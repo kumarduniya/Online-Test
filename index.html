@@ -57,23 +57,19 @@
         .box { width: 25px; height: 25px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: white; line-height: 25px; font-weight: bold; border: 1px solid #aaa; }
         
         .status-not-visited { background: #fff; color: #333; } .status-not-answered { background: #dc3545; color: white; border-color: #dc3545; } .status-answered { background: #28a745; color: white; border-color: #28a745; } 
-        
-        /* 🔥 THE FIX: Scrollable Palette for 100+ Qs 🔥 */
         .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; overflow-y: auto; max-height: 220px; align-content: flex-start; }
         .palette-btn { width: 40px; height: 40px; border-radius: 4px; border: 1px solid #999; font-weight: bold; cursor: pointer; }
         
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         .confetti { position: absolute; font-size: 24px; z-index: 9999; pointer-events: none; animation: fall 3s linear forwards; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
         #print-area { display: none; }
         
-        /* 🔥 THE FIX: Super Compact PDF Styles with RED Background Box 🔥 */
         @media print {
-            @page { margin: 8mm; } /* Tight margins to fit more on a page */
+            @page { margin: 8mm; } 
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
             #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
@@ -81,13 +77,12 @@
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
-            /* Reduced paddings and margins for extreme compactness */
-            .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 13px; line-height: 1.3; color: #111; }
+            .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #111; }
             .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
-            .opt-item { width: 48%; margin-bottom: 2px; font-size: 13px; padding: 1px 4px; box-sizing: border-box; }
+            .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; }
             
-            /* Red Background for Correct Answer, exact color adjust forced on */
-            .print-ans { background-color: #dc3545 !important; color: white !important; font-weight: bold; display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-top: 4px; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+            /* 🔥 THE FIX: Normal text for print-ans, red background only on option grid item 🔥 */
+            .print-ans { font-weight: bold; font-size: 13px; color: #111; }
             .print-exp { color: #333; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
         }
@@ -97,7 +92,7 @@
             .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 80px; }
             .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
             .action-btn { padding: 8px 12px; font-size: 14px; }
-            .question-palette { max-height: 150px; } /* Even smaller on mobile so it doesn't push down */
+            .question-palette { max-height: 150px; } 
         }
     </style>
 </head>
@@ -109,6 +104,7 @@
         <div id="timer-box" class="timer" style="display:none;">Time: 00:00</div>
     </div>
 
+    <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -124,6 +120,7 @@
         </div>
     </div>
 
+    <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">टेस्ट डेटाबेस से लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -135,6 +132,7 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
+    <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -197,6 +195,7 @@
         </div>
     </div>
 
+    <!-- 2. STUDENT LOGIN -->
     <div id="login-view" class="view-section">
         <div style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -228,6 +227,7 @@
         </div>
     </div>
 
+    <!-- 3. EXAM INTERFACE -->
     <div id="exam-view" class="view-section" style="padding: 0;">
         <div class="exam-container">
             <div class="left-panel">
@@ -258,6 +258,7 @@
         </div>
     </div>
 
+    <!-- 4. RESULT & REPORT CARD -->
     <div id="result-view" class="view-section">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -274,12 +275,14 @@
                 <button class="btn btn-outline" style="flex: 1;" onclick="startReattempt()">🔄 Reattempt Test</button>
             </div>
 
+            <!-- 🔥 THE FIX: Analysis Buttons 🔥 -->
             <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
             
+            <!-- Analysis Display Box -->
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 600px; margin: 15px auto; padding: 15px; text-align: left; max-height: 350px; overflow-y: auto; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);"></div>
             
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
@@ -303,6 +306,11 @@
                     <button class="btn btn-pdf" style="width: 100%;" onclick="executePDFPrint(studentInfo.name)">📄 Free PDF डाउनलोड करें</button>
                 </div>
             </div>
+
+            <!-- 🔥 THE FIX: Close and Redirect Button 🔥 -->
+            <div style="text-align: center; margin: 25px 0;">
+                <button class="btn" style="background: #17a2b8; max-width: 300px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.2);" onclick="closeAndRedirect()">🏠 Close & Go to Home</button>
+            </div>
         </div>
     </div>
 </div>
@@ -321,6 +329,11 @@
     let currentGeneratedPass = ""; 
 
     window.onload = initApp;
+
+    // 🔥 THE FIX: Close and Redirect Logic 🔥
+    function closeAndRedirect() {
+        window.location.href = "https://studynotesmanager.netlify.app/";
+    }
 
     function blastConfetti() {
         let duration = 4000; let end = Date.now() + duration;
@@ -452,7 +465,6 @@
         document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
     }
 
-    // 🔥 THE FIX: Super Reliable Copy Password via document.execCommand Fallback 🔥
     function copyGeneratedPass() {
         if(!currentGeneratedPass) return;
         try {
@@ -695,7 +707,6 @@
 
     function clearResponse() { userAnswers[currentQ] = null; qStatus[currentQ] = 1; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-not-answered`; renderQuestion(currentQ); updateCounts(); }
     
-    // 🔥 THE FIX: Save & Next Last Question Alert 🔥
     function nextQ() { 
         if(currentQ < examData.questions.length - 1) {
             renderQuestion(currentQ + 1); 
@@ -760,6 +771,12 @@
 
         let submissionCode = isReattemptMode ? (examData.code + "-RE") : examData.code;
 
+        // 🔥 THE FIX: Hijack Back Button to go to App 🔥
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            closeAndRedirect();
+        };
+
         fetch(SCRIPT_URL, {
             method: 'POST', body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode}),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -776,7 +793,7 @@
         });
     }
 
-    // 🔥 THE FIX: Show Smart Analysis (Right/Wrong/Blank) 🔥
+    // 🔥 THE FIX: Show Full Option Text in Analysis 🔥
     function showAnalysis(type) {
         let box = document.getElementById('analysis-box');
         let html = "";
@@ -789,14 +806,20 @@
 
             if((type === 'right' && isRight) || (type === 'wrong' && isWrong) || (type === 'blank' && isBlank)) {
                 let statusIcon = isRight ? "✅" : (isWrong ? "❌" : "⬜");
-                let uAnsText = isBlank ? "N/A" : uAns;
                 let ansColor = isRight ? "green" : (isWrong ? "red" : "gray");
+
+                // Get full text
+                let correctOpt = q.opts.find(o => o.id === q.ans);
+                let correctStr = correctOpt ? `${correctOpt.id}. ${correctOpt.text}` : q.ans;
+                
+                let userOpt = q.opts.find(o => o.id === uAns);
+                let userStr = isBlank ? "N/A" : (userOpt ? `${userOpt.id}. ${userOpt.text}` : uAns);
 
                 html += `<div style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
                     <b style="font-size:15px; color:#1f4e79;">${statusIcon} Q${i+1}. ${q.q}</b>
-                    <div style="margin-top:6px; font-size: 14px;">
-                        <span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold;">Correct Ans: ${q.ans}</span>
-                        <span style="margin-left: 15px; font-weight: bold; color: ${ansColor};">Your Ans: ${uAnsText}</span>
+                    <div style="margin-top:6px; font-size: 14px; display:flex; flex-direction:column; gap:5px;">
+                        <div style="background: #e6f9ec; color: #155724; padding: 4px 8px; border-radius: 4px; border: 1px solid #c3e6cb; font-weight:bold;">✅ Correct: ${correctStr}</div>
+                        <div style="color: ${ansColor}; font-weight: bold; padding: 0 8px;">👉 Your Ans: ${userStr}</div>
                     </div>
                     <div style="font-size: 14px; color: #444; margin-top: 6px; line-height:1.4;"><b>Explanation:</b> ${q.exp}</div>
                 </div>`;
@@ -890,22 +913,23 @@
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
             
-            // 🔥 THE FIX: X mark for wrong answers in PDF 🔥
             let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && uAns !== q.ans && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
             let wrongMarkHtml = isWrongAns ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
             
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
+                // 🔥 THE FIX: Solid Red Box directly on the correct option only 🔥
                 let isRight = (o.id === q.ans) ? "background-color: #dc3545 !important; color: white !important; font-weight: bold; border-radius: 4px;" : "";
                 html += `<div class="opt-item" style="${isRight}">${o.id}. ${o.text}</div>`;
             });
             html += `</div>`;
             
+            // 🔥 THE FIX: Normal bold text for "Correct Option: X" at the bottom 🔥
             if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar")) {
                 let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                html += `<div style="margin-top:5px;"><span class="print-ans">Correct Ans: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:12px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
             } else {
-                html += `<div style="margin-top:5px;"><span class="print-ans">Correct Ans: ${q.ans}</span></div>`;
+                html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
             }
             html += `<div class="print-exp"><b>Explanation:</b> ${q.exp}</div></div>`;
         });
