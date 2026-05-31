@@ -27,31 +27,31 @@
         .btn-blue { background: #1f4e79; } .btn-pdf { background: #dc3545; } .btn-outline { background: transparent; border: 2px solid #1f4e79; color: #1f4e79; }
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
 
-        /* Admin Tabs */
         .admin-tabs { display: flex; border-bottom: 2px solid #1f4e79; margin-bottom: 20px; }
         .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 16px; cursor: pointer; background: #e9ecef; border: none; outline: none; }
         .tab-btn.active { background: #1f4e79; color: white; }
 
-        /* Dashboard Styles */
         .test-card { background: #fff; border: 1px solid #ddd; border-left: 5px solid #1f4e79; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333;}
         
-        /* Exam Layout */
         .exam-container { display: flex; flex-direction: row; height: calc(100vh - 70px); }
         .left-panel { flex: 3; padding: 20px; border-right: 1px solid #ccc; display: flex; flex-direction: column; position: relative; }
         .right-panel { flex: 1; background: #fdfdfd; display: flex; flex-direction: column; }
         
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; color: #1f4e79; }
         .q-text { font-size: 18px; line-height: 1.5; color: #222; margin-bottom: 20px; }
-        .options-div label { display: block; padding: 12px; border: 1px solid #ccc; margin-bottom: 10px; border-radius: 4px; cursor: pointer; background: #fff; }
-        .options-div input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
+        
+        /* 🔥 NEW HIGHLIGHTED OPTIONS STYLE 🔥 */
+        .opt-label { display: block; padding: 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; }
+        .opt-label:hover { background: #f8f9fa; }
+        .opt-label.selected { background: #e0f7fa; border-color: #00838f; color: #006064; font-weight: bold; box-shadow: 0 2px 8px rgba(0,131,143,0.15); }
+        .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #00838f; }
         
         .action-buttons { margin-top: auto; display: flex; justify-content: space-between; border-top: 1px solid #ccc; padding-top: 15px; }
         .action-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
         .btn-prev { background: #6c757d; } .btn-next { background: #28a745; } .btn-clear { background: #ffc107; color: #333; } .btn-submit { background: #dc3545; }
         
-        /* Palette */
         .candidate-info { padding: 15px; border-bottom: 1px solid #ccc; text-align: center; }
         .palette-legend { display: flex; flex-wrap: wrap; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; justify-content: center; }
         .legend-item { display: flex; align-items: center; margin: 5px; width: 45%; }
@@ -61,7 +61,6 @@
         .question-palette { padding: 15px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; }
         .palette-btn { width: 40px; height: 40px; border-radius: 4px; border: 1px solid #999; font-weight: bold; cursor: pointer; }
         
-        /* Report Card & Misc */
         #result-view { text-align: center; padding: 30px; }
         canvas { max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .payment-box { background: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeeba; border-radius: 6px; margin-top: 20px; font-size: 14px; text-align: left;}
@@ -69,7 +68,6 @@
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Print Settings */
         #print-area { display: none; }
         @media print {
             body * { visibility: hidden; }
@@ -173,7 +171,6 @@
                 <button class="btn" onclick="startExam(false)">Start Test 🚀</button>
             </div>
 
-            <!-- यह बॉक्स सिर्फ Paid PDF होने पर ही दिखेगा, Free में गायब रहेगा -->
             <div id="direct-pdf-box" style="background: #fff3cd; padding: 15px; border-radius: 6px; border: 1px solid #ffeeba;">
                 <h4 style="margin: 0 0 10px 0; color: #856404;">📥 बिना टेस्ट दिए डायरेक्ट PDF डाउनलोड</h4>
                 <div id="paid-instructions" style="font-size: 13px; color: #856404; margin-bottom: 10px;">
@@ -272,7 +269,6 @@
     let timerInterval;
     let isReattemptMode = false; 
 
-    // 🚀 THE ULTIMATE DB FETCH LOGIC
     window.onload = initApp;
 
     function initApp() {
@@ -281,12 +277,17 @@
         
         const urlParams = new URLSearchParams(window.location.search);
         const testCode = urlParams.get('test');
-        const oldHash = window.location.hash.substring(1); // For older tests backward compatibility
+        const oldHash = window.location.hash.substring(1); 
 
         if(testCode) {
-            // NEW SYSTEM: Fetch test data from Google Sheets Database!
+            // 🔥 FIXED: Now fetching test using POST method to avoid Google CORS / Network Errors 🔥
             document.getElementById('loading-view').classList.add('active-view');
-            fetch(SCRIPT_URL + "?code=" + testCode)
+            
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: new URLSearchParams({'action': 'getTest', 'testCode': testCode}),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
             .then(res => res.json())
             .then(data => {
                 if(data.error) { 
@@ -298,11 +299,12 @@
                 examData = data;
                 setupLoginScreen();
             }).catch(err => {
-                alert("❌ नेटवर्क एरर! कृपया अपना इंटरनेट चेक करें।");
+                alert("❌ नेटवर्क एरर! कृपया अपना इंटरनेट चेक करें या पेज रीफ्रेश करें।");
+                document.getElementById('loading-view').classList.remove('active-view');
+                document.getElementById('admin-view').classList.add('active-view');
             });
 
         } else if(oldHash) {
-            // OLD SYSTEM: Decode hash if it's an old link
             try {
                 let safeHash = decodeURIComponent(oldHash);
                 examData = JSON.parse(decodeURIComponent(atob(safeHash)));
@@ -326,14 +328,12 @@
         document.getElementById('disp-code').innerText = examData.code;
         document.getElementById('res-code').innerText = examData.code;
         
-        // FREE PDF LOGIC FIX
         if(examData.isFree) {
-            document.getElementById('direct-pdf-box').style.display = 'none'; // Login पेज से पैसे वाला बॉक्स पूरा गायब
-            
-            document.getElementById('res-paid-instructions').style.display = 'none'; // Result पेज से पेमेंट इन्फो गायब
-            document.getElementById('res-pass-box').style.display = 'none'; // Result पेज से पासवर्ड बॉक्स गायब
-            document.getElementById('res-free-instructions').style.display = 'block'; // Free Text दिखाओ
-            document.getElementById('res-free-btn-box').style.display = 'block'; // Direct Download बटन दिखाओ
+            document.getElementById('direct-pdf-box').style.display = 'none'; 
+            document.getElementById('res-paid-instructions').style.display = 'none'; 
+            document.getElementById('res-pass-box').style.display = 'none'; 
+            document.getElementById('res-free-instructions').style.display = 'block'; 
+            document.getElementById('res-free-btn-box').style.display = 'block'; 
         } else {
             document.getElementById('direct-pdf-box').style.display = 'block';
             document.getElementById('disp-price').innerText = examData.price;
@@ -342,7 +342,6 @@
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
     }
 
-    // --- ADMIN PANEL LOGIC ---
     function switchAdminTab(tab) {
         if(tab === 'create') {
             document.getElementById('tab-create').classList.add('active');
@@ -409,7 +408,6 @@
 
         let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs };
         
-        // NEW SYSTEM: Sending test data to Google Sheet DB!
         let btn = document.getElementById('btn-generate');
         btn.innerText = "⏳ Saving Test to Database...";
         btn.disabled = true;
@@ -425,7 +423,6 @@
         }).then(res => res.json()).then(data => {
             btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false;
             
-            // Generate super short URL!
             let testLink = window.location.href.split('?')[0].split('#')[0] + "?test=" + eCode;
             
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
@@ -513,19 +510,37 @@
         updateCounts();
     }
 
+    // 🔥 FIXED: Added highlight logic for options 🔥
     function renderQuestion(idx) {
         currentQ = idx; let q = examData.questions[idx];
         if(qStatus[idx] === 0) { qStatus[idx] = 1; document.getElementById(`pal-${idx}`).className = `palette-btn status-not-answered`; updateCounts(); }
         document.getElementById('q-no-header').innerText = `Question No. ${idx + 1}`; document.getElementById('q-text').innerText = q.q;
+        
         let optHtml = "";
         q.opts.forEach(opt => {
             let isChecked = (userAnswers[idx] === opt.id) ? "checked" : "";
-            optHtml += `<label><input type="radio" name="option" value="${opt.id}" ${isChecked} onchange="markAnswered('${opt.id}')"> <b>${opt.id}.</b> ${opt.text}</label>`;
+            let highlightClass = (userAnswers[idx] === opt.id) ? "selected" : "";
+            optHtml += `<label class="opt-label ${highlightClass}" id="lbl-${opt.id}">
+                            <input type="radio" name="option" value="${opt.id}" ${isChecked} onchange="markAnswered('${opt.id}')"> 
+                            <b>${opt.id}.</b> ${opt.text}
+                        </label>`;
         });
         document.getElementById('options-box').innerHTML = optHtml;
     }
 
-    function markAnswered(val) { userAnswers[currentQ] = val; qStatus[currentQ] = 2; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-answered`; updateCounts(); }
+    // 🔥 FIXED: Applies background color to the selected option dynamically 🔥
+    function markAnswered(val) { 
+        userAnswers[currentQ] = val; 
+        qStatus[currentQ] = 2; 
+        document.getElementById(`pal-${currentQ}`).className = `palette-btn status-answered`; 
+        
+        // Remove 'selected' class from all options, add it to the clicked one
+        document.querySelectorAll('.opt-label').forEach(el => el.classList.remove('selected'));
+        document.getElementById(`lbl-${val}`).classList.add('selected');
+        
+        updateCounts(); 
+    }
+
     function clearResponse() { userAnswers[currentQ] = null; qStatus[currentQ] = 1; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-not-answered`; renderQuestion(currentQ); updateCounts(); }
     function nextQ() { if(currentQ < examData.questions.length - 1) renderQuestion(currentQ + 1); }
     function prevQ() { if(currentQ > 0) renderQuestion(currentQ - 1); }
