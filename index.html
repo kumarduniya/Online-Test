@@ -23,7 +23,7 @@
         .flex-row { display: flex; gap: 10px; flex-wrap: wrap; }
         .flex-row .form-group { flex: 1; min-width: 180px; }
 
-        .btn { background: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 10px; transition: 0.3s; }
+        .btn { background: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 10px; transition: 0.3s; box-sizing: border-box;}
         .btn-blue { background: #1f4e79; } .btn-pdf { background: #dc3545; } .btn-outline { background: transparent; border: 2px solid #1f4e79; color: #1f4e79; }
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
 
@@ -57,11 +57,12 @@
         .box { width: 25px; height: 25px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: white; line-height: 25px; font-weight: bold; border: 1px solid #aaa; }
         
         .status-not-visited { background: #fff; color: #333; } .status-not-answered { background: #dc3545; color: white; border-color: #dc3545; } .status-answered { background: #28a745; color: white; border-color: #28a745; } 
-        .question-palette { padding: 15px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; }
+        
+        /* 🔥 THE FIX: Scrollable Palette for 100+ Qs 🔥 */
+        .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; overflow-y: auto; max-height: 220px; align-content: flex-start; }
         .palette-btn { width: 40px; height: 40px; border-radius: 4px; border: 1px solid #999; font-weight: bold; cursor: pointer; }
         
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
-        
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -69,8 +70,10 @@
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
         #print-area { display: none; }
+        
+        /* 🔥 THE FIX: Super Compact PDF Styles with RED Background Box 🔥 */
         @media print {
-            @page { margin: 15mm; } 
+            @page { margin: 8mm; } /* Tight margins to fit more on a page */
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
             #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
@@ -78,14 +81,15 @@
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
-            /* 🔥 PDF Font Sizes Increased for Better Readability 🔥 */
-            .print-q { margin-bottom: 15px; page-break-inside: avoid; border-bottom: 1px dashed #ccc; padding-bottom: 12px; font-size: 16px; line-height: 1.5; color: #222; }
-            .opt-grid { display: flex; flex-wrap: wrap; margin-top: 8px; }
-            .opt-item { width: 48%; margin-bottom: 6px; font-size: 16px; padding: 4px 6px; box-sizing: border-box; }
+            /* Reduced paddings and margins for extreme compactness */
+            .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 13px; line-height: 1.3; color: #111; }
+            .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
+            .opt-item { width: 48%; margin-bottom: 2px; font-size: 13px; padding: 1px 4px; box-sizing: border-box; }
             
-            .print-ans { font-weight: bold; background: #e6f9ec; display: inline-block; padding: 5px 8px; border-radius: 4px; font-size: 15px; margin-top: 8px; border: 1px solid #c3e6cb;}
-            .print-exp { color: #333; font-size: 15px; margin-top: 8px; line-height: 1.5; }
-            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px;}
+            /* Red Background for Correct Answer, exact color adjust forced on */
+            .print-ans { background-color: #dc3545 !important; color: white !important; font-weight: bold; display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-top: 4px; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+            .print-exp { color: #333; font-size: 12px; margin-top: 3px; line-height: 1.2; }
+            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
         }
 
         @media (max-width: 768px) {
@@ -93,7 +97,7 @@
             .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 80px; }
             .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
             .action-btn { padding: 8px 12px; font-size: 14px; }
-            .watermark { font-size: 80px; } 
+            .question-palette { max-height: 150px; } /* Even smaller on mobile so it doesn't push down */
         }
     </style>
 </head>
@@ -105,7 +109,6 @@
         <div id="timer-box" class="timer" style="display:none;">Time: 00:00</div>
     </div>
 
-    <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -121,10 +124,9 @@
         </div>
     </div>
 
-    <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
-        <h3 style="color:#1f4e79; margin-top: 20px;">टेस्ट लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
+        <h3 style="color:#1f4e79; margin-top: 20px;">टेस्ट डेटाबेस से लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
     </div>
 
     <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
@@ -133,7 +135,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
-    <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -186,10 +187,9 @@
                     <button class="btn btn-blue" style="margin: 0; flex: 1;" onclick="generatePass()">Generate</button>
                 </div>
                 
-                <!-- 🔥 Copy Button Added 🔥 -->
                 <div style="margin: 10px 0 0 0; font-weight: bold; color: #dc3545; display: flex; align-items: center; gap: 10px;">
                     <span id="show-gen-pass">पासवर्ड यहाँ दिखेगा...</span>
-                    <button id="copy-pass-btn" class="btn btn-outline" style="display: none; padding: 2px 8px; margin: 0; font-size: 12px; width: auto;" onclick="copyGeneratedPass()">📋 Copy</button>
+                    <button id="copy-pass-btn" class="btn btn-outline" style="display: none; padding: 2px 8px; margin: 0; font-size: 12px; width: auto; background:white;" onclick="copyGeneratedPass()">📋 Copy Pass</button>
                 </div>
             </div>
             <h3 style="color: #1f4e79;">📁 Active Tests List</h3>
@@ -197,7 +197,6 @@
         </div>
     </div>
 
-    <!-- 2. STUDENT LOGIN -->
     <div id="login-view" class="view-section">
         <div style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -206,11 +205,9 @@
             
             <div style="background: #f4f6f8; padding: 15px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 20px;">
                 <h4 style="margin: 0 0 10px 0; color: #333;">📝 नया टेस्ट शुरू करें</h4>
-                
                 <p style="text-align: center; color: #28a745; font-size: 13px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 10px;">
                     ✅ टेस्ट देने के लिए कोई रजिस्ट्रेशन की जरूरत नहीं है, बस अपना नाम और मोबाइल नंबर डालें और टेस्ट शुरू करें!
                 </p>
-
                 <input type="text" id="s-name" placeholder="अपना नाम भरें" required style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
                 <input type="tel" id="s-phone" placeholder="अपना मोबाइल नंबर भरें (I.D.)" required style="width:100%; padding:10px; box-sizing:border-box;">
                 <button class="btn" onclick="startExam(false)">Start Test 🚀</button>
@@ -231,7 +228,6 @@
         </div>
     </div>
 
-    <!-- 3. EXAM INTERFACE -->
     <div id="exam-view" class="view-section" style="padding: 0;">
         <div class="exam-container">
             <div class="left-panel">
@@ -262,7 +258,6 @@
         </div>
     </div>
 
-    <!-- 4. RESULT & REPORT CARD -->
     <div id="result-view" class="view-section">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -278,6 +273,14 @@
                 <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1;" onclick="downloadImage()">🖼️ Download Score Card</button>
                 <button class="btn btn-outline" style="flex: 1;" onclick="startReattempt()">🔄 Reattempt Test</button>
             </div>
+
+            <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
+                <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
+                <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
+            </div>
+            
+            <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 600px; margin: 15px auto; padding: 15px; text-align: left; max-height: 350px; overflow-y: auto; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);"></div>
             
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
                 <h4 style="margin: 0 0 10px 0; color: #856404;">📥 PDF + Solution कैसे लें?</h4>
@@ -307,13 +310,12 @@
 <div id="print-area"></div>
 
 <script>
-    // 🚨 तुम्हारी दी गई नई Google Script URL 🚨
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5yMdRoQy6leC0l79nN3X9WYTq26vAOtjD2GtnkYhUg_Px4tJ_KDqIQfZpB_AudzTBGA/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
     let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, questions: [] };
     let userAnswers = []; let qStatus = []; let currentQ = 0;
-    let studentInfo = { name: "", phone: "", score: 0, right: 0, wrong: 0, time: 0, attempt: 1 };
+    let studentInfo = { name: "", phone: "", score: 0, right: 0, wrong: 0, blank: 0, time: 0, attempt: 1 };
     let timerInterval;
     let isReattemptMode = false; 
     let currentGeneratedPass = ""; 
@@ -360,28 +362,19 @@
 
         if(testCode) {
             document.getElementById('loading-view').classList.add('active-view');
-            
             let cacheBuster = new Date().getTime();
             let script = document.createElement('script');
             script.src = SCRIPT_URL + "?action=getTest&testCode=" + testCode + "&callback=handleTestLoad&t=" + cacheBuster;
-            
-            script.onerror = function() {
-                showErrorView("❌ नेटवर्क एरर! कृपया सुनिश्चित करें कि Apps Script में Who has access 'Anyone' है।");
-            };
+            script.onerror = function() { showErrorView("❌ नेटवर्क एरर! सुनिश्चित करें कि Apps Script में Who has access 'Anyone' है।"); };
             document.body.appendChild(script);
-
         } else {
             document.getElementById('admin-auth-view').classList.add('active-view');
         }
     }
 
     window.handleTestLoad = function(data) {
-        if(data.error) { 
-            showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")");
-            return; 
-        }
-        data.marks = data.marks || 2; 
-        data.neg = data.neg || 0;
+        if(data.error) { showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")"); return; }
+        data.marks = data.marks || 2; data.neg = data.neg || 0;
         examData = data;
         setupLoginScreen();
     };
@@ -394,7 +387,6 @@
         document.getElementById('login-test-name').innerText = examData.exam + " (" + examData.subject + ")";
         document.getElementById('disp-code').innerText = examData.code;
         document.getElementById('res-code').innerText = examData.code;
-        
         document.getElementById('disp-marks').innerText = examData.marks;
         document.getElementById('disp-neg').innerText = examData.neg;
         
@@ -437,7 +429,6 @@
         let mixed = key + phone + "PRO";
         let num = 0;
         for(let i=0; i<mixed.length; i++) { num += mixed.charCodeAt(i) * (i+1); }
-        
         let sym = ['@','#','$','&','*'];
         let s1 = sym[num % sym.length];
         let s2 = sym[(num * 2) % sym.length];
@@ -446,7 +437,6 @@
         let p1 = phone.length >= 4 ? phone.substring(0,2) : "99";
         let p2 = phone.length >= 4 ? phone.slice(-2) : "88";
         let k1 = key.charAt(0).toUpperCase();
-        
         return l1 + s1 + p1 + l2 + s2 + p2 + k1;
     }
 
@@ -458,18 +448,29 @@
         
         let pass = generateStrongPass(phone, key);
         currentGeneratedPass = pass; 
-        
         document.getElementById('show-gen-pass').innerText = "पासवर्ड: " + pass;
         document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
     }
 
+    // 🔥 THE FIX: Super Reliable Copy Password via document.execCommand Fallback 🔥
     function copyGeneratedPass() {
         if(!currentGeneratedPass) return;
-        navigator.clipboard.writeText(currentGeneratedPass).then(function() {
-            alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass);
-        }).catch(function(err) {
-            alert("कॉपी नहीं हो पाया, मैन्युअली कॉपी करें: " + currentGeneratedPass);
-        });
+        try {
+            navigator.clipboard.writeText(currentGeneratedPass).then(() => {
+                alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass + "\nअब आप इसे कहीं भी पेस्ट कर सकते हैं।");
+            }).catch(fallbackCopy);
+        } catch(e) {
+            fallbackCopy();
+        }
+        function fallbackCopy() {
+            let tempInput = document.createElement("input");
+            tempInput.value = currentGeneratedPass;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass + "\nअब आप इसे कहीं भी पेस्ट कर सकते हैं।");
+        }
     }
 
     function checkPass(enteredPhone, enteredPass) {
@@ -636,7 +637,7 @@
             if(!studentInfo.name || studentInfo.phone.length < 10) { alert("कृपया सही नाम और 10 अंकों का नंबर डालें!"); return; }
         }
         isReattemptMode = isReattempt;
-        studentInfo.time = 0; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0;
+        studentInfo.time = 0; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0;
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
         
         document.getElementById('panel-sname').innerText = studentInfo.name;
@@ -693,7 +694,17 @@
     }
 
     function clearResponse() { userAnswers[currentQ] = null; qStatus[currentQ] = 1; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-not-answered`; renderQuestion(currentQ); updateCounts(); }
-    function nextQ() { if(currentQ < examData.questions.length - 1) renderQuestion(currentQ + 1); }
+    
+    // 🔥 THE FIX: Save & Next Last Question Alert 🔥
+    function nextQ() { 
+        if(currentQ < examData.questions.length - 1) {
+            renderQuestion(currentQ + 1); 
+        } else {
+            if(confirm("✅ टेस्ट के सभी प्रश्न पूरे हो गए हैं! क्या आप टेस्ट सबमिट करना चाहते हैं?")) {
+                clearInterval(timerInterval); calculateScoreAndSubmit();
+            }
+        }
+    }
     function prevQ() { if(currentQ > 0) renderQuestion(currentQ - 1); }
 
     function updateCounts() {
@@ -711,12 +722,21 @@
         document.getElementById('result-view').classList.add('active-view');
         document.getElementById('timer-box').style.display = 'none';
 
-        studentInfo.right = 0; studentInfo.wrong = 0;
+        studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0;
         for(let i=0; i<examData.questions.length; i++) { 
-            if(userAnswers[i] === examData.questions[i].ans) studentInfo.right++; 
-            else if (userAnswers[i] !== null) studentInfo.wrong++;
+            if(userAnswers[i] === null) {
+                studentInfo.blank++;
+            } else if(userAnswers[i] === examData.questions[i].ans) {
+                studentInfo.right++; 
+            } else {
+                studentInfo.wrong++;
+            }
         }
         
+        document.getElementById('btn-cnt-right').innerText = studentInfo.right;
+        document.getElementById('btn-cnt-wrong').innerText = studentInfo.wrong;
+        document.getElementById('btn-cnt-blank').innerText = studentInfo.blank;
+
         let rawScore = (studentInfo.right * examData.marks) - (studentInfo.wrong * examData.neg);
         studentInfo.score = Math.max(0, Math.round(rawScore * 100) / 100); 
         
@@ -754,6 +774,41 @@
             document.getElementById('btn-img-down').style.display = 'block';
             drawReportCard("N/A", "N/A", maxScore);
         });
+    }
+
+    // 🔥 THE FIX: Show Smart Analysis (Right/Wrong/Blank) 🔥
+    function showAnalysis(type) {
+        let box = document.getElementById('analysis-box');
+        let html = "";
+        
+        examData.questions.forEach((q, i) => {
+            let uAns = userAnswers[i];
+            let isRight = uAns === q.ans;
+            let isBlank = uAns === null;
+            let isWrong = !isBlank && !isRight;
+
+            if((type === 'right' && isRight) || (type === 'wrong' && isWrong) || (type === 'blank' && isBlank)) {
+                let statusIcon = isRight ? "✅" : (isWrong ? "❌" : "⬜");
+                let uAnsText = isBlank ? "N/A" : uAns;
+                let ansColor = isRight ? "green" : (isWrong ? "red" : "gray");
+
+                html += `<div style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
+                    <b style="font-size:15px; color:#1f4e79;">${statusIcon} Q${i+1}. ${q.q}</b>
+                    <div style="margin-top:6px; font-size: 14px;">
+                        <span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold;">Correct Ans: ${q.ans}</span>
+                        <span style="margin-left: 15px; font-weight: bold; color: ${ansColor};">Your Ans: ${uAnsText}</span>
+                    </div>
+                    <div style="font-size: 14px; color: #444; margin-top: 6px; line-height:1.4;"><b>Explanation:</b> ${q.exp}</div>
+                </div>`;
+            }
+        });
+
+        if(html === "") {
+            html = `<div style="text-align:center; color:#777; padding:20px;">इस केटेगरी में कोई प्रश्न नहीं है।</div>`;
+        }
+        
+        box.innerHTML = html;
+        box.style.display = 'block';
     }
 
     function drawReportCard(rank, totalStudents, maxScore) {
@@ -819,7 +874,7 @@
         let html = `<div class="watermark">${watermarkText}</div>`;
         
         html += `
-        <div style="font-size: 14px; border-bottom: 2px solid #1f4e79; padding: 10px 20px; margin-bottom: 20px; box-sizing: border-box;">
+        <div style="font-size: 14px; border-bottom: 2px solid #1f4e79; padding: 10px 20px; margin-bottom: 10px; box-sizing: border-box;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                 <a href="https://studynotesmanager.netlify.app/" target="_blank" style="color: #1f4e79; text-decoration: none; font-weight: bold; padding-left: 10px;">🌐 Study Notes Manager</a>
                 <a href="${safeTestUrl}" target="_blank" style="color: #dc3545; text-decoration: none; font-weight: bold; padding-right: 10px;">📝 Give Online Test</a>
@@ -835,19 +890,22 @@
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
             
-            html += `<div class="print-q"><b>Q${i+1}. ${q.q}</b><div class="opt-grid">`;
+            // 🔥 THE FIX: X mark for wrong answers in PDF 🔥
+            let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && uAns !== q.ans && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
+            let wrongMarkHtml = isWrongAns ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
+            
+            html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
-                // 🔥 THE FIX: Black Background & White Bold Text for Correct Answer 🔥
-                let isRight = (o.id === q.ans) ? "background-color: black; color: white; font-weight: bold; border-radius: 4px; padding: 2px 6px;" : "padding: 2px 6px;";
+                let isRight = (o.id === q.ans) ? "background-color: #dc3545 !important; color: white !important; font-weight: bold; border-radius: 4px;" : "";
                 html += `<div class="opt-item" style="${isRight}">${o.id}. ${o.text}</div>`;
             });
             html += `</div>`;
             
             if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar")) {
                 let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                html += `<div class="print-ans">Correct Ans: ${q.ans} <span style="margin-left:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                html += `<div style="margin-top:5px;"><span class="print-ans">Correct Ans: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:12px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
             } else {
-                html += `<div class="print-ans">Correct Ans: ${q.ans}</div>`;
+                html += `<div style="margin-top:5px;"><span class="print-ans">Correct Ans: ${q.ans}</span></div>`;
             }
             html += `<div class="print-exp"><b>Explanation:</b> ${q.exp}</div></div>`;
         });
