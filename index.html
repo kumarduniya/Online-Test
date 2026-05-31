@@ -12,7 +12,6 @@
         .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
         .timer { font-size: 18px; font-weight: bold; background: #e74c3c; padding: 5px 15px; border-radius: 4px; }
         
-        /* 🔥 THE FIX: New Compact Top Bar for Student Name & Exam 🔥 */
         .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; }
         .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; }
         .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
@@ -45,9 +44,10 @@
         .right-panel { flex: 1; background: #fdfdfd; display: flex; flex-direction: column; }
         
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; color: #1f4e79; }
-        .q-text { font-size: 18px; line-height: 1.5; color: #222; margin-bottom: 20px; }
+        /* 🔥 THE FIX: Question text is now BOLD 🔥 */
+        .q-text { font-size: 18px; line-height: 1.5; color: #222; margin-bottom: 20px; font-weight: bold; }
         
-        .opt-label { display: block; padding: 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; }
+        .opt-label { display: block; padding: 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; }
         .opt-label:hover { background: #f8f9fa; }
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
@@ -82,7 +82,6 @@
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
-            /* 🔥 THE FIX: Black absolute color explicitly declared for normal text to remove 'feeka' look 🔥 */
             .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #000000 !important; }
             .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
             .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; color: #000000 !important; }
@@ -97,7 +96,6 @@
             .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 80px; }
             .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
             .action-btn { padding: 8px 12px; font-size: 14px; }
-            /* Extra height allowed for palette since we moved the name up */
             .question-palette { max-height: 250px; } 
         }
     </style>
@@ -110,7 +108,6 @@
         <div id="timer-box" class="timer" style="display:none;">Time: 00:00</div>
     </div>
     
-    <!-- 🔥 THE FIX: New Top Bar for Space Saving 🔥 -->
     <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
         <div class="s-name" id="top-sname">Student Name</div>
         <div class="s-exam" id="top-sexam">Exam Name</div>
@@ -256,7 +253,6 @@
             </div>
             
             <div class="right-panel">
-                <!-- 🔥 Removed old candidate info completely to save space 🔥 -->
                 <div class="palette-legend">
                     <div class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Answered</div>
                     <div class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Answered</div>
@@ -303,7 +299,7 @@
                     PDF मूल्य: <b>₹<span id="res-price">0</span></b> | पासवर्ड के लिए <b>8273684939</b> पर Payment करके स्क्रीनशॉट WhatsApp करें।
                 </div>
                 <div id="res-free-instructions" style="font-size: 13px; color: #28a745; display: none; font-weight:bold;">
-                    🎉 यह PDF सभी के लिए Free है!
+                    🎉 यह PDF सभी के लिए बिल्कुल Free है! नीचे दिए गए बटन से सीधे डाउनलोड करें।
                 </div>
 
                 <div id="res-pass-box" style="display: flex; gap: 10px; margin-top: 15px;">
@@ -660,7 +656,6 @@
         studentInfo.time = 0; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0;
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
         
-        // 🔥 THE FIX: Setup new top bar and show it 🔥
         document.getElementById('top-sname').innerText = "👤 " + studentInfo.name;
         document.getElementById('top-sexam').innerText = examData.exam + (isReattemptMode ? " (Reattempt)" : "");
         document.getElementById('student-top-bar').style.display = 'flex';
@@ -740,7 +735,7 @@
     }
 
     function calculateScoreAndSubmit() {
-        document.getElementById('student-top-bar').style.display = 'none'; // Hide top bar on result
+        document.getElementById('student-top-bar').style.display = 'none'; 
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('result-view').classList.add('active-view');
         document.getElementById('timer-box').style.display = 'none';
@@ -925,7 +920,6 @@
             
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
-                // 🔥 THE FIX: Dark Green Box over full correct option text 🔥
                 let isRight = (o.id === q.ans) ? "background-color: #0f5132 !important; color: #ffffff !important; font-weight: bold; border-radius: 4px; -webkit-print-color-adjust: exact; print-color-adjust: exact;" : "";
                 html += `<div class="opt-item" style="${isRight}">${o.id}. ${o.text}</div>`;
             });
