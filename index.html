@@ -44,7 +44,6 @@
         .right-panel { flex: 1; background: #fdfdfd; display: flex; flex-direction: column; }
         
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; color: #1f4e79; }
-        /* 🔥 THE FIX: Question text is now BOLD 🔥 */
         .q-text { font-size: 18px; line-height: 1.5; color: #222; margin-bottom: 20px; font-weight: bold; }
         
         .opt-label { display: block; padding: 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; }
@@ -92,11 +91,18 @@
         }
 
         @media (max-width: 768px) {
-            .exam-container { flex-direction: column; height: auto; }
-            .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 80px; }
+            /* 🔥 THE FIX: Added padding-bottom to the whole container to prevent fixed buttons from overlapping the last row 🔥 */
+            .exam-container { flex-direction: column; height: auto; padding-bottom: 100px; }
+            
+            .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 20px; }
+            .right-panel { padding-bottom: 20px; }
+            
             .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
             .action-btn { padding: 8px 12px; font-size: 14px; }
-            .question-palette { max-height: 250px; } 
+            
+            /* Give it maximum allowed space so users can scroll easily */
+            .question-palette { max-height: 350px; margin-bottom: 20px; } 
+            .watermark { font-size: 80px; } 
         }
     </style>
 </head>
@@ -113,7 +119,6 @@
         <div class="s-exam" id="top-sexam">Exam Name</div>
     </div>
 
-    <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -129,7 +134,6 @@
         </div>
     </div>
 
-    <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">टेस्ट डेटाबेस से लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -141,7 +145,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
-    <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -204,7 +207,6 @@
         </div>
     </div>
 
-    <!-- 2. STUDENT LOGIN -->
     <div id="login-view" class="view-section">
         <div style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -236,7 +238,6 @@
         </div>
     </div>
 
-    <!-- 3. EXAM INTERFACE -->
     <div id="exam-view" class="view-section" style="padding: 0;">
         <div class="exam-container">
             <div class="left-panel">
@@ -263,7 +264,6 @@
         </div>
     </div>
 
-    <!-- 4. RESULT & REPORT CARD -->
     <div id="result-view" class="view-section">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -280,14 +280,12 @@
                 <button class="btn btn-outline" style="flex: 1;" onclick="startReattempt()">🔄 Reattempt Test</button>
             </div>
 
-            <!-- Analysis Buttons -->
             <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
             
-            <!-- Analysis Display Box -->
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 600px; margin: 15px auto; padding: 15px; text-align: left; max-height: 350px; overflow-y: auto; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);"></div>
             
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
