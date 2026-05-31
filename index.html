@@ -42,7 +42,6 @@
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; color: #1f4e79; }
         .q-text { font-size: 18px; line-height: 1.5; color: #222; margin-bottom: 20px; }
         
-        /* 🔥 ऑप्शन हाईलाइट करने की CSS 🔥 */
         .opt-label { display: block; padding: 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; }
         .opt-label:hover { background: #f8f9fa; }
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
@@ -67,7 +66,6 @@
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Print Settings */
         #print-area { display: none; }
         @media print {
             body * { visibility: hidden; }
@@ -107,7 +105,7 @@
 
     <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <h2 style="color:#dc3545;">❌ टेस्ट लोड नहीं हो पाया</h2>
-        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें या पेज को रीफ्रेश करें।</p>
+        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें और पेज रीफ्रेश करें।</p>
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
@@ -144,7 +142,7 @@
             <button id="btn-generate" class="btn btn-blue" onclick="generateAndSaveLink()">🚀 Generate & Save Test</button>
             
             <div id="linkContainer" style="display: none; margin-top: 20px; background: #e9ecef; padding: 15px; border-radius: 5px;">
-                <label style="color: #d35400;"><b>👇 यह लिंक कॉपी करके छात्रों को भेजें (अब यह बहुत छोटी होगी):</b></label>
+                <label style="color: #d35400;"><b>👇 यह लिंक कॉपी करके छात्रों को भेजें:</b></label>
                 <input type="text" id="generatedLink" readonly onclick="this.select(); document.execCommand('copy'); alert('Copied!');" style="font-weight: bold; cursor: copy; padding:15px; width:100%;">
             </div>
         </div>
@@ -265,9 +263,10 @@
 
 <div id="print-area"></div>
 
+<!-- 🔥 JSONP BYPASS SYSTEM: ये कोड हर हाल में डेटा खींच कर लाएगा 🔥 -->
 <script>
-    // तुम्हारी Google Sheet Backend Link
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwI_uTueJXU7nfl-7effNu7iJ3EHiUJ6G8pOrXc47obdZOh9l31pyh3cAM-ZNGH8lQbTQ/exec";
+    // ✅ तुम्हारी नई और अपडेटेड Apps Script लिंक
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXYBH31QHJ6553RX35nQsi_YOwn1JersGH7GvFhGAiEn1fCv-pYdb61UPxpi9MS0VzLw/exec";
     
     let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", questions: [] };
     let userAnswers = []; let qStatus = []; let currentQ = 0;
@@ -292,21 +291,16 @@
         const oldHash = window.location.hash.substring(1); 
 
         if(testCode) {
-            // 🔥 FIXED: USING 'GET' METHOD. THIS WILL NEVER FAIL IN ANY APP. 🔥
             document.getElementById('loading-view').classList.add('active-view');
             
-            fetch(SCRIPT_URL + "?action=getTest&testCode=" + testCode)
-            .then(res => res.json())
-            .then(data => {
-                if(data.error) { 
-                    showErrorView("❌ टेस्ट नहीं मिला! कृपया एडमिन से सही लिंक मांगें।");
-                    return; 
-                }
-                examData = data;
-                setupLoginScreen();
-            }).catch(err => {
-                showErrorView("❌ नेटवर्क एरर! कृपया अपना इंटरनेट कनेक्शन चेक करें और पेज रीफ्रेश करें।");
-            });
+            // 🛡️ JSONP METHOD: यह ब्राउज़र की सिक्योरिटी को बाईपास करके डेटा लाएगा
+            let script = document.createElement('script');
+            script.src = SCRIPT_URL + "?action=getTest&testCode=" + testCode + "&callback=handleTestLoad";
+            
+            script.onerror = function() {
+                showErrorView("❌ नेटवर्क एरर! कृपया सुनिश्चित करें कि Apps Script में Who has access: 'Anyone' सेट है।");
+            };
+            document.body.appendChild(script);
 
         } else if(oldHash) {
             try {
@@ -317,11 +311,20 @@
                 showErrorView("❌ यह पुरानी लिंक टूट चुकी है। कृपया एडमिन से नई लिंक लें।");
             }
         } else {
-            // अगर लिंक में कोई कोड नहीं है, तो एडमिन पैनल दिखाओ
             document.getElementById('admin-view').classList.add('active-view');
             switchAdminTab('create');
         }
     }
+
+    // JSONP CALLBACK FUNCTION
+    window.handleTestLoad = function(data) {
+        if(data.error) { 
+            showErrorView("❌ टेस्ट नहीं मिला! कृपया एडमिन से सही लिंक मांगें।");
+            return; 
+        }
+        examData = data;
+        setupLoginScreen();
+    };
 
     function setupLoginScreen() {
         document.getElementById('loading-view').classList.remove('active-view');
@@ -514,7 +517,6 @@
         updateCounts();
     }
 
-    // 🔥 FIXED: डार्क हाईलाइट वाला सिस्टम 🔥
     function renderQuestion(idx) {
         currentQ = idx; let q = examData.questions[idx];
         if(qStatus[idx] === 0) { qStatus[idx] = 1; document.getElementById(`pal-${idx}`).className = `palette-btn status-not-answered`; updateCounts(); }
@@ -612,7 +614,7 @@
         let rankText = (rank === "...") ? "Loading..." : (rank === "N/A" ? "Only Score" : "#" + rank + " / " + totalStudents);
         ctx.font = (rank === "..." || rank === "N/A") ? 'bold 30px Arial' : 'bold 45px Arial'; ctx.fillText(rankText, 570, 360);
         
-        ctx.fillStyle = '#1f4e79'; ctx.font = 'bold 20px Arial'; ctx.fillText("Performance Report Card", 400, 480);
+        ctx.fillStyle = '#1f4e79'; ctx.font = 'bold 20px Arial'; ctx.fillText("Prepared by: Ankush Kumar S/O Manoj Kumar", 400, 480);
         ctx.fillStyle = '#777'; ctx.font = '16px Arial'; ctx.fillText("Generated on: " + new Date().toLocaleString(), 400, 520);
         ctx.fillStyle = '#ccc'; ctx.font = 'bold 50px Arial'; ctx.globalAlpha = 0.2; ctx.fillText("ANKUSH KUMAR", 400, 350); ctx.globalAlpha = 1.0;
     }
