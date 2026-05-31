@@ -68,7 +68,7 @@
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Print Settings (Hidden on screen) */
+        /* Print Settings */
         #print-area { display: none; }
         @media print {
             body * { visibility: hidden; }
@@ -107,7 +107,6 @@
             <button class="tab-btn" id="tab-manage" onclick="switchAdminTab('manage')">📂 मेरे सेव किये गए टेस्ट</button>
         </div>
 
-        <!-- Create Test Section -->
         <div id="admin-create-section">
             <div class="flex-row">
                 <div class="form-group"><label>Exam Name:</label><input type="text" id="a-exam" placeholder="UP Police Constable"></div>
@@ -139,11 +138,9 @@
             </div>
         </div>
 
-        <!-- Manage Tests Section (Dashboard) -->
         <div id="admin-manage-section" style="display: none;">
-            
             <div style="background: #e6f9ec; border: 1px solid #28a745; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-                <h4 style="margin: 0 0 10px 0; color: #155724;">🔑 Auto Password Generator (For Any Test)</h4>
+                <h4 style="margin: 0 0 10px 0; color: #155724;">🔑 Auto Password Generator</h4>
                 <div style="display: flex; gap: 10px;">
                     <input type="text" id="gen-key" placeholder="Test Secret Key (e.g. ANK)" style="flex: 1; padding: 10px;">
                     <input type="number" id="gen-phone" placeholder="Student Mobile Number" style="flex: 2; padding: 10px;">
@@ -151,11 +148,8 @@
                 </div>
                 <p style="margin: 10px 0 0 0; font-weight: bold; color: #dc3545;" id="show-gen-pass">पासवर्ड यहाँ दिखेगा...</p>
             </div>
-
             <h3 style="color: #1f4e79;">📁 Active Tests List</h3>
-            <div id="dashboard-list">
-                <!-- Test Cards will appear here -->
-            </div>
+            <div id="dashboard-list"></div>
         </div>
     </div>
 
@@ -253,7 +247,6 @@
     </div>
 </div>
 
-<!-- 5. HIDDEN PRINT AREA -->
 <div id="print-area"></div>
 
 <script>
@@ -263,9 +256,9 @@
     let userAnswers = []; let qStatus = []; let currentQ = 0;
     let studentInfo = { name: "", phone: "", score: 0, time: 0, attempt: 1 };
     let timerInterval;
-    let isReattemptMode = false; // To track if test is a reattempt
+    let isReattemptMode = false; 
 
-    // 🚀 MASTER INIT FUNCTION (Fixes multiple reloads)
+    // 🚀 MASTER INIT FUNCTION (FIXED FOR 3RD PARTY APPS)
     window.onload = initApp;
     window.addEventListener('hashchange', initApp);
 
@@ -275,22 +268,16 @@
         
         const hash = window.location.hash.substring(1);
         if(hash) {
-            // URL has hash -> Load Login Screen safely
-            document.getElementById('login-view').classList.add('active-view');
-            
-            // Reset all values just in case
             studentInfo.score = 0; studentInfo.time = 0; isReattemptMode = false;
             document.getElementById('s-name').value = ""; document.getElementById('s-phone').value = "";
-            
             decodeAndLoadData(hash);
         } else {
-            // No hash -> Load Admin Panel safely
             document.getElementById('admin-view').classList.add('active-view');
             switchAdminTab('create');
         }
     }
 
-    // --- ADMIN PANEL LOGIC (Dashboard + localStorage) ---
+    // --- ADMIN PANEL LOGIC ---
     function switchAdminTab(tab) {
         if(tab === 'create') {
             document.getElementById('tab-create').classList.add('active');
@@ -359,7 +346,6 @@
         let encodedStr = btoa(encodeURIComponent(JSON.stringify(finalObj)));
         let testLink = window.location.href.split('#')[0] + "#" + encodedStr;
         
-        // Save to LocalStorage
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         savedTests.push({ code: eCode, exam: eName, sub: eSub, price: ePrice, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString() });
         localStorage.setItem('myMockTests', JSON.stringify(savedTests));
@@ -372,11 +358,8 @@
     function renderDashboard() {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         let listDiv = document.getElementById('dashboard-list');
-        if(savedTests.length === 0) {
-            listDiv.innerHTML = "<p>अभी तक कोई टेस्ट सेव नहीं है।</p>"; return;
-        }
+        if(savedTests.length === 0) { listDiv.innerHTML = "<p>अभी तक कोई टेस्ट सेव नहीं है।</p>"; return; }
         
-        // Group by Exam Name
         let grouped = {};
         savedTests.forEach(t => {
             if(!grouped[t.exam]) grouped[t.exam] = [];
@@ -391,9 +374,9 @@
                 <div class="test-card">
                     <h4>${t.sub} (${t.code})</h4>
                     <div style="margin-bottom: 10px;">
-                        <span class="badge">Questions: ${t.qs}</span>
-                        <span class="badge">Price: ₹${t.price}</span>
-                        <span class="badge">Secret Key: ${t.key}</span>
+                        <span class="badge">Qs: ${t.qs}</span>
+                        <span class="badge">₹${t.price}</span>
+                        <span class="badge">Key: ${t.key}</span>
                         <span class="badge">Date: ${t.date}</span>
                     </div>
                     <input type="text" value="${t.link}" readonly style="width:100%; padding:5px; border:1px solid #ccc; font-size:12px; margin-bottom:5px;">
@@ -407,7 +390,13 @@
     // --- STUDENT LOGIC ---
     function decodeAndLoadData(hash) {
         try {
-            examData = JSON.parse(decodeURIComponent(atob(hash)));
+            // 💡 THE BUG FIX: decodeURIComponent added to fix "%3D" issues from 3rd party apps
+            let safeHash = decodeURIComponent(hash);
+            examData = JSON.parse(decodeURIComponent(atob(safeHash)));
+            
+            // Link is safe, show login view
+            document.getElementById('login-view').classList.add('active-view');
+            
             document.getElementById('head-exam-name').innerText = examData.exam;
             document.getElementById('login-test-name').innerText = examData.exam + " (" + examData.subject + ")";
             document.getElementById('disp-code').innerText = examData.code;
@@ -424,7 +413,10 @@
                 document.getElementById('res-price').innerText = examData.price;
             }
             for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
-        } catch(e) { alert("Invalid Quiz Link!"); }
+        } catch(e) { 
+            alert("❌ यह टेस्ट लिंक टूट गई है या करप्ट हो गई है। कृपया एडमिन से सही लिंक मांगें।"); 
+            document.getElementById('admin-view').classList.add('active-view');
+        }
     }
 
     function startExam(isReattempt) {
@@ -454,9 +446,7 @@
     }
 
     function startReattempt() {
-        if(confirm("क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं? (इसकी रैंक अलग से बनेगी)")) {
-            startExam(true);
-        }
+        if(confirm("क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं? (इसकी रैंक अलग से बनेगी)")) { startExam(true); }
     }
 
     function initPalette() {
@@ -508,7 +498,6 @@
         document.getElementById('btn-img-down').style.display = 'none';
         document.getElementById('rank-loader').style.display = 'block';
 
-        // MAGIC: Reattempt test code uses "-RE" suffix. Backend will automatically rank it separately!
         let submissionCode = isReattemptMode ? (examData.code + "-RE") : examData.code;
 
         fetch(SCRIPT_URL, {
@@ -519,7 +508,6 @@
             document.getElementById('rank-loader').style.display = 'none';
             document.getElementById('btn-img-down').style.display = 'block';
             
-            // If reattempt and only 1 student has reattempted, hide rank.
             let finalRank = data.rank;
             if(isReattemptMode && data.totalStudents <= 1) finalRank = "N/A"; 
             
@@ -561,7 +549,6 @@
         const link = document.createElement('a'); link.download = studentInfo.name + '_Report.png'; link.href = document.getElementById('reportCard').toDataURL('image/png'); link.click();
     }
 
-    // --- SECURE PDF PRINT LOGIC (MOBILE NATIVE) ---
     function directDownloadPDF() {
         let phone = document.getElementById('pdf-phone').value;
         let pass = document.getElementById('pdf-pass').value;
