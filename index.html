@@ -8,10 +8,15 @@
         body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; user-select: none; }
         .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; }
         
-        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #f39c12; }
+        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
         .timer { font-size: 18px; font-weight: bold; background: #e74c3c; padding: 5px 15px; border-radius: 4px; }
         
+        /* 🔥 THE FIX: New Compact Top Bar for Student Name & Exam 🔥 */
+        .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; }
+        .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; }
+        .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
+
         .view-section { padding: 20px; flex: 1; display: none; }
         .active-view { display: block; }
 
@@ -35,7 +40,7 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
-        .exam-container { display: flex; flex-direction: row; height: calc(100vh - 70px); }
+        .exam-container { display: flex; flex-direction: row; height: calc(100vh - 100px); }
         .left-panel { flex: 3; padding: 20px; border-right: 1px solid #ccc; display: flex; flex-direction: column; position: relative; }
         .right-panel { flex: 1; background: #fdfdfd; display: flex; flex-direction: column; }
         
@@ -51,13 +56,13 @@
         .action-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
         .btn-prev { background: #6c757d; } .btn-next { background: #28a745; } .btn-clear { background: #ffc107; color: #333; } .btn-submit { background: #dc3545; }
         
-        .candidate-info { padding: 15px; border-bottom: 1px solid #ccc; text-align: center; }
-        .palette-legend { display: flex; flex-wrap: wrap; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; justify-content: center; }
+        .palette-legend { display: flex; flex-wrap: wrap; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; justify-content: center; background: #fff; }
         .legend-item { display: flex; align-items: center; margin: 5px; width: 45%; }
         .box { width: 25px; height: 25px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: white; line-height: 25px; font-weight: bold; border: 1px solid #aaa; }
         
         .status-not-visited { background: #fff; color: #333; } .status-not-answered { background: #dc3545; color: white; border-color: #dc3545; } .status-answered { background: #28a745; color: white; border-color: #28a745; } 
-        .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; overflow-y: auto; max-height: 220px; align-content: flex-start; }
+        
+        .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; overflow-y: auto; max-height: 280px; align-content: flex-start; }
         .palette-btn { width: 40px; height: 40px; border-radius: 4px; border: 1px solid #999; font-weight: bold; cursor: pointer; }
         
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
@@ -77,13 +82,13 @@
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
-            .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #111; }
+            /* 🔥 THE FIX: Black absolute color explicitly declared for normal text to remove 'feeka' look 🔥 */
+            .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #000000 !important; }
             .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
-            .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; }
+            .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; color: #000000 !important; }
             
-            /* 🔥 THE FIX: Normal text for print-ans, red background only on option grid item 🔥 */
-            .print-ans { font-weight: bold; font-size: 13px; color: #111; }
-            .print-exp { color: #333; font-size: 12px; margin-top: 3px; line-height: 1.2; }
+            .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
+            .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
         }
 
@@ -92,7 +97,8 @@
             .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 80px; }
             .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
             .action-btn { padding: 8px 12px; font-size: 14px; }
-            .question-palette { max-height: 150px; } 
+            /* Extra height allowed for palette since we moved the name up */
+            .question-palette { max-height: 250px; } 
         }
     </style>
 </head>
@@ -102,6 +108,12 @@
     <div class="tcs-header">
         <h2 id="head-exam-name">Exam Portal</h2>
         <div id="timer-box" class="timer" style="display:none;">Time: 00:00</div>
+    </div>
+    
+    <!-- 🔥 THE FIX: New Top Bar for Space Saving 🔥 -->
+    <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
+        <div class="s-name" id="top-sname">Student Name</div>
+        <div class="s-exam" id="top-sexam">Exam Name</div>
     </div>
 
     <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
@@ -244,10 +256,7 @@
             </div>
             
             <div class="right-panel">
-                <div class="candidate-info">
-                    <h3 id="panel-sname">Student</h3>
-                    <p style="margin: 5px 0 0; font-size: 13px; color: #666;" id="panel-exam">Exam</p>
-                </div>
+                <!-- 🔥 Removed old candidate info completely to save space 🔥 -->
                 <div class="palette-legend">
                     <div class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Answered</div>
                     <div class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Answered</div>
@@ -275,7 +284,7 @@
                 <button class="btn btn-outline" style="flex: 1;" onclick="startReattempt()">🔄 Reattempt Test</button>
             </div>
 
-            <!-- 🔥 THE FIX: Analysis Buttons 🔥 -->
+            <!-- Analysis Buttons -->
             <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
@@ -294,7 +303,7 @@
                     PDF मूल्य: <b>₹<span id="res-price">0</span></b> | पासवर्ड के लिए <b>8273684939</b> पर Payment करके स्क्रीनशॉट WhatsApp करें।
                 </div>
                 <div id="res-free-instructions" style="font-size: 13px; color: #28a745; display: none; font-weight:bold;">
-                    🎉 यह PDF सभी के लिए बिल्कुल Free है! नीचे दिए गए बटन से सीधे डाउनलोड करें।
+                    🎉 यह PDF सभी के लिए Free है!
                 </div>
 
                 <div id="res-pass-box" style="display: flex; gap: 10px; margin-top: 15px;">
@@ -307,7 +316,6 @@
                 </div>
             </div>
 
-            <!-- 🔥 THE FIX: Close and Redirect Button 🔥 -->
             <div style="text-align: center; margin: 25px 0;">
                 <button class="btn" style="background: #17a2b8; max-width: 300px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.2);" onclick="closeAndRedirect()">🏠 Close & Go to Home</button>
             </div>
@@ -330,7 +338,6 @@
 
     window.onload = initApp;
 
-    // 🔥 THE FIX: Close and Redirect Logic 🔥
     function closeAndRedirect() {
         window.location.href = "https://studynotesmanager.netlify.app/";
     }
@@ -369,6 +376,7 @@
     function initApp() {
         clearInterval(timerInterval);
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+        document.getElementById('student-top-bar').style.display = 'none';
         
         const urlParams = new URLSearchParams(window.location.search);
         const testCode = urlParams.get('test');
@@ -652,8 +660,11 @@
         studentInfo.time = 0; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0;
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
         
-        document.getElementById('panel-sname').innerText = studentInfo.name;
-        document.getElementById('panel-exam').innerText = examData.exam + (isReattemptMode ? " (Reattempt)" : "");
+        // 🔥 THE FIX: Setup new top bar and show it 🔥
+        document.getElementById('top-sname').innerText = "👤 " + studentInfo.name;
+        document.getElementById('top-sexam').innerText = examData.exam + (isReattemptMode ? " (Reattempt)" : "");
+        document.getElementById('student-top-bar').style.display = 'flex';
+
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('exam-view').classList.add('active-view');
         
@@ -729,6 +740,7 @@
     }
 
     function calculateScoreAndSubmit() {
+        document.getElementById('student-top-bar').style.display = 'none'; // Hide top bar on result
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('result-view').classList.add('active-view');
         document.getElementById('timer-box').style.display = 'none';
@@ -771,11 +783,8 @@
 
         let submissionCode = isReattemptMode ? (examData.code + "-RE") : examData.code;
 
-        // 🔥 THE FIX: Hijack Back Button to go to App 🔥
         history.pushState(null, null, location.href);
-        window.onpopstate = function () {
-            closeAndRedirect();
-        };
+        window.onpopstate = function () { closeAndRedirect(); };
 
         fetch(SCRIPT_URL, {
             method: 'POST', body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode}),
@@ -793,7 +802,6 @@
         });
     }
 
-    // 🔥 THE FIX: Show Full Option Text in Analysis 🔥
     function showAnalysis(type) {
         let box = document.getElementById('analysis-box');
         let html = "";
@@ -808,7 +816,6 @@
                 let statusIcon = isRight ? "✅" : (isWrong ? "❌" : "⬜");
                 let ansColor = isRight ? "green" : (isWrong ? "red" : "gray");
 
-                // Get full text
                 let correctOpt = q.opts.find(o => o.id === q.ans);
                 let correctStr = correctOpt ? `${correctOpt.id}. ${correctOpt.text}` : q.ans;
                 
@@ -918,13 +925,12 @@
             
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
-                // 🔥 THE FIX: Solid Red Box directly on the correct option only 🔥
-                let isRight = (o.id === q.ans) ? "background-color: #dc3545 !important; color: white !important; font-weight: bold; border-radius: 4px;" : "";
+                // 🔥 THE FIX: Dark Green Box over full correct option text 🔥
+                let isRight = (o.id === q.ans) ? "background-color: #0f5132 !important; color: #ffffff !important; font-weight: bold; border-radius: 4px; -webkit-print-color-adjust: exact; print-color-adjust: exact;" : "";
                 html += `<div class="opt-item" style="${isRight}">${o.id}. ${o.text}</div>`;
             });
             html += `</div>`;
             
-            // 🔥 THE FIX: Normal bold text for "Correct Option: X" at the bottom 🔥
             if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar")) {
                 let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
                 html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
