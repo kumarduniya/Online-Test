@@ -21,7 +21,7 @@
         .form-group textarea { height: 180px; font-family: monospace; background: #fdfdfd; }
         
         .flex-row { display: flex; gap: 10px; flex-wrap: wrap; }
-        .flex-row .form-group { flex: 1; min-width: 200px; }
+        .flex-row .form-group { flex: 1; min-width: 180px; }
 
         .btn { background: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 10px; transition: 0.3s; }
         .btn-blue { background: #1f4e79; } .btn-pdf { background: #dc3545; } .btn-outline { background: transparent; border: 2px solid #1f4e79; color: #1f4e79; }
@@ -33,7 +33,7 @@
 
         .test-card { background: #fff; border: 1px solid #ddd; border-left: 5px solid #1f4e79; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
-        .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333;}
+        .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
         .exam-container { display: flex; flex-direction: row; height: calc(100vh - 70px); }
         .left-panel { flex: 3; padding: 20px; border-right: 1px solid #ccc; display: flex; flex-direction: column; position: relative; }
@@ -60,25 +60,32 @@
         .question-palette { padding: 15px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; }
         .palette-btn { width: 40px; height: 40px; border-radius: 4px; border: 1px solid #999; font-weight: bold; cursor: pointer; }
         
-        #result-view { text-align: center; padding: 30px; }
-        canvas { max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
         
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        .confetti { position: absolute; font-size: 24px; z-index: 9999; pointer-events: none; animation: fall 3s linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
         #print-area { display: none; }
         @media print {
+            @page { margin: 15mm; } 
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
-            #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 15px; font-family: Arial, sans-serif; }
+            #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
             .container { display: none !important; }
-            .watermark { position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 90px; font-weight: bold; color: rgba(0, 0, 0, 0.05); z-index: -1; white-space: nowrap; pointer-events: none; }
-            .print-q { margin-bottom: 12px; page-break-inside: avoid; border-bottom: 1px dashed #ccc; padding-bottom: 8px; font-size: 13px; }
-            .opt-grid { display: flex; flex-wrap: wrap; margin-top: 5px; }
-            .opt-item { width: 48%; margin-bottom: 4px; }
-            .print-ans { color: #155724; font-weight: bold; background: #e6f9ec; display: inline-block; padding: 3px 6px; border-radius: 3px; font-size: 12px; margin-top: 4px;}
-            .print-exp { color: #444; font-size: 12px; margin-top: 4px; }
-            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px; padding-bottom: 10px;}
+            
+            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
+            
+            /* 🔥 PDF Font Sizes Increased for Better Readability 🔥 */
+            .print-q { margin-bottom: 15px; page-break-inside: avoid; border-bottom: 1px dashed #ccc; padding-bottom: 12px; font-size: 16px; line-height: 1.5; color: #222; }
+            .opt-grid { display: flex; flex-wrap: wrap; margin-top: 8px; }
+            .opt-item { width: 48%; margin-bottom: 6px; font-size: 16px; padding: 4px 6px; box-sizing: border-box; }
+            
+            .print-ans { font-weight: bold; background: #e6f9ec; display: inline-block; padding: 5px 8px; border-radius: 4px; font-size: 15px; margin-top: 8px; border: 1px solid #c3e6cb;}
+            .print-exp { color: #333; font-size: 15px; margin-top: 8px; line-height: 1.5; }
+            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 20px; padding-bottom: 10px;}
         }
 
         @media (max-width: 768px) {
@@ -86,6 +93,7 @@
             .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 80px; }
             .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
             .action-btn { padding: 8px 12px; font-size: 14px; }
+            .watermark { font-size: 80px; } 
         }
     </style>
 </head>
@@ -97,22 +105,38 @@
         <div id="timer-box" class="timer" style="display:none;">Time: 00:00</div>
     </div>
 
+    <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
+    <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
+        <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
+            <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
+            <div class="form-group" style="text-align: left;">
+                <label>Admin ID:</label>
+                <input type="text" id="admin-id" placeholder="Enter ID">
+            </div>
+            <div class="form-group" style="text-align: left;">
+                <label>Password:</label>
+                <input type="password" id="admin-pass" placeholder="Enter Password">
+            </div>
+            <button class="btn btn-blue" onclick="loginAdmin()">Login to Dashboard</button>
+        </div>
+    </div>
+
     <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
-        <h3 style="color:#1f4e79; margin-top: 20px;">टेस्ट डेटाबेस से लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
+        <h3 style="color:#1f4e79; margin-top: 20px;">टेस्ट लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
     </div>
 
     <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <h2 style="color:#dc3545;">❌ टेस्ट लोड नहीं हो पाया</h2>
-        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें और पेज रीफ्रेश करें।</p>
+        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें और ब्राउज़र की History/Cache डिलीट करके दोबारा प्रयास करें।</p>
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
     <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
-            <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं</button>
+            <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
             <button class="tab-btn" id="tab-manage" onclick="switchAdminTab('manage')">📂 मेरे सेव किये गए टेस्ट</button>
         </div>
 
@@ -122,8 +146,14 @@
                 <div class="form-group"><label>Subject:</label><input type="text" id="a-sub" placeholder="सामान्य हिंदी"></div>
                 <div class="form-group"><label>Sub-topic:</label><input type="text" id="a-topic" placeholder="साहित्य"></div>
             </div>
+            
             <div class="flex-row">
                 <div class="form-group"><label>Test Code (Unique):</label><input type="text" id="a-code" placeholder="UP-01"></div>
+                <div class="form-group"><label>Marks Per Q:</label><input type="number" step="0.5" id="a-marks" value="2"></div>
+                <div class="form-group"><label>Negative Marking:</label><input type="number" step="0.25" id="a-neg" value="0.5" placeholder="e.g. 0.5"></div>
+            </div>
+
+            <div class="flex-row">
                 <div class="form-group">
                     <label>PDF Status:</label>
                     <select id="a-pdf-type" onchange="togglePriceBox()">
@@ -155,7 +185,12 @@
                     <input type="number" id="gen-phone" placeholder="Student Mobile" style="flex: 2; padding: 10px;">
                     <button class="btn btn-blue" style="margin: 0; flex: 1;" onclick="generatePass()">Generate</button>
                 </div>
-                <p style="margin: 10px 0 0 0; font-weight: bold; color: #dc3545;" id="show-gen-pass">पासवर्ड यहाँ दिखेगा...</p>
+                
+                <!-- 🔥 Copy Button Added 🔥 -->
+                <div style="margin: 10px 0 0 0; font-weight: bold; color: #dc3545; display: flex; align-items: center; gap: 10px;">
+                    <span id="show-gen-pass">पासवर्ड यहाँ दिखेगा...</span>
+                    <button id="copy-pass-btn" class="btn btn-outline" style="display: none; padding: 2px 8px; margin: 0; font-size: 12px; width: auto;" onclick="copyGeneratedPass()">📋 Copy</button>
+                </div>
             </div>
             <h3 style="color: #1f4e79;">📁 Active Tests List</h3>
             <div id="dashboard-list"></div>
@@ -167,9 +202,15 @@
         <div style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
             <p style="text-align:center; color:#e74c3c; font-weight:bold; margin-top:0;">Test Code: <span id="disp-code">...</span></p>
+            <p style="text-align:center; color:#555; font-size:13px; margin-top:-5px;">(+<span id="disp-marks"></span> Marks / -<span id="disp-neg"></span> Negative)</p>
             
             <div style="background: #f4f6f8; padding: 15px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 20px;">
                 <h4 style="margin: 0 0 10px 0; color: #333;">📝 नया टेस्ट शुरू करें</h4>
+                
+                <p style="text-align: center; color: #28a745; font-size: 13px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 10px;">
+                    ✅ टेस्ट देने के लिए कोई रजिस्ट्रेशन की जरूरत नहीं है, बस अपना नाम और मोबाइल नंबर डालें और टेस्ट शुरू करें!
+                </p>
+
                 <input type="text" id="s-name" placeholder="अपना नाम भरें" required style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
                 <input type="tel" id="s-phone" placeholder="अपना मोबाइल नंबर भरें (I.D.)" required style="width:100%; padding:10px; box-sizing:border-box;">
                 <button class="btn" onclick="startExam(false)">Start Test 🚀</button>
@@ -179,6 +220,9 @@
                 <h4 style="margin: 0 0 10px 0; color: #856404;">📥 बिना टेस्ट दिए डायरेक्ट PDF डाउनलोड</h4>
                 <div id="paid-instructions" style="font-size: 13px; color: #856404; margin-bottom: 10px;">
                     PDF मूल्य: <b>₹<span id="disp-price">0</span></b><br>पासवर्ड पाने के लिए <b>8273684939</b> पर पेमेंट करें और स्क्रीनशॉट WhatsApp करें।
+                </div>
+                <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
+                    🎉 यह PDF सभी के लिए Free है!
                 </div>
                 <input type="tel" id="pdf-phone" placeholder="अपना मोबाइल नंबर डालें..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
                 <input type="text" id="pdf-pass" placeholder="पासवर्ड डालें..." style="width:100%; padding:10px; box-sizing:border-box;">
@@ -220,17 +264,18 @@
 
     <!-- 4. RESULT & REPORT CARD -->
     <div id="result-view" class="view-section">
-        <h2 style="color: #28a745; margin-bottom: 5px;">Test Submitted Successfully!</h2>
+        <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
         <div id="rank-loader" style="margin-bottom: 15px; color: #1f4e79; font-weight: bold;">
             <div class="loader" style="width:20px; height:20px; border-width:3px;"></div> <span>रैंक कैलकुलेट हो रही है, कृपया रुकें...</span>
         </div>
 
         <div id="report-section">
-            <canvas id="reportCard" width="800" height="600"></canvas>
+            <canvas id="reportCard" width="800" height="650" style="display:none;"></canvas>
+            <img id="reportCardImg" style="max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display:none;" />
             
             <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto;">
-                <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1;" onclick="downloadImage()">🖼️ Image</button>
+                <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1;" onclick="downloadImage()">🖼️ Download Score Card</button>
                 <button class="btn btn-outline" style="flex: 1;" onclick="startReattempt()">🔄 Reattempt Test</button>
             </div>
             
@@ -239,11 +284,9 @@
                 <p style="margin: 0 0 10px 0; font-size: 14px; color: #dc3545; font-weight:bold;">
                     📌 निर्देश: भविष्य में इस टेस्ट की PDF के लिए इसी लिंक को दोबारा ओपन करें और Test Code: <span id="res-code"></span> याद रखें।
                 </p>
-                
                 <div id="res-paid-instructions" style="font-size: 13px; color: #333;">
                     PDF मूल्य: <b>₹<span id="res-price">0</span></b> | पासवर्ड के लिए <b>8273684939</b> पर Payment करके स्क्रीनशॉट WhatsApp करें।
                 </div>
-                
                 <div id="res-free-instructions" style="font-size: 13px; color: #28a745; display: none; font-weight:bold;">
                     🎉 यह PDF सभी के लिए बिल्कुल Free है! नीचे दिए गए बटन से सीधे डाउनलोड करें।
                 </div>
@@ -254,7 +297,7 @@
                 </div>
                 
                 <div id="res-free-btn-box" style="display: none; margin-top: 15px;">
-                    <button class="btn btn-pdf" style="width: 100%;" onclick="executePDFPrint()">📄 Free PDF डाउनलोड करें</button>
+                    <button class="btn btn-pdf" style="width: 100%;" onclick="executePDFPrint(studentInfo.name)">📄 Free PDF डाउनलोड करें</button>
                 </div>
             </div>
         </div>
@@ -263,18 +306,44 @@
 
 <div id="print-area"></div>
 
-<!-- 🔥 JSONP BYPASS SYSTEM: ये कोड हर हाल में डेटा खींच कर लाएगा 🔥 -->
 <script>
-    // ✅ तुम्हारी नई और अपडेटेड Apps Script लिंक
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXYBH31QHJ6553RX35nQsi_YOwn1JersGH7GvFhGAiEn1fCv-pYdb61UPxpi9MS0VzLw/exec";
-    
-    let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", questions: [] };
+    // 🚨 तुम्हारी दी गई नई Google Script URL 🚨
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5yMdRoQy6leC0l79nN3X9WYTq26vAOtjD2GtnkYhUg_Px4tJ_KDqIQfZpB_AudzTBGA/exec";
+    const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
+
+    let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, questions: [] };
     let userAnswers = []; let qStatus = []; let currentQ = 0;
-    let studentInfo = { name: "", phone: "", score: 0, time: 0, attempt: 1 };
+    let studentInfo = { name: "", phone: "", score: 0, right: 0, wrong: 0, time: 0, attempt: 1 };
     let timerInterval;
     let isReattemptMode = false; 
+    let currentGeneratedPass = ""; 
 
     window.onload = initApp;
+
+    function blastConfetti() {
+        let duration = 4000; let end = Date.now() + duration;
+        let emojis = ['🎉', '✨', '🏆', '🔥', '👏'];
+        let interval = setInterval(function() {
+            if (Date.now() > end) return clearInterval(interval);
+            let el = document.createElement('div');
+            el.className = 'confetti';
+            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.top = '-50px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }, 150);
+    }
+
+    function loginAdmin() {
+        let id = document.getElementById('admin-id').value;
+        let pass = document.getElementById('admin-pass').value;
+        if(btoa(id) === "ODI3MzY4NDkzOQ==" && btoa(pass) === "QW5rdXNoQDEyMzFAMTIz") {
+            document.getElementById('admin-auth-view').classList.remove('active-view');
+            document.getElementById('admin-view').classList.add('active-view');
+            switchAdminTab('create');
+        } else { alert("❌ गलत Admin ID या Password!"); }
+    }
 
     function showErrorView(msg) {
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
@@ -288,40 +357,31 @@
         
         const urlParams = new URLSearchParams(window.location.search);
         const testCode = urlParams.get('test');
-        const oldHash = window.location.hash.substring(1); 
 
         if(testCode) {
             document.getElementById('loading-view').classList.add('active-view');
             
-            // 🛡️ JSONP METHOD: यह ब्राउज़र की सिक्योरिटी को बाईपास करके डेटा लाएगा
+            let cacheBuster = new Date().getTime();
             let script = document.createElement('script');
-            script.src = SCRIPT_URL + "?action=getTest&testCode=" + testCode + "&callback=handleTestLoad";
+            script.src = SCRIPT_URL + "?action=getTest&testCode=" + testCode + "&callback=handleTestLoad&t=" + cacheBuster;
             
             script.onerror = function() {
-                showErrorView("❌ नेटवर्क एरर! कृपया सुनिश्चित करें कि Apps Script में Who has access: 'Anyone' सेट है।");
+                showErrorView("❌ नेटवर्क एरर! कृपया सुनिश्चित करें कि Apps Script में Who has access 'Anyone' है।");
             };
             document.body.appendChild(script);
 
-        } else if(oldHash) {
-            try {
-                let safeHash = decodeURIComponent(oldHash);
-                examData = JSON.parse(decodeURIComponent(atob(safeHash)));
-                setupLoginScreen();
-            } catch(e) {
-                showErrorView("❌ यह पुरानी लिंक टूट चुकी है। कृपया एडमिन से नई लिंक लें।");
-            }
         } else {
-            document.getElementById('admin-view').classList.add('active-view');
-            switchAdminTab('create');
+            document.getElementById('admin-auth-view').classList.add('active-view');
         }
     }
 
-    // JSONP CALLBACK FUNCTION
     window.handleTestLoad = function(data) {
         if(data.error) { 
-            showErrorView("❌ टेस्ट नहीं मिला! कृपया एडमिन से सही लिंक मांगें।");
+            showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")");
             return; 
         }
+        data.marks = data.marks || 2; 
+        data.neg = data.neg || 0;
         examData = data;
         setupLoginScreen();
     };
@@ -334,6 +394,9 @@
         document.getElementById('login-test-name').innerText = examData.exam + " (" + examData.subject + ")";
         document.getElementById('disp-code').innerText = examData.code;
         document.getElementById('res-code').innerText = examData.code;
+        
+        document.getElementById('disp-marks').innerText = examData.marks;
+        document.getElementById('disp-neg').innerText = examData.neg;
         
         if(examData.isFree) {
             document.getElementById('direct-pdf-box').style.display = 'none'; 
@@ -369,33 +432,53 @@
         document.getElementById('price-box').style.display = (type === 'free') ? 'none' : 'block';
     }
 
+    function generateStrongPass(phone, key) {
+        if(!key) key = "ANK";
+        let mixed = key + phone + "PRO";
+        let num = 0;
+        for(let i=0; i<mixed.length; i++) { num += mixed.charCodeAt(i) * (i+1); }
+        
+        let sym = ['@','#','$','&','*'];
+        let s1 = sym[num % sym.length];
+        let s2 = sym[(num * 2) % sym.length];
+        let l1 = String.fromCharCode(65 + (num % 26)); 
+        let l2 = String.fromCharCode(97 + ((num*3) % 26)); 
+        let p1 = phone.length >= 4 ? phone.substring(0,2) : "99";
+        let p2 = phone.length >= 4 ? phone.slice(-2) : "88";
+        let k1 = key.charAt(0).toUpperCase();
+        
+        return l1 + s1 + p1 + l2 + s2 + p2 + k1;
+    }
+
     function generatePass() {
         let phone = document.getElementById('gen-phone').value;
         let key = document.getElementById('gen-key').value.toUpperCase();
         if(!key) { alert("Secret Key डालें!"); return; }
-        if(phone.length < 4) { document.getElementById('show-gen-pass').innerText = "पूरा नंबर डालें!"; return; }
-        let pass = key + phone.slice(-4);
+        if(phone.length < 10) { document.getElementById('show-gen-pass').innerText = "पूरा 10 अंकों का नंबर डालें!"; return; }
+        
+        let pass = generateStrongPass(phone, key);
+        currentGeneratedPass = pass; 
+        
         document.getElementById('show-gen-pass').innerText = "पासवर्ड: " + pass;
+        document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
+    }
+
+    function copyGeneratedPass() {
+        if(!currentGeneratedPass) return;
+        navigator.clipboard.writeText(currentGeneratedPass).then(function() {
+            alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass);
+        }).catch(function(err) {
+            alert("कॉपी नहीं हो पाया, मैन्युअली कॉपी करें: " + currentGeneratedPass);
+        });
     }
 
     function checkPass(enteredPhone, enteredPass) {
         if(examData.isFree) return true;
-        let validPass = examData.key.toUpperCase() + enteredPhone.slice(-4);
+        let validPass = generateStrongPass(enteredPhone, examData.key.toUpperCase());
         return enteredPass === validPass;
     }
 
-    function generateAndSaveLink() {
-        let eName = document.getElementById('a-exam').value || "Mock Test";
-        let eSub = document.getElementById('a-sub').value || "Subject";
-        let eTopic = document.getElementById('a-topic').value || "";
-        let eCode = document.getElementById('a-code').value || "T-" + Math.floor(Math.random() * 1000);
-        let isFree = document.getElementById('a-pdf-type').value === "free";
-        let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49");
-        let eKey = document.getElementById('a-key').value || "ANK";
-        let rawText = document.getElementById('a-rawdata').value;
-        
-        if(!rawText.trim()) { alert("Please paste questions!"); return; }
-
+    function parseRawQuestions(rawText) {
         let parsedQs = []; let lines = rawText.split('\n'); let tempQ = null;
         for(let i=0; i<lines.length; i++) {
             let line = lines[i].trim();
@@ -412,35 +495,54 @@
             }
         }
         if(tempQ && tempQ.q) parsedQs.push(tempQ);
+        return parsedQs;
+    }
 
-        let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs };
+    function generateAndSaveLink() {
+        let eName = document.getElementById('a-exam').value || "Mock Test";
+        let eSub = document.getElementById('a-sub').value || "Subject";
+        let eTopic = document.getElementById('a-topic').value || "";
+        let eCode = document.getElementById('a-code').value || "T-" + Math.floor(Math.random() * 1000);
+        let eMarks = parseFloat(document.getElementById('a-marks').value) || 2;
+        let eNeg = parseFloat(document.getElementById('a-neg').value) || 0;
+        let isFree = document.getElementById('a-pdf-type').value === "free";
+        let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49");
+        let eKey = document.getElementById('a-key').value || "ANK";
+        let rawText = document.getElementById('a-rawdata').value;
+        
+        if(!rawText.trim()) { alert("Please paste questions!"); return; }
+
+        let parsedQs = parseRawQuestions(rawText);
+        let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs };
         
         let btn = document.getElementById('btn-generate');
-        btn.innerText = "⏳ Saving Test to Database...";
-        btn.disabled = true;
+        btn.innerText = "⏳ Saving Test to Database..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, {
             method: 'POST',
-            body: new URLSearchParams({
-                'action': 'saveTest',
-                'testCode': eCode,
-                'testData': JSON.stringify(finalObj)
-            }),
+            body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(res => res.json()).then(data => {
             btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false;
             
-            let testLink = window.location.href.split('?')[0].split('#')[0] + "?test=" + eCode;
+            document.getElementById('a-exam').value = ""; document.getElementById('a-sub').value = ""; document.getElementById('a-topic').value = "";
+            document.getElementById('a-code').value = ""; document.getElementById('a-price').value = ""; document.getElementById('a-key').value = "";
+            document.getElementById('a-rawdata').value = "";
             
+            let testLink = BASE_URL + "?test=" + eCode;
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
-            savedTests.push({ code: eCode, exam: eName, sub: eSub, price: ePrice, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString() });
+            let existingIdx = savedTests.findIndex(t => t.code === eCode);
+            let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText };
+            
+            if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } 
+            else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
             document.getElementById('generatedLink').value = testLink;
             document.getElementById('linkContainer').style.display = 'block';
-            alert("टेस्ट सफलतापूर्वक Database में सेव हो गया! अब यह लिंक कभी नहीं टूटेगी।");
+            alert("टेस्ट सफलतापूर्वक Database में सेव हो गया! अब आप नया टेस्ट बना सकते हैं।");
         }).catch(err => {
-            alert("टेस्ट सेव करने में दिक्कत आई, कृपया इंटरनेट चेक करें।");
+            alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।");
             btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false;
         });
     }
@@ -450,31 +552,80 @@
         let listDiv = document.getElementById('dashboard-list');
         if(savedTests.length === 0) { listDiv.innerHTML = "<p>अभी तक कोई टेस्ट सेव नहीं है।</p>"; return; }
         
+        let savedTestsWithId = savedTests.map((t, index) => ({...t, originalIndex: index}));
         let grouped = {};
-        savedTests.forEach(t => {
-            if(!grouped[t.exam]) grouped[t.exam] = [];
-            grouped[t.exam].push(t);
-        });
+        savedTestsWithId.forEach(t => { if(!grouped[t.exam]) grouped[t.exam] = []; grouped[t.exam].push(t); });
 
         let html = "";
         for(let exam in grouped) {
             html += `<h3 style="background:#1f4e79; color:white; padding:10px; border-radius:4px; margin-top:20px;">${exam}</h3>`;
             grouped[exam].forEach(t => {
+                let priceText = t.isFree ? "Free" : "₹" + t.price;
                 html += `
                 <div class="test-card">
                     <h4>${t.sub} (${t.code})</h4>
                     <div style="margin-bottom: 10px;">
                         <span class="badge">Qs: ${t.qs}</span>
-                        <span class="badge">₹${t.price}</span>
+                        <span class="badge">${priceText}</span>
+                        <span class="badge">M/N: +${t.marks || 2} / -${t.neg || 0}</span>
                         <span class="badge">Key: ${t.key}</span>
                         <span class="badge">Date: ${t.date}</span>
                     </div>
                     <input type="text" value="${t.link}" readonly style="width:100%; padding:5px; border:1px solid #ccc; font-size:12px; margin-bottom:5px;">
-                    <button class="btn btn-outline" style="padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Short Link</button>
+                    <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn btn-blue" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="editTest(${t.originalIndex})">✏️ Edit</button>
+                        <button class="btn" style="background:#dc3545; margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="deleteTest(${t.originalIndex})">🗑️ Delete</button>
+                        <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="adminDownloadPDF(${t.originalIndex})">📥 Download PDF</button>
+                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
+                    </div>
                 </div>`;
             });
         }
         listDiv.innerHTML = html;
+    }
+
+    function editTest(idx) {
+        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+        let t = savedTests[idx];
+        if(!t) return;
+        
+        document.getElementById('a-exam').value = t.exam || "";
+        document.getElementById('a-sub').value = t.sub || "";
+        document.getElementById('a-topic').value = t.topic || "";
+        document.getElementById('a-code').value = t.code || "";
+        document.getElementById('a-marks').value = t.marks || 2;
+        document.getElementById('a-neg').value = t.neg || 0;
+        
+        if(t.isFree || t.price === "Free") { document.getElementById('a-pdf-type').value = "free"; } 
+        else { document.getElementById('a-pdf-type').value = "paid"; document.getElementById('a-price').value = t.price || ""; }
+        
+        document.getElementById('a-key').value = t.key || "";
+        document.getElementById('a-rawdata').value = t.rawText || "";
+        
+        togglePriceBox();
+        switchAdminTab('create');
+        alert("टेस्ट का डेटा फॉर्म में आ गया है! बदलाव करके 'Generate & Save Test' दबाएं।");
+    }
+
+    function deleteTest(idx) {
+        if(confirm("क्या आप सच में इस टेस्ट को हटाना चाहते हैं?")) {
+            let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+            savedTests.splice(idx, 1);
+            localStorage.setItem('myMockTests', JSON.stringify(savedTests));
+            renderDashboard();
+        }
+    }
+
+    function adminDownloadPDF(idx) {
+        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+        let t = savedTests[idx];
+        if(!t || !t.rawText) { alert("डेटा नहीं मिला!"); return; }
+        
+        let parsedQs = parseRawQuestions(t.rawText);
+        examData = { exam: t.exam, subject: t.sub, topic: t.topic, code: t.code, questions: parsedQs };
+        studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; 
+        userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; });
+        executePDFPrint(studentInfo.name);
     }
 
     // --- STUDENT TEST LOGIC ---
@@ -484,9 +635,8 @@
             studentInfo.phone = document.getElementById('s-phone').value;
             if(!studentInfo.name || studentInfo.phone.length < 10) { alert("कृपया सही नाम और 10 अंकों का नंबर डालें!"); return; }
         }
-        
         isReattemptMode = isReattempt;
-        studentInfo.time = 0; studentInfo.score = 0;
+        studentInfo.time = 0; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0;
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
         
         document.getElementById('panel-sname').innerText = studentInfo.name;
@@ -505,7 +655,7 @@
     }
 
     function startReattempt() {
-        if(confirm("क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं? (इसकी रैंक अलग से बनेगी)")) { startExam(true); }
+        if(confirm("क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं?")) { startExam(true); }
     }
 
     function initPalette() {
@@ -535,13 +685,10 @@
     }
 
     function markAnswered(val) { 
-        userAnswers[currentQ] = val; 
-        qStatus[currentQ] = 2; 
+        userAnswers[currentQ] = val; qStatus[currentQ] = 2; 
         document.getElementById(`pal-${currentQ}`).className = `palette-btn status-answered`; 
-        
         document.querySelectorAll('.opt-label').forEach(el => el.classList.remove('selected'));
         document.getElementById(`lbl-${val}`).classList.add('selected');
-        
         updateCounts(); 
     }
 
@@ -564,10 +711,29 @@
         document.getElementById('result-view').classList.add('active-view');
         document.getElementById('timer-box').style.display = 'none';
 
-        studentInfo.score = 0;
-        for(let i=0; i<examData.questions.length; i++) { if(userAnswers[i] === examData.questions[i].ans) studentInfo.score++; }
+        studentInfo.right = 0; studentInfo.wrong = 0;
+        for(let i=0; i<examData.questions.length; i++) { 
+            if(userAnswers[i] === examData.questions[i].ans) studentInfo.right++; 
+            else if (userAnswers[i] !== null) studentInfo.wrong++;
+        }
+        
+        let rawScore = (studentInfo.right * examData.marks) - (studentInfo.wrong * examData.neg);
+        studentInfo.score = Math.max(0, Math.round(rawScore * 100) / 100); 
+        
+        let maxScore = examData.questions.length * examData.marks;
+        let percentage = (studentInfo.score / maxScore) * 100;
 
-        drawReportCard("...", "...");
+        let resHeading = document.getElementById('result-heading');
+        if(percentage >= 80) {
+            resHeading.innerText = "🎉 आपने बहुत अच्छा टेस्ट दिया! शानदार! 🎉";
+            resHeading.style.color = "#28a745";
+            blastConfetti();
+        } else {
+            resHeading.innerText = "💪 कोई बात नहीं, अगली बार और बेहतर होगा! लगे रहो!";
+            resHeading.style.color = "#e74c3c";
+        }
+
+        drawReportCard("...", "...", maxScore);
 
         document.getElementById('btn-img-down').style.display = 'none';
         document.getElementById('rank-loader').style.display = 'block';
@@ -581,46 +747,54 @@
             studentInfo.attempt = data.attempt || (isReattemptMode ? "Reattempt" : 1);
             document.getElementById('rank-loader').style.display = 'none';
             document.getElementById('btn-img-down').style.display = 'block';
-            
-            let finalRank = data.rank;
-            if(isReattemptMode && data.totalStudents <= 1) finalRank = "N/A"; 
-            
-            drawReportCard(finalRank, data.totalStudents);
+            let finalRank = (isReattemptMode && data.totalStudents <= 1) ? "N/A" : data.rank; 
+            drawReportCard(finalRank, data.totalStudents, maxScore);
         }).catch(err => {
             document.getElementById('rank-loader').style.display = 'none';
             document.getElementById('btn-img-down').style.display = 'block';
-            drawReportCard("N/A", "N/A");
+            drawReportCard("N/A", "N/A", maxScore);
         });
     }
 
-    function drawReportCard(rank, totalStudents) {
+    function drawReportCard(rank, totalStudents, maxScore) {
         const cvs = document.getElementById('reportCard'); const ctx = cvs.getContext('2d');
-        ctx.fillStyle = '#fdfdfd'; ctx.fillRect(0, 0, 800, 600);
+        ctx.fillStyle = '#fdfdfd'; ctx.fillRect(0, 0, 800, 650);
         ctx.fillStyle = '#1f4e79'; ctx.fillRect(0, 0, 800, 140);
         ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.font = 'bold 36px Arial'; ctx.fillText(examData.exam.toUpperCase(), 400, 50);
         ctx.font = '22px Arial'; ctx.fillText(examData.subject + (examData.topic ? " - " + examData.topic : ""), 400, 85);
         ctx.font = '16px Arial'; ctx.fillStyle = '#f39c12'; ctx.fillText("TEST CODE: " + examData.code, 400, 115);
         
         ctx.fillStyle = '#333'; ctx.textAlign = 'left'; ctx.font = 'bold 28px Arial'; ctx.fillText("Name: " + studentInfo.name, 80, 200);
-        
         let attemptText = isReattemptMode ? "Mode: Reattempt" : ("Attempt No: " + (studentInfo.attempt || 1));
         ctx.fillStyle = '#dc3545'; ctx.font = 'bold 20px Arial'; ctx.textAlign = 'right'; ctx.fillText(attemptText, 720, 200);
         
-        ctx.fillStyle = '#28a745'; ctx.fillRect(80, 250, 300, 140); ctx.fillStyle = '#f39c12'; ctx.fillRect(420, 250, 300, 140); 
-        ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.font = '24px Arial'; ctx.fillText("Total Score", 230, 295); ctx.fillText("Rank / Students", 570, 295);
+        ctx.fillStyle = '#28a745'; ctx.fillRect(80, 240, 300, 120); 
+        ctx.fillStyle = '#f39c12'; ctx.fillRect(420, 240, 300, 120); 
+        ctx.fillStyle = '#1f4e79'; ctx.fillRect(80, 380, 640, 120); 
+
+        ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; 
+        ctx.font = '20px Arial'; ctx.fillText("Right / Wrong", 230, 275); 
+        ctx.font = 'bold 40px Arial'; ctx.fillText(studentInfo.right + " / " + studentInfo.wrong, 230, 330);
         
-        ctx.font = 'bold 50px Arial'; ctx.fillText(studentInfo.score + " / " + examData.questions.length, 230, 360);
-        
+        ctx.font = '20px Arial'; ctx.fillText("Rank / Students", 570, 275);
         let rankText = (rank === "...") ? "Loading..." : (rank === "N/A" ? "Only Score" : "#" + rank + " / " + totalStudents);
-        ctx.font = (rank === "..." || rank === "N/A") ? 'bold 30px Arial' : 'bold 45px Arial'; ctx.fillText(rankText, 570, 360);
+        ctx.font = (rank === "..." || rank === "N/A") ? 'bold 26px Arial' : 'bold 40px Arial'; ctx.fillText(rankText, 570, 330);
         
-        ctx.fillStyle = '#1f4e79'; ctx.font = 'bold 20px Arial'; ctx.fillText("Prepared by: Ankush Kumar S/O Manoj Kumar", 400, 480);
-        ctx.fillStyle = '#777'; ctx.font = '16px Arial'; ctx.fillText("Generated on: " + new Date().toLocaleString(), 400, 520);
-        ctx.fillStyle = '#ccc'; ctx.font = 'bold 50px Arial'; ctx.globalAlpha = 0.2; ctx.fillText("ANKUSH KUMAR", 400, 350); ctx.globalAlpha = 1.0;
+        ctx.font = '24px Arial'; ctx.fillText("Final Marks Scored", 400, 420);
+        ctx.font = 'bold 50px Arial'; ctx.fillStyle = '#f39c12'; ctx.fillText(studentInfo.score + " / " + maxScore, 400, 475);
+        
+        ctx.fillStyle = '#1f4e79'; ctx.font = 'bold 20px Arial'; ctx.fillText("Prepared by: Ankush Kumar S/O Manoj Kumar", 400, 540);
+        ctx.fillStyle = '#777'; ctx.font = '16px Arial'; ctx.fillText("Generated on: " + new Date().toLocaleString(), 400, 580);
+        ctx.fillStyle = '#ccc'; ctx.font = 'bold 50px Arial'; ctx.globalAlpha = 0.2; ctx.fillText("ANKUSH KUMAR", 400, 400); ctx.globalAlpha = 1.0;
+
+        const imgEl = document.getElementById('reportCardImg');
+        imgEl.src = cvs.toDataURL('image/png');
+        imgEl.style.display = 'block';
+        cvs.style.display = 'none';
     }
 
     function downloadImage() {
-        const link = document.createElement('a'); link.download = studentInfo.name + '_Report.png'; link.href = document.getElementById('reportCard').toDataURL('image/png'); link.click();
+        const link = document.createElement('a'); link.download = studentInfo.name + '_Report.png'; link.href = document.getElementById('reportCardImg').src; link.click();
     }
 
     function directDownloadPDF() {
@@ -629,32 +803,48 @@
         if(!phone) { alert("अपना नंबर डालें!"); return; }
         if(!checkPass(phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
         studentInfo.name = "Student";
-        executePDFPrint();
+        executePDFPrint(phone); 
     }
 
     function resultDownloadPDF() {
         let pass = document.getElementById('s-pass-result').value;
         if(!checkPass(studentInfo.phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
-        executePDFPrint();
+        executePDFPrint(studentInfo.name); 
     }
 
-    function executePDFPrint() {
+    function executePDFPrint(watermarkText) {
         let printArea = document.getElementById('print-area');
-        let html = `<div class="watermark">ANKUSH KUMAR</div>`;
-        html += `<div class="print-header"><h2>${examData.exam.toUpperCase()}</h2><h3>${examData.subject} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Student:</b> ${studentInfo.name}</p></div>`;
+        let safeTestUrl = BASE_URL + "?test=" + examData.code;
+
+        let html = `<div class="watermark">${watermarkText}</div>`;
+        
+        html += `
+        <div style="font-size: 14px; border-bottom: 2px solid #1f4e79; padding: 10px 20px; margin-bottom: 20px; box-sizing: border-box;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <a href="https://studynotesmanager.netlify.app/" target="_blank" style="color: #1f4e79; text-decoration: none; font-weight: bold; padding-left: 10px;">🌐 Study Notes Manager</a>
+                <a href="${safeTestUrl}" target="_blank" style="color: #dc3545; text-decoration: none; font-weight: bold; padding-right: 10px;">📝 Give Online Test</a>
+            </div>
+            <div style="text-align: center; color: #444; font-size: 12px; margin-top: 5px;">
+                <i>निर्देश: और सब्जेक्ट के टेस्ट फ्री में देने के लिए Study Notes Manager लिंक पर टैप करें। इस टेस्ट को ऑनलाइन देने के लिए Give Online Test लिंक पर टैप करें।</i>
+            </div>
+        </div>
+        `;
+        
+        html += `<div class="print-header"><h2>${examData.exam.toUpperCase()}</h2><h3>${examData.subject} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark ID:</b> ${watermarkText}</p></div>`;
         
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
-            let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
             
             html += `<div class="print-q"><b>Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
-                let isRight = (o.id === q.ans) ? "font-weight:bold;" : "";
+                // 🔥 THE FIX: Black Background & White Bold Text for Correct Answer 🔥
+                let isRight = (o.id === q.ans) ? "background-color: black; color: white; font-weight: bold; border-radius: 4px; padding: 2px 6px;" : "padding: 2px 6px;";
                 html += `<div class="opt-item" style="${isRight}">${o.id}. ${o.text}</div>`;
             });
             html += `</div>`;
             
-            if(userAnswers.length > 0 && document.getElementById('result-view').classList.contains('active-view')) {
+            if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar")) {
+                let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
                 html += `<div class="print-ans">Correct Ans: ${q.ans} <span style="margin-left:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
             } else {
                 html += `<div class="print-ans">Correct Ans: ${q.ans}</div>`;
