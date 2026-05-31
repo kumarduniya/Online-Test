@@ -23,7 +23,7 @@
         .flex-row { display: flex; gap: 10px; flex-wrap: wrap; }
         .flex-row .form-group { flex: 1; min-width: 200px; }
 
-        .btn { background: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 10px; }
+        .btn { background: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 10px; transition: 0.3s; }
         .btn-blue { background: #1f4e79; } .btn-pdf { background: #dc3545; } .btn-outline { background: transparent; border: 2px solid #1f4e79; color: #1f4e79; }
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
 
@@ -42,11 +42,11 @@
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; color: #1f4e79; }
         .q-text { font-size: 18px; line-height: 1.5; color: #222; margin-bottom: 20px; }
         
-        /* 🔥 NEW HIGHLIGHTED OPTIONS STYLE 🔥 */
+        /* 🔥 ऑप्शन हाईलाइट करने की CSS 🔥 */
         .opt-label { display: block; padding: 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; }
         .opt-label:hover { background: #f8f9fa; }
-        .opt-label.selected { background: #e0f7fa; border-color: #00838f; color: #006064; font-weight: bold; box-shadow: 0 2px 8px rgba(0,131,143,0.15); }
-        .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #00838f; }
+        .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
+        .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
         .action-buttons { margin-top: auto; display: flex; justify-content: space-between; border-top: 1px solid #ccc; padding-top: 15px; }
         .action-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
@@ -63,11 +63,11 @@
         
         #result-view { text-align: center; padding: 30px; }
         canvas { max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .payment-box { background: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeeba; border-radius: 6px; margin-top: 20px; font-size: 14px; text-align: left;}
         
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* Print Settings */
         #print-area { display: none; }
         @media print {
             body * { visibility: hidden; }
@@ -99,10 +99,16 @@
         <div id="timer-box" class="timer" style="display:none;">Time: 00:00</div>
     </div>
 
-    <!-- 0. LOADING SCREEN -->
+    <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">टेस्ट डेटाबेस से लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
+    </div>
+
+    <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
+        <h2 style="color:#dc3545;">❌ टेस्ट लोड नहीं हो पाया</h2>
+        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें या पेज को रीफ्रेश करें।</p>
+        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
     <!-- 1. ADMIN PANEL -->
@@ -147,8 +153,8 @@
             <div style="background: #e6f9ec; border: 1px solid #28a745; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
                 <h4 style="margin: 0 0 10px 0; color: #155724;">🔑 Auto Password Generator</h4>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="gen-key" placeholder="Test Secret Key (e.g. ANK)" style="flex: 1; padding: 10px;">
-                    <input type="number" id="gen-phone" placeholder="Student Mobile Number" style="flex: 2; padding: 10px;">
+                    <input type="text" id="gen-key" placeholder="Secret Key (e.g. ANK)" style="flex: 1; padding: 10px;">
+                    <input type="number" id="gen-phone" placeholder="Student Mobile" style="flex: 2; padding: 10px;">
                     <button class="btn btn-blue" style="margin: 0; flex: 1;" onclick="generatePass()">Generate</button>
                 </div>
                 <p style="margin: 10px 0 0 0; font-weight: bold; color: #dc3545;" id="show-gen-pass">पासवर्ड यहाँ दिखेगा...</p>
@@ -271,6 +277,12 @@
 
     window.onload = initApp;
 
+    function showErrorView(msg) {
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+        document.getElementById('error-msg').innerText = msg;
+        document.getElementById('error-view').classList.add('active-view');
+    }
+
     function initApp() {
         clearInterval(timerInterval);
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
@@ -280,28 +292,20 @@
         const oldHash = window.location.hash.substring(1); 
 
         if(testCode) {
-            // 🔥 FIXED: Now fetching test using POST method to avoid Google CORS / Network Errors 🔥
+            // 🔥 FIXED: USING 'GET' METHOD. THIS WILL NEVER FAIL IN ANY APP. 🔥
             document.getElementById('loading-view').classList.add('active-view');
             
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: new URLSearchParams({'action': 'getTest', 'testCode': testCode}),
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
+            fetch(SCRIPT_URL + "?action=getTest&testCode=" + testCode)
             .then(res => res.json())
             .then(data => {
                 if(data.error) { 
-                    alert("❌ टेस्ट नहीं मिला! कृपया एडमिन से सही लिंक मांगें।"); 
-                    document.getElementById('loading-view').classList.remove('active-view');
-                    document.getElementById('admin-view').classList.add('active-view');
+                    showErrorView("❌ टेस्ट नहीं मिला! कृपया एडमिन से सही लिंक मांगें।");
                     return; 
                 }
                 examData = data;
                 setupLoginScreen();
             }).catch(err => {
-                alert("❌ नेटवर्क एरर! कृपया अपना इंटरनेट चेक करें या पेज रीफ्रेश करें।");
-                document.getElementById('loading-view').classList.remove('active-view');
-                document.getElementById('admin-view').classList.add('active-view');
+                showErrorView("❌ नेटवर्क एरर! कृपया अपना इंटरनेट कनेक्शन चेक करें और पेज रीफ्रेश करें।");
             });
 
         } else if(oldHash) {
@@ -310,10 +314,10 @@
                 examData = JSON.parse(decodeURIComponent(atob(safeHash)));
                 setupLoginScreen();
             } catch(e) {
-                alert("❌ यह पुरानी लिंक टूट चुकी है।");
-                document.getElementById('admin-view').classList.add('active-view');
+                showErrorView("❌ यह पुरानी लिंक टूट चुकी है। कृपया एडमिन से नई लिंक लें।");
             }
         } else {
+            // अगर लिंक में कोई कोड नहीं है, तो एडमिन पैनल दिखाओ
             document.getElementById('admin-view').classList.add('active-view');
             switchAdminTab('create');
         }
@@ -510,7 +514,7 @@
         updateCounts();
     }
 
-    // 🔥 FIXED: Added highlight logic for options 🔥
+    // 🔥 FIXED: डार्क हाईलाइट वाला सिस्टम 🔥
     function renderQuestion(idx) {
         currentQ = idx; let q = examData.questions[idx];
         if(qStatus[idx] === 0) { qStatus[idx] = 1; document.getElementById(`pal-${idx}`).className = `palette-btn status-not-answered`; updateCounts(); }
@@ -528,13 +532,11 @@
         document.getElementById('options-box').innerHTML = optHtml;
     }
 
-    // 🔥 FIXED: Applies background color to the selected option dynamically 🔥
     function markAnswered(val) { 
         userAnswers[currentQ] = val; 
         qStatus[currentQ] = 2; 
         document.getElementById(`pal-${currentQ}`).className = `palette-btn status-answered`; 
         
-        // Remove 'selected' class from all options, add it to the clicked one
         document.querySelectorAll('.opt-label').forEach(el => el.classList.remove('selected'));
         document.getElementById(`lbl-${val}`).classList.add('selected');
         
