@@ -85,9 +85,8 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 BULLETPROOF PRINTING CSS 🔥 */
+        /* 🔥 BULLETPROOF PDF PRINTING CSS 🔥 */
         #print-area { display: none; }
-        #leaderboard-print { display: none; }
         
         @media screen {
             .print-only { display: none !important; }
@@ -99,13 +98,11 @@
             
             body * { visibility: hidden; }
             
+            /* PDF Print Layout - Fixes Blank Pages */
+            body.print-pdf, body.print-pdf html { height: auto !important; overflow: visible !important; }
             body.print-pdf #main-ui-container { display: none !important; }
             body.print-pdf #print-area, body.print-pdf #print-area * { visibility: visible; }
             body.print-pdf #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
-            
-            body.print-lb #main-ui-container { display: none !important; }
-            body.print-lb #leaderboard-print, body.print-lb #leaderboard-print * { visibility: visible; }
-            body.print-lb #leaderboard-print { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
@@ -116,13 +113,6 @@
             .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
             .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
-            
-            .screen-only { display: none !important; }
-            .print-only { display: inline !important; }
-            
-            table.res-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;}
-            table.res-table th, table.res-table td { border: 1px solid #000; padding: 6px; color: #000;}
-            table.res-table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
         @media (max-width: 768px) {
@@ -141,6 +131,7 @@
 </head>
 <body>
 
+<!-- MAIN UI CONTAINER -->
 <div class="container" id="main-ui-container">
     <div class="tcs-header">
         <h2 id="head-exam-name">Exam Portal</h2>
@@ -154,7 +145,7 @@
         <div class="s-exam" id="top-sexam">Exam Name</div>
     </div>
 
-    <!-- 🔥 STUDENT GLOBAL DASHBOARD (Active Tests & History) 🔥 -->
+    <!-- 🔥 STUDENT GLOBAL DASHBOARD 🔥 -->
     <div id="student-dashboard-view" class="view-section">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
@@ -169,7 +160,7 @@
 
         <div id="st-history-section" style="display: none;">
             <div style="background: #f4f6f8; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align:center;">
-                <h3 style="color:#1f4e79; margin-top:0;">🔍 अपनी परफॉर्मेंस देखें</h3>
+                <h3 style="color:#1f4e79; margin-top:0;">🔍 अपनी परफॉर्मेंस और टेस्ट हिस्ट्री देखें</h3>
                 <input type="tel" id="hist-phone" placeholder="अपना 10 अंकों का मोबाइल नंबर डालें" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;" maxlength="10">
                 <button class="btn btn-blue" style="max-width:300px; margin:0 auto;" onclick="fetchStudentHistory()">Search History</button>
             </div>
@@ -295,6 +286,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
                     <h3 style="margin: 0; color: #1f4e79;">📊 Result: <span id="lb-title"></span></h3>
                     <div>
+                        <!-- 🔥 LEADERBOARD IMAGE DOWNLOAD 🔥 -->
                         <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="downloadLeaderboardImage()">🖼️ Download Image</button>
                         <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌</button>
                     </div>
@@ -392,7 +384,7 @@
             <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto;">
                 <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1;" onclick="downloadImage()">🖼️ Download Score Card</button>
                 
-                <!-- 🔥 THE FIX: Direct PDF Download Button Restored & Password Protected 🔥 -->
+                <!-- 🔥 THE FIX: Direct PDF Download Locked 🔥 -->
                 <button id="btn-pdf-down" class="btn btn-pdf" style="display: none; flex: 1;" onclick="handleResultPDFClick()">📄 Download Question Paper</button>
             </div>
 
@@ -433,12 +425,12 @@
 <div id="print-area"></div>
 
 <script>
-    // 🚨 YAHAN APNI GOOGLE SCRIPT LINK PASTE KAREIN 🚨
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG8mRMbsSsAflJacr7K-VLiaynnizCDCpXE0ieLvhm5ttojjGL_-2h_VKA6E_YSXs9LQ/exec";
+    // 🚨 YAHAN APNI NAYI APPS SCRIPT LINK PASTE KAREIN 🚨
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVL6c4ttZkWOddyyRyQmMAgj1mbR6bItQ6qniMsjG5idsP2iftcAY1E2dm64or4wyKoQ/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
-    // 🔥 THE FIX: Yahan un purane tests ke code daal do jo tum nahi dikhana chahte 🔥
-    const HIDDEN_TESTS = ["UP-123", "DEMO", "DEMO2"]; 
+    // 🔥 अगर अभी भी कोई पुराना टेस्ट छुप कर बैठा है तो उसका कोड इसमें डाल दो 🔥
+    const HIDDEN_TESTS = []; 
 
     let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [] };
     let userAnswers = []; let qStatus = []; let currentQ = 0;
@@ -461,12 +453,11 @@
         }
     }
 
-    // 🔥 THE FIX: Auto-fill Secret Key helper 🔥
-    window.setPasswordKey = function(key) {
+    function setPasswordKey(key) {
         document.getElementById('gen-key').value = key;
         document.getElementById('gen-phone').focus();
         window.scrollTo(0, 0); 
-    };
+    }
 
     function blastConfetti() {
         let duration = 4000; let end = Date.now() + duration; let emojis = ['🎉', '✨', '🏆', '🔥', '👏'];
@@ -547,7 +538,6 @@
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
     }
 
-    // 🔥 STUDENT DASHBOARD LOGIC 🔥
     function switchStudentTab(tab) {
         if(tab === 'active') {
             document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
@@ -764,7 +754,6 @@
                     <div style="margin-bottom: 10px;">
                         <span class="badge">Qs: ${t.qs}</span><span class="badge">${priceText}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
                         <span class="badge">T: ${t.totTime||0}m / Q: ${t.qTime||0}s</span><span class="badge">Date: ${t.date}</span>
-                        <!-- 🔥 THE FIX: Key Added Back for Easy Access 🔥 -->
                         <span class="badge" style="background:#ffc107;">Key: ${t.key}</span>
                     </div>
                     <input type="text" value="${t.link}" readonly style="width:100%; padding:5px; border:1px solid #ccc; font-size:12px; margin-bottom:5px;">
@@ -775,7 +764,6 @@
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#17a2b8;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_ans')">✅ Qs+Ans</button>
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#28a745;" onclick="adminDownloadPDF(${t.originalIndex}, 'full')">📚 Full PDF</button>
                         <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
-                        <!-- 🔥 THE FIX: Auto Fill Pass Button 🔥 -->
                         <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="setPasswordKey('${t.key}')">🔑 Auto Pass</button>
                         <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: 100%; font-size:14px;" onclick="viewResults('${t.code}')">📊 View Results / Leaderboard</button>
                     </div>
@@ -829,7 +817,7 @@
             let maskedPhone = r.phone.toString().length >= 4 ? "XXXXXX" + r.phone.toString().slice(-4) : r.phone;
             let d = new Date(r.date).toLocaleDateString();
             html += `<tr><td style="border:1px solid #ccc; padding:5px;">#${i+1}</td><td style="border:1px solid #ccc; padding:5px;"><b>${r.name}</b></td>
-                <td style="border:1px solid #ccc; padding:5px;">${r.phone}</td>
+                <td style="border:1px solid #ccc; padding:5px;">${maskedPhone}</td>
                 <td style="border:1px solid #ccc; padding:5px; color:#28a745; font-weight:bold;">${r.score}</td>
                 <td style="border:1px solid #ccc; padding:5px;"><span style='color:green'>${r.right}</span>/<span style='color:red'>${r.wrong}</span>/${r.blank}</td>
                 <td style="border:1px solid #ccc; padding:5px;">${r.time}s</td><td style="border:1px solid #ccc; padding:5px;">${d}</td></tr>`;
@@ -998,7 +986,6 @@
         
         let submissionCode = isReattemptMode ? (examData.code + "-RE") : examData.code;
 
-        // 🔥 THE FIX: new URLSearchParams Typing Corrected 🔥
         fetch(SCRIPT_URL, {
             method: 'POST', body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -1067,7 +1054,7 @@
     function downloadImage() { const link = document.createElement('a'); link.download = studentInfo.name + '_Scorecard.png'; link.href = document.getElementById('reportCardImg').src; link.click(); }
 
     function handleResultPDFClick() {
-        if(examData.isFree) {
+        if(examData.isFree === true || examData.isFree === "true") {
             executePDFPrint(studentInfo.name, 'full');
         } else {
             alert("🔒 यह पेड (Paid) PDF है। कृपया पेज के नीचे दिए गए बॉक्स में पासवर्ड डालें और 'Unlock PDF' पर क्लिक करें।");
