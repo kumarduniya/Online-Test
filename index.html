@@ -86,7 +86,7 @@
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
         /* 🔥 BULLETPROOF PDF PRINTING CSS 🔥 */
-        #print-area { display: none; }
+        #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media screen {
             .print-only { display: none !important; }
@@ -131,7 +131,6 @@
 </head>
 <body>
 
-<!-- MAIN UI CONTAINER -->
 <div class="container" id="main-ui-container">
     <div class="tcs-header">
         <h2 id="head-exam-name">Exam Portal</h2>
@@ -145,7 +144,6 @@
         <div class="s-exam" id="top-sexam">Exam Name</div>
     </div>
 
-    <!-- 🔥 STUDENT GLOBAL DASHBOARD 🔥 -->
     <div id="student-dashboard-view" class="view-section">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
@@ -190,7 +188,6 @@
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
-    <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -207,7 +204,6 @@
         </div>
     </div>
 
-    <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -219,7 +215,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
-    <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -286,7 +281,6 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
                     <h3 style="margin: 0; color: #1f4e79;">📊 Result: <span id="lb-title"></span></h3>
                     <div>
-                        <!-- 🔥 LEADERBOARD IMAGE DOWNLOAD 🔥 -->
                         <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="downloadLeaderboardImage()">🖼️ Download Image</button>
                         <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌</button>
                     </div>
@@ -302,7 +296,6 @@
         </div>
     </div>
 
-    <!-- 2. TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -339,7 +332,6 @@
         </div>
     </div>
 
-    <!-- 3. EXAM INTERFACE -->
     <div id="exam-view" class="view-section" style="padding: 0;">
         <div class="exam-container">
             <div class="left-panel">
@@ -369,7 +361,6 @@
         </div>
     </div>
 
-    <!-- 4. RESULT & REPORT CARD -->
     <div id="result-view" class="view-section">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -383,8 +374,6 @@
             
             <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto;">
                 <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1;" onclick="downloadImage()">🖼️ Download Score Card</button>
-                
-                <!-- 🔥 THE FIX: Direct PDF Download Locked 🔥 -->
                 <button id="btn-pdf-down" class="btn btn-pdf" style="display: none; flex: 1;" onclick="handleResultPDFClick()">📄 Download Question Paper</button>
             </div>
 
@@ -421,15 +410,13 @@
     </div>
 </div>
 
-<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
-    // 🚨 YAHAN APNI NAYI APPS SCRIPT LINK PASTE KAREIN 🚨
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVL6c4ttZkWOddyyRyQmMAgj1mbR6bItQ6qniMsjG5idsP2iftcAY1E2dm64or4wyKoQ/exec";
+    // 🚨 YAHAN APNI NAYI GOOGLE SCRIPT LINK PASTE KAREIN (Zaruri!) 🚨
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFscJaqyqdUz6_YuPTwl3CjijxBFH2FIVKPg6QmSF_eJuuTMNGgqnDqAXymwdj6w-GGA/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
-    // 🔥 अगर अभी भी कोई पुराना टेस्ट छुप कर बैठा है तो उसका कोड इसमें डाल दो 🔥
     const HIDDEN_TESTS = []; 
 
     let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [] };
@@ -526,7 +513,7 @@
         if(examData.qTime > 0) tInfo += `Per Q: ${examData.qTime} Secs`;
         document.getElementById('disp-time-info').innerText = tInfo;
         
-        if(examData.isFree) {
+        if(examData.isFree === true || examData.isFree === "true") {
             document.getElementById('direct-pdf-box').style.display = 'none'; 
             document.getElementById('res-paid-instructions').style.display = 'none'; 
             document.getElementById('res-pass-box').style.display = 'none'; 
@@ -681,7 +668,8 @@
     }
 
     function checkPass(enteredPhone, enteredPass) {
-        if(examData.isFree) return true; return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
+        if(examData.isFree === true || examData.isFree === "true") return true; 
+        return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
     function parseRawQuestions(rawText) {
