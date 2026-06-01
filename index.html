@@ -40,8 +40,20 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
+        /* 🔥 THE FIX: Subject Folders CSS 🔥 */
+        .subject-card { background: white; border: 2px solid #1f4e79; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; width: 140px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .subject-card:hover { transform: translateY(-5px); background: #f4f6f8; }
+        .subject-card .s-icon { font-size: 40px; margin-bottom: 10px; }
+        .subject-card .s-title { font-size: 16px; font-weight: bold; color: #1f4e79; margin-bottom: 5px; word-wrap: break-word; }
+        .subject-card .s-count { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+
         .exam-container { display: flex; flex-direction: row; height: calc(100vh - 100px); }
         .left-panel { flex: 3; padding: 20px; border-right: 1px solid #ccc; display: flex; flex-direction: column; position: relative; }
+        
+        /* 🔥 THE FIX: GS Long Statement Scroll + Unseen Passage Box 🔥 */
+        .q-content-wrapper { flex: 1; overflow-y: auto; padding-right: 10px; margin-bottom: 15px; }
+        .passage-box { background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 6px; margin-bottom: 15px; font-size: 15px; color: #856404; line-height: 1.5; max-height: 200px; overflow-y: auto; border-left: 4px solid #f39c12; }
+        
         .right-panel { flex: 1; background: #fdfdfd; display: flex; flex-direction: column; }
         
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; }
@@ -53,8 +65,8 @@
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        .action-buttons { margin-top: auto; display: flex; justify-content: space-between; border-top: 1px solid #ccc; padding-top: 15px; }
-        .action-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
+        .action-buttons { margin-top: auto; display: flex; justify-content: space-between; border-top: 1px solid #ccc; padding-top: 15px; flex-wrap: wrap; gap: 10px;}
+        .action-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; flex:1; min-width: 100px; text-align: center;}
         .btn-prev { background: #6c757d; } .btn-next { background: #28a745; } .btn-clear { background: #ffc107; color: #333; } .btn-submit { background: #dc3545; }
         
         .palette-legend { display: flex; flex-wrap: nowrap; justify-content: space-around; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; background: #fff; }
@@ -85,20 +97,24 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 WAHI PURANA SOLID PRINT CSS (NO JS HACKS, NO BLANK PAGES) 🔥 */
         #print-area { display: none; }
+        
+        @media screen {
+            .print-only { display: none !important; }
+            .screen-only { display: inline !important; }
+        }
         
         @media print {
             @page { margin: 8mm; } 
+            body * { visibility: hidden; }
             
-            body { background: white; margin: 0; padding: 0; }
-            #main-ui-container { display: none !important; }
-            
-            #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; }
-            #print-area * { visibility: visible !important; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
+            .container { display: none !important; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #000000 !important; }
+            .print-passage { font-size: 12px; color: #444; background: #eee; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
             .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
             .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; color: #000000 !important; }
             .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
@@ -107,11 +123,11 @@
         }
 
         @media (max-width: 768px) {
-            .exam-container { flex-direction: column; height: auto; padding-bottom: 100px; }
+            .exam-container { flex-direction: column; height: auto; padding-bottom: 130px; }
             .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 20px; }
             .right-panel { padding-bottom: 20px; }
-            .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
-            .action-btn { padding: 8px 12px; font-size: 14px; }
+            .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); justify-content: center; }
+            .action-btn { padding: 8px; font-size: 13px; min-width: 80px; }
             .question-palette { max-height: 350px; margin-bottom: 20px; } 
             .watermark { font-size: 80px; } 
             .palette-legend { font-size: 10px; padding: 10px 5px;}
@@ -143,9 +159,21 @@
         </div>
 
         <div id="st-active-section">
-            <h3 style="color: #1f4e79; text-align: center; margin-bottom: 15px; font-size:16px;">वर्तमान में उपलब्ध टेस्ट</h3>
             <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading...</div>
-            <div id="st-active-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
+            
+            <!-- 🔥 THE FIX: Subject Folders UI 🔥 -->
+            <div id="st-subject-view">
+                <h3 style="color: #1f4e79; text-align: center; margin-bottom: 15px; font-size:16px;">📚 विषय चुनें (Select Subject)</h3>
+                <div id="st-subject-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
+            </div>
+
+            <div id="st-tests-view" style="display: none;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <button class="btn btn-outline" style="width:auto; padding: 5px 15px;" onclick="showSubjects()">⬅️ Back to Subjects</button>
+                </div>
+                <h3 id="selected-subject-title" style="color: #1f4e79; text-align: center; margin-top: 0;">Tests</h3>
+                <div id="st-active-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
+            </div>
         </div>
 
         <div id="st-history-section" style="display: none;">
@@ -247,7 +275,8 @@
             </div>
 
             <div class="form-group">
-                <label style="color: #dc3545;"><b>यहाँ क्वेश्चंस पेस्ट करें (!!1!, !A, !B, !!!, !!!!):</b></label>
+                <label style="color: #dc3545;"><b>यहाँ क्वेश्चंस पेस्ट करें:</b></label>
+                <div style="font-size: 12px; color: #555; margin-bottom: 5px;">गद्यांश/Unseen Passage के लिए <b>!PASSAGE</b> से शुरू करें और <b>!ENDPASSAGE</b> पर खत्म करें। गद्यांश हटाने के लिए <b>!NOPASSAGE</b> लिखें।</div>
                 <textarea id="a-rawdata"></textarea>
             </div>
             <button id="btn-generate" class="btn btn-blue" onclick="generateAndSaveLink()">🚀 Generate & Save Test</button>
@@ -332,16 +361,22 @@
     <div id="exam-view" class="view-section" style="padding: 0;">
         <div class="exam-container">
             <div class="left-panel">
-                <div class="q-header">
-                    <span id="q-no-header">Question No. 1</span>
-                    <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
+                <!-- 🔥 THE FIX: Scroll Wrapper for Long GS Questions & Passage 🔥 -->
+                <div class="q-content-wrapper">
+                    <div class="q-header">
+                        <span id="q-no-header">Question No. 1</span>
+                        <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
+                    </div>
+                    
+                    <div id="q-passage" class="passage-box" style="display:none;"></div>
+                    
+                    <div class="q-text" id="q-text">Loading question...</div>
+                    <div class="options-div" id="options-box"></div>
                 </div>
-                <div class="q-text" id="q-text">Loading question...</div>
-                <div class="options-div" id="options-box"></div>
                 
                 <div class="action-buttons">
                     <button class="action-btn btn-prev" onclick="prevQ()">⬅️ Previous</button>
-                    <button class="action-btn btn-clear" onclick="clearResponse()">Clear Response</button>
+                    <button class="action-btn btn-clear" onclick="clearResponse()">Clear</button>
                     <button class="action-btn btn-next" onclick="nextQ(false)">Save & Next ➡️</button>
                     <button class="action-btn btn-submit" onclick="submitExamConfirmation()">Submit Test</button>
                 </div>
@@ -412,8 +447,8 @@
 <div id="print-area"></div>
 
 <script>
-    // 🚨 YAHAN APNI NAYI GOOGLE SCRIPT LINK PASTE KARI GAYI HAI 🚨
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2cnrYrgNzObhZBEju6mDCVEftCRqMcTgk55RNfqsxGPJg0pLDtGJqZVnUWfco9AZ_aA/exec";
+    // 🚨 YAHAN APNI NAYI GOOGLE SCRIPT LINK PASTE KAREIN 🚨
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVL6c4ttZkWOddyyRyQmMAgj1mbR6bItQ6qniMsjG5idsP2iftcAY1E2dm64or4wyKoQ/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
     const HIDDEN_TESTS = []; 
@@ -426,6 +461,7 @@
     let globalTimeLeft = 0; let qTimeLeft = 0; let totalTimeSpent = 0;
     let isReattemptMode = false; let currentGeneratedPass = ""; 
     let currentAdminLbDataRaw = []; 
+    let globalActiveTests = []; // 🔥 For Subject Folders
 
     window.onload = initApp;
 
@@ -487,7 +523,6 @@
         }
     }
 
-    // 🔥 THE FIX: Free/Paid Bug Strict Logic 🔥
     window.handleTestLoad = function(data) {
         if(data.error) { showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")"); return; }
         if(data.isActive === false) { showErrorView("❌ यह टेस्ट अभी एडमिन द्वारा बंद (Inactive) कर दिया गया है।"); return; }
@@ -495,10 +530,7 @@
         examData = data; 
         examData.marks = data.marks || 2; examData.neg = data.neg || 0;
         examData.totTime = data.totTime || 0; examData.qTime = data.qTime || 0;
-        
-        // Ensure backend data translates string "false" into actual boolean false
         examData.isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
-        
         setupLoginScreen();
     };
 
@@ -542,19 +574,65 @@
     }
 
     function fetchActiveTests() {
-        document.getElementById('st-active-loader').style.display = 'block'; document.getElementById('st-active-list').innerHTML = '';
+        document.getElementById('st-active-loader').style.display = 'block'; 
+        document.getElementById('st-subject-view').style.display = 'none';
+        document.getElementById('st-tests-view').style.display = 'none';
         let cb = new Date().getTime(); let script = document.createElement('script');
         script.src = SCRIPT_URL + "?action=getActiveTests&callback=handleActiveTests&t=" + cb;
         document.body.appendChild(script);
     }
     
+    // 🔥 THE FIX: Subject Folders Logic 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
-        let list = document.getElementById('st-active-list');
-        if(!data.tests || data.tests.length === 0) { list.innerHTML = "<p>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>"; return; }
+        let subList = document.getElementById('st-subject-list');
+        
+        if(!data.tests || data.tests.length === 0) { 
+            subList.innerHTML = "<p style='color:red;'>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>"; 
+            document.getElementById('st-subject-view').style.display = 'block';
+            return; 
+        }
+        
+        globalActiveTests = data.tests.filter(t => !HIDDEN_TESTS.includes(t.code));
+        
+        let subjectsMap = {};
+        globalActiveTests.forEach(t => {
+            let s = t.sub ? t.sub.trim() : "Other";
+            if(!subjectsMap[s]) subjectsMap[s] = 0;
+            subjectsMap[s]++;
+        });
+
         let html = "";
-        data.tests.forEach(t => {
-            if(HIDDEN_TESTS.includes(t.code)) return; 
+        let icons = ["📚", "📝", "🧠", "📖", "🔬", "📊"];
+        let i = 0;
+        for(let s in subjectsMap) {
+            let icon = icons[i % icons.length];
+            html += `<div class="subject-card" onclick="openSubjectTests('${s}')">
+                <div class="s-icon">${icon}</div>
+                <div class="s-title">${s}</div>
+                <div class="s-count">${subjectsMap[s]} Active Tests</div>
+            </div>`;
+            i++;
+        }
+        subList.innerHTML = html;
+        showSubjects();
+    };
+
+    function showSubjects() {
+        document.getElementById('st-subject-view').style.display = 'block';
+        document.getElementById('st-tests-view').style.display = 'none';
+    }
+
+    function openSubjectTests(subject) {
+        document.getElementById('st-subject-view').style.display = 'none';
+        document.getElementById('st-tests-view').style.display = 'block';
+        document.getElementById('selected-subject-title').innerText = subject + " Tests";
+        
+        let list = document.getElementById('st-active-list');
+        let filtered = globalActiveTests.filter(t => (t.sub ? t.sub.trim() : "Other") === subject);
+        
+        let html = "";
+        filtered.forEach(t => {
             html += `<div style="background:#fff; border:1px solid #ccc; border-radius:8px; padding:15px; width:100%; max-width:350px; text-align:left; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
                 <h4 style="margin:0 0 5px 0; color:#1f4e79;">${t.exam}</h4>
                 <p style="margin:0 0 10px 0; font-size:13px; color:#555;"><b>${t.sub}</b> ${t.topic ? "("+t.topic+")" : ""}</p>
@@ -562,9 +640,8 @@
                 <button class="btn btn-blue" style="margin:0; padding:8px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>
             </div>`;
         });
-        if(html === "") html = "<p>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>";
         list.innerHTML = html;
-    };
+    }
 
     function fetchStudentHistory() {
         let phone = document.getElementById('hist-phone').value;
@@ -612,7 +689,6 @@
         document.getElementById('st-hist-list').innerHTML = html; document.getElementById('st-hist-content').style.display = 'block';
     };
 
-    // 🔥 THE FIX: Strict Password Check for History Page PDF Download 🔥
     window.downloadHistoryPDF = function(code, phone) {
         alert("Preparing Revision PDF, please wait...");
         let cb = new Date().getTime(); let script = document.createElement('script');
@@ -675,18 +751,30 @@
         }
     }
 
-    // 🔥 THE FIX: Strict Password Function 🔥
     function checkPass(enteredPhone, enteredPass) {
         let isFreeStatus = (examData.isFree === true || String(examData.isFree).toLowerCase() === "true");
         if(isFreeStatus) return true; 
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
+    // 🔥 THE FIX: Unseen Passage Logic Added 🔥
     function parseRawQuestions(rawText) {
         let parsedQs = []; let lines = rawText.split('\n'); let tempQ = null;
+        let inPassage = false; let currentPassage = "";
+        
         for(let i=0; i<lines.length; i++) {
             let line = lines[i].trim();
-            if(!line) continue;
+            if(!line && !inPassage) continue;
+            
+            // Passage Commands
+            if(line === "!PASSAGE") { inPassage = true; currentPassage = ""; continue; }
+            if(line === "!ENDPASSAGE") { inPassage = false; continue; }
+            if(line === "!NOPASSAGE") { currentPassage = ""; continue; }
+            
+            // Read Passage Multi-line Text
+            if(inPassage) { currentPassage += line + "<br>"; continue; }
+
+            // Question Reading
             if(line.startsWith("!!!!")) { if(tempQ) tempQ.exp = line.substring(4).trim(); }
             else if(line.startsWith("!!!")) { if(tempQ) tempQ.ans = line.substring(3).trim().charAt(0).toUpperCase(); }
             else if(line.startsWith("!A")) { if(tempQ) tempQ.opts.push({id:"A", text:line.substring(2).trim()}); }
@@ -695,7 +783,7 @@
             else if(line.startsWith("!D")) { if(tempQ) tempQ.opts.push({id:"D", text:line.substring(2).trim()}); }
             else if(line.match(/^!!\d+!/)) {
                 if(tempQ && tempQ.q) parsedQs.push(tempQ);
-                tempQ = { q: line.replace(/^!!\d+!\s*/, '').trim(), opts: [], ans: "", exp: "" };
+                tempQ = { q: line.replace(/^!!\d+!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: currentPassage };
             }
         }
         if(tempQ && tempQ.q) parsedQs.push(tempQ); return parsedQs;
@@ -707,7 +795,7 @@
         let eMarks = parseFloat(document.getElementById('a-marks').value) || 2; let eNeg = parseFloat(document.getElementById('a-neg').value) || 0;
         let tTime = parseInt(document.getElementById('a-tot-time').value) || 0; let qTime = parseInt(document.getElementById('a-q-time').value) || 0;
         
-        let isFree = document.getElementById('a-pdf-type').value === "free"; // Strictly boolean
+        let isFree = document.getElementById('a-pdf-type').value === "free"; 
         let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49");
         let eKey = document.getElementById('a-key').value || "ANK"; let rawText = document.getElementById('a-rawdata').value;
         if(!rawText.trim()) { alert("Please paste questions!"); return; }
@@ -724,7 +812,7 @@
             
             let testLink = BASE_URL + "?test=" + eCode;
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
-            // 🔥 THE FIX: Update logic in Local Storage so Admin panel also avoids duplicate! 🔥
+            
             let existingIdx = savedTests.findIndex(t => t.code === eCode);
             let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
             
@@ -732,7 +820,7 @@
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
             document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; alert("टेस्ट सफलतापूर्वक Database में सेव/अपडेट हो गया!");
-            renderDashboard(); // Refresh list automatically
+            renderDashboard(); 
         }).catch(err => { alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।"); btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false; });
     }
 
@@ -814,6 +902,7 @@
         script.src = SCRIPT_URL + "?action=getResults&testCode=" + testCode + "&callback=handleResultsLoad&t=" + cb; document.body.appendChild(script);
     }
 
+    // 🔥 THE FIX: Full Phone Number on Admin Screen 🔥
     window.handleResultsLoad = function(data) {
         if(data.error) { document.getElementById('leaderboard-content').innerHTML = "<p style='color:red;'>"+data.error+"</p>"; return; }
         let res = data.results; if(!res || res.length === 0) { document.getElementById('leaderboard-content').innerHTML = "<p>अभी तक किसी ने यह टेस्ट नहीं दिया है।</p>"; return; }
@@ -822,10 +911,9 @@
         
         let html = `<table class="res-table" style="width:100%; border-collapse: collapse; font-size:12px;"><tr><th style="border:1px solid #ccc; padding:5px;">Rank</th><th style="border:1px solid #ccc; padding:5px;">Name</th><th style="border:1px solid #ccc; padding:5px;">Phone</th><th style="border:1px solid #ccc; padding:5px;">Score</th><th style="border:1px solid #ccc; padding:5px;">R/W/B</th><th style="border:1px solid #ccc; padding:5px;">Time</th><th style="border:1px solid #ccc; padding:5px;">Date</th></tr>`;
         res.forEach((r, i) => {
-            let maskedPhone = r.phone.toString().length >= 4 ? "XXXXXX" + r.phone.toString().slice(-4) : r.phone;
             let d = new Date(r.date).toLocaleDateString();
             html += `<tr><td style="border:1px solid #ccc; padding:5px;">#${i+1}</td><td style="border:1px solid #ccc; padding:5px;"><b>${r.name}</b></td>
-                <td style="border:1px solid #ccc; padding:5px;">${maskedPhone}</td>
+                <td style="border:1px solid #ccc; padding:5px; color:#e74c3c;">${r.phone}</td>
                 <td style="border:1px solid #ccc; padding:5px; color:#28a745; font-weight:bold;">${r.score}</td>
                 <td style="border:1px solid #ccc; padding:5px;"><span style='color:green'>${r.right}</span>/<span style='color:red'>${r.wrong}</span>/${r.blank}</td>
                 <td style="border:1px solid #ccc; padding:5px;">${r.time}s</td><td style="border:1px solid #ccc; padding:5px;">${d}</td></tr>`;
@@ -858,6 +946,7 @@
 
         ctx.font = '16px Arial';
         res.forEach((r, i) => {
+            // 🔥 Canvas Image में Number Masked रहेगा 🔥
             let maskedPhone = r.phone.toString().length >= 4 ? "XXXXXX" + r.phone.toString().slice(-4) : r.phone;
             ctx.fillStyle = '#333';
             ctx.fillText("#" + (i+1), 50, y);
@@ -926,7 +1015,18 @@
     function renderQuestion(idx) {
         currentQ = idx; let q = examData.questions[idx];
         if(qStatus[idx] === 0) { qStatus[idx] = 1; document.getElementById(`pal-${idx}`).className = `palette-btn status-not-answered`; updateCounts(); }
-        document.getElementById('q-no-header').innerText = `Question No. ${idx + 1}`; document.getElementById('q-text').innerText = q.q;
+        document.getElementById('q-no-header').innerText = `Question No. ${idx + 1}`; 
+        
+        // 🔥 THE FIX: Unseen Passage Renderer 🔥
+        let pBox = document.getElementById('q-passage');
+        if(q.passage && q.passage.trim() !== "") {
+            pBox.innerHTML = "<b>गद्यांश (Passage):</b><br>" + q.passage;
+            pBox.style.display = 'block';
+        } else {
+            pBox.style.display = 'none';
+        }
+
+        document.getElementById('q-text').innerText = q.q;
         
         let optHtml = "";
         q.opts.forEach(opt => {
@@ -1061,7 +1161,6 @@
 
     function downloadImage() { const link = document.createElement('a'); link.download = studentInfo.name + '_Scorecard.png'; link.href = document.getElementById('reportCardImg').src; link.click(); }
 
-    // 🔥 THE FIX: Strict Paid/Free Result Lock Check 🔥
     function handleResultPDFClick() {
         let isFreeStatus = (examData.isFree === true || String(examData.isFree).toLowerCase() === "true");
         if(isFreeStatus) {
@@ -1084,7 +1183,6 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 WAHI PURANA 100% PERFECT CSS PRINTING FUNCTION (NO JS TRICKS) 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1107,6 +1205,11 @@
             let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && uAns !== q.ans && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
             let wrongMarkHtml = (isWrongAns && mode === 'full') ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
             
+            // 🔥 THE FIX: Print Passage in PDF too 🔥
+            if(q.passage && q.passage.trim() !== "") {
+                html += `<div class="print-passage">${q.passage}</div>`;
+            }
+
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
                 let isRight = "";
@@ -1130,8 +1233,6 @@
         });
         
         printArea.innerHTML = html; 
-        
-        // सीधे नेटिव ब्राउज़र प्रिंट (No setTimeout logic)
         window.print(); 
     }
 </script>
