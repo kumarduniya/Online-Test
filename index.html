@@ -33,7 +33,7 @@
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
 
         .admin-tabs { display: flex; border-bottom: 2px solid #1f4e79; margin-bottom: 20px; flex-wrap: wrap;}
-        .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 15px; cursor: pointer; background: #e9ecef; border: none; outline: none; white-space: nowrap; min-width:150px;}
+        .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 15px; cursor: background: #e9ecef; border: none; outline: none; white-space: nowrap; min-width:150px;}
         .tab-btn.active { background: #1f4e79; color: white; }
 
         .test-card { background: #fff; border: 1px solid #ddd; border-left: 5px solid #1f4e79; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -85,23 +85,11 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 WAHI PURANA 100% WORKING PDF PRINTING CSS 🔥 */
-        #print-area { display: none; }
-        
-        @media screen {
-            .print-only { display: none !important; }
-            .screen-only { display: inline !important; }
-        }
+        /* 🔥 BULLETPROOF PDF PRINTING CSS 🔥 */
+        #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
-            body * { visibility: hidden; }
-            
-            /* PDF Print Logic */
-            #print-area, #print-area * { visibility: visible; }
-            #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
-            .container { display: none !important; }
-            
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #000000 !important; }
             .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
@@ -140,7 +128,6 @@
         <div class="s-exam" id="top-sexam">Exam Name</div>
     </div>
 
-    <!-- 🔥 STUDENT GLOBAL DASHBOARD 🔥 -->
     <div id="student-dashboard-view" class="view-section">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
@@ -185,7 +172,6 @@
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
-    <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -202,7 +188,6 @@
         </div>
     </div>
 
-    <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -214,7 +199,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
-    <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -255,7 +239,7 @@
                 <label style="color: #dc3545;"><b>यहाँ क्वेश्चंस पेस्ट करें (!!1!, !A, !B, !!!, !!!!):</b></label>
                 <textarea id="a-rawdata"></textarea>
             </div>
-            <button id="btn-generate" class="btn btn-blue" onclick="generateAndSaveLink()">🚀 Generate & Save Test</button>
+            <button id="btn-generate" class="btn btn-blue" onclick="generateAndSaveLink()">🚀 Save / Update Test</button>
             
             <div id="linkContainer" style="display: none; margin-top: 20px; background: #e9ecef; padding: 15px; border-radius: 5px;">
                 <label style="color: #d35400;"><b>👇 यह लिंक कॉपी करके छात्रों को भेजें:</b></label>
@@ -281,7 +265,6 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
                     <h3 style="margin: 0; color: #1f4e79;">📊 Result: <span id="lb-title"></span></h3>
                     <div>
-                        <!-- 🔥 IMAGE DOWNLOAD ONLY 🔥 -->
                         <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="downloadLeaderboardImage()">🖼️ Download Image</button>
                         <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌</button>
                     </div>
@@ -297,7 +280,6 @@
         </div>
     </div>
 
-    <!-- 2. TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -334,7 +316,6 @@
         </div>
     </div>
 
-    <!-- 3. EXAM INTERFACE -->
     <div id="exam-view" class="view-section" style="padding: 0;">
         <div class="exam-container">
             <div class="left-panel">
@@ -364,7 +345,6 @@
         </div>
     </div>
 
-    <!-- 4. RESULT & REPORT CARD -->
     <div id="result-view" class="view-section">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -378,8 +358,6 @@
             
             <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto;">
                 <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1;" onclick="downloadImage()">🖼️ Download Score Card</button>
-                
-                <!-- 🔥 THE FIX: Download Protected Question Paper Button 🔥 -->
                 <button id="btn-pdf-down" class="btn btn-pdf" style="display: none; flex: 1;" onclick="handleResultPDFClick()">📄 Download Question Paper</button>
             </div>
 
@@ -416,12 +394,11 @@
     </div>
 </div>
 
-<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
-    // 🚨 YAHAN APNI NAYI GOOGLE SCRIPT LINK PASTE KAREIN (Zaruri!) 🚨
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwVL6c4ttZkWOddyyRyQmMAgj1mbR6bItQ6qniMsjG5idsP2iftcAY1E2dm64or4wyKoQ/exec";
+    // 🚨 YAHAN NAYI GOOGLE SCRIPT LINK PASTE KAREIN (Update logic ke sath) 🚨
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzg-Ak426PzmyJeA7nt3kcoDsVbK2hxNXa1khEHUIj6g6yJ2IWkJTuGKtx_t7K1gFEjKQ/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
     const HIDDEN_TESTS = []; 
@@ -495,7 +472,6 @@
         }
     }
 
-    // 🔥 THE FIX: Force examData.isFree to be a strict Boolean when loading from server 🔥
     window.handleTestLoad = function(data) {
         if(data.error) { showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")"); return; }
         if(data.isActive === false) { showErrorView("❌ यह टेस्ट अभी एडमिन द्वारा बंद (Inactive) कर दिया गया है।"); return; }
@@ -504,7 +480,7 @@
         examData.marks = data.marks || 2; examData.neg = data.neg || 0;
         examData.totTime = data.totTime || 0; examData.qTime = data.qTime || 0;
         
-        // Strict conversion to true boolean to stop "Free to Paid" bugs!
+        // Strict conversion to true boolean
         examData.isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
         
         setupLoginScreen();
@@ -538,6 +514,7 @@
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
     }
 
+    // 🔥 STUDENT DASHBOARD LOGIC 🔥
     function switchStudentTab(tab) {
         if(tab === 'active') {
             document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
@@ -620,7 +597,6 @@
         document.getElementById('st-hist-list').innerHTML = html; document.getElementById('st-hist-content').style.display = 'block';
     };
 
-    // 🔥 THE FIX: Strict Password Check for History PDF Download 🔥
     window.downloadHistoryPDF = function(code, phone) {
         alert("Preparing Revision PDF, please wait...");
         let cb = new Date().getTime(); let script = document.createElement('script');
@@ -683,10 +659,8 @@
         }
     }
 
-    // 🔥 THE FIX: Strict Check for Pass 🔥
     function checkPass(enteredPhone, enteredPass) {
-        let isFreeStatus = (examData.isFree === true || String(examData.isFree).toLowerCase() === "true");
-        if(isFreeStatus) return true; 
+        if(examData.isFree === true || String(examData.isFree).toLowerCase() === "true") return true; 
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
@@ -720,11 +694,12 @@
 
         let parsedQs = parseRawQuestions(rawText);
         let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, isActive: true };
-        let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test to Database..."; btn.disabled = true;
+        
+        let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving / Updating Test..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
         .then(res => res.json()).then(data => {
-            btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false;
+            btn.innerText = "🚀 Save / Update Test"; btn.disabled = false;
             document.getElementById('a-exam').value = ""; document.getElementById('a-sub').value = ""; document.getElementById('a-topic').value = "";
             document.getElementById('a-code').value = ""; document.getElementById('a-price').value = ""; document.getElementById('a-key').value = ""; document.getElementById('a-rawdata').value = "";
             
@@ -734,8 +709,8 @@
             if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
-            document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; alert("टेस्ट सफलतापूर्वक Database में सेव हो गया!");
-        }).catch(err => { alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।"); btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false; });
+            document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; alert("टेस्ट सफलतापूर्वक Database में सेव / अपडेट हो गया!");
+        }).catch(err => { alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।"); btn.innerText = "🚀 Save / Update Test"; btn.disabled = false; });
     }
 
     function renderDashboard() {
@@ -750,7 +725,6 @@
         for(let exam in grouped) {
             html += `<h3 style="background:#1f4e79; color:white; padding:10px; border-radius:4px; margin-top:20px;">${exam}</h3>`;
             grouped[exam].forEach(t => {
-                // Ensure correct stringification
                 let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
                 let priceText = isFreeStatus ? "Free" : "₹" + t.price;
                 let isActive = t.isActive !== false; 
@@ -803,7 +777,8 @@
         if(isFreeStatus || t.price === "Free") { document.getElementById('a-pdf-type').value = "free"; } else { document.getElementById('a-pdf-type').value = "paid"; document.getElementById('a-price').value = t.price || ""; }
         
         document.getElementById('a-key').value = t.key || ""; document.getElementById('a-rawdata').value = t.rawText || "";
-        togglePriceBox(); switchAdminTab('create'); alert("टेस्ट का डेटा फॉर्म में आ गया है! बदलाव करके 'Generate & Save Test' दबाएं।");
+        togglePriceBox(); switchAdminTab('create'); 
+        alert("टेस्ट का डेटा फॉर्म में आ गया है! बदलाव करके 'Save / Update Test' दबाएं।");
     }
 
     function deleteTest(idx) {
@@ -828,7 +803,7 @@
             let maskedPhone = r.phone.toString().length >= 4 ? "XXXXXX" + r.phone.toString().slice(-4) : r.phone;
             let d = new Date(r.date).toLocaleDateString();
             html += `<tr><td style="border:1px solid #ccc; padding:5px;">#${i+1}</td><td style="border:1px solid #ccc; padding:5px;"><b>${r.name}</b></td>
-                <td style="border:1px solid #ccc; padding:5px;">${maskedPhone}</td>
+                <td style="border:1px solid #ccc; padding:5px;"><span class="screen-only">${r.phone}</span><span class="print-only">${maskedPhone}</span></td>
                 <td style="border:1px solid #ccc; padding:5px; color:#28a745; font-weight:bold;">${r.score}</td>
                 <td style="border:1px solid #ccc; padding:5px;"><span style='color:green'>${r.right}</span>/<span style='color:red'>${r.wrong}</span>/${r.blank}</td>
                 <td style="border:1px solid #ccc; padding:5px;">${r.time}s</td><td style="border:1px solid #ccc; padding:5px;">${d}</td></tr>`;
@@ -1064,7 +1039,6 @@
 
     function downloadImage() { const link = document.createElement('a'); link.download = studentInfo.name + '_Scorecard.png'; link.href = document.getElementById('reportCardImg').src; link.click(); }
 
-    // 🔥 THE FIX: Strict Password Check for Exam Results Page 🔥
     function handleResultPDFClick() {
         let isFreeStatus = (examData.isFree === true || String(examData.isFree).toLowerCase() === "true");
         if(isFreeStatus) {
@@ -1087,10 +1061,8 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 THE FIX: ORIGINAL, 100% WORKING PDF PRINT METHOD 🔥
     function executePDFPrint(watermarkText, mode) {
-        let printArea = document.getElementById('print-area'); 
-        let safeTestUrl = BASE_URL + "?test=" + examData.code;
+        let printArea = document.getElementById('print-area'); let safeTestUrl = BASE_URL + "?test=" + examData.code;
 
         let html = `<div class="watermark">${watermarkText}</div>`;
         html += `
@@ -1134,8 +1106,14 @@
         
         printArea.innerHTML = html; 
         
-        // Native Printing (No delays, no display: none JS hacks)
-        window.print(); 
+        document.getElementById('main-ui-container').style.display = 'none';
+        document.body.classList.add('print-pdf');
+        
+        setTimeout(() => {
+            window.print();
+            document.body.classList.remove('print-pdf');
+            document.getElementById('main-ui-container').style.display = 'flex';
+        }, 500);
     }
 </script>
 </body>
