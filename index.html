@@ -91,10 +91,27 @@
         
         @media print {
             @page { margin: 8mm; } 
+            
             body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
-            #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
-            .container { display: none !important; }
+            
+            /* Admin Leaderboard Print */
+            body.print-lb .container { display: none !important; }
+            body.print-lb #leaderboard-print { display: block !important; position: static; visibility: visible; width:100%; }
+            body.print-lb #leaderboard-print * { visibility: visible; }
+            
+            /* Student History Report Print */
+            body.print-report .container > * { display: none !important; }
+            body.print-report .container { display: block !important; }
+            body.print-report #student-dashboard-view, 
+            body.print-report #st-history-section, 
+            body.print-report #st-hist-content { display: block !important; visibility: visible; }
+            body.print-report #st-hist-content * { visibility: visible; }
+            body.print-report input, body.print-report button, body.print-report .admin-tabs { display: none !important; }
+
+            /* Standard PDF Print */
+            body.print-pdf #print-area, body.print-pdf #print-area * { visibility: visible; }
+            body.print-pdf #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
+            body.print-pdf .container { display: none !important; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
@@ -106,12 +123,8 @@
             .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
             
-            /* 🔥 Leaderboard Print Hack 🔥 */
             .screen-only { display: none !important; }
             .print-only { display: inline !important; }
-            
-            #leaderboard-print { visibility: visible; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; }
-            #leaderboard-print * { visibility: visible; }
             #leaderboard-print table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;}
             #leaderboard-print th, #leaderboard-print td { border: 1px solid #000; padding: 6px; color: #000;}
             #leaderboard-print th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -146,6 +159,55 @@
         <div class="s-exam" id="top-sexam">Exam Name</div>
     </div>
 
+    <div id="student-dashboard-view" class="view-section">
+        <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
+            <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
+            <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('history')">📈 Check My History</button>
+        </div>
+
+        <div id="st-active-section">
+            <h3 style="color: #1f4e79; text-align: center; margin-bottom: 15px; font-size:16px;">वर्तमान में उपलब्ध टेस्ट</h3>
+            <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading...</div>
+            <div id="st-active-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
+        </div>
+
+        <div id="st-history-section" style="display: none;">
+            <div style="background: #f4f6f8; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align:center;">
+                <h3 style="color:#1f4e79; margin-top:0;">🔍 अपनी परफॉर्मेंस और टेस्ट हिस्ट्री देखें</h3>
+                <input type="tel" id="hist-phone" placeholder="अपना 10 अंकों का रजिस्टर्ड मोबाइल नंबर डालें" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;" maxlength="10">
+                <button class="btn btn-blue" style="max-width:300px; margin:0 auto;" onclick="fetchStudentHistory()">Fetch History</button>
+            </div>
+            
+            <div id="st-hist-loader" style="text-align: center; display:none; margin-top:20px;"><div class="loader"></div> Analysing Performance...</div>
+            
+            <div id="st-hist-content" style="margin-top: 30px; display:none;">
+                <div id="st-graphical-report" style="background: #e6f9ec; border: 2px solid #28a745; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                    <h3 style="margin:0 0 15px 0; color:#155724; text-align:center;">📊 Overall Final Report Card</h3>
+                    <div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:15px; text-align:center;">
+                        <div><h4 style="margin:0; color:#555;">Total Tests</h4><b style="font-size:24px; color:#1f4e79;" id="gr-tot">0</b></div>
+                        <div><h4 style="margin:0; color:#555;">Total Qs</h4><b style="font-size:24px; color:#1f4e79;" id="gr-qs">0</b></div>
+                        <div><h4 style="margin:0; color:#555;">Accuracy</h4><b style="font-size:24px; color:#dc3545;" id="gr-acc">0%</b></div>
+                    </div>
+                    <div class="progress-bar-container" id="gr-bar"></div>
+                    <div style="display:flex; justify-content:center; gap:15px; margin-top:10px; font-size:12px; font-weight:bold;">
+                        <span style="color:#28a745;">🟩 Correct (<span id="gr-r">0</span>)</span>
+                        <span style="color:#dc3545;">🟥 Wrong (<span id="gr-w">0</span>)</span>
+                        <span style="color:#6c757d;">⬜ Blank (<span id="gr-b">0</span>)</span>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-bottom:20px;">
+                    <button class="btn btn-blue" onclick="downloadPerformance()" style="max-width:300px;">📥 Download Complete Performance</button>
+                </div>
+
+                <h3 style="color: #1f4e79; border-bottom:2px solid #ccc; padding-bottom:5px;">📜 Individual Test Records</h3>
+                <div id="st-hist-list"></div>
+            </div>
+        </div>
+        
+        <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
+    </div>
+
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -165,6 +227,12 @@
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
+    </div>
+
+    <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
+        <h2 style="color:#dc3545;">❌ टेस्ट लोड नहीं हो पाया</h2>
+        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें और ब्राउज़र की History/Cache डिलीट करके दोबारा प्रयास करें।</p>
+        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
     <div id="admin-view" class="view-section">
@@ -246,8 +314,7 @@
     </div>
 
     <div id="login-view" class="view-section">
-        
-        <div id="specific-test-login" style="display:none; max-width: 450px; margin: 0 auto 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
+        <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
             <p style="text-align:center; color:#e74c3c; font-weight:bold; margin-top:0;">Test Code: <span id="disp-code">...</span></p>
             <p style="text-align:center; color:#555; font-size:13px; margin-top:-5px;">(+<span id="disp-marks"></span> Marks / -<span id="disp-neg"></span> Negative)</p>
@@ -275,52 +342,11 @@
                 <input type="text" id="pdf-pass" placeholder="पासवर्ड डालें..." style="width:100%; padding:10px; box-sizing:border-box;">
                 <button class="btn btn-pdf" onclick="directDownloadPDF()">🔒 Unlock & Download PDF</button>
             </div>
-        </div>
-
-        <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
-                <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
-                <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('history')">📈 Check My History</button>
-            </div>
-
-            <div id="st-active-section">
-                <h3 style="color: #1f4e79; text-align: center; margin-bottom: 15px; font-size:16px;">वर्तमान में उपलब्ध टेस्ट</h3>
-                <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading...</div>
-                <div id="st-active-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
-            </div>
-
-            <div id="st-history-section" style="display: none;">
-                <div style="background: #f4f6f8; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align:center;">
-                    <h3 style="color:#1f4e79; margin-top:0;">🔍 अपनी परफॉर्मेंस और पुराने टेस्ट देखें</h3>
-                    <input type="tel" id="hist-phone" placeholder="Enter your registered 10-digit mobile number" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;">
-                    <button class="btn btn-blue" style="max-width:300px; margin:0 auto;" onclick="fetchStudentHistory()">Fetch History</button>
-                </div>
-                
-                <div id="st-hist-loader" style="text-align: center; display:none; margin-top:20px;"><div class="loader"></div> Analysing Performance...</div>
-                
-                <div id="st-hist-content" style="margin-top: 30px; display:none;">
-                    <div id="st-graphical-report" style="background: #e6f9ec; border: 2px solid #28a745; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-                        <h3 style="margin:0 0 15px 0; color:#155724; text-align:center;">📊 Overall Final Report Card</h3>
-                        <div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:15px; text-align:center;">
-                            <div><h4 style="margin:0; color:#555;">Total Tests</h4><b style="font-size:24px; color:#1f4e79;" id="gr-tot">0</b></div>
-                            <div><h4 style="margin:0; color:#555;">Total Qs</h4><b style="font-size:24px; color:#1f4e79;" id="gr-qs">0</b></div>
-                            <div><h4 style="margin:0; color:#555;">Accuracy</h4><b style="font-size:24px; color:#dc3545;" id="gr-acc">0%</b></div>
-                        </div>
-                        <div class="progress-bar-container" id="gr-bar"></div>
-                        <div style="display:flex; justify-content:center; gap:15px; margin-top:10px; font-size:12px; font-weight:bold;">
-                            <span style="color:#28a745;">🟩 Correct (<span id="gr-r">0</span>)</span>
-                            <span style="color:#dc3545;">🟥 Wrong (<span id="gr-w">0</span>)</span>
-                            <span style="color:#6c757d;">⬜ Blank (<span id="gr-b">0</span>)</span>
-                        </div>
-                    </div>
-
-                    <h3 style="color: #1f4e79; border-bottom:2px solid #ccc; padding-bottom:5px;">📜 Individual Test Records</h3>
-                    <div id="st-hist-list"></div>
-                </div>
+            
+            <div style="text-align: center; margin-top: 15px;">
+                <button class="btn btn-outline" style="width:auto; padding:8px 20px;" onclick="closeAndRedirect()">🏠 Back to Home</button>
             </div>
         </div>
-        
-        <div class="admin-lock" onclick="openAdminLogin()">🔒</div>
     </div>
 
     <div id="exam-view" class="view-section" style="padding: 0;">
@@ -409,8 +435,8 @@
 <div id="leaderboard-print" style="display:none;"></div>
 
 <script>
-    // 🚨 FINAL GOOGLE SCRIPT URL 🚨
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFh4ImEJMMq7ukkNMNW7022txz8hMb5MErLa3F97udMXXCRSn0JD-sPCFC3lb2vwFgXw/exec";
+    // 🔥 तुम्हारी नई Google Apps Script URL 🔥
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNC5_3_H2vUHtcpH82C0w95Xlr17GLfkGdvs-LFUUajF7b-8U07nYzyvtAaZ8zHP0HSA/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
     let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [] };
@@ -425,7 +451,7 @@
     window.onload = initApp;
 
     function closeAndRedirect() { window.location.href = BASE_URL; }
-    function openAdminLogin() { document.getElementById('login-view').classList.remove('active-view'); document.getElementById('admin-auth-view').classList.add('active-view'); }
+    function openAdminLogin() { document.getElementById('student-dashboard-view').classList.remove('active-view'); document.getElementById('admin-auth-view').classList.add('active-view'); }
 
     function blastConfetti() {
         let duration = 4000; let end = Date.now() + duration; let emojis = ['🎉', '✨', '🏆', '🔥', '👏'];
@@ -464,8 +490,7 @@
             script.onerror = function() { showErrorView("❌ नेटवर्क एरर! सुनिश्चित करें कि Apps Script में Who has access 'Anyone' है।"); };
             document.body.appendChild(script);
         } else {
-            document.getElementById('login-view').classList.add('active-view');
-            document.getElementById('specific-test-login').style.display = 'none'; // Hide test login
+            document.getElementById('student-dashboard-view').classList.add('active-view');
             switchStudentTab('active');
         }
     }
@@ -482,7 +507,7 @@
     function setupLoginScreen() {
         document.getElementById('loading-view').classList.remove('active-view');
         document.getElementById('login-view').classList.add('active-view');
-        document.getElementById('specific-test-login').style.display = 'block'; // Show test login
+        document.getElementById('specific-test-login').style.display = 'block'; 
         
         document.getElementById('head-exam-name').innerText = examData.exam;
         document.getElementById('login-test-name').innerText = examData.exam + " (" + examData.subject + ")";
@@ -507,12 +532,9 @@
             document.getElementById('disp-price').innerText = examData.price; document.getElementById('res-price').innerText = examData.price;
         }
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
-        
-        // Load active tests below the login box too
-        switchStudentTab('active');
     }
 
-    // 🔥 STUDENT HISTORY & DASHBOARD LOGIC 🔥
+    // --- STUDENT DASHBOARD LOGIC ---
     function switchStudentTab(tab) {
         if(tab === 'active') {
             document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
@@ -561,6 +583,7 @@
         if(data.error || !data.history || data.history.length === 0) { alert("इस नंबर से कोई टेस्ट रिकॉर्ड नहीं मिला।"); return; }
         
         let h = data.history; let totRight = 0, totWrong = 0, totBlank = 0; let html = "";
+        
         h.forEach((r) => {
             totRight += r.right; totWrong += r.wrong; totBlank += r.blank;
             let d = new Date(r.date).toLocaleDateString();
@@ -578,7 +601,7 @@
                 </div>
                 <div style="display:flex; gap:5px;">
                     <button class="btn btn-pdf" style="margin:0; padding:6px; font-size:12px; flex:1;" onclick="downloadHistoryPDF('${r.code}', '${r.phone}')">📄 Revision PDF</button>
-                    <button class="btn btn-outline" style="margin:0; padding:6px; font-size:12px; flex:1;" onclick="alert('आपकी विस्तृत परफॉर्मेंस ऊपर Overall Report में जोड़ दी गई है।')">📊 Performance</button>
+                    <button class="btn btn-outline" style="margin:0; padding:6px; font-size:12px; flex:1;" onclick="alert('आपकी विस्तृत परफॉर्मेंस ऊपर Overall Report में जोड़ दी गई है। इसे आप डाउनलोड कर सकते हैं।')">📊 Performance</button>
                 </div>
             </div>`;
         });
@@ -593,13 +616,29 @@
         document.getElementById('st-hist-list').innerHTML = html; document.getElementById('st-hist-content').style.display = 'block';
     };
 
+    function downloadPerformance() {
+        document.body.classList.add('print-report');
+        window.print();
+        document.body.classList.remove('print-report');
+    }
+
     window.downloadHistoryPDF = function(code, phone) {
-        alert("Preparing Revision PDF...");
+        alert("Preparing Revision PDF, please wait...");
         let cb = new Date().getTime(); let script = document.createElement('script');
-        script.src = SCRIPT_URL + "?action=getTest&testCode=" + code + "&callback=handleHistTestLoad&t=" + cb;
-        window.handleHistTestLoad = function(data) {
+        let uniqueCallback = "handleHistTestLoad_" + code.replace(/-/g, '');
+        script.src = SCRIPT_URL + "?action=getTest&testCode=" + code + "&callback=" + uniqueCallback + "&t=" + cb;
+        
+        window[uniqueCallback] = function(data) {
             if(data.error) { alert("Test data unavailable."); return; }
-            examData = data; userAnswers = []; executePDFPrint(phone, 'q_ans'); 
+            if(data.isFree === false) {
+                let pass = prompt("🔒 यह पेड (Paid) PDF है। कृपया अपना पासवर्ड डालें:");
+                if(pass === null) return; 
+                if(pass !== generateStrongPass(phone, data.key.toUpperCase())) {
+                    alert("❌ पासवर्ड गलत है!"); return;
+                }
+            }
+            examData = data; userAnswers = []; 
+            executePDFPrint(phone, 'q_ans'); 
         };
         document.body.appendChild(script);
     }
@@ -725,14 +764,11 @@
                     <div style="margin-top:5px; display:flex; gap:10px; flex-wrap:wrap; border-top:1px solid #eee; padding-top:10px;">
                         <button class="btn btn-blue" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="editTest(${t.originalIndex})">✏️ Edit</button>
                         <button class="btn" style="background:#dc3545; margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="deleteTest(${t.originalIndex})">🗑️ Delete</button>
+                        <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_only')">📝 Qs Only</button>
+                        <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#17a2b8;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_ans')">✅ Qs+Ans</button>
+                        <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#28a745;" onclick="adminDownloadPDF(${t.originalIndex}, 'full')">📚 Full PDF</button>
                         <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
-                        <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="viewResults('${t.code}')">📊 View Results</button>
-                    </div>
-                    <div style="margin-top:10px; display:flex; gap:5px; flex-wrap:wrap;">
-                        <b style="font-size:12px; width:100%;">PDF Options:</b>
-                        <button class="btn btn-pdf" style="margin:0; padding:5px; font-size:11px; width:auto;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_only')">📝 Qs Only</button>
-                        <button class="btn btn-pdf" style="margin:0; padding:5px; font-size:11px; width:auto; background:#17a2b8;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_ans')">✅ Qs+Ans</button>
-                        <button class="btn btn-pdf" style="margin:0; padding:5px; font-size:11px; width:auto; background:#28a745;" onclick="adminDownloadPDF(${t.originalIndex}, 'full')">📚 Full PDF</button>
+                        <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: 100%; font-size:14px;" onclick="viewResults('${t.code}')">📊 View Results / Leaderboard</button>
                     </div>
                 </div>`;
             });
@@ -794,9 +830,11 @@
     function printLeaderboard() {
         if(!currentAdminLbData) return;
         let printArea = document.getElementById('leaderboard-print');
-        printArea.innerHTML = `<h2 style="text-align:center; color:#1f4e79; margin-bottom:15px;">Result Report: ${document.getElementById('lb-title').innerText}</h2>` + currentAdminLbData;
-        document.querySelector('.container').style.display = 'none'; printArea.style.display = 'block'; window.print();
-        printArea.style.display = 'none'; document.querySelector('.container').style.display = 'flex';
+        printArea.innerHTML = `<h2 style="text-align:center; color:#1f4e79; margin-bottom:15px; border-bottom: 2px solid #ccc; padding-bottom:10px;">🏆 Leaderboard Result: ${document.getElementById('lb-title').innerText}</h2>` + currentAdminLbData;
+        
+        document.body.classList.add('print-lb');
+        window.print();
+        document.body.classList.remove('print-lb');
     }
 
     function adminDownloadPDF(idx, mode) {
@@ -994,7 +1032,7 @@
 
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); let safeTestUrl = BASE_URL + "?test=" + examData.code;
-        document.body.classList.add("print-mode-" + mode); 
+        document.body.classList.add("print-pdf"); 
 
         let html = `<div class="watermark">${watermarkText}</div>`;
         html += `
@@ -1036,7 +1074,7 @@
             html += `</div>`; 
         });
         
-        printArea.innerHTML = html; window.print(); 
+        printArea.innerHTML = html; window.print(); document.body.classList.remove("print-pdf");
     }
 </script>
 </body>
