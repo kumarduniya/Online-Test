@@ -57,6 +57,7 @@
         .action-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
         .btn-prev { background: #6c757d; } .btn-next { background: #28a745; } .btn-clear { background: #ffc107; color: #333; } .btn-submit { background: #dc3545; }
         
+        /* 🔥 पैलेट अलाइनमेंट और कलर्स फिक्स 🔥 */
         .palette-legend { display: flex; flex-wrap: nowrap; justify-content: space-around; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; background: #fff; }
         .legend-item { display: flex; align-items: center; justify-content: center; font-weight:bold; color:#555;}
         .box { width: 20px; height: 20px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: #333; line-height: 20px; font-weight: bold; border: 1px solid #aaa; font-size:10px;}
@@ -85,30 +86,39 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 MASTER PRINT CSS (100% Blank Page Fix) 🔥 */
+        /* 🔥 BULLETPROOF PRINTING CSS (परमानेंट फिक्स) 🔥 */
         #print-area { display: none; }
         #leaderboard-print { display: none; }
         
+        @media screen {
+            .print-only { display: none !important; }
+            .screen-only { display: inline !important; }
+        }
+        
         @media print {
-            @page { margin: 10mm; } 
+            @page { margin: 8mm; } 
             
-            /* PDF Print Mode */
-            body.print-pdf .container { display: none !important; }
-            body.print-pdf #print-area { display: block !important; position: static; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
+            body * { visibility: hidden; }
             
-            /* Leaderboard Print Mode */
-            body.print-lb .container { display: none !important; }
-            body.print-lb #leaderboard-print { display: block !important; position: static; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
+            /* PDF Q&A Print Mode (Static for multi-page) */
+            body.print-pdf #main-ui-container { display: none !important; }
+            body.print-pdf #print-area, body.print-pdf #print-area * { visibility: visible; }
+            body.print-pdf #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
             
-            /* Student Report Print Mode */
-            body.print-report .tcs-header, 
-            body.print-report .admin-tabs, 
-            body.print-report input, 
-            body.print-report button, 
-            body.print-report .admin-lock, 
-            body.print-report #st-active-section,
-            body.print-report #direct-pdf-box { display: none !important; }
-
+            /* Leaderboard Print Mode (Static for multi-page) */
+            body.print-lb #main-ui-container { display: none !important; }
+            body.print-lb #leaderboard-print, body.print-lb #leaderboard-print * { visibility: visible; }
+            body.print-lb #leaderboard-print { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
+            
+            /* History Report Print Mode */
+            body.print-report #main-ui-container > *:not(#student-dashboard-view) { display: none !important; }
+            body.print-report #student-dashboard-view, 
+            body.print-report #st-history-section, 
+            body.print-report #st-hist-content { display: block !important; visibility: visible; }
+            body.print-report #st-hist-content * { visibility: visible; }
+            body.print-report input, body.print-report button, body.print-report .admin-tabs { display: none !important; }
+            
+            /* Shared PDF Styles */
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #000000 !important; }
             .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
@@ -117,15 +127,13 @@
             .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
             
-            /* Leaderboard specific Print classes */
+            /* Number Masking for Print */
             .screen-only { display: none !important; }
             .print-only { display: inline !important; }
-            #leaderboard-print table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;}
-            #leaderboard-print th, #leaderboard-print td { border: 1px solid #000; padding: 6px; color: #000;}
-            #leaderboard-print th { background-color: #eee !important; }
-
-            /* Force Colors */
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            
+            table.res-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;}
+            table.res-table th, table.res-table td { border: 1px solid #000; padding: 6px; color: #000;}
+            table.res-table th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
         @media (max-width: 768px) {
@@ -144,7 +152,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="main-ui-container">
     <div class="tcs-header">
         <h2 id="head-exam-name">Exam Portal</h2>
         <div id="timer-box" class="timer" style="display:none;">
@@ -157,25 +165,22 @@
         <div class="s-exam" id="top-sexam">Exam Name</div>
     </div>
 
-    <!-- 🔥 STUDENT GLOBAL DASHBOARD (Active Tests & History) 🔥 -->
     <div id="student-dashboard-view" class="view-section">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
-            <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('history')">📈 Check My History</button>
+            <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('history')">📈 My Performance</button>
         </div>
 
-        <!-- Active Tests List -->
         <div id="st-active-section">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 15px; font-size:16px;">वर्तमान में उपलब्ध टेस्ट</h3>
             <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading...</div>
             <div id="st-active-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
         </div>
 
-        <!-- Student History Tracker -->
         <div id="st-history-section" style="display: none;">
             <div style="background: #f4f6f8; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align:center;">
                 <h3 style="color:#1f4e79; margin-top:0;">🔍 अपनी परफॉर्मेंस और टेस्ट हिस्ट्री देखें</h3>
-                <input type="tel" id="hist-phone" placeholder="अपना 10 अंकों का रजिस्टर्ड मोबाइल नंबर डालें" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;" maxlength="10">
+                <input type="tel" id="hist-phone" placeholder="Enter your registered 10-digit mobile number" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;" maxlength="10">
                 <button class="btn btn-blue" style="max-width:300px; margin:0 auto;" onclick="fetchStudentHistory()">Fetch History</button>
             </div>
             
@@ -205,11 +210,9 @@
                 <div id="st-hist-list"></div>
             </div>
         </div>
-        
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
-    <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -222,11 +225,10 @@
                 <input type="password" id="admin-pass" placeholder="Enter Password">
             </div>
             <button class="btn btn-blue" onclick="loginAdmin()">Login to Dashboard</button>
-            <button class="btn btn-outline" style="margin-top:10px;" onclick="closeAndRedirect()">⬅️ Back to Home</button>
+            <button class="btn btn-outline" style="margin-top:10px;" onclick="location.reload()">⬅️ Back to Home</button>
         </div>
     </div>
 
-    <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -235,10 +237,9 @@
     <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <h2 style="color:#dc3545;">❌ टेस्ट लोड नहीं हो पाया</h2>
         <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें और ब्राउज़र की History/Cache डिलीट करके दोबारा प्रयास करें।</p>
-        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="closeAndRedirect()">🏠 Back to Home</button>
+        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
-    <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -280,7 +281,6 @@
                 <textarea id="a-rawdata"></textarea>
             </div>
             <button id="btn-generate" class="btn btn-blue" onclick="generateAndSaveLink()">🚀 Generate & Save Test</button>
-            <button class="btn btn-outline" onclick="closeAndRedirect()" style="margin-top:10px;">🏠 Exit Admin Panel</button>
             
             <div id="linkContainer" style="display: none; margin-top: 20px; background: #e9ecef; padding: 15px; border-radius: 5px;">
                 <label style="color: #d35400;"><b>👇 यह लिंक कॉपी करके छात्रों को भेजें:</b></label>
@@ -301,24 +301,11 @@
                     <button id="copy-pass-btn" class="btn btn-outline" style="display: none; padding: 2px 8px; margin: 0; font-size: 12px; width: auto; background:white;" onclick="copyGeneratedPass()">📋 Copy Pass</button>
                 </div>
             </div>
-            
-            <div id="leaderboard-view" style="display: none; background: #fff; padding: 15px; border: 2px solid #1f4e79; border-radius: 8px; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
-                    <h3 style="margin: 0; color: #1f4e79;">📊 Result: <span id="lb-title"></span></h3>
-                    <div>
-                        <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="printLeaderboard()">🖨️ Print List</button>
-                        <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌</button>
-                    </div>
-                </div>
-                <div style="overflow-x:auto;" id="leaderboard-content"></div>
-            </div>
-
             <h3 style="color: #1f4e79;">📁 Active Tests List</h3>
             <div id="dashboard-list"></div>
         </div>
     </div>
 
-    <!-- 2. TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -355,7 +342,6 @@
         </div>
     </div>
 
-    <!-- 3. EXAM INTERFACE -->
     <div id="exam-view" class="view-section" style="padding: 0;">
         <div class="exam-container">
             <div class="left-panel">
@@ -385,7 +371,6 @@
         </div>
     </div>
 
-    <!-- 4. RESULT & REPORT CARD -->
     <div id="result-view" class="view-section">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -439,14 +424,13 @@
     </div>
 </div>
 
-<!-- 🔥 INVISIBLE CONTAINERS FOR FLAWLESS PRINTING 🔥 -->
 <div id="print-area"></div>
 <div id="leaderboard-print"></div>
 
 <script>
     // 🚨 FINAL GOOGLE SCRIPT URL 🚨
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFh4ImEJMMq7ukkNMNW7022txz8hMb5MErLa3F97udMXXCRSn0JD-sPCFC3lb2vwFgXw/exec";
-    const BASE_URL = "https://studynotesmanager.netlify.app/"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG8mRMbsSsAflJacr7K-VLiaynnizCDCpXE0ieLvhm5ttojjGL_-2h_VKA6E_YSXs9LQ/exec";
+    const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
     let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [] };
     let userAnswers = []; let qStatus = []; let currentQ = 0;
@@ -459,13 +443,8 @@
 
     window.onload = initApp;
 
-    // 🔥 THE FIX: Permanent Universal Redirect 🔥
     function closeAndRedirect() { window.location.href = BASE_URL; }
-    
-    // Also trap the physical Back button
-    window.addEventListener('popstate', function(event) { closeAndRedirect(); });
-
-    function openAdminLogin() { document.getElementById('student-dashboard-view').classList.remove('active-view'); document.getElementById('admin-auth-view').classList.add('active-view'); }
+    function openAdminLogin() { document.getElementById('login-view').classList.remove('active-view'); document.getElementById('student-dashboard-view').classList.remove('active-view'); document.getElementById('admin-auth-view').classList.add('active-view'); }
 
     function blastConfetti() {
         let duration = 4000; let end = Date.now() + duration; let emojis = ['🎉', '✨', '🏆', '🔥', '👏'];
@@ -494,8 +473,6 @@
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('student-top-bar').style.display = 'none';
         
-        history.pushState(null, null, window.location.href); // Setup state for back button
-
         const urlParams = new URLSearchParams(window.location.search);
         const testCode = urlParams.get('test');
 
@@ -513,7 +490,7 @@
 
     window.handleTestLoad = function(data) {
         if(data.error) { showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")"); return; }
-        if(data.isActive === false) { showErrorView("❌ यह टेस्ट अभी एडमिन द्वारा बंद (Deactive) कर दिया गया है।"); return; }
+        if(data.isActive === false) { showErrorView("❌ यह टेस्ट अभी एडमिन द्वारा बंद (Inactive) कर दिया गया है।"); return; }
         
         examData = data; examData.marks = data.marks || 2; examData.neg = data.neg || 0;
         examData.totTime = data.totTime || 0; examData.qTime = data.qTime || 0;
@@ -550,6 +527,7 @@
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
     }
 
+    // 🔥 STUDENT DASHBOARD LOGIC 🔥
     function switchStudentTab(tab) {
         if(tab === 'active') {
             document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
@@ -600,14 +578,8 @@
         let h = data.history; let totRight = 0, totWrong = 0, totBlank = 0; let html = "";
         
         h.forEach((r) => {
-            // 🔥 THE FIX: Safe variables to avoid undefined UI 🔥
-            let rt = r.right !== undefined && r.right !== "" ? parseInt(r.right) : 0;
-            let wr = r.wrong !== undefined && r.wrong !== "" ? parseInt(r.wrong) : 0;
-            let bk = r.blank !== undefined && r.blank !== "" ? parseInt(r.blank) : 0;
-            
-            totRight += rt; totWrong += wr; totBlank += bk;
+            totRight += r.right; totWrong += r.wrong; totBlank += r.blank;
             let d = new Date(r.date).toLocaleDateString();
-            
             html += `<div style="background:#fff; border:1px solid #ddd; padding:15px; border-radius:6px; margin-bottom:15px; text-align:left;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:5px; margin-bottom:10px;">
                     <b style="color:#1f4e79;">Test: ${r.code}</b> <span style="font-size:12px; color:#777;">🗓️ ${d}</span>
@@ -618,7 +590,7 @@
                     <span style="background:#e2e3e5; color:#383d41; padding:3px 8px; border-radius:4px;"><b>Attempt:</b> ${r.attempt}</span>
                 </div>
                 <div style="font-size:12px; font-weight:bold; display:flex; gap:10px; margin-bottom:15px;">
-                    <span style="color:#28a745;">✅ R: ${rt}</span> <span style="color:#dc3545;">❌ W: ${wr}</span> <span style="color:#6c757d;">⬜ B: ${bk}</span>
+                    <span style="color:#28a745;">✅ R: ${r.right}</span> <span style="color:#dc3545;">❌ W: ${r.wrong}</span> <span style="color:#6c757d;">⬜ B: ${r.blank}</span>
                 </div>
                 <div style="display:flex; gap:5px;">
                     <button class="btn btn-pdf" style="margin:0; padding:6px; font-size:12px; flex:1;" onclick="downloadHistoryPDF('${r.code}', '${r.phone}')">📄 Revision PDF</button>
@@ -638,8 +610,11 @@
     };
 
     function downloadPerformance() {
-        document.body.className = 'print-report';
-        setTimeout(() => { window.print(); document.body.className = ''; }, 500);
+        document.body.classList.add('print-report');
+        setTimeout(() => {
+            window.print();
+            document.body.classList.remove('print-report');
+        }, 1000);
     }
 
     window.downloadHistoryPDF = function(code, phone) {
@@ -653,9 +628,7 @@
             if(data.isFree === false) {
                 let pass = prompt("🔒 यह पेड (Paid) PDF है। कृपया अपना पासवर्ड डालें:");
                 if(pass === null) return; 
-                if(pass !== generateStrongPass(phone, data.key.toUpperCase())) {
-                    alert("❌ पासवर्ड गलत है!"); return;
-                }
+                if(pass !== generateStrongPass(phone, data.key.toUpperCase())) { alert("❌ पासवर्ड गलत है!"); return; }
             }
             examData = data; userAnswers = []; 
             executePDFPrint(phone, 'q_ans'); 
@@ -738,7 +711,7 @@
 
         let parsedQs = parseRawQuestions(rawText);
         let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, isActive: true };
-        let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving..."; btn.disabled = true;
+        let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test to Database..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
         .then(res => res.json()).then(data => {
@@ -746,7 +719,7 @@
             document.getElementById('a-exam').value = ""; document.getElementById('a-sub').value = ""; document.getElementById('a-topic').value = "";
             document.getElementById('a-code').value = ""; document.getElementById('a-price').value = ""; document.getElementById('a-key').value = ""; document.getElementById('a-rawdata').value = "";
             
-            let testLink = window.location.origin + window.location.pathname + "?test=" + eCode;
+            let testLink = BASE_URL + "?test=" + eCode;
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let existingIdx = savedTests.findIndex(t => t.code === eCode);
             let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
             if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
@@ -832,35 +805,33 @@
         if(data.error) { document.getElementById('leaderboard-content').innerHTML = "<p style='color:red;'>"+data.error+"</p>"; return; }
         let res = data.results; if(!res || res.length === 0) { document.getElementById('leaderboard-content').innerHTML = "<p>अभी तक किसी ने यह टेस्ट नहीं दिया है।</p>"; return; }
         
-        let html = `<table class="res-table"><tr><th>Rank</th><th>Name</th><th>Phone</th><th>Score</th><th>R / W / B</th><th>Time(s)</th><th>Date</th></tr>`;
+        // 🔥 THE FIX: Leaderboard Data Update with Time and Colors 🔥
+        let html = `<table class="res-table"><tr><th>Rank</th><th>Name</th><th>Phone</th><th>Score</th><th>✅ R</th><th>❌ W</th><th>⬜ B</th><th>Time(s)</th><th>Date</th></tr>`;
         res.forEach((r, i) => {
             let maskedPhone = r.phone.toString().length >= 4 ? "XXXXXX" + r.phone.toString().slice(-4) : r.phone;
             let d = new Date(r.date).toLocaleDateString();
-            
-            // 🔥 THE FIX: Safe variables for Leaderboard data 🔥
-            let rt = r.right !== undefined && r.right !== "" ? r.right : "-";
-            let wr = r.wrong !== undefined && r.wrong !== "" ? r.wrong : "-";
-            let bk = r.blank !== undefined && r.blank !== "" ? r.blank : "-";
-            let tm = r.time !== undefined && r.time !== "" ? r.time + "s" : "-";
-
             html += `<tr><td>#${i+1}</td><td><b>${r.name}</b></td>
                 <td><span class="screen-only">${r.phone}</span><span class="print-only">${maskedPhone}</span></td>
                 <td style="color:#28a745; font-weight:bold;">${r.score}</td>
-                <td><span style='color:green'>${rt}</span> / <span style='color:red'>${wr}</span> / ${bk}</td>
-                <td>${tm}</td><td>${d}</td></tr>`;
+                <td style="color:green; font-weight:bold;">${r.right}</td><td style="color:red; font-weight:bold;">${r.wrong}</td><td style="color:gray; font-weight:bold;">${r.blank}</td>
+                <td>${r.time}s</td><td>${d}</td></tr>`;
         });
         html += `</table>`;
         currentAdminLbData = html; document.getElementById('leaderboard-content').innerHTML = html;
     };
 
-    // 🔥 THE FIX: Leaderboard Print Page Bug Fixed 🔥
+    // 🔥 THE FIX: Bulletproof Leaderboard Print Hack 🔥
     function printLeaderboard() {
         if(!currentAdminLbData) return;
         let printArea = document.getElementById('leaderboard-print');
         printArea.innerHTML = `<h2 style="text-align:center; color:#1f4e79; margin-bottom:15px; border-bottom: 2px solid #ccc; padding-bottom:10px;">🏆 Leaderboard Result: ${document.getElementById('lb-title').innerText}</h2>` + currentAdminLbData;
         
-        document.body.className = 'print-lb';
-        setTimeout(() => { window.print(); document.body.className = ''; }, 500); // 500ms delay to allow DOM render before print dialog
+        document.body.classList.add('print-lb');
+        
+        setTimeout(() => {
+            window.print();
+            document.body.classList.remove('print-lb');
+        }, 1000); // 1-second delay so Mobile Chrome renders properly!
     }
 
     function adminDownloadPDF(idx, mode) {
@@ -869,6 +840,7 @@
         studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; }); executePDFPrint(studentInfo.name, mode);
     }
 
+    // --- STUDENT TEST LOGIC ---
     function startExam(isReattempt) {
         if(!isReattempt) {
             studentInfo.name = document.getElementById('s-name').value; studentInfo.phone = document.getElementById('s-phone').value;
@@ -1054,10 +1026,9 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 THE FIX: Flawless PDF Print Logic 🔥
+    // 🔥 THE FIX: Q&A PDF Print Hack 🔥
     function executePDFPrint(watermarkText, mode) {
-        let printArea = document.getElementById('print-area'); 
-        let safeTestUrl = BASE_URL + "?test=" + examData.code;
+        let printArea = document.getElementById('print-area'); let safeTestUrl = BASE_URL + "?test=" + examData.code;
 
         let html = `<div class="watermark">${watermarkText}</div>`;
         html += `
@@ -1101,11 +1072,12 @@
         
         printArea.innerHTML = html; 
         
-        document.body.className = "print-pdf"; 
-        setTimeout(() => { 
-            window.print(); 
-            document.body.className = ""; 
-        }, 500); // 500ms delay to ensure browser renders HTML before print dialog opens
+        document.body.classList.add('print-pdf');
+        
+        setTimeout(() => {
+            window.print();
+            document.body.classList.remove('print-pdf');
+        }, 1000); // 1 Second Delay to fix Blank Page bug!
     }
 </script>
 </body>
