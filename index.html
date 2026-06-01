@@ -85,16 +85,23 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 BULLETPROOF PRINTING CSS (परमानेंट और देसी फिक्स) 🔥 */
+        /* 🔥 BULLETPROOF PRINTING CSS 🔥 */
         #print-area { display: none; }
+        
+        @media screen {
+            .print-only { display: none !important; }
+            .screen-only { display: inline !important; }
+        }
         
         @media print {
             @page { margin: 8mm; } 
             
-            /* कंटेनर को छुपाओ और प्रिंट एरिया को दिखाओ */
-            body > *:not(#print-area) { display: none !important; }
-            #print-area { display: block !important; visibility: visible !important; width: 100%; position: static !important; font-family: Arial, sans-serif; }
-            #print-area * { visibility: visible !important; }
+            body * { visibility: hidden; }
+            
+            /* PDF Q&A Print Mode (Static for multi-page, no blank page issues) */
+            body.print-pdf #main-ui-container { display: none !important; }
+            body.print-pdf #print-area, body.print-pdf #print-area * { visibility: visible; }
+            body.print-pdf #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; box-sizing: border-box; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
@@ -123,6 +130,7 @@
 </head>
 <body>
 
+<!-- MAIN UI CONTAINER -->
 <div class="container" id="main-ui-container">
     <div class="tcs-header">
         <h2 id="head-exam-name">Exam Portal</h2>
@@ -204,6 +212,12 @@
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
     </div>
 
+    <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
+        <h2 style="color:#dc3545;">❌ टेस्ट लोड नहीं हो पाया</h2>
+        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें और ब्राउज़र की History/Cache डिलीट करके दोबारा प्रयास करें।</p>
+        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
+    </div>
+
     <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
@@ -271,7 +285,6 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
                     <h3 style="margin: 0; color: #1f4e79;">📊 Result: <span id="lb-title"></span></h3>
                     <div>
-                        <!-- 🔥 THE FIX: Leaderboard Image Download Button 🔥 -->
                         <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="downloadLeaderboardImage()">🖼️ Download Image</button>
                         <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌</button>
                     </div>
@@ -279,7 +292,10 @@
                 <div style="overflow-x:auto;" id="leaderboard-content"></div>
             </div>
 
-            <h3 style="color: #1f4e79;">📁 Active Tests List</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #1f4e79;">📁 Active Tests List</h3>
+                <button class="btn btn-outline" style="background:#dc3545; color:white; border:none; width:auto; padding: 5px 10px; font-size:12px;" onclick="clearAdminMemory()">🗑️ Clear Old Admin Memory</button>
+            </div>
             <div id="dashboard-list"></div>
         </div>
     </div>
@@ -300,6 +316,19 @@
                 <input type="text" id="s-name" placeholder="अपना नाम भरें" required style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
                 <input type="tel" id="s-phone" placeholder="अपना 10 अंकों का मोबाइल नंबर भरें" required style="width:100%; padding:10px; box-sizing:border-box;" maxlength="10">
                 <button class="btn" onclick="startExam(false)">Start Test 🚀</button>
+            </div>
+
+            <div id="direct-pdf-box" style="background: #fff3cd; padding: 15px; border-radius: 6px; border: 1px solid #ffeeba;">
+                <h4 style="margin: 0 0 10px 0; color: #856404;">📥 बिना टेस्ट दिए डायरेक्ट PDF डाउनलोड</h4>
+                <div id="paid-instructions" style="font-size: 13px; color: #856404; margin-bottom: 10px;">
+                    PDF मूल्य: <b>₹<span id="disp-price">0</span></b><br>पासवर्ड पाने के लिए <b>8273684939</b> पर पेमेंट करें और स्क्रीनशॉट WhatsApp करें।
+                </div>
+                <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
+                    🎉 यह PDF सभी के लिए Free है!
+                </div>
+                <input type="tel" id="pdf-phone" placeholder="अपना मोबाइल नंबर डालें..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
+                <input type="text" id="pdf-pass" placeholder="पासवर्ड डालें..." style="width:100%; padding:10px; box-sizing:border-box;">
+                <button class="btn btn-pdf" onclick="directDownloadPDF()">🔒 Unlock & Download PDF</button>
             </div>
             
             <div style="text-align: center; margin-top: 15px;">
@@ -352,8 +381,9 @@
             
             <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto;">
                 <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1;" onclick="downloadImage()">🖼️ Download Score Card</button>
-                <!-- 🔥 THE FIX: Direct PDF Download Button on Scorecard 🔥 -->
-                <button id="btn-pdf-down" class="btn btn-pdf" style="display: none; flex: 1;" onclick="executePDFPrint(studentInfo.name, 'full')">📄 Download Test PDF</button>
+                
+                <!-- 🔥 THE FIX: Paid PDF Bypass fixed via handleResultPDFClick() 🔥 -->
+                <button id="btn-pdf-down" class="btn btn-pdf" style="display: none; flex: 1;" onclick="handleResultPDFClick()">📄 Download Question Paper</button>
             </div>
 
             <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
@@ -364,6 +394,24 @@
             
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 600px; margin: 15px auto; padding: 15px; text-align: left; max-height: 350px; overflow-y: auto; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);"></div>
             
+            <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
+                <h4 style="margin: 0 0 10px 0; color: #856404;">📥 PDF + Solution कैसे लें?</h4>
+                <p style="margin: 0 0 10px 0; font-size: 14px; color: #dc3545; font-weight:bold;">
+                    📌 निर्देश: भविष्य में इस टेस्ट की PDF के लिए इसी लिंक को दोबारा ओपन करें और Test Code: <span id="res-code"></span> याद रखें।
+                </p>
+                <div id="res-paid-instructions" style="font-size: 13px; color: #333;">
+                    PDF मूल्य: <b>₹<span id="res-price">0</span></b> | पासवर्ड के लिए <b>8273684939</b> पर Payment करके स्क्रीनशॉट WhatsApp करें।
+                </div>
+                <div id="res-free-instructions" style="font-size: 13px; color: #28a745; display: none; font-weight:bold;">
+                    🎉 यह PDF सभी के लिए Free है!
+                </div>
+
+                <div id="res-pass-box" style="display: flex; gap: 10px; margin-top: 15px;">
+                    <input type="text" id="s-pass-result" placeholder="अपना पासवर्ड डालें" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <button class="btn-pdf action-btn" style="border-radius: 4px; padding: 10px 20px;" onclick="resultDownloadPDF()">🔒 Unlock PDF</button>
+                </div>
+            </div>
+
             <div style="text-align: center; margin: 25px 0;">
                 <button class="btn" style="background: #17a2b8; max-width: 300px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.2);" onclick="closeAndRedirect()">🏠 Close & Go to Home</button>
             </div>
@@ -375,8 +423,12 @@
 <div id="print-area"></div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFh4ImEJMMq7ukkNMNW7022txz8hMb5MErLa3F97udMXXCRSn0JD-sPCFC3lb2vwFgXw/exec";
+    // 🚨 YAHAN APNI GOOGLE SCRIPT LINK PASTE KAREIN 🚨
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxG8mRMbsSsAflJacr7K-VLiaynnizCDCpXE0ieLvhm5ttojjGL_-2h_VKA6E_YSXs9LQ/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
+
+    // 🔥 THE FIX: Yahan un purane tests ke code daal do jo tum nahi dikhana chahte 🔥
+    const HIDDEN_TESTS = ["UP-123", "DEMO", "DEMO2"]; 
 
     let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [] };
     let userAnswers = []; let qStatus = []; let currentQ = 0;
@@ -385,12 +437,19 @@
     let globalTimer; let qTimer; 
     let globalTimeLeft = 0; let qTimeLeft = 0; let totalTimeSpent = 0;
     let isReattemptMode = false; let currentGeneratedPass = ""; 
-    let currentAdminLbDataRaw = []; // Holds array data for Canvas Drawing
+    let currentAdminLbDataRaw = []; 
 
     window.onload = initApp;
 
     function closeAndRedirect() { window.location.href = BASE_URL; }
     function openAdminLogin() { document.getElementById('student-dashboard-view').classList.remove('active-view'); document.getElementById('admin-auth-view').classList.add('active-view'); }
+
+    function clearAdminMemory() {
+        if(confirm("क्या आप एडमिन पैनल से सभी पुराने सेव किये गए टेस्ट हटाना चाहते हैं? (इससे डेटाबेस से कुछ डिलीट नहीं होगा)")) {
+            localStorage.removeItem('myMockTests');
+            renderDashboard();
+        }
+    }
 
     function blastConfetti() {
         let duration = 4000; let end = Date.now() + duration; let emojis = ['🎉', '✨', '🏆', '🔥', '👏'];
@@ -459,6 +518,15 @@
         if(examData.qTime > 0) tInfo += `Per Q: ${examData.qTime} Secs`;
         document.getElementById('disp-time-info').innerText = tInfo;
         
+        if(examData.isFree) {
+            document.getElementById('direct-pdf-box').style.display = 'none'; 
+            document.getElementById('res-paid-instructions').style.display = 'none'; 
+            document.getElementById('res-pass-box').style.display = 'none'; 
+            document.getElementById('res-free-instructions').style.display = 'block'; 
+        } else {
+            document.getElementById('direct-pdf-box').style.display = 'block';
+            document.getElementById('disp-price').innerText = examData.price; document.getElementById('res-price').innerText = examData.price;
+        }
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
     }
 
@@ -487,6 +555,7 @@
         if(!data.tests || data.tests.length === 0) { list.innerHTML = "<p>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>"; return; }
         let html = "";
         data.tests.forEach(t => {
+            if(HIDDEN_TESTS.includes(t.code)) return; 
             html += `<div style="background:#fff; border:1px solid #ccc; border-radius:8px; padding:15px; width:100%; max-width:350px; text-align:left; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
                 <h4 style="margin:0 0 5px 0; color:#1f4e79;">${t.exam}</h4>
                 <p style="margin:0 0 10px 0; font-size:13px; color:#555;"><b>${t.sub}</b> ${t.topic ? "("+t.topic+")" : ""}</p>
@@ -494,6 +563,7 @@
                 <button class="btn btn-blue" style="margin:0; padding:8px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>
             </div>`;
         });
+        if(html === "") html = "<p>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>";
         list.innerHTML = html;
     };
 
@@ -543,6 +613,7 @@
         document.getElementById('st-hist-list').innerHTML = html; document.getElementById('st-hist-content').style.display = 'block';
     };
 
+    // 🔥 THE FIX: Password Check for History PDF Download 🔥
     window.downloadHistoryPDF = function(code, phone) {
         alert("Preparing Revision PDF, please wait...");
         let cb = new Date().getTime(); let script = document.createElement('script');
@@ -551,7 +622,7 @@
         
         window[uniqueCallback] = function(data) {
             if(data.error) { alert("Test data unavailable."); return; }
-            if(data.isFree === false) {
+            if(data.isFree === false || data.isFree === "false") {
                 let pass = prompt("🔒 यह पेड (Paid) PDF है। कृपया अपना पासवर्ड डालें:");
                 if(pass === null) return; 
                 if(pass !== generateStrongPass(phone, data.key.toUpperCase())) { alert("❌ पासवर्ड गलत है!"); return; }
@@ -562,7 +633,6 @@
         document.body.appendChild(script);
     }
 
-    // --- ADMIN PANEL LOGIC ---
     function switchAdminTab(tab) {
         if(tab === 'create') {
             document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active');
@@ -732,7 +802,7 @@
         if(data.error) { document.getElementById('leaderboard-content').innerHTML = "<p style='color:red;'>"+data.error+"</p>"; return; }
         let res = data.results; if(!res || res.length === 0) { document.getElementById('leaderboard-content').innerHTML = "<p>अभी तक किसी ने यह टेस्ट नहीं दिया है।</p>"; return; }
         
-        currentAdminLbDataRaw = res; // Save for Image generation
+        currentAdminLbDataRaw = res; 
         
         let html = `<table class="res-table" style="width:100%; border-collapse: collapse; font-size:12px;"><tr><th style="border:1px solid #ccc; padding:5px;">Rank</th><th style="border:1px solid #ccc; padding:5px;">Name</th><th style="border:1px solid #ccc; padding:5px;">Phone</th><th style="border:1px solid #ccc; padding:5px;">Score</th><th style="border:1px solid #ccc; padding:5px;">R/W/B</th><th style="border:1px solid #ccc; padding:5px;">Time</th><th style="border:1px solid #ccc; padding:5px;">Date</th></tr>`;
         res.forEach((r, i) => {
@@ -755,53 +825,38 @@
         
         let canvas = document.createElement('canvas');
         canvas.width = 1000;
-        canvas.height = 200 + (res.length * 40); // Auto height
+        canvas.height = 200 + (res.length * 40); 
         let ctx = canvas.getContext('2d');
 
-        // Background
         ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Header
         ctx.fillStyle = '#1f4e79'; ctx.fillRect(0, 0, canvas.width, 100);
         ctx.fillStyle = '#ffffff'; ctx.font = 'bold 30px Arial'; ctx.textAlign = 'center';
         ctx.fillText("Test Result Leaderboard: " + document.getElementById('lb-title').innerText, 500, 60);
 
-        // Columns
         ctx.fillStyle = '#1f4e79'; ctx.font = 'bold 18px Arial'; ctx.textAlign = 'left';
         let y = 150;
-        ctx.fillText("Rank", 50, y);
-        ctx.fillText("Name", 150, y);
-        ctx.fillText("Phone", 400, y);
-        ctx.fillText("Score", 550, y);
-        ctx.fillText("R / W / B", 680, y);
-        ctx.fillText("Time", 820, y);
+        ctx.fillText("Rank", 50, y); ctx.fillText("Name", 150, y); ctx.fillText("Phone", 400, y);
+        ctx.fillText("Score", 550, y); ctx.fillText("R / W / B", 680, y); ctx.fillText("Time", 820, y);
 
         ctx.beginPath(); ctx.moveTo(50, y+10); ctx.lineTo(950, y+10); ctx.strokeStyle = '#ccc'; ctx.stroke();
         y += 40;
 
-        // Data Rows
         ctx.font = '16px Arial';
         res.forEach((r, i) => {
             let maskedPhone = r.phone.toString().length >= 4 ? "XXXXXX" + r.phone.toString().slice(-4) : r.phone;
             ctx.fillStyle = '#333';
             ctx.fillText("#" + (i+1), 50, y);
-            ctx.fillText(r.name.substring(0, 22), 150, y); // Trim long names
+            ctx.fillText(r.name.substring(0, 22), 150, y); 
             ctx.fillText(maskedPhone, 400, y);
-            
-            ctx.fillStyle = '#28a745'; ctx.font = 'bold 16px Arial';
-            ctx.fillText(r.score, 550, y);
-            
+            ctx.fillStyle = '#28a745'; ctx.font = 'bold 16px Arial'; ctx.fillText(r.score, 550, y);
             ctx.fillStyle = '#333'; ctx.font = '16px Arial';
-            ctx.fillText(`${r.right} / ${r.wrong} / ${r.blank}`, 680, y);
-            ctx.fillText(r.time + "s", 820, y);
-            
+            ctx.fillText(`${r.right} / ${r.wrong} / ${r.blank}`, 680, y); ctx.fillText(r.time + "s", 820, y);
             y += 40;
         });
 
-        // Download
         let link = document.createElement('a');
         link.download = 'Leaderboard_' + document.getElementById('lb-title').innerText + '.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+        link.href = canvas.toDataURL('image/png'); link.click();
     }
 
     function adminDownloadPDF(idx, mode) {
@@ -810,7 +865,6 @@
         studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; }); executePDFPrint(studentInfo.name, mode);
     }
 
-    // --- STUDENT TEST LOGIC ---
     function startExam(isReattempt) {
         if(!isReattempt) {
             studentInfo.name = document.getElementById('s-name').value; studentInfo.phone = document.getElementById('s-phone').value;
@@ -926,13 +980,13 @@
         let submissionCode = isReattemptMode ? (examData.code + "-RE") : examData.code;
 
         fetch(SCRIPT_URL, {
-            method: 'POST', body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
+            method: 'POST', body: newSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(res => res.json()).then(data => {
             studentInfo.attempt = data.attempt || (isReattemptMode ? "Reattempt" : 1);
             document.getElementById('rank-loader').style.display = 'none'; 
             document.getElementById('btn-img-down').style.display = 'block';
-            document.getElementById('btn-pdf-down').style.display = 'block'; // Show PDF Download button
+            document.getElementById('btn-pdf-down').style.display = 'block'; 
             let finalRank = (isReattemptMode && data.totalStudents <= 1) ? "N/A" : data.rank; drawReportCard(finalRank, data.totalStudents, maxScore);
         }).catch(err => {
             document.getElementById('rank-loader').style.display = 'none'; 
@@ -992,7 +1046,28 @@
 
     function downloadImage() { const link = document.createElement('a'); link.download = studentInfo.name + '_Scorecard.png'; link.href = document.getElementById('reportCardImg').src; link.click(); }
 
-    // 🔥 THE FIX: CSS-based Perfect Print Function 🔥
+    function directDownloadPDF() {
+        let phone = document.getElementById('pdf-phone').value; let pass = document.getElementById('pdf-pass').value;
+        if(!phone) { alert("अपना नंबर डालें!"); return; } if(!checkPass(phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
+        studentInfo.name = "Student"; executePDFPrint(phone, 'full'); 
+    }
+
+    function resultDownloadPDF() {
+        let pass = document.getElementById('s-pass-result').value;
+        if(!checkPass(studentInfo.phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
+        executePDFPrint(studentInfo.name, 'full'); 
+    }
+
+    // 🔥 THE FIX: Paid Bypass Fixed 🔥
+    function handleResultPDFClick() {
+        if(examData.isFree) {
+            executePDFPrint(studentInfo.name, 'full');
+        } else {
+            alert("🔒 यह पेड (Paid) PDF है। कृपया पेज के नीचे दिए गए बॉक्स में पासवर्ड डालें और 'Unlock PDF' पर क्लिक करें।");
+            document.getElementById('s-pass-result').focus();
+        }
+    }
+
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); let safeTestUrl = BASE_URL + "?test=" + examData.code;
 
@@ -1037,8 +1112,6 @@
         });
         
         printArea.innerHTML = html; 
-        
-        // Native Print (No setTimeout bugs)
         window.print(); 
     }
 </script>
