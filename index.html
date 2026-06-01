@@ -10,7 +10,7 @@
         
         .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
-        .timer { font-size: 18px; font-weight: bold; background: #e74c3c; padding: 5px 15px; border-radius: 4px; }
+        .timer { font-size: 16px; font-weight: bold; background: #e74c3c; padding: 5px 10px; border-radius: 4px; display:flex; gap:10px;}
         
         .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; }
         .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; }
@@ -29,6 +29,7 @@
 
         .btn { background: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 10px; transition: 0.3s; box-sizing: border-box;}
         .btn-blue { background: #1f4e79; } .btn-pdf { background: #dc3545; } .btn-outline { background: transparent; border: 2px solid #1f4e79; color: #1f4e79; }
+        .btn-warning { background: #f39c12; color: #fff; }
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
 
         .admin-tabs { display: flex; border-bottom: 2px solid #1f4e79; margin-bottom: 20px; }
@@ -43,7 +44,8 @@
         .left-panel { flex: 3; padding: 20px; border-right: 1px solid #ccc; display: flex; flex-direction: column; position: relative; }
         .right-panel { flex: 1; background: #fdfdfd; display: flex; flex-direction: column; }
         
-        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; color: #1f4e79; }
+        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; }
+        .q-timer-badge { background:#ffc107; color:#000; padding:2px 8px; border-radius:4px; font-size:14px; font-weight:bold; }
         .q-text { font-size: 18px; line-height: 1.5; color: #222; margin-bottom: 20px; font-weight: bold; }
         
         .opt-label { display: block; padding: 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; }
@@ -55,11 +57,13 @@
         .action-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
         .btn-prev { background: #6c757d; } .btn-next { background: #28a745; } .btn-clear { background: #ffc107; color: #333; } .btn-submit { background: #dc3545; }
         
-        .palette-legend { display: flex; flex-wrap: wrap; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; justify-content: center; background: #fff; }
-        .legend-item { display: flex; align-items: center; margin: 5px; width: 45%; }
-        .box { width: 25px; height: 25px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: white; line-height: 25px; font-weight: bold; border: 1px solid #aaa; }
+        .palette-legend { display: flex; flex-wrap: nowrap; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; background: #fff; }
+        .legend-item { display: flex; align-items: center; justify-content: center; font-weight:bold; color:#555;}
+        .box { width: 20px; height: 20px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: white; line-height: 20px; font-weight: bold; border: 1px solid #aaa; font-size:10px;}
         
-        .status-not-visited { background: #fff; color: #333; } .status-not-answered { background: #dc3545; color: white; border-color: #dc3545; } .status-answered { background: #28a745; color: white; border-color: #28a745; } 
+        .status-not-visited { background: #fff; color: #333; } 
+        .status-not-answered { background: #ffc107; color: #000; border-color: #e0a800; } 
+        .status-answered { background: #003366; color: white; border-color: #002244; } 
         
         .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; overflow-y: auto; max-height: 280px; align-content: flex-start; }
         .palette-btn { width: 40px; height: 40px; border-radius: 4px; border: 1px solid #999; font-weight: bold; cursor: pointer; }
@@ -69,6 +73,11 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .confetti { position: absolute; font-size: 24px; z-index: 9999; pointer-events: none; animation: fall 3s linear forwards; }
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+        .res-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: center; }
+        .res-table th, .res-table td { border: 1px solid #ddd; padding: 8px; }
+        .res-table th { background-color: #1f4e79; color: white; }
+        .res-table tr:nth-child(even){background-color: #f2f2f2;}
 
         #print-area { display: none; }
         
@@ -88,21 +97,23 @@
             .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
             .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
+            
+            #leaderboard-print { visibility: visible; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; }
+            #leaderboard-print table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;}
+            #leaderboard-print th, #leaderboard-print td { border: 1px solid #000; padding: 6px; }
+            #leaderboard-print th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
         @media (max-width: 768px) {
-            /* 🔥 THE FIX: Added padding-bottom to the whole container to prevent fixed buttons from overlapping the last row 🔥 */
             .exam-container { flex-direction: column; height: auto; padding-bottom: 100px; }
-            
             .left-panel { border-right: none; border-bottom: 2px solid #1f4e79; padding-bottom: 20px; }
             .right-panel { padding-bottom: 20px; }
-            
             .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
             .action-btn { padding: 8px 12px; font-size: 14px; }
-            
-            /* Give it maximum allowed space so users can scroll easily */
             .question-palette { max-height: 350px; margin-bottom: 20px; } 
             .watermark { font-size: 80px; } 
+            .palette-legend { font-size: 10px; }
+            .box { width: 16px; height: 16px; line-height: 16px; }
         }
     </style>
 </head>
@@ -111,7 +122,9 @@
 <div class="container">
     <div class="tcs-header">
         <h2 id="head-exam-name">Exam Portal</h2>
-        <div id="timer-box" class="timer" style="display:none;">Time: 00:00</div>
+        <div id="timer-box" class="timer" style="display:none;">
+            <div id="main-time">Time: 00:00</div>
+        </div>
     </div>
     
     <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
@@ -136,7 +149,7 @@
 
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
-        <h3 style="color:#1f4e79; margin-top: 20px;">टेस्ट डेटाबेस से लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
+        <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
     </div>
 
     <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
@@ -162,6 +175,11 @@
                 <div class="form-group"><label>Test Code (Unique):</label><input type="text" id="a-code" placeholder="UP-01"></div>
                 <div class="form-group"><label>Marks Per Q:</label><input type="number" step="0.5" id="a-marks" value="2"></div>
                 <div class="form-group"><label>Negative Marking:</label><input type="number" step="0.25" id="a-neg" value="0.5" placeholder="e.g. 0.5"></div>
+            </div>
+
+            <div class="flex-row">
+                <div class="form-group"><label>Total Time (Mins):</label><input type="number" id="a-tot-time" placeholder="e.g. 60 (0 for no limit)" value="0"></div>
+                <div class="form-group"><label>Time Per Question (Secs):</label><input type="number" id="a-q-time" placeholder="e.g. 30 (0 for no limit)" value="0"></div>
             </div>
 
             <div class="flex-row">
@@ -196,12 +214,23 @@
                     <input type="number" id="gen-phone" placeholder="Student Mobile" style="flex: 2; padding: 10px;">
                     <button class="btn btn-blue" style="margin: 0; flex: 1;" onclick="generatePass()">Generate</button>
                 </div>
-                
                 <div style="margin: 10px 0 0 0; font-weight: bold; color: #dc3545; display: flex; align-items: center; gap: 10px;">
                     <span id="show-gen-pass">पासवर्ड यहाँ दिखेगा...</span>
                     <button id="copy-pass-btn" class="btn btn-outline" style="display: none; padding: 2px 8px; margin: 0; font-size: 12px; width: auto; background:white;" onclick="copyGeneratedPass()">📋 Copy Pass</button>
                 </div>
             </div>
+            
+            <div id="leaderboard-view" style="display: none; background: #fff; padding: 15px; border: 2px solid #1f4e79; border-radius: 8px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
+                    <h3 style="margin: 0; color: #1f4e79;">📊 Result: <span id="lb-title"></span></h3>
+                    <div>
+                        <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="printLeaderboard()">🖨️ Print Result List</button>
+                        <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌ Close</button>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;" id="leaderboard-content"></div>
+            </div>
+
             <h3 style="color: #1f4e79;">📁 Active Tests List</h3>
             <div id="dashboard-list"></div>
         </div>
@@ -212,6 +241,7 @@
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
             <p style="text-align:center; color:#e74c3c; font-weight:bold; margin-top:0;">Test Code: <span id="disp-code">...</span></p>
             <p style="text-align:center; color:#555; font-size:13px; margin-top:-5px;">(+<span id="disp-marks"></span> Marks / -<span id="disp-neg"></span> Negative)</p>
+            <p id="disp-time-info" style="text-align:center; color:#1f4e79; font-size:12px; margin-top:-5px; font-weight:bold;"></p>
             
             <div style="background: #f4f6f8; padding: 15px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 20px;">
                 <h4 style="margin: 0 0 10px 0; color: #333;">📝 नया टेस्ट शुरू करें</h4>
@@ -219,7 +249,7 @@
                     ✅ टेस्ट देने के लिए कोई रजिस्ट्रेशन की जरूरत नहीं है, बस अपना नाम और मोबाइल नंबर डालें और टेस्ट शुरू करें!
                 </p>
                 <input type="text" id="s-name" placeholder="अपना नाम भरें" required style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
-                <input type="tel" id="s-phone" placeholder="अपना मोबाइल नंबर भरें (I.D.)" required style="width:100%; padding:10px; box-sizing:border-box;">
+                <input type="tel" id="s-phone" placeholder="अपना 10 अंकों का मोबाइल नंबर भरें" required style="width:100%; padding:10px; box-sizing:border-box;" maxlength="10">
                 <button class="btn" onclick="startExam(false)">Start Test 🚀</button>
             </div>
 
@@ -241,7 +271,10 @@
     <div id="exam-view" class="view-section" style="padding: 0;">
         <div class="exam-container">
             <div class="left-panel">
-                <div class="q-header" id="q-no-header">Question No. 1</div>
+                <div class="q-header">
+                    <span id="q-no-header">Question No. 1</span>
+                    <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
+                </div>
                 <div class="q-text" id="q-text">Loading question...</div>
                 <div class="options-div" id="options-box"></div>
                 
@@ -257,7 +290,7 @@
                 <div class="palette-legend">
                     <div class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Answered</div>
                     <div class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Answered</div>
-                    <div class="legend-item" style="width: 100%; justify-content: center; margin-top: 5px;"><span class="box status-not-visited" id="cnt-notvis">0</span> Not Visited</div>
+                    <div class="legend-item"><span class="box status-not-visited" id="cnt-notvis">0</span> Blank</div>
                 </div>
                 <div class="question-palette" id="palette-grid"></div>
             </div>
@@ -306,7 +339,7 @@
                 </div>
                 
                 <div id="res-free-btn-box" style="display: none; margin-top: 15px;">
-                    <button class="btn btn-pdf" style="width: 100%;" onclick="executePDFPrint(studentInfo.name)">📄 Free PDF डाउनलोड करें</button>
+                    <button class="btn btn-pdf" style="width: 100%;" onclick="executePDFPrint(studentInfo.name, 'full')">📄 Free PDF डाउनलोड करें</button>
                 </div>
             </div>
 
@@ -318,23 +351,25 @@
 </div>
 
 <div id="print-area"></div>
+<div id="leaderboard-print" style="display:none;"></div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5yMdRoQy6leC0l79nN3X9WYTq26vAOtjD2GtnkYhUg_Px4tJ_KDqIQfZpB_AudzTBGA/exec";
+    // 🔥 YAHAN TUMHARI NAYI GOOGLE SCRIPT LINK 🔥
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2IOYWfiFdCHcGHGuoET8Ff5I6Rcapfm69EvrJogCQfGcv_pDSCABTiULBY2DH7-So9g/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
-    let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, questions: [] };
+    let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [] };
     let userAnswers = []; let qStatus = []; let currentQ = 0;
     let studentInfo = { name: "", phone: "", score: 0, right: 0, wrong: 0, blank: 0, time: 0, attempt: 1 };
-    let timerInterval;
-    let isReattemptMode = false; 
-    let currentGeneratedPass = ""; 
+    
+    let globalTimer; let qTimer; 
+    let globalTimeLeft = 0; let qTimeLeft = 0; let totalTimeSpent = 0;
+    let isReattemptMode = false; let currentGeneratedPass = ""; 
+    let currentAdminLbData = "";
 
     window.onload = initApp;
 
-    function closeAndRedirect() {
-        window.location.href = "https://studynotesmanager.netlify.app/";
-    }
+    function closeAndRedirect() { window.location.href = "https://studynotesmanager.netlify.app/"; }
 
     function blastConfetti() {
         let duration = 4000; let end = Date.now() + duration;
@@ -342,33 +377,26 @@
         let interval = setInterval(function() {
             if (Date.now() > end) return clearInterval(interval);
             let el = document.createElement('div');
-            el.className = 'confetti';
-            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-            el.style.left = Math.random() * 100 + 'vw';
-            el.style.top = '-50px';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 3000);
+            el.className = 'confetti'; el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + 'vw'; el.style.top = '-50px';
+            document.body.appendChild(el); setTimeout(() => el.remove(), 3000);
         }, 150);
     }
 
     function loginAdmin() {
-        let id = document.getElementById('admin-id').value;
-        let pass = document.getElementById('admin-pass').value;
+        let id = document.getElementById('admin-id').value; let pass = document.getElementById('admin-pass').value;
         if(btoa(id) === "ODI3MzY4NDkzOQ==" && btoa(pass) === "QW5rdXNoQDEyMzFAMTIz") {
-            document.getElementById('admin-auth-view').classList.remove('active-view');
-            document.getElementById('admin-view').classList.add('active-view');
-            switchAdminTab('create');
+            document.getElementById('admin-auth-view').classList.remove('active-view'); document.getElementById('admin-view').classList.add('active-view'); switchAdminTab('create');
         } else { alert("❌ गलत Admin ID या Password!"); }
     }
 
     function showErrorView(msg) {
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-        document.getElementById('error-msg').innerText = msg;
-        document.getElementById('error-view').classList.add('active-view');
+        document.getElementById('error-msg').innerText = msg; document.getElementById('error-view').classList.add('active-view');
     }
 
     function initApp() {
-        clearInterval(timerInterval);
+        clearInterval(globalTimer); clearInterval(qTimer);
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('student-top-bar').style.display = 'none';
         
@@ -377,20 +405,18 @@
 
         if(testCode) {
             document.getElementById('loading-view').classList.add('active-view');
-            let cacheBuster = new Date().getTime();
-            let script = document.createElement('script');
-            script.src = SCRIPT_URL + "?action=getTest&testCode=" + testCode + "&callback=handleTestLoad&t=" + cacheBuster;
+            let cb = new Date().getTime(); let script = document.createElement('script');
+            script.src = SCRIPT_URL + "?action=getTest&testCode=" + testCode + "&callback=handleTestLoad&t=" + cb;
             script.onerror = function() { showErrorView("❌ नेटवर्क एरर! सुनिश्चित करें कि Apps Script में Who has access 'Anyone' है।"); };
             document.body.appendChild(script);
-        } else {
-            document.getElementById('admin-auth-view').classList.add('active-view');
-        }
+        } else { document.getElementById('admin-auth-view').classList.add('active-view'); }
     }
 
     window.handleTestLoad = function(data) {
         if(data.error) { showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")"); return; }
-        data.marks = data.marks || 2; data.neg = data.neg || 0;
         examData = data;
+        examData.marks = data.marks || 2; examData.neg = data.neg || 0;
+        examData.totTime = data.totTime || 0; examData.qTime = data.qTime || 0;
         setupLoginScreen();
     };
 
@@ -405,6 +431,11 @@
         document.getElementById('disp-marks').innerText = examData.marks;
         document.getElementById('disp-neg').innerText = examData.neg;
         
+        let tInfo = "";
+        if(examData.totTime > 0) tInfo += `Total Time: ${examData.totTime} Mins | `;
+        if(examData.qTime > 0) tInfo += `Per Q: ${examData.qTime} Secs`;
+        document.getElementById('disp-time-info').innerText = tInfo;
+        
         if(examData.isFree) {
             document.getElementById('direct-pdf-box').style.display = 'none'; 
             document.getElementById('res-paid-instructions').style.display = 'none'; 
@@ -413,23 +444,18 @@
             document.getElementById('res-free-btn-box').style.display = 'block'; 
         } else {
             document.getElementById('direct-pdf-box').style.display = 'block';
-            document.getElementById('disp-price').innerText = examData.price;
-            document.getElementById('res-price').innerText = examData.price;
+            document.getElementById('disp-price').innerText = examData.price; document.getElementById('res-price').innerText = examData.price;
         }
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
     }
 
     function switchAdminTab(tab) {
         if(tab === 'create') {
-            document.getElementById('tab-create').classList.add('active');
-            document.getElementById('tab-manage').classList.remove('active');
-            document.getElementById('admin-create-section').style.display = 'block';
-            document.getElementById('admin-manage-section').style.display = 'none';
+            document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active');
+            document.getElementById('admin-create-section').style.display = 'block'; document.getElementById('admin-manage-section').style.display = 'none';
         } else {
-            document.getElementById('tab-manage').classList.add('active');
-            document.getElementById('tab-create').classList.remove('active');
-            document.getElementById('admin-create-section').style.display = 'none';
-            document.getElementById('admin-manage-section').style.display = 'block';
+            document.getElementById('tab-manage').classList.add('active'); document.getElementById('tab-create').classList.remove('active');
+            document.getElementById('admin-create-section').style.display = 'none'; document.getElementById('admin-manage-section').style.display = 'block';
             renderDashboard();
         }
     }
@@ -440,57 +466,38 @@
     }
 
     function generateStrongPass(phone, key) {
-        if(!key) key = "ANK";
-        let mixed = key + phone + "PRO";
-        let num = 0;
+        if(!key) key = "ANK"; let mixed = key + phone + "PRO"; let num = 0;
         for(let i=0; i<mixed.length; i++) { num += mixed.charCodeAt(i) * (i+1); }
         let sym = ['@','#','$','&','*'];
-        let s1 = sym[num % sym.length];
-        let s2 = sym[(num * 2) % sym.length];
-        let l1 = String.fromCharCode(65 + (num % 26)); 
-        let l2 = String.fromCharCode(97 + ((num*3) % 26)); 
-        let p1 = phone.length >= 4 ? phone.substring(0,2) : "99";
-        let p2 = phone.length >= 4 ? phone.slice(-2) : "88";
+        let s1 = sym[num % sym.length]; let s2 = sym[(num * 2) % sym.length];
+        let l1 = String.fromCharCode(65 + (num % 26)); let l2 = String.fromCharCode(97 + ((num*3) % 26)); 
+        let p1 = phone.length >= 4 ? phone.substring(0,2) : "99"; let p2 = phone.length >= 4 ? phone.slice(-2) : "88";
         let k1 = key.charAt(0).toUpperCase();
         return l1 + s1 + p1 + l2 + s2 + p2 + k1;
     }
 
     function generatePass() {
-        let phone = document.getElementById('gen-phone').value;
-        let key = document.getElementById('gen-key').value.toUpperCase();
+        let phone = document.getElementById('gen-phone').value; let key = document.getElementById('gen-key').value.toUpperCase();
         if(!key) { alert("Secret Key डालें!"); return; }
         if(phone.length < 10) { document.getElementById('show-gen-pass').innerText = "पूरा 10 अंकों का नंबर डालें!"; return; }
-        
-        let pass = generateStrongPass(phone, key);
-        currentGeneratedPass = pass; 
-        document.getElementById('show-gen-pass').innerText = "पासवर्ड: " + pass;
-        document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
+        let pass = generateStrongPass(phone, key); currentGeneratedPass = pass; 
+        document.getElementById('show-gen-pass').innerText = "पासवर्ड: " + pass; document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
     }
 
     function copyGeneratedPass() {
         if(!currentGeneratedPass) return;
         try {
-            navigator.clipboard.writeText(currentGeneratedPass).then(() => {
-                alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass + "\nअब आप इसे कहीं भी पेस्ट कर सकते हैं।");
-            }).catch(fallbackCopy);
-        } catch(e) {
-            fallbackCopy();
-        }
+            navigator.clipboard.writeText(currentGeneratedPass).then(() => { alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass); }).catch(fallbackCopy);
+        } catch(e) { fallbackCopy(); }
         function fallbackCopy() {
-            let tempInput = document.createElement("input");
-            tempInput.value = currentGeneratedPass;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-            alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass + "\nअब आप इसे कहीं भी पेस्ट कर सकते हैं।");
+            let tempInput = document.createElement("input"); tempInput.value = currentGeneratedPass; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput);
+            alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass);
         }
     }
 
     function checkPass(enteredPhone, enteredPass) {
         if(examData.isFree) return true;
-        let validPass = generateStrongPass(enteredPhone, examData.key.toUpperCase());
-        return enteredPass === validPass;
+        return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
     function parseRawQuestions(rawText) {
@@ -509,57 +516,36 @@
                 tempQ = { q: line.replace(/^!!\d+!\s*/, '').trim(), opts: [], ans: "", exp: "" };
             }
         }
-        if(tempQ && tempQ.q) parsedQs.push(tempQ);
-        return parsedQs;
+        if(tempQ && tempQ.q) parsedQs.push(tempQ); return parsedQs;
     }
 
     function generateAndSaveLink() {
-        let eName = document.getElementById('a-exam').value || "Mock Test";
-        let eSub = document.getElementById('a-sub').value || "Subject";
-        let eTopic = document.getElementById('a-topic').value || "";
+        let eName = document.getElementById('a-exam').value || "Mock Test"; let eSub = document.getElementById('a-sub').value || "Subject"; let eTopic = document.getElementById('a-topic').value || "";
         let eCode = document.getElementById('a-code').value || "T-" + Math.floor(Math.random() * 1000);
-        let eMarks = parseFloat(document.getElementById('a-marks').value) || 2;
-        let eNeg = parseFloat(document.getElementById('a-neg').value) || 0;
-        let isFree = document.getElementById('a-pdf-type').value === "free";
-        let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49");
-        let eKey = document.getElementById('a-key').value || "ANK";
-        let rawText = document.getElementById('a-rawdata').value;
-        
+        let eMarks = parseFloat(document.getElementById('a-marks').value) || 2; let eNeg = parseFloat(document.getElementById('a-neg').value) || 0;
+        let tTime = parseInt(document.getElementById('a-tot-time').value) || 0; let qTime = parseInt(document.getElementById('a-q-time').value) || 0;
+        let isFree = document.getElementById('a-pdf-type').value === "free"; let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49");
+        let eKey = document.getElementById('a-key').value || "ANK"; let rawText = document.getElementById('a-rawdata').value;
         if(!rawText.trim()) { alert("Please paste questions!"); return; }
 
         let parsedQs = parseRawQuestions(rawText);
-        let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs };
-        
-        let btn = document.getElementById('btn-generate');
-        btn.innerText = "⏳ Saving Test to Database..."; btn.disabled = true;
+        let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs };
+        let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test to Database..."; btn.disabled = true;
 
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }),
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        }).then(res => res.json()).then(data => {
+        fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+        .then(res => res.json()).then(data => {
             btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false;
-            
             document.getElementById('a-exam').value = ""; document.getElementById('a-sub').value = ""; document.getElementById('a-topic').value = "";
-            document.getElementById('a-code').value = ""; document.getElementById('a-price').value = ""; document.getElementById('a-key').value = "";
-            document.getElementById('a-rawdata').value = "";
+            document.getElementById('a-code').value = ""; document.getElementById('a-price').value = ""; document.getElementById('a-key').value = ""; document.getElementById('a-rawdata').value = "";
             
             let testLink = BASE_URL + "?test=" + eCode;
-            let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
-            let existingIdx = savedTests.findIndex(t => t.code === eCode);
-            let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText };
-            
-            if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } 
-            else { savedTests.push(testObj); }
+            let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let existingIdx = savedTests.findIndex(t => t.code === eCode);
+            let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText };
+            if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
-            document.getElementById('generatedLink').value = testLink;
-            document.getElementById('linkContainer').style.display = 'block';
-            alert("टेस्ट सफलतापूर्वक Database में सेव हो गया! अब आप नया टेस्ट बना सकते हैं।");
-        }).catch(err => {
-            alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।");
-            btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false;
-        });
+            document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; alert("टेस्ट सफलतापूर्वक Database में सेव हो गया!");
+        }).catch(err => { alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।"); btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false; });
     }
 
     function renderDashboard() {
@@ -568,30 +554,31 @@
         if(savedTests.length === 0) { listDiv.innerHTML = "<p>अभी तक कोई टेस्ट सेव नहीं है।</p>"; return; }
         
         let savedTestsWithId = savedTests.map((t, index) => ({...t, originalIndex: index}));
-        let grouped = {};
-        savedTestsWithId.forEach(t => { if(!grouped[t.exam]) grouped[t.exam] = []; grouped[t.exam].push(t); });
+        let grouped = {}; savedTestsWithId.forEach(t => { if(!grouped[t.exam]) grouped[t.exam] = []; grouped[t.exam].push(t); });
 
         let html = "";
         for(let exam in grouped) {
             html += `<h3 style="background:#1f4e79; color:white; padding:10px; border-radius:4px; margin-top:20px;">${exam}</h3>`;
             grouped[exam].forEach(t => {
                 let priceText = t.isFree ? "Free" : "₹" + t.price;
-                html += `
-                <div class="test-card">
+                html += `<div class="test-card">
                     <h4>${t.sub} (${t.code})</h4>
                     <div style="margin-bottom: 10px;">
-                        <span class="badge">Qs: ${t.qs}</span>
-                        <span class="badge">${priceText}</span>
-                        <span class="badge">M/N: +${t.marks || 2} / -${t.neg || 0}</span>
-                        <span class="badge">Key: ${t.key}</span>
-                        <span class="badge">Date: ${t.date}</span>
+                        <span class="badge">Qs: ${t.qs}</span><span class="badge">${priceText}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
+                        <span class="badge">T: ${t.totTime||0}m / Q: ${t.qTime||0}s</span><span class="badge">Date: ${t.date}</span>
                     </div>
                     <input type="text" value="${t.link}" readonly style="width:100%; padding:5px; border:1px solid #ccc; font-size:12px; margin-bottom:5px;">
-                    <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                        <button class="btn btn-blue" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="editTest(${t.originalIndex})">✏️ Edit</button>
-                        <button class="btn" style="background:#dc3545; margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="deleteTest(${t.originalIndex})">🗑️ Delete</button>
-                        <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="adminDownloadPDF(${t.originalIndex})">📥 Download PDF</button>
-                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
+                    <div style="margin-top:5px; display:flex; gap:10px; flex-wrap:wrap; border-top:1px solid #eee; padding-top:10px;">
+                        <button class="btn btn-blue" style="margin:0; padding:5px; font-size:12px; width:auto;" onclick="editTest(${t.originalIndex})">✏️ Edit</button>
+                        <button class="btn" style="background:#dc3545; margin:0; padding:5px; font-size:12px; width:auto;" onclick="deleteTest(${t.originalIndex})">🗑️ Delete</button>
+                        <button class="btn btn-outline" style="margin:0; padding: 5px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
+                        <button class="btn btn-warning" style="margin:0; padding: 5px; width: auto; font-size:12px;" onclick="viewResults('${t.code}')">📊 View Results</button>
+                    </div>
+                    <div style="margin-top:10px; display:flex; gap:5px; flex-wrap:wrap;">
+                        <b style="font-size:12px; width:100%;">PDF Options:</b>
+                        <button class="btn btn-pdf" style="margin:0; padding:5px; font-size:11px; width:auto;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_only')">📝 Qs Only</button>
+                        <button class="btn btn-pdf" style="margin:0; padding:5px; font-size:11px; width:auto; background:#17a2b8;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_ans')">✅ Qs+Ans</button>
+                        <button class="btn btn-pdf" style="margin:0; padding:5px; font-size:11px; width:auto; background:#28a745;" onclick="adminDownloadPDF(${t.originalIndex}, 'full')">📚 Full PDF</button>
                     </div>
                 </div>`;
             });
@@ -600,58 +587,68 @@
     }
 
     function editTest(idx) {
-        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
-        let t = savedTests[idx];
-        if(!t) return;
-        
-        document.getElementById('a-exam').value = t.exam || "";
-        document.getElementById('a-sub').value = t.sub || "";
-        document.getElementById('a-topic').value = t.topic || "";
-        document.getElementById('a-code').value = t.code || "";
-        document.getElementById('a-marks').value = t.marks || 2;
-        document.getElementById('a-neg').value = t.neg || 0;
-        
-        if(t.isFree || t.price === "Free") { document.getElementById('a-pdf-type').value = "free"; } 
-        else { document.getElementById('a-pdf-type').value = "paid"; document.getElementById('a-price').value = t.price || ""; }
-        
-        document.getElementById('a-key').value = t.key || "";
-        document.getElementById('a-rawdata').value = t.rawText || "";
-        
-        togglePriceBox();
-        switchAdminTab('create');
-        alert("टेस्ट का डेटा फॉर्म में आ गया है! बदलाव करके 'Generate & Save Test' दबाएं।");
+        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t) return;
+        document.getElementById('a-exam').value = t.exam || ""; document.getElementById('a-sub').value = t.sub || ""; document.getElementById('a-topic').value = t.topic || "";
+        document.getElementById('a-code').value = t.code || ""; document.getElementById('a-marks').value = t.marks || 2; document.getElementById('a-neg').value = t.neg || 0;
+        document.getElementById('a-tot-time').value = t.totTime || 0; document.getElementById('a-q-time').value = t.qTime || 0;
+        if(t.isFree || t.price === "Free") { document.getElementById('a-pdf-type').value = "free"; } else { document.getElementById('a-pdf-type').value = "paid"; document.getElementById('a-price').value = t.price || ""; }
+        document.getElementById('a-key').value = t.key || ""; document.getElementById('a-rawdata').value = t.rawText || "";
+        togglePriceBox(); switchAdminTab('create'); alert("टेस्ट का डेटा फॉर्म में आ गया है! बदलाव करके 'Generate & Save Test' दबाएं।");
     }
 
     function deleteTest(idx) {
-        if(confirm("क्या आप सच में इस टेस्ट को हटाना चाहते हैं?")) {
-            let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
-            savedTests.splice(idx, 1);
-            localStorage.setItem('myMockTests', JSON.stringify(savedTests));
-            renderDashboard();
-        }
+        if(confirm("क्या आप सच में इस टेस्ट को हटाना चाहते हैं?")) { let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; savedTests.splice(idx, 1); localStorage.setItem('myMockTests', JSON.stringify(savedTests)); renderDashboard(); }
     }
 
-    function adminDownloadPDF(idx) {
-        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
-        let t = savedTests[idx];
-        if(!t || !t.rawText) { alert("डेटा नहीं मिला!"); return; }
+    function viewResults(testCode) {
+        document.getElementById('leaderboard-view').style.display = 'block';
+        document.getElementById('lb-title').innerText = testCode;
+        document.getElementById('leaderboard-content').innerHTML = '<div style="text-align:center;"><div class="loader"></div> Loading...</div>';
+        let cb = new Date().getTime(); let script = document.createElement('script');
+        script.src = SCRIPT_URL + "?action=getResults&testCode=" + testCode + "&callback=handleResultsLoad&t=" + cb;
+        document.body.appendChild(script);
+    }
+
+    window.handleResultsLoad = function(data) {
+        if(data.error) { document.getElementById('leaderboard-content').innerHTML = "<p style='color:red;'>"+data.error+"</p>"; return; }
+        let res = data.results;
+        if(!res || res.length === 0) { document.getElementById('leaderboard-content').innerHTML = "<p>अभी तक किसी ने यह टेस्ट नहीं दिया है।</p>"; return; }
         
-        let parsedQs = parseRawQuestions(t.rawText);
-        examData = { exam: t.exam, subject: t.sub, topic: t.topic, code: t.code, questions: parsedQs };
+        let html = `<table class="res-table"><tr><th>Rank</th><th>Name</th><th>Phone (Last 4)</th><th>Score</th><th>R / W / B</th><th>Time(s)</th><th>Date</th></tr>`;
+        res.forEach((r, i) => {
+            let maskedPhone = r.phone.toString().length >= 4 ? "XXXXXX" + r.phone.toString().slice(-4) : r.phone;
+            let d = new Date(r.date).toLocaleDateString();
+            html += `<tr><td>#${i+1}</td><td><b>${r.name}</b></td><td>${maskedPhone}</td><td style="color:#28a745; font-weight:bold;">${r.score}</td><td><span style='color:green'>${r.right}</span>/<span style='color:red'>${r.wrong}</span>/${r.blank}</td><td>${r.time}</td><td>${d}</td></tr>`;
+        });
+        html += `</table>`;
+        currentAdminLbData = html; document.getElementById('leaderboard-content').innerHTML = html;
+    };
+
+    function printLeaderboard() {
+        if(!currentAdminLbData) return;
+        let printArea = document.getElementById('leaderboard-print');
+        printArea.innerHTML = `<h2 style="text-align:center; color:#1f4e79;">Test Result Report: ${document.getElementById('lb-title').innerText}</h2>` + currentAdminLbData;
+        document.querySelector('.container').style.display = 'none'; printArea.style.display = 'block'; window.print();
+        printArea.style.display = 'none'; document.querySelector('.container').style.display = 'flex';
+    }
+
+    function adminDownloadPDF(idx, mode) {
+        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t || !t.rawText) { alert("डेटा नहीं मिला!"); return; }
+        let parsedQs = parseRawQuestions(t.rawText); examData = { exam: t.exam, subject: t.sub, topic: t.topic, code: t.code, questions: parsedQs };
         studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; 
         userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; });
-        executePDFPrint(studentInfo.name);
+        executePDFPrint(studentInfo.name, mode);
     }
 
     // --- STUDENT TEST LOGIC ---
     function startExam(isReattempt) {
         if(!isReattempt) {
-            studentInfo.name = document.getElementById('s-name').value;
-            studentInfo.phone = document.getElementById('s-phone').value;
+            studentInfo.name = document.getElementById('s-name').value; studentInfo.phone = document.getElementById('s-phone').value;
             if(!studentInfo.name || studentInfo.phone.length < 10) { alert("कृपया सही नाम और 10 अंकों का नंबर डालें!"); return; }
         }
-        isReattemptMode = isReattempt;
-        studentInfo.time = 0; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0;
+        isReattemptMode = isReattempt; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0; totalTimeSpent = 0;
+        
+        if(examData.totTime > 0) { globalTimeLeft = examData.totTime * 60; } else { globalTimeLeft = 0; }
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
         
         document.getElementById('top-sname').innerText = "👤 " + studentInfo.name;
@@ -661,19 +658,25 @@
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('exam-view').classList.add('active-view');
         
-        document.getElementById('timer-box').style.display = 'block';
+        document.getElementById('timer-box').style.display = 'flex';
         initPalette(); renderQuestion(0);
         
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            studentInfo.time++; let min = Math.floor(studentInfo.time / 60); let sec = studentInfo.time % 60;
-            document.getElementById('timer-box').innerText = `Time: ${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+        clearInterval(globalTimer);
+        globalTimer = setInterval(() => {
+            totalTimeSpent++;
+            if(examData.totTime > 0) {
+                globalTimeLeft--;
+                let m = Math.floor(globalTimeLeft / 60); let s = globalTimeLeft % 60;
+                document.getElementById('main-time').innerText = `Time Left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                if(globalTimeLeft <= 0) { clearInterval(globalTimer); alert("⏳ समय समाप्त! आपका टेस्ट आटोमेटिक सबमिट हो रहा है।"); calculateScoreAndSubmit(); }
+            } else {
+                let m = Math.floor(totalTimeSpent / 60); let s = totalTimeSpent % 60;
+                document.getElementById('main-time').innerText = `Time: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            }
         }, 1000);
     }
 
-    function startReattempt() {
-        if(confirm("क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं?")) { startExam(true); }
-    }
+    function startReattempt() { if(confirm("क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं?")) { startExam(true); } }
 
     function initPalette() {
         let grid = document.getElementById('palette-grid'); grid.innerHTML = "";
@@ -691,129 +694,88 @@
         
         let optHtml = "";
         q.opts.forEach(opt => {
-            let isChecked = (userAnswers[idx] === opt.id) ? "checked" : "";
-            let highlightClass = (userAnswers[idx] === opt.id) ? "selected" : "";
-            optHtml += `<label class="opt-label ${highlightClass}" id="lbl-${opt.id}">
-                            <input type="radio" name="option" value="${opt.id}" ${isChecked} onchange="markAnswered('${opt.id}')"> 
-                            <b>${opt.id}.</b> ${opt.text}
-                        </label>`;
+            let isChecked = (userAnswers[idx] === opt.id) ? "checked" : ""; let highlightClass = (userAnswers[idx] === opt.id) ? "selected" : "";
+            optHtml += `<label class="opt-label ${highlightClass}" id="lbl-${opt.id}"><input type="radio" name="option" value="${opt.id}" ${isChecked} onchange="markAnswered('${opt.id}')"> <b>${opt.id}.</b> ${opt.text}</label>`;
         });
         document.getElementById('options-box').innerHTML = optHtml;
+
+        clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
+        if(examData.qTime > 0) {
+            badge.style.display = 'inline-block'; qTimeLeft = examData.qTime; document.getElementById('q-sec-left').innerText = qTimeLeft;
+            qTimer = setInterval(() => {
+                qTimeLeft--; document.getElementById('q-sec-left').innerText = qTimeLeft;
+                if(qTimeLeft <= 0) { clearInterval(qTimer); nextQ(true); } 
+            }, 1000);
+        } else { badge.style.display = 'none'; }
     }
 
     function markAnswered(val) { 
-        userAnswers[currentQ] = val; qStatus[currentQ] = 2; 
-        document.getElementById(`pal-${currentQ}`).className = `palette-btn status-answered`; 
-        document.querySelectorAll('.opt-label').forEach(el => el.classList.remove('selected'));
-        document.getElementById(`lbl-${val}`).classList.add('selected');
-        updateCounts(); 
+        userAnswers[currentQ] = val; qStatus[currentQ] = 2; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-answered`; 
+        document.querySelectorAll('.opt-label').forEach(el => el.classList.remove('selected')); document.getElementById(`lbl-${val}`).classList.add('selected'); updateCounts(); 
     }
 
     function clearResponse() { userAnswers[currentQ] = null; qStatus[currentQ] = 1; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-not-answered`; renderQuestion(currentQ); updateCounts(); }
     
-    function nextQ() { 
-        if(currentQ < examData.questions.length - 1) {
-            renderQuestion(currentQ + 1); 
+    function nextQ(isAuto) { 
+        if(currentQ < examData.questions.length - 1) { renderQuestion(currentQ + 1); 
         } else {
-            if(confirm("✅ टेस्ट के सभी प्रश्न पूरे हो गए हैं! क्या आप टेस्ट सबमिट करना चाहते हैं?")) {
-                clearInterval(timerInterval); calculateScoreAndSubmit();
-            }
+            if(isAuto) { clearInterval(globalTimer); calculateScoreAndSubmit(); } 
+            else if(confirm("✅ टेस्ट के सभी प्रश्न पूरे हो गए हैं! क्या आप टेस्ट सबमिट करना चाहते हैं?")) { clearInterval(globalTimer); calculateScoreAndSubmit(); }
         }
     }
     function prevQ() { if(currentQ > 0) renderQuestion(currentQ - 1); }
 
     function updateCounts() {
-        let ans = 0, notans = 0, notvis = 0;
-        qStatus.forEach(s => { if(s === 2) ans++; else if(s === 1) notans++; else notvis++; });
+        let ans = 0, notans = 0, notvis = 0; qStatus.forEach(s => { if(s === 2) ans++; else if(s === 1) notans++; else notvis++; });
         document.getElementById('cnt-ans').innerText = ans; document.getElementById('cnt-notans').innerText = notans; document.getElementById('cnt-notvis').innerText = notvis;
     }
 
-    function submitExamConfirmation() {
-        if(confirm("Are you sure you want to submit the test?")) { clearInterval(timerInterval); calculateScoreAndSubmit(); }
-    }
+    function submitExamConfirmation() { if(confirm("Are you sure you want to submit the test?")) { clearInterval(globalTimer); clearInterval(qTimer); calculateScoreAndSubmit(); } }
 
     function calculateScoreAndSubmit() {
+        clearInterval(globalTimer); clearInterval(qTimer);
         document.getElementById('student-top-bar').style.display = 'none'; 
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-        document.getElementById('result-view').classList.add('active-view');
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); document.getElementById('result-view').classList.add('active-view');
         document.getElementById('timer-box').style.display = 'none';
 
         studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0;
         for(let i=0; i<examData.questions.length; i++) { 
-            if(userAnswers[i] === null) {
-                studentInfo.blank++;
-            } else if(userAnswers[i] === examData.questions[i].ans) {
-                studentInfo.right++; 
-            } else {
-                studentInfo.wrong++;
-            }
+            if(userAnswers[i] === null) { studentInfo.blank++; } else if(userAnswers[i] === examData.questions[i].ans) { studentInfo.right++; } else { studentInfo.wrong++; }
         }
         
-        document.getElementById('btn-cnt-right').innerText = studentInfo.right;
-        document.getElementById('btn-cnt-wrong').innerText = studentInfo.wrong;
-        document.getElementById('btn-cnt-blank').innerText = studentInfo.blank;
+        document.getElementById('btn-cnt-right').innerText = studentInfo.right; document.getElementById('btn-cnt-wrong').innerText = studentInfo.wrong; document.getElementById('btn-cnt-blank').innerText = studentInfo.blank;
 
-        let rawScore = (studentInfo.right * examData.marks) - (studentInfo.wrong * examData.neg);
-        studentInfo.score = Math.max(0, Math.round(rawScore * 100) / 100); 
-        
-        let maxScore = examData.questions.length * examData.marks;
-        let percentage = (studentInfo.score / maxScore) * 100;
+        let rawScore = (studentInfo.right * examData.marks) - (studentInfo.wrong * examData.neg); studentInfo.score = Math.max(0, Math.round(rawScore * 100) / 100); 
+        let maxScore = examData.questions.length * examData.marks; let percentage = (studentInfo.score / maxScore) * 100;
 
         let resHeading = document.getElementById('result-heading');
-        if(percentage >= 80) {
-            resHeading.innerText = "🎉 आपने बहुत अच्छा टेस्ट दिया! शानदार! 🎉";
-            resHeading.style.color = "#28a745";
-            blastConfetti();
-        } else {
-            resHeading.innerText = "💪 कोई बात नहीं, अगली बार और बेहतर होगा! लगे रहो!";
-            resHeading.style.color = "#e74c3c";
-        }
+        if(percentage >= 80) { resHeading.innerText = "🎉 आपने बहुत अच्छा टेस्ट दिया! शानदार! 🎉"; resHeading.style.color = "#28a745"; blastConfetti(); } else { resHeading.innerText = "💪 कोई बात नहीं, अगली बार और बेहतर होगा! लगे रहो!"; resHeading.style.color = "#e74c3c"; }
 
         drawReportCard("...", "...", maxScore);
-
-        document.getElementById('btn-img-down').style.display = 'none';
-        document.getElementById('rank-loader').style.display = 'block';
-
+        document.getElementById('btn-img-down').style.display = 'none'; document.getElementById('rank-loader').style.display = 'block';
         let submissionCode = isReattemptMode ? (examData.code + "-RE") : examData.code;
-
-        history.pushState(null, null, location.href);
-        window.onpopstate = function () { closeAndRedirect(); };
+        history.pushState(null, null, location.href); window.onpopstate = function () { closeAndRedirect(); };
 
         fetch(SCRIPT_URL, {
-            method: 'POST', body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode}),
+            method: 'POST', body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(res => res.json()).then(data => {
             studentInfo.attempt = data.attempt || (isReattemptMode ? "Reattempt" : 1);
-            document.getElementById('rank-loader').style.display = 'none';
-            document.getElementById('btn-img-down').style.display = 'block';
-            let finalRank = (isReattemptMode && data.totalStudents <= 1) ? "N/A" : data.rank; 
-            drawReportCard(finalRank, data.totalStudents, maxScore);
+            document.getElementById('rank-loader').style.display = 'none'; document.getElementById('btn-img-down').style.display = 'block';
+            let finalRank = (isReattemptMode && data.totalStudents <= 1) ? "N/A" : data.rank; drawReportCard(finalRank, data.totalStudents, maxScore);
         }).catch(err => {
-            document.getElementById('rank-loader').style.display = 'none';
-            document.getElementById('btn-img-down').style.display = 'block';
-            drawReportCard("N/A", "N/A", maxScore);
+            document.getElementById('rank-loader').style.display = 'none'; document.getElementById('btn-img-down').style.display = 'block'; drawReportCard("N/A", "N/A", maxScore);
         });
     }
 
     function showAnalysis(type) {
-        let box = document.getElementById('analysis-box');
-        let html = "";
-        
+        let box = document.getElementById('analysis-box'); let html = "";
         examData.questions.forEach((q, i) => {
-            let uAns = userAnswers[i];
-            let isRight = uAns === q.ans;
-            let isBlank = uAns === null;
-            let isWrong = !isBlank && !isRight;
-
+            let uAns = userAnswers[i]; let isRight = uAns === q.ans; let isBlank = uAns === null; let isWrong = !isBlank && !isRight;
             if((type === 'right' && isRight) || (type === 'wrong' && isWrong) || (type === 'blank' && isBlank)) {
-                let statusIcon = isRight ? "✅" : (isWrong ? "❌" : "⬜");
-                let ansColor = isRight ? "green" : (isWrong ? "red" : "gray");
-
-                let correctOpt = q.opts.find(o => o.id === q.ans);
-                let correctStr = correctOpt ? `${correctOpt.id}. ${correctOpt.text}` : q.ans;
-                
-                let userOpt = q.opts.find(o => o.id === uAns);
-                let userStr = isBlank ? "N/A" : (userOpt ? `${userOpt.id}. ${userOpt.text}` : uAns);
+                let statusIcon = isRight ? "✅" : (isWrong ? "❌" : "⬜"); let ansColor = isRight ? "green" : (isWrong ? "red" : "gray");
+                let correctOpt = q.opts.find(o => o.id === q.ans); let correctStr = correctOpt ? `${correctOpt.id}. ${correctOpt.text}` : q.ans;
+                let userOpt = q.opts.find(o => o.id === uAns); let userStr = isBlank ? "N/A" : (userOpt ? `${userOpt.id}. ${userOpt.text}` : uAns);
 
                 html += `<div style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
                     <b style="font-size:15px; color:#1f4e79;">${statusIcon} Q${i+1}. ${q.q}</b>
@@ -825,117 +787,99 @@
                 </div>`;
             }
         });
-
-        if(html === "") {
-            html = `<div style="text-align:center; color:#777; padding:20px;">इस केटेगरी में कोई प्रश्न नहीं है।</div>`;
-        }
-        
-        box.innerHTML = html;
-        box.style.display = 'block';
+        if(html === "") { html = `<div style="text-align:center; color:#777; padding:20px;">इस केटेगरी में कोई प्रश्न नहीं है।</div>`; }
+        box.innerHTML = html; box.style.display = 'block';
     }
 
     function drawReportCard(rank, totalStudents, maxScore) {
         const cvs = document.getElementById('reportCard'); const ctx = cvs.getContext('2d');
-        ctx.fillStyle = '#fdfdfd'; ctx.fillRect(0, 0, 800, 650);
-        ctx.fillStyle = '#1f4e79'; ctx.fillRect(0, 0, 800, 140);
+        ctx.fillStyle = '#fdfdfd'; ctx.fillRect(0, 0, 800, 650); ctx.fillStyle = '#1f4e79'; ctx.fillRect(0, 0, 800, 140);
         ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.font = 'bold 36px Arial'; ctx.fillText(examData.exam.toUpperCase(), 400, 50);
-        ctx.font = '22px Arial'; ctx.fillText(examData.subject + (examData.topic ? " - " + examData.topic : ""), 400, 85);
-        ctx.font = '16px Arial'; ctx.fillStyle = '#f39c12'; ctx.fillText("TEST CODE: " + examData.code, 400, 115);
+        ctx.font = '22px Arial'; ctx.fillText(examData.subject + (examData.topic ? " - " + examData.topic : ""), 400, 85); ctx.font = '16px Arial'; ctx.fillStyle = '#f39c12'; ctx.fillText("TEST CODE: " + examData.code, 400, 115);
         
-        ctx.fillStyle = '#333'; ctx.textAlign = 'left'; ctx.font = 'bold 28px Arial'; ctx.fillText("Name: " + studentInfo.name, 80, 200);
+        ctx.fillStyle = '#333'; ctx.textAlign = 'left'; ctx.font = 'bold 28px Arial'; 
+        let phoneText = studentInfo.phone ? ` (${studentInfo.phone})` : ""; ctx.fillText("Name: " + studentInfo.name + phoneText, 80, 200);
+        
         let attemptText = isReattemptMode ? "Mode: Reattempt" : ("Attempt No: " + (studentInfo.attempt || 1));
         ctx.fillStyle = '#dc3545'; ctx.font = 'bold 20px Arial'; ctx.textAlign = 'right'; ctx.fillText(attemptText, 720, 200);
         
-        ctx.fillStyle = '#28a745'; ctx.fillRect(80, 240, 300, 120); 
-        ctx.fillStyle = '#f39c12'; ctx.fillRect(420, 240, 300, 120); 
-        ctx.fillStyle = '#1f4e79'; ctx.fillRect(80, 380, 640, 120); 
-
-        ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; 
-        ctx.font = '20px Arial'; ctx.fillText("Right / Wrong", 230, 275); 
-        ctx.font = 'bold 40px Arial'; ctx.fillText(studentInfo.right + " / " + studentInfo.wrong, 230, 330);
-        
+        ctx.fillStyle = '#28a745'; ctx.fillRect(80, 240, 300, 120); ctx.fillStyle = '#f39c12'; ctx.fillRect(420, 240, 300, 120); ctx.fillStyle = '#1f4e79'; ctx.fillRect(80, 380, 640, 120); 
+        ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.font = '20px Arial'; ctx.fillText("Right / Wrong", 230, 275); ctx.font = 'bold 40px Arial'; ctx.fillText(studentInfo.right + " / " + studentInfo.wrong, 230, 330);
         ctx.font = '20px Arial'; ctx.fillText("Rank / Students", 570, 275);
         let rankText = (rank === "...") ? "Loading..." : (rank === "N/A" ? "Only Score" : "#" + rank + " / " + totalStudents);
         ctx.font = (rank === "..." || rank === "N/A") ? 'bold 26px Arial' : 'bold 40px Arial'; ctx.fillText(rankText, 570, 330);
+        ctx.font = '24px Arial'; ctx.fillText("Final Marks Scored", 400, 420); ctx.font = 'bold 50px Arial'; ctx.fillStyle = '#f39c12'; ctx.fillText(studentInfo.score + " / " + maxScore, 400, 475);
         
-        ctx.font = '24px Arial'; ctx.fillText("Final Marks Scored", 400, 420);
-        ctx.font = 'bold 50px Arial'; ctx.fillStyle = '#f39c12'; ctx.fillText(studentInfo.score + " / " + maxScore, 400, 475);
-        
-        ctx.fillStyle = '#1f4e79'; ctx.font = 'bold 20px Arial'; ctx.fillText("Prepared by: Ankush Kumar S/O Manoj Kumar", 400, 540);
-        ctx.fillStyle = '#777'; ctx.font = '16px Arial'; ctx.fillText("Generated on: " + new Date().toLocaleString(), 400, 580);
+        ctx.fillStyle = '#1f4e79'; ctx.font = 'bold 20px Arial'; ctx.fillText("Prepared by: Ankush Kumar S/O Manoj Kumar", 400, 540); ctx.fillStyle = '#777'; ctx.font = '16px Arial'; ctx.fillText("Generated on: " + new Date().toLocaleString(), 400, 580);
         ctx.fillStyle = '#ccc'; ctx.font = 'bold 50px Arial'; ctx.globalAlpha = 0.2; ctx.fillText("ANKUSH KUMAR", 400, 400); ctx.globalAlpha = 1.0;
 
-        const imgEl = document.getElementById('reportCardImg');
-        imgEl.src = cvs.toDataURL('image/png');
-        imgEl.style.display = 'block';
-        cvs.style.display = 'none';
+        const imgEl = document.getElementById('reportCardImg'); imgEl.src = cvs.toDataURL('image/png'); imgEl.style.display = 'block'; cvs.style.display = 'none';
     }
 
-    function downloadImage() {
-        const link = document.createElement('a'); link.download = studentInfo.name + '_Report.png'; link.href = document.getElementById('reportCardImg').src; link.click();
-    }
+    function downloadImage() { const link = document.createElement('a'); link.download = studentInfo.name + '_Report.png'; link.href = document.getElementById('reportCardImg').src; link.click(); }
 
     function directDownloadPDF() {
-        let phone = document.getElementById('pdf-phone').value;
-        let pass = document.getElementById('pdf-pass').value;
-        if(!phone) { alert("अपना नंबर डालें!"); return; }
-        if(!checkPass(phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
-        studentInfo.name = "Student";
-        executePDFPrint(phone); 
+        let phone = document.getElementById('pdf-phone').value; let pass = document.getElementById('pdf-pass').value;
+        if(!phone) { alert("अपना नंबर डालें!"); return; } if(!checkPass(phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
+        studentInfo.name = "Student"; executePDFPrint(phone, 'full'); 
     }
 
     function resultDownloadPDF() {
         let pass = document.getElementById('s-pass-result').value;
         if(!checkPass(studentInfo.phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
-        executePDFPrint(studentInfo.name); 
+        executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    function executePDFPrint(watermarkText) {
-        let printArea = document.getElementById('print-area');
-        let safeTestUrl = BASE_URL + "?test=" + examData.code;
+    function executePDFPrint(watermarkText, mode) {
+        let printArea = document.getElementById('print-area'); let safeTestUrl = BASE_URL + "?test=" + examData.code;
+        document.body.classList.add("print-mode-" + mode); 
 
         let html = `<div class="watermark">${watermarkText}</div>`;
-        
         html += `
         <div style="font-size: 14px; border-bottom: 2px solid #1f4e79; padding: 10px 20px; margin-bottom: 10px; box-sizing: border-box;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                 <a href="https://studynotesmanager.netlify.app/" target="_blank" style="color: #1f4e79; text-decoration: none; font-weight: bold; padding-left: 10px;">🌐 Study Notes Manager</a>
                 <a href="${safeTestUrl}" target="_blank" style="color: #dc3545; text-decoration: none; font-weight: bold; padding-right: 10px;">📝 Give Online Test</a>
             </div>
-            <div style="text-align: center; color: #444; font-size: 12px; margin-top: 5px;">
-                <i>निर्देश: और सब्जेक्ट के टेस्ट फ्री में देने के लिए Study Notes Manager लिंक पर टैप करें। इस टेस्ट को ऑनलाइन देने के लिए Give Online Test लिंक पर टैप करें।</i>
-            </div>
-        </div>
-        `;
+            <div style="text-align: center; color: #444; font-size: 12px; margin-top: 5px;"><i>निर्देश: और सब्जेक्ट के टेस्ट फ्री में देने के लिए Study Notes Manager लिंक पर टैप करें।</i></div>
+        </div>`;
         
-        html += `<div class="print-header"><h2>${examData.exam.toUpperCase()}</h2><h3>${examData.subject} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark ID:</b> ${watermarkText}</p></div>`;
+        let headerSub = mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)");
+        html += `<div class="print-header"><h2>${examData.exam.toUpperCase()} ${headerSub}</h2><h3>${examData.subject} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>`;
         
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
-            
             let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && uAns !== q.ans && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
-            let wrongMarkHtml = isWrongAns ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
+            
+            let wrongMarkHtml = (isWrongAns && mode === 'full') ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
             
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
-                let isRight = (o.id === q.ans) ? "background-color: #0f5132 !important; color: #ffffff !important; font-weight: bold; border-radius: 4px; -webkit-print-color-adjust: exact; print-color-adjust: exact;" : "";
+                let isRight = "";
+                if(mode !== 'q_only' && o.id === q.ans) {
+                    isRight = "background-color: #0f5132 !important; color: #ffffff !important; font-weight: bold; border-radius: 4px; -webkit-print-color-adjust: exact; print-color-adjust: exact;";
+                }
                 html += `<div class="opt-item" style="${isRight}">${o.id}. ${o.text}</div>`;
             });
             html += `</div>`;
             
-            if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar")) {
-                let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
-            } else {
-                html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
+            if(mode !== 'q_only') {
+                if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
+                    let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                } else {
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
+                }
+                
+                if(mode === 'full' && q.exp) {
+                    html += `<div class="print-exp"><b>Explanation:</b> ${q.exp}</div>`;
+                }
             }
-            html += `<div class="print-exp"><b>Explanation:</b> ${q.exp}</div></div>`;
+            html += `</div>`; 
         });
         
-        printArea.innerHTML = html;
-        window.print(); 
+        printArea.innerHTML = html; window.print(); 
     }
 </script>
-
 </body>
 </html>
