@@ -6,7 +6,7 @@
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; user-select: none; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
         
         .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
@@ -32,8 +32,8 @@
         .btn-warning { background: #f39c12; color: #fff; }
         .btn:disabled { background: #6c757d; cursor: not-allowed; }
 
-        .admin-tabs { display: flex; border-bottom: 2px solid #1f4e79; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 16px; cursor: pointer; background: #e9ecef; border: none; outline: none; }
+        .admin-tabs { display: flex; border-bottom: 2px solid #1f4e79; margin-bottom: 20px; flex-wrap: wrap;}
+        .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 15px; cursor: pointer; background: #e9ecef; border: none; outline: none; white-space: nowrap; min-width:150px;}
         .tab-btn.active { background: #1f4e79; color: white; }
 
         .test-card { background: #fff; border: 1px solid #ddd; border-left: 5px solid #1f4e79; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -57,9 +57,9 @@
         .action-btn { padding: 10px 20px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; }
         .btn-prev { background: #6c757d; } .btn-next { background: #28a745; } .btn-clear { background: #ffc107; color: #333; } .btn-submit { background: #dc3545; }
         
-        .palette-legend { display: flex; flex-wrap: nowrap; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; background: #fff; }
+        .palette-legend { display: flex; flex-wrap: nowrap; justify-content: space-around; padding: 10px; border-bottom: 1px solid #ccc; font-size: 12px; background: #fff; }
         .legend-item { display: flex; align-items: center; justify-content: center; font-weight:bold; color:#555;}
-        .box { width: 20px; height: 20px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: white; line-height: 20px; font-weight: bold; border: 1px solid #aaa; font-size:10px;}
+        .box { width: 20px; height: 20px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: #333; line-height: 20px; font-weight: bold; border: 1px solid #aaa; font-size:10px;}
         
         .status-not-visited { background: #fff; color: #333; } 
         .status-not-answered { background: #ffc107; color: #000; border-color: #e0a800; } 
@@ -79,7 +79,15 @@
         .res-table th { background-color: #1f4e79; color: white; }
         .res-table tr:nth-child(even){background-color: #f2f2f2;}
 
+        .admin-lock { position: absolute; bottom: 20px; right: 20px; font-size: 24px; cursor: pointer; opacity: 0.5; transition: 0.3s; z-index:999;}
+        .admin-lock:hover { opacity: 1; }
+
+        .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
+        .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
+
         #print-area { display: none; }
+        
+        .print-only { display: none !important; }
         
         @media print {
             @page { margin: 8mm; } 
@@ -98,9 +106,14 @@
             .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
             
+            /* 🔥 Leaderboard Print Hack 🔥 */
+            .screen-only { display: none !important; }
+            .print-only { display: inline !important; }
+            
             #leaderboard-print { visibility: visible; position: absolute; left: 0; top: 0; width: 100%; font-family: Arial, sans-serif; }
+            #leaderboard-print * { visibility: visible; }
             #leaderboard-print table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center;}
-            #leaderboard-print th, #leaderboard-print td { border: 1px solid #000; padding: 6px; }
+            #leaderboard-print th, #leaderboard-print td { border: 1px solid #000; padding: 6px; color: #000;}
             #leaderboard-print th { background-color: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
@@ -112,8 +125,9 @@
             .action-btn { padding: 8px 12px; font-size: 14px; }
             .question-palette { max-height: 350px; margin-bottom: 20px; } 
             .watermark { font-size: 80px; } 
-            .palette-legend { font-size: 10px; }
-            .box { width: 16px; height: 16px; line-height: 16px; }
+            .palette-legend { font-size: 10px; padding: 10px 5px;}
+            .box { width: 14px; height: 14px; line-height: 14px; }
+            .admin-lock { bottom: 10px; right: 10px; font-size: 20px;}
         }
     </style>
 </head>
@@ -144,18 +158,13 @@
                 <input type="password" id="admin-pass" placeholder="Enter Password">
             </div>
             <button class="btn btn-blue" onclick="loginAdmin()">Login to Dashboard</button>
+            <button class="btn btn-outline" style="margin-top:10px;" onclick="location.reload()">⬅️ Back to Home</button>
         </div>
     </div>
 
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
-    </div>
-
-    <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
-        <h2 style="color:#dc3545;">❌ टेस्ट लोड नहीं हो पाया</h2>
-        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें और ब्राउज़र की History/Cache डिलीट करके दोबारा प्रयास करें।</p>
-        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
     <div id="admin-view" class="view-section">
@@ -224,8 +233,8 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
                     <h3 style="margin: 0; color: #1f4e79;">📊 Result: <span id="lb-title"></span></h3>
                     <div>
-                        <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="printLeaderboard()">🖨️ Print Result List</button>
-                        <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌ Close</button>
+                        <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="printLeaderboard()">🖨️ Print List</button>
+                        <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌</button>
                     </div>
                 </div>
                 <div style="overflow-x:auto;" id="leaderboard-content"></div>
@@ -237,7 +246,8 @@
     </div>
 
     <div id="login-view" class="view-section">
-        <div style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        
+        <div id="specific-test-login" style="display:none; max-width: 450px; margin: 0 auto 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
             <p style="text-align:center; color:#e74c3c; font-weight:bold; margin-top:0;">Test Code: <span id="disp-code">...</span></p>
             <p style="text-align:center; color:#555; font-size:13px; margin-top:-5px;">(+<span id="disp-marks"></span> Marks / -<span id="disp-neg"></span> Negative)</p>
@@ -266,6 +276,51 @@
                 <button class="btn btn-pdf" onclick="directDownloadPDF()">🔒 Unlock & Download PDF</button>
             </div>
         </div>
+
+        <div style="max-width: 800px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
+                <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
+                <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('history')">📈 Check My History</button>
+            </div>
+
+            <div id="st-active-section">
+                <h3 style="color: #1f4e79; text-align: center; margin-bottom: 15px; font-size:16px;">वर्तमान में उपलब्ध टेस्ट</h3>
+                <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading...</div>
+                <div id="st-active-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
+            </div>
+
+            <div id="st-history-section" style="display: none;">
+                <div style="background: #f4f6f8; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align:center;">
+                    <h3 style="color:#1f4e79; margin-top:0;">🔍 अपनी परफॉर्मेंस और पुराने टेस्ट देखें</h3>
+                    <input type="tel" id="hist-phone" placeholder="Enter your registered 10-digit mobile number" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;">
+                    <button class="btn btn-blue" style="max-width:300px; margin:0 auto;" onclick="fetchStudentHistory()">Fetch History</button>
+                </div>
+                
+                <div id="st-hist-loader" style="text-align: center; display:none; margin-top:20px;"><div class="loader"></div> Analysing Performance...</div>
+                
+                <div id="st-hist-content" style="margin-top: 30px; display:none;">
+                    <div id="st-graphical-report" style="background: #e6f9ec; border: 2px solid #28a745; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                        <h3 style="margin:0 0 15px 0; color:#155724; text-align:center;">📊 Overall Final Report Card</h3>
+                        <div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:15px; text-align:center;">
+                            <div><h4 style="margin:0; color:#555;">Total Tests</h4><b style="font-size:24px; color:#1f4e79;" id="gr-tot">0</b></div>
+                            <div><h4 style="margin:0; color:#555;">Total Qs</h4><b style="font-size:24px; color:#1f4e79;" id="gr-qs">0</b></div>
+                            <div><h4 style="margin:0; color:#555;">Accuracy</h4><b style="font-size:24px; color:#dc3545;" id="gr-acc">0%</b></div>
+                        </div>
+                        <div class="progress-bar-container" id="gr-bar"></div>
+                        <div style="display:flex; justify-content:center; gap:15px; margin-top:10px; font-size:12px; font-weight:bold;">
+                            <span style="color:#28a745;">🟩 Correct (<span id="gr-r">0</span>)</span>
+                            <span style="color:#dc3545;">🟥 Wrong (<span id="gr-w">0</span>)</span>
+                            <span style="color:#6c757d;">⬜ Blank (<span id="gr-b">0</span>)</span>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #1f4e79; border-bottom:2px solid #ccc; padding-bottom:5px;">📜 Individual Test Records</h3>
+                    <div id="st-hist-list"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-lock" onclick="openAdminLogin()">🔒</div>
     </div>
 
     <div id="exam-view" class="view-section" style="padding: 0;">
@@ -281,15 +336,15 @@
                 <div class="action-buttons">
                     <button class="action-btn btn-prev" onclick="prevQ()">⬅️ Previous</button>
                     <button class="action-btn btn-clear" onclick="clearResponse()">Clear Response</button>
-                    <button class="action-btn btn-next" onclick="nextQ()">Save & Next ➡️</button>
+                    <button class="action-btn btn-next" onclick="nextQ(false)">Save & Next ➡️</button>
                     <button class="action-btn btn-submit" onclick="submitExamConfirmation()">Submit Test</button>
                 </div>
             </div>
             
             <div class="right-panel">
                 <div class="palette-legend">
-                    <div class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Answered</div>
-                    <div class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Answered</div>
+                    <div class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Att</div>
+                    <div class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Att</div>
                     <div class="legend-item"><span class="box status-not-visited" id="cnt-notvis">0</span> Blank</div>
                 </div>
                 <div class="question-palette" id="palette-grid"></div>
@@ -330,7 +385,7 @@
                     PDF मूल्य: <b>₹<span id="res-price">0</span></b> | पासवर्ड के लिए <b>8273684939</b> पर Payment करके स्क्रीनशॉट WhatsApp करें।
                 </div>
                 <div id="res-free-instructions" style="font-size: 13px; color: #28a745; display: none; font-weight:bold;">
-                    🎉 यह PDF सभी के लिए बिल्कुल Free है! नीचे दिए गए बटन से सीधे डाउनलोड करें।
+                    🎉 यह PDF सभी के लिए Free है!
                 </div>
 
                 <div id="res-pass-box" style="display: flex; gap: 10px; margin-top: 15px;">
@@ -354,8 +409,8 @@
 <div id="leaderboard-print" style="display:none;"></div>
 
 <script>
-    // 🔥 YAHAN TUMHARI NAYI GOOGLE SCRIPT LINK 🔥
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2IOYWfiFdCHcGHGuoET8Ff5I6Rcapfm69EvrJogCQfGcv_pDSCABTiULBY2DH7-So9g/exec";
+    // 🚨 FINAL GOOGLE SCRIPT URL 🚨
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFh4ImEJMMq7ukkNMNW7022txz8hMb5MErLa3F97udMXXCRSn0JD-sPCFC3lb2vwFgXw/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
     let examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [] };
@@ -369,15 +424,14 @@
 
     window.onload = initApp;
 
-    function closeAndRedirect() { window.location.href = "https://studynotesmanager.netlify.app/"; }
+    function closeAndRedirect() { window.location.href = BASE_URL; }
+    function openAdminLogin() { document.getElementById('login-view').classList.remove('active-view'); document.getElementById('admin-auth-view').classList.add('active-view'); }
 
     function blastConfetti() {
-        let duration = 4000; let end = Date.now() + duration;
-        let emojis = ['🎉', '✨', '🏆', '🔥', '👏'];
+        let duration = 4000; let end = Date.now() + duration; let emojis = ['🎉', '✨', '🏆', '🔥', '👏'];
         let interval = setInterval(function() {
             if (Date.now() > end) return clearInterval(interval);
-            let el = document.createElement('div');
-            el.className = 'confetti'; el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            let el = document.createElement('div'); el.className = 'confetti'; el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
             el.style.left = Math.random() * 100 + 'vw'; el.style.top = '-50px';
             document.body.appendChild(el); setTimeout(() => el.remove(), 3000);
         }, 150);
@@ -409,13 +463,18 @@
             script.src = SCRIPT_URL + "?action=getTest&testCode=" + testCode + "&callback=handleTestLoad&t=" + cb;
             script.onerror = function() { showErrorView("❌ नेटवर्क एरर! सुनिश्चित करें कि Apps Script में Who has access 'Anyone' है।"); };
             document.body.appendChild(script);
-        } else { document.getElementById('admin-auth-view').classList.add('active-view'); }
+        } else {
+            document.getElementById('login-view').classList.add('active-view');
+            document.getElementById('specific-test-login').style.display = 'none'; // Hide test login
+            switchStudentTab('active');
+        }
     }
 
     window.handleTestLoad = function(data) {
         if(data.error) { showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")"); return; }
-        examData = data;
-        examData.marks = data.marks || 2; examData.neg = data.neg || 0;
+        if(data.isActive === false) { showErrorView("❌ यह टेस्ट अभी एडमिन द्वारा बंद (Deactive) कर दिया गया है।"); return; }
+        
+        examData = data; examData.marks = data.marks || 2; examData.neg = data.neg || 0;
         examData.totTime = data.totTime || 0; examData.qTime = data.qTime || 0;
         setupLoginScreen();
     };
@@ -423,6 +482,7 @@
     function setupLoginScreen() {
         document.getElementById('loading-view').classList.remove('active-view');
         document.getElementById('login-view').classList.add('active-view');
+        document.getElementById('specific-test-login').style.display = 'block'; // Show test login
         
         document.getElementById('head-exam-name').innerText = examData.exam;
         document.getElementById('login-test-name').innerText = examData.exam + " (" + examData.subject + ")";
@@ -447,8 +507,104 @@
             document.getElementById('disp-price').innerText = examData.price; document.getElementById('res-price').innerText = examData.price;
         }
         for(let i=0; i<examData.questions.length; i++) { userAnswers[i] = null; qStatus[i] = 0; }
+        
+        // Load active tests below the login box too
+        switchStudentTab('active');
     }
 
+    // 🔥 STUDENT HISTORY & DASHBOARD LOGIC 🔥
+    function switchStudentTab(tab) {
+        if(tab === 'active') {
+            document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
+            document.getElementById('st-active-section').style.display = 'block'; document.getElementById('st-history-section').style.display = 'none';
+            fetchActiveTests();
+        } else {
+            document.getElementById('tab-st-history').classList.add('active'); document.getElementById('tab-st-active').classList.remove('active');
+            document.getElementById('st-active-section').style.display = 'none'; document.getElementById('st-history-section').style.display = 'block';
+        }
+    }
+
+    function fetchActiveTests() {
+        document.getElementById('st-active-loader').style.display = 'block'; document.getElementById('st-active-list').innerHTML = '';
+        let cb = new Date().getTime(); let script = document.createElement('script');
+        script.src = SCRIPT_URL + "?action=getActiveTests&callback=handleActiveTests&t=" + cb;
+        document.body.appendChild(script);
+    }
+    
+    window.handleActiveTests = function(data) {
+        document.getElementById('st-active-loader').style.display = 'none';
+        let list = document.getElementById('st-active-list');
+        if(!data.tests || data.tests.length === 0) { list.innerHTML = "<p>अभी कोई टेस्ट उपलब्ध नहीं है।</p>"; return; }
+        let html = "";
+        data.tests.forEach(t => {
+            html += `<div style="background:#fff; border:1px solid #ccc; border-radius:8px; padding:15px; width:100%; max-width:350px; text-align:left; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
+                <h4 style="margin:0 0 5px 0; color:#1f4e79;">${t.exam}</h4>
+                <p style="margin:0 0 10px 0; font-size:13px; color:#555;"><b>${t.sub}</b> ${t.topic ? "("+t.topic+")" : ""}</p>
+                <div style="font-size:12px; margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time || 0} Min</span> <span class="badge">Marks: ${t.marks || 2}</span></div>
+                <button class="btn btn-blue" style="margin:0; padding:8px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>
+            </div>`;
+        });
+        list.innerHTML = html;
+    };
+
+    function fetchStudentHistory() {
+        let phone = document.getElementById('hist-phone').value;
+        if(phone.length !== 10) { alert("कृपया सही 10 अंकों का नंबर डालें!"); return; }
+        document.getElementById('st-hist-loader').style.display = 'block'; document.getElementById('st-hist-content').style.display = 'none';
+        let cb = new Date().getTime(); let script = document.createElement('script');
+        script.src = SCRIPT_URL + "?action=getStudentHistory&phone=" + phone + "&callback=handleStudentHistory&t=" + cb;
+        document.body.appendChild(script);
+    }
+
+    window.handleStudentHistory = function(data) {
+        document.getElementById('st-hist-loader').style.display = 'none';
+        if(data.error || !data.history || data.history.length === 0) { alert("इस नंबर से कोई टेस्ट रिकॉर्ड नहीं मिला।"); return; }
+        
+        let h = data.history; let totRight = 0, totWrong = 0, totBlank = 0; let html = "";
+        h.forEach((r) => {
+            totRight += r.right; totWrong += r.wrong; totBlank += r.blank;
+            let d = new Date(r.date).toLocaleDateString();
+            html += `<div style="background:#fff; border:1px solid #ddd; padding:15px; border-radius:6px; margin-bottom:15px; text-align:left;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:5px; margin-bottom:10px;">
+                    <b style="color:#1f4e79;">Test: ${r.code}</b> <span style="font-size:12px; color:#777;">🗓️ ${d}</span>
+                </div>
+                <div style="font-size:13px; margin-bottom:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <span style="background:#e6f9ec; color:#155724; padding:3px 8px; border-radius:4px;"><b>Score:</b> ${r.score}</span>
+                    <span style="background:#f8d7da; color:#721c24; padding:3px 8px; border-radius:4px;"><b>Rank:</b> #${r.rank}</span>
+                    <span style="background:#e2e3e5; color:#383d41; padding:3px 8px; border-radius:4px;"><b>Attempt:</b> ${r.attempt}</span>
+                </div>
+                <div style="font-size:12px; font-weight:bold; display:flex; gap:10px; margin-bottom:15px;">
+                    <span style="color:#28a745;">✅ R: ${r.right}</span> <span style="color:#dc3545;">❌ W: ${r.wrong}</span> <span style="color:#6c757d;">⬜ B: ${r.blank}</span>
+                </div>
+                <div style="display:flex; gap:5px;">
+                    <button class="btn btn-pdf" style="margin:0; padding:6px; font-size:12px; flex:1;" onclick="downloadHistoryPDF('${r.code}', '${r.phone}')">📄 Revision PDF</button>
+                    <button class="btn btn-outline" style="margin:0; padding:6px; font-size:12px; flex:1;" onclick="alert('आपकी विस्तृत परफॉर्मेंस ऊपर Overall Report में जोड़ दी गई है।')">📊 Performance</button>
+                </div>
+            </div>`;
+        });
+        
+        let totQs = totRight + totWrong + totBlank; if(totQs === 0) totQs = 1;
+        let rp = (totRight/totQs)*100; let wp = (totWrong/totQs)*100; let bp = (totBlank/totQs)*100;
+        
+        document.getElementById('gr-tot').innerText = h.length; document.getElementById('gr-qs').innerText = totQs; document.getElementById('gr-acc').innerText = Math.round(rp) + "%";
+        document.getElementById('gr-r').innerText = totRight; document.getElementById('gr-w').innerText = totWrong; document.getElementById('gr-b').innerText = totBlank;
+        document.getElementById('gr-bar').innerHTML = `<div class="progress-segment" style="width:${rp}%; background:#28a745;" title="Right"></div><div class="progress-segment" style="width:${wp}%; background:#dc3545;" title="Wrong"></div><div class="progress-segment" style="width:${bp}%; background:#6c757d;" title="Blank"></div>`;
+        
+        document.getElementById('st-hist-list').innerHTML = html; document.getElementById('st-hist-content').style.display = 'block';
+    };
+
+    window.downloadHistoryPDF = function(code, phone) {
+        alert("Preparing Revision PDF...");
+        let cb = new Date().getTime(); let script = document.createElement('script');
+        script.src = SCRIPT_URL + "?action=getTest&testCode=" + code + "&callback=handleHistTestLoad&t=" + cb;
+        window.handleHistTestLoad = function(data) {
+            if(data.error) { alert("Test data unavailable."); return; }
+            examData = data; userAnswers = []; executePDFPrint(phone, 'q_ans'); 
+        };
+        document.body.appendChild(script);
+    }
+
+    // --- ADMIN PANEL LOGIC ---
     function switchAdminTab(tab) {
         if(tab === 'create') {
             document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active');
@@ -461,33 +617,28 @@
     }
 
     function togglePriceBox() {
-        let type = document.getElementById('a-pdf-type').value;
-        document.getElementById('price-box').style.display = (type === 'free') ? 'none' : 'block';
+        let type = document.getElementById('a-pdf-type').value; document.getElementById('price-box').style.display = (type === 'free') ? 'none' : 'block';
     }
 
     function generateStrongPass(phone, key) {
         if(!key) key = "ANK"; let mixed = key + phone + "PRO"; let num = 0;
         for(let i=0; i<mixed.length; i++) { num += mixed.charCodeAt(i) * (i+1); }
-        let sym = ['@','#','$','&','*'];
-        let s1 = sym[num % sym.length]; let s2 = sym[(num * 2) % sym.length];
+        let sym = ['@','#','$','&','*']; let s1 = sym[num % sym.length]; let s2 = sym[(num * 2) % sym.length];
         let l1 = String.fromCharCode(65 + (num % 26)); let l2 = String.fromCharCode(97 + ((num*3) % 26)); 
         let p1 = phone.length >= 4 ? phone.substring(0,2) : "99"; let p2 = phone.length >= 4 ? phone.slice(-2) : "88";
-        let k1 = key.charAt(0).toUpperCase();
-        return l1 + s1 + p1 + l2 + s2 + p2 + k1;
+        let k1 = key.charAt(0).toUpperCase(); return l1 + s1 + p1 + l2 + s2 + p2 + k1;
     }
 
     function generatePass() {
         let phone = document.getElementById('gen-phone').value; let key = document.getElementById('gen-key').value.toUpperCase();
-        if(!key) { alert("Secret Key डालें!"); return; }
-        if(phone.length < 10) { document.getElementById('show-gen-pass').innerText = "पूरा 10 अंकों का नंबर डालें!"; return; }
+        if(!key) { alert("Secret Key डालें!"); return; } if(phone.length < 10) { document.getElementById('show-gen-pass').innerText = "पूरा 10 अंकों का नंबर डालें!"; return; }
         let pass = generateStrongPass(phone, key); currentGeneratedPass = pass; 
         document.getElementById('show-gen-pass').innerText = "पासवर्ड: " + pass; document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
     }
 
     function copyGeneratedPass() {
         if(!currentGeneratedPass) return;
-        try {
-            navigator.clipboard.writeText(currentGeneratedPass).then(() => { alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass); }).catch(fallbackCopy);
+        try { navigator.clipboard.writeText(currentGeneratedPass).then(() => { alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass); }).catch(fallbackCopy);
         } catch(e) { fallbackCopy(); }
         function fallbackCopy() {
             let tempInput = document.createElement("input"); tempInput.value = currentGeneratedPass; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput);
@@ -496,8 +647,7 @@
     }
 
     function checkPass(enteredPhone, enteredPass) {
-        if(examData.isFree) return true;
-        return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
+        if(examData.isFree) return true; return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
     function parseRawQuestions(rawText) {
@@ -529,7 +679,7 @@
         if(!rawText.trim()) { alert("Please paste questions!"); return; }
 
         let parsedQs = parseRawQuestions(rawText);
-        let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs };
+        let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, isActive: true };
         let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test to Database..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
@@ -540,7 +690,7 @@
             
             let testLink = BASE_URL + "?test=" + eCode;
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let existingIdx = savedTests.findIndex(t => t.code === eCode);
-            let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText };
+            let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
             if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
@@ -561,18 +711,22 @@
             html += `<h3 style="background:#1f4e79; color:white; padding:10px; border-radius:4px; margin-top:20px;">${exam}</h3>`;
             grouped[exam].forEach(t => {
                 let priceText = t.isFree ? "Free" : "₹" + t.price;
+                let isActive = t.isActive !== false; 
+                let statusBtn = isActive ? `<button class="btn" style="background:#28a745; margin:0; padding:5px; font-size:12px; width:auto;" onclick="toggleTestStatus('${t.code}', false, ${t.originalIndex})">🟢 Active</button>` 
+                                         : `<button class="btn" style="background:#6c757d; margin:0; padding:5px; font-size:12px; width:auto;" onclick="toggleTestStatus('${t.code}', true, ${t.originalIndex})">🔴 Inactive</button>`;
+
                 html += `<div class="test-card">
-                    <h4>${t.sub} (${t.code})</h4>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><h4 style="margin:0;">${t.sub} (${t.code})</h4> ${statusBtn}</div>
                     <div style="margin-bottom: 10px;">
                         <span class="badge">Qs: ${t.qs}</span><span class="badge">${priceText}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
                         <span class="badge">T: ${t.totTime||0}m / Q: ${t.qTime||0}s</span><span class="badge">Date: ${t.date}</span>
                     </div>
                     <input type="text" value="${t.link}" readonly style="width:100%; padding:5px; border:1px solid #ccc; font-size:12px; margin-bottom:5px;">
                     <div style="margin-top:5px; display:flex; gap:10px; flex-wrap:wrap; border-top:1px solid #eee; padding-top:10px;">
-                        <button class="btn btn-blue" style="margin:0; padding:5px; font-size:12px; width:auto;" onclick="editTest(${t.originalIndex})">✏️ Edit</button>
-                        <button class="btn" style="background:#dc3545; margin:0; padding:5px; font-size:12px; width:auto;" onclick="deleteTest(${t.originalIndex})">🗑️ Delete</button>
-                        <button class="btn btn-outline" style="margin:0; padding: 5px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
-                        <button class="btn btn-warning" style="margin:0; padding: 5px; width: auto; font-size:12px;" onclick="viewResults('${t.code}')">📊 View Results</button>
+                        <button class="btn btn-blue" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="editTest(${t.originalIndex})">✏️ Edit</button>
+                        <button class="btn" style="background:#dc3545; margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="deleteTest(${t.originalIndex})">🗑️ Delete</button>
+                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
+                        <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="viewResults('${t.code}')">📊 View Results</button>
                     </div>
                     <div style="margin-top:10px; display:flex; gap:5px; flex-wrap:wrap;">
                         <b style="font-size:12px; width:100%;">PDF Options:</b>
@@ -584,6 +738,18 @@
             });
         }
         listDiv.innerHTML = html;
+    }
+
+    window.toggleTestStatus = function(code, newStatus, idx) {
+        let cb = new Date().getTime(); let script = document.createElement('script');
+        script.src = SCRIPT_URL + "?action=toggleTestStatus&testCode=" + code + "&status=" + newStatus + "&callback=handleToggle&t=" + cb;
+        window.handleToggle = function(data) {
+            if(data.status === "success") {
+                let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+                if(savedTests[idx]) { savedTests[idx].isActive = newStatus; localStorage.setItem('myMockTests', JSON.stringify(savedTests)); }
+                renderDashboard();
+            } else { alert("Failed to update status."); }
+        }; document.body.appendChild(script);
     }
 
     function editTest(idx) {
@@ -601,24 +767,25 @@
     }
 
     function viewResults(testCode) {
-        document.getElementById('leaderboard-view').style.display = 'block';
-        document.getElementById('lb-title').innerText = testCode;
+        document.getElementById('leaderboard-view').style.display = 'block'; document.getElementById('lb-title').innerText = testCode;
         document.getElementById('leaderboard-content').innerHTML = '<div style="text-align:center;"><div class="loader"></div> Loading...</div>';
         let cb = new Date().getTime(); let script = document.createElement('script');
-        script.src = SCRIPT_URL + "?action=getResults&testCode=" + testCode + "&callback=handleResultsLoad&t=" + cb;
-        document.body.appendChild(script);
+        script.src = SCRIPT_URL + "?action=getResults&testCode=" + testCode + "&callback=handleResultsLoad&t=" + cb; document.body.appendChild(script);
     }
 
     window.handleResultsLoad = function(data) {
         if(data.error) { document.getElementById('leaderboard-content').innerHTML = "<p style='color:red;'>"+data.error+"</p>"; return; }
-        let res = data.results;
-        if(!res || res.length === 0) { document.getElementById('leaderboard-content').innerHTML = "<p>अभी तक किसी ने यह टेस्ट नहीं दिया है।</p>"; return; }
+        let res = data.results; if(!res || res.length === 0) { document.getElementById('leaderboard-content').innerHTML = "<p>अभी तक किसी ने यह टेस्ट नहीं दिया है।</p>"; return; }
         
-        let html = `<table class="res-table"><tr><th>Rank</th><th>Name</th><th>Phone (Last 4)</th><th>Score</th><th>R / W / B</th><th>Time(s)</th><th>Date</th></tr>`;
+        let html = `<table class="res-table"><tr><th>Rank</th><th>Name</th><th>Phone</th><th>Score</th><th>Rt / Wr / Bk</th><th>Time(s)</th><th>Date</th></tr>`;
         res.forEach((r, i) => {
             let maskedPhone = r.phone.toString().length >= 4 ? "XXXXXX" + r.phone.toString().slice(-4) : r.phone;
             let d = new Date(r.date).toLocaleDateString();
-            html += `<tr><td>#${i+1}</td><td><b>${r.name}</b></td><td>${maskedPhone}</td><td style="color:#28a745; font-weight:bold;">${r.score}</td><td><span style='color:green'>${r.right}</span>/<span style='color:red'>${r.wrong}</span>/${r.blank}</td><td>${r.time}</td><td>${d}</td></tr>`;
+            html += `<tr><td>#${i+1}</td><td><b>${r.name}</b></td>
+                <td><span class="screen-only">${r.phone}</span><span class="print-only">${maskedPhone}</span></td>
+                <td style="color:#28a745; font-weight:bold;">${r.score}</td>
+                <td><span style='color:green'>${r.right}</span> / <span style='color:red'>${r.wrong}</span> / ${r.blank}</td>
+                <td>${r.time}</td><td>${d}</td></tr>`;
         });
         html += `</table>`;
         currentAdminLbData = html; document.getElementById('leaderboard-content').innerHTML = html;
@@ -627,7 +794,7 @@
     function printLeaderboard() {
         if(!currentAdminLbData) return;
         let printArea = document.getElementById('leaderboard-print');
-        printArea.innerHTML = `<h2 style="text-align:center; color:#1f4e79;">Test Result Report: ${document.getElementById('lb-title').innerText}</h2>` + currentAdminLbData;
+        printArea.innerHTML = `<h2 style="text-align:center; color:#1f4e79; margin-bottom:15px;">Result Report: ${document.getElementById('lb-title').innerText}</h2>` + currentAdminLbData;
         document.querySelector('.container').style.display = 'none'; printArea.style.display = 'block'; window.print();
         printArea.style.display = 'none'; document.querySelector('.container').style.display = 'flex';
     }
@@ -635,16 +802,14 @@
     function adminDownloadPDF(idx, mode) {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t || !t.rawText) { alert("डेटा नहीं मिला!"); return; }
         let parsedQs = parseRawQuestions(t.rawText); examData = { exam: t.exam, subject: t.sub, topic: t.topic, code: t.code, questions: parsedQs };
-        studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; 
-        userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; });
-        executePDFPrint(studentInfo.name, mode);
+        studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; }); executePDFPrint(studentInfo.name, mode);
     }
 
     // --- STUDENT TEST LOGIC ---
     function startExam(isReattempt) {
         if(!isReattempt) {
             studentInfo.name = document.getElementById('s-name').value; studentInfo.phone = document.getElementById('s-phone').value;
-            if(!studentInfo.name || studentInfo.phone.length < 10) { alert("कृपया सही नाम और 10 अंकों का नंबर डालें!"); return; }
+            if(!studentInfo.name || studentInfo.phone.length !== 10) { alert("कृपया सही नाम और 10 अंकों का नंबर डालें!"); return; }
         }
         isReattemptMode = isReattempt; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0; totalTimeSpent = 0;
         
@@ -655,9 +820,7 @@
         document.getElementById('top-sexam').innerText = examData.exam + (isReattemptMode ? " (Reattempt)" : "");
         document.getElementById('student-top-bar').style.display = 'flex';
 
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-        document.getElementById('exam-view').classList.add('active-view');
-        
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); document.getElementById('exam-view').classList.add('active-view');
         document.getElementById('timer-box').style.display = 'flex';
         initPalette(); renderQuestion(0);
         
@@ -665,8 +828,7 @@
         globalTimer = setInterval(() => {
             totalTimeSpent++;
             if(examData.totTime > 0) {
-                globalTimeLeft--;
-                let m = Math.floor(globalTimeLeft / 60); let s = globalTimeLeft % 60;
+                globalTimeLeft--; let m = Math.floor(globalTimeLeft / 60); let s = globalTimeLeft % 60;
                 document.getElementById('main-time').innerText = `Time Left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
                 if(globalTimeLeft <= 0) { clearInterval(globalTimer); alert("⏳ समय समाप्त! आपका टेस्ट आटोमेटिक सबमिट हो रहा है।"); calculateScoreAndSubmit(); }
             } else {
@@ -850,7 +1012,6 @@
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
             let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && uAns !== q.ans && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
-            
             let wrongMarkHtml = (isWrongAns && mode === 'full') ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
             
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
@@ -870,10 +1031,7 @@
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
                 }
-                
-                if(mode === 'full' && q.exp) {
-                    html += `<div class="print-exp"><b>Explanation:</b> ${q.exp}</div>`;
-                }
+                if(mode === 'full' && q.exp) { html += `<div class="print-exp"><b>Explanation:</b> ${q.exp}</div>`; }
             }
             html += `</div>`; 
         });
