@@ -10,7 +10,7 @@
         /* 🔥 Admin can select text 🔥 */
         #admin-view { user-select: auto; -webkit-user-select: auto; }
 
-        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
+        .container { max-width: 1200px; margin: 0 auto; background: white; height: 100vh; display: flex; flex-direction: column; position: relative;}
         
         .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
@@ -20,8 +20,12 @@
         .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; }
         .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
 
-        .view-section { padding: 20px; flex: 1; display: none; }
+        .view-section { padding: 20px; flex: 1; overflow-y: auto; display: none; }
         .active-view { display: block; }
+        
+        /* Exam view special handling */
+        #exam-view { padding: 0; overflow: hidden; display: none; flex-direction: column; }
+        #exam-view.active-view { display: flex; }
 
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; font-size: 14px;}
@@ -44,21 +48,30 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
-        /* 🔥 Optimized Main Test Area 🔥 */
-        .exam-container { display: flex; flex-direction: column; height: calc(100vh - 100px); }
-        .left-panel { width: 100%; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; flex: 1;}
+        /* 🔥 NEW: Optimized Exam Area With Scroll System 🔥 */
+        .exam-container { display: flex; flex-direction: column; flex: 1; overflow: hidden; background: #fff;}
+        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px; box-sizing: border-box; overflow: hidden; }
         
-        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; flex-shrink: 0;}
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
+        
+        /* Scrollable Area For Long Questions */
+        #q-scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 10px; }
+        /* Scrollbar Styling */
+        #q-scroll-area::-webkit-scrollbar { width: 5px; }
+        #q-scroll-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 5px; }
+
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
         .opt-label { display: block; padding: 10px 12px; border: 2px solid #e0e0e0; margin-bottom: 8px; border-radius: 6px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 15px; font-weight: normal; }
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        /* 🔥 Mini Palette Bottom Preview Animation 🔥 */
-        .mini-palette-wrapper { margin-top: auto; position: relative; padding-top: 25px; margin-bottom: 15px; border-top: 1px solid #ccc; }
-        .pulse-btn { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
+        /* 🔥 Bottom Fixed Controls 🔥 */
+        .bottom-controls { flex-shrink: 0; background: #fff; padding-top: 15px; border-top: 1px solid #ccc; margin-top: auto; }
+        
+        .mini-palette-wrapper { position: relative; margin-bottom: 10px; }
+        .pulse-btn { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(31, 78, 121, 0); } 100% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0); } }
         
         .mini-strip { display: flex; gap: 8px; overflow: hidden; justify-content: center; background: #f8f9fa; padding: 15px 10px 10px 10px; border-radius: 8px; border: 1px solid #e9ecef; }
@@ -102,7 +115,7 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 WAHI PURANA 100% PERFECT PDF PRINTING CSS 🔥 */
+        /* 🔥 PRINTING CSS (100% SAFE) 🔥 */
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
@@ -124,12 +137,13 @@
         }
 
         @media (max-width: 768px) {
-            .exam-container { padding-bottom: 20px; height: auto; }
-            .left-panel { padding: 15px; }
+            .left-panel { padding: 10px 15px; }
             .watermark { font-size: 80px; } 
             .admin-lock { bottom: 10px; right: 10px; font-size: 20px;}
             .fullscreen-overlay { padding: 0; }
             .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
+            .action-btn { font-size: 13px; padding: 8px; }
+            .pulse-btn { top: -25px; font-size: 12px; padding: 4px 15px; }
         }
     </style>
 </head>
@@ -342,7 +356,7 @@
     </div>
 
     <!-- 3. EXAM INTERFACE (Anti-Copy Enabled) -->
-    <div id="exam-view" class="view-section" style="padding: 0;" oncontextmenu="return false;">
+    <div id="exam-view" class="view-section" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
                 <div class="q-header">
@@ -350,23 +364,26 @@
                     <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
                 </div>
                 
-                <!-- 🔥 PASSAGE AREA 🔥 -->
-                <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
-                
-                <div class="q-text" id="q-text">Loading question...</div>
-                <div class="options-div" id="options-box"></div>
-                
-                <!-- 🔥 MINI PALETTE PREVIEW (Bottom) 🔥 -->
-                <div class="mini-palette-wrapper">
-                    <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
-                    <div id="mini-palette-strip" class="mini-strip"></div>
+                <!-- 🔥 NEW SCROLLABLE AREA FOR LONG QUESTIONS 🔥 -->
+                <div id="q-scroll-area">
+                    <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
+                    <div class="q-text" id="q-text">Loading question...</div>
+                    <div class="options-div" id="options-box"></div>
                 </div>
 
-                <div class="action-buttons">
-                    <button class="action-btn btn-prev" onclick="prevQ()">⬅️ Prev</button>
-                    <button class="action-btn btn-clear" onclick="clearResponse()">Clear</button>
-                    <button class="action-btn btn-next" onclick="nextQ(false)">Save & Next ➡️</button>
-                    <button class="action-btn btn-submit" onclick="submitExamConfirmation()">Submit</button>
+                <!-- 🔥 BOTTOM FIXED CONTROLS 🔥 -->
+                <div class="bottom-controls">
+                    <div class="mini-palette-wrapper">
+                        <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
+                        <div id="mini-palette-strip" class="mini-strip"></div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn btn-prev" onclick="prevQ()">⬅️ Prev</button>
+                        <button class="action-btn btn-clear" onclick="clearResponse()">Clear</button>
+                        <button class="action-btn btn-next" onclick="nextQ(false)">Save & Next ➡️</button>
+                        <button class="action-btn btn-submit" onclick="submitExamConfirmation()">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -413,7 +430,7 @@
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
             
-            <!-- 🔥 ONE-BY-ONE ANALYSIS BOX 🔥 -->
+            <!-- ONE-BY-ONE ANALYSIS BOX -->
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
 
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
@@ -459,7 +476,6 @@
     let isReattemptMode = false; let currentGeneratedPass = ""; 
     let currentAdminLbDataRaw = []; 
     
-    // For 1-by-1 Analysis Carousel
     let currentAnalysisArray = [];
     let currentAnalysisIndex = 0;
     let currentAnalysisType = "";
@@ -962,7 +978,6 @@
         updateCounts();
     }
     
-    // 🔥 NEW: Toggle Palette Overlay 🔥
     function togglePaletteOverlay(forceState) {
         let overlay = document.getElementById('palette-overlay');
         if(forceState === false) { overlay.style.display = 'none'; document.body.style.overflow = ''; return; }
@@ -970,7 +985,6 @@
         else { overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; }
     }
 
-    // 🔥 NEW: Update Bottom Mini Palette Preview 🔥
     function updateMiniPalette() {
         let strip = document.getElementById('mini-palette-strip'); strip.innerHTML = "";
         let start = Math.max(0, currentQ - 2); let end = Math.min(examData.questions.length - 1, currentQ + 2);
@@ -998,6 +1012,9 @@
         document.getElementById('options-box').innerHTML = optHtml;
 
         updateMiniPalette();
+
+        // Scroll back to top on new question
+        document.getElementById('q-scroll-area').scrollTop = 0;
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
         if(examData.qTime > 0) {
@@ -1079,7 +1096,6 @@
         });
     }
 
-    // 🔥 NEW: One-by-One Anti-Screenshot Carousel Analysis 🔥
     function showAnalysis(type) {
         currentAnalysisArray = []; currentAnalysisType = type;
         
@@ -1110,13 +1126,11 @@
         
         let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
 
-        // 2x2 Horizontal Options Grid
         let optsHtml = `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
             if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
             else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-            // calc(50% - 5px) ensures 2 items per row nicely
             optsHtml += `<div style="width: calc(50% - 5px); padding:8px 10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box;">${o.id}. ${o.text}</div>`;
         });
         optsHtml += `</div>`;
