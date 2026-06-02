@@ -7,7 +7,7 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
         
-        /* 🔥 Admin can still select text in Admin panel, overriding the block 🔥 */
+        /* 🔥 Admin can select text 🔥 */
         #admin-view { user-select: auto; -webkit-user-select: auto; }
 
         .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
@@ -34,7 +34,7 @@
         .btn { background: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 10px; transition: 0.3s; box-sizing: border-box;}
         .btn-blue { background: #1f4e79; } .btn-pdf { background: #dc3545; } .btn-outline { background: transparent; border: 2px solid #1f4e79; color: #1f4e79; }
         .btn-warning { background: #f39c12; color: #fff; }
-        .btn:disabled { background: #6c757d; cursor: not-allowed; }
+        .btn:disabled { background: #6c757d; cursor: not-allowed; opacity: 0.6; }
 
         .admin-tabs { display: flex; border-bottom: 2px solid #1f4e79; margin-bottom: 20px; flex-wrap: wrap;}
         .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 15px; cursor: pointer; background: #e9ecef; border: none; outline: none; white-space: nowrap; min-width:150px;}
@@ -44,7 +44,7 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
-        /* 🔥 Optimized Main Test Area for Long Questions 🔥 */
+        /* 🔥 Optimized Main Test Area 🔥 */
         .exam-container { display: flex; flex-direction: column; height: calc(100vh - 100px); }
         .left-panel { width: 100%; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; flex: 1;}
         
@@ -52,16 +52,28 @@
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
-        /* 🔥 Space Optimized Options 🔥 */
         .opt-label { display: block; padding: 10px 12px; border: 2px solid #e0e0e0; margin-bottom: 8px; border-radius: 6px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 15px; font-weight: normal; }
-        .opt-label:hover { background: #f8f9fa; }
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        .action-buttons { margin-top: auto; display: flex; justify-content: space-between; border-top: 1px solid #ccc; padding-top: 15px; gap:5px; flex-wrap:wrap;}
+        /* 🔥 Mini Palette Bottom Preview Animation 🔥 */
+        .mini-palette-wrapper { margin-top: auto; position: relative; padding-top: 25px; margin-bottom: 15px; border-top: 1px solid #ccc; }
+        .pulse-btn { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(31, 78, 121, 0); } 100% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0); } }
+        
+        .mini-strip { display: flex; gap: 8px; overflow: hidden; justify-content: center; background: #f8f9fa; padding: 15px 10px 10px 10px; border-radius: 8px; border: 1px solid #e9ecef; }
+        .mini-box { width: 35px; height: 35px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; border: 1px solid #aaa; cursor: pointer; color: #333; background: #fff;}
+        .mini-box.active-q { border: 3px solid #000; transform: scale(1.1); font-weight: 900;}
+
+        .action-buttons { display: flex; justify-content: space-between; gap:5px; flex-wrap:wrap;}
         .action-btn { padding: 10px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; flex:1; min-width:80px; font-size:14px;}
         .btn-prev { background: #6c757d; } .btn-next { background: #28a745; } .btn-clear { background: #ffc107; color: #333; } .btn-submit { background: #dc3545; }
         
+        /* 🔥 FULL SCREEN PALETTE OVERLAY 🔥 */
+        .fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f6f8; z-index: 99999; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        .fs-container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 95vh; }
+        .fs-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 15px; margin-bottom: 20px; position: sticky; top: 0; background: white; z-index: 10; }
+
         .palette-legend { display: flex; flex-wrap: wrap; justify-content: space-around; padding: 10px; border-bottom: 1px solid #ccc; font-size: 13px; background: #fff; margin-bottom: 15px;}
         .legend-item { display: flex; align-items: center; justify-content: center; font-weight:bold; color:#555; margin:5px;}
         .box { width: 20px; height: 20px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: #333; line-height: 20px; font-weight: bold; border: 1px solid #aaa; font-size:11px;}
@@ -72,11 +84,6 @@
         
         .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; justify-content:center;}
         .palette-btn { width: 45px; height: 45px; border-radius: 6px; border: 1px solid #999; font-weight: bold; font-size: 15px; cursor: pointer; }
-        
-        /* 🔥 FULL SCREEN PALETTE & ANALYSIS OVERLAYS 🔥 */
-        .fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f6f8; z-index: 99999; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-        .fs-container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 95vh; }
-        .fs-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 15px; margin-bottom: 20px; position: sticky; top: 0; background: white; z-index: 10; }
 
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
@@ -113,15 +120,12 @@
             .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
             .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
-            /* Passes in Print */
             .print-passage { background:#eee; padding:5px; margin-bottom:5px; font-style:italic; border-left:3px solid #333; font-size:13px; }
         }
 
         @media (max-width: 768px) {
-            .exam-container { padding-bottom: 80px; }
+            .exam-container { padding-bottom: 20px; height: auto; }
             .left-panel { padding: 15px; }
-            .action-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px; z-index: 100; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); margin:0;}
-            .action-btn { padding: 8px 5px; font-size: 13px; }
             .watermark { font-size: 80px; } 
             .admin-lock { bottom: 10px; right: 10px; font-size: 20px;}
             .fullscreen-overlay { padding: 0; }
@@ -256,7 +260,7 @@
             </div>
 
             <div class="form-group">
-                <label style="color: #dc3545;"><b>यहाँ क्वेश्चंस पेस्ट करें:</b> (गद्यांश के लिए <b>!P</b> पैसेज टेक्स्ट, हटाने के लिए <b>!P none</b>)</label>
+                <label style="color: #dc3545;"><b>यहाँ क्वेश्चंस पेस्ट करें:</b> (गद्यांश/टॉपिक के लिए <b>!P</b> पैसेज टेक्स्ट, हटाने के लिए <b>!P none</b>)</label>
                 <textarea id="a-rawdata" placeholder="!P निम्नलिखित गद्यांश को पढ़ें...&#10;!!1! प्रश्न 1...&#10;!A Option 1...&#10;!!! A&#10;!!!! Explanation..."></textarea>
             </div>
             <button id="btn-generate" class="btn btn-blue" onclick="generateAndSaveLink()">🚀 Generate / Update Test</button>
@@ -340,15 +344,10 @@
     <!-- 3. EXAM INTERFACE (Anti-Copy Enabled) -->
     <div id="exam-view" class="view-section" style="padding: 0;" oncontextmenu="return false;">
         <div class="exam-container">
-            <!-- 🔥 FULL WIDTH EXAM PANEL 🔥 -->
             <div class="left-panel">
                 <div class="q-header">
                     <span id="q-no-header">Question No. 1</span>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
-                        <!-- 🔥 ALL QUESTIONS BUTTON 🔥 -->
-                        <button onclick="togglePaletteOverlay()" class="btn btn-outline" style="margin:0; padding: 4px 10px; font-size:14px; background:#e3f2fd; border-radius:4px;">🔠 All Qs</button>
-                    </div>
+                    <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
                 </div>
                 
                 <!-- 🔥 PASSAGE AREA 🔥 -->
@@ -357,6 +356,12 @@
                 <div class="q-text" id="q-text">Loading question...</div>
                 <div class="options-div" id="options-box"></div>
                 
+                <!-- 🔥 MINI PALETTE PREVIEW (Bottom) 🔥 -->
+                <div class="mini-palette-wrapper">
+                    <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
+                    <div id="mini-palette-strip" class="mini-strip"></div>
+                </div>
+
                 <div class="action-buttons">
                     <button class="action-btn btn-prev" onclick="prevQ()">⬅️ Prev</button>
                     <button class="action-btn btn-clear" onclick="clearResponse()">Clear</button>
@@ -408,6 +413,9 @@
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
             
+            <!-- 🔥 ONE-BY-ONE ANALYSIS BOX 🔥 -->
+            <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
+
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
                 <h4 style="margin: 0 0 10px 0; color: #856404;">📥 PDF + Solution कैसे लें?</h4>
                 <p style="margin: 0 0 10px 0; font-size: 14px; color: #dc3545; font-weight:bold;">
@@ -431,18 +439,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- 🔥 FULL SCREEN ANALYSIS VIEW (Anti-Copy Enabled) 🔥 -->
-<div id="analysis-fullscreen" class="fullscreen-overlay" oncontextmenu="return false;">
-    <div class="fs-container">
-        <div class="fs-header">
-            <h2 id="fs-analysis-title" style="margin: 0; color: #1f4e79;">Analysis</h2>
-            <button class="btn btn-outline" style="margin: 0; padding: 6px 15px; width: auto; font-size:14px; background:#dc3545; color:white; border:none;" onclick="closeAnalysis()">🔙 Back</button>
-        </div>
-        <div id="fs-analysis-content" style="text-align: left;"></div>
-    </div>
-</div>
 
 <!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
@@ -462,6 +458,11 @@
     let globalTimeLeft = 0; let qTimeLeft = 0; let totalTimeSpent = 0;
     let isReattemptMode = false; let currentGeneratedPass = ""; 
     let currentAdminLbDataRaw = []; 
+    
+    // For 1-by-1 Analysis Carousel
+    let currentAnalysisArray = [];
+    let currentAnalysisIndex = 0;
+    let currentAnalysisType = "";
 
     window.onload = initApp;
 
@@ -713,7 +714,6 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
-    // 🔥 THE FIX: Passage/Heading Parsing Logic added (!P) 🔥
     function parseRawQuestions(rawText) {
         let parsedQs = []; let lines = rawText.split('\n'); let tempQ = null;
         let currentPassage = "";
@@ -956,24 +956,29 @@
         let grid = document.getElementById('palette-grid'); grid.innerHTML = "";
         for(let i=0; i<examData.questions.length; i++) {
             let btn = document.createElement('button'); btn.className = `palette-btn status-not-visited`; btn.id = `pal-${i}`; btn.innerText = i + 1;
-            
-            // 🔥 Close palette overlay when clicked on mobile/fullscreen 🔥
             btn.onclick = () => { renderQuestion(i); togglePaletteOverlay(false); }; 
             grid.appendChild(btn);
         }
         updateCounts();
     }
     
-    // 🔥 THE FIX: Toggle Palette Overlay 🔥
+    // 🔥 NEW: Toggle Palette Overlay 🔥
     function togglePaletteOverlay(forceState) {
         let overlay = document.getElementById('palette-overlay');
-        if(forceState === false) {
-            overlay.style.display = 'none'; document.body.style.overflow = ''; return;
-        }
-        if(overlay.style.display === 'block') {
-            overlay.style.display = 'none'; document.body.style.overflow = '';
-        } else {
-            overlay.style.display = 'block'; document.body.style.overflow = 'hidden';
+        if(forceState === false) { overlay.style.display = 'none'; document.body.style.overflow = ''; return; }
+        if(overlay.style.display === 'block') { overlay.style.display = 'none'; document.body.style.overflow = ''; } 
+        else { overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+    }
+
+    // 🔥 NEW: Update Bottom Mini Palette Preview 🔥
+    function updateMiniPalette() {
+        let strip = document.getElementById('mini-palette-strip'); strip.innerHTML = "";
+        let start = Math.max(0, currentQ - 2); let end = Math.min(examData.questions.length - 1, currentQ + 2);
+        for(let i=start; i<=end; i++) {
+            let statusClass = "status-not-visited";
+            if(qStatus[i] === 2) statusClass = "status-answered"; else if(qStatus[i] === 1) statusClass = "status-not-answered";
+            let isCurrent = (i === currentQ) ? "active-q" : "";
+            strip.innerHTML += `<div class="mini-box ${statusClass} ${isCurrent}" onclick="renderQuestion(${i})">${i+1}</div>`;
         }
     }
 
@@ -982,7 +987,6 @@
         if(qStatus[idx] === 0) { qStatus[idx] = 1; document.getElementById(`pal-${idx}`).className = `palette-btn status-not-answered`; updateCounts(); }
         document.getElementById('q-no-header').innerText = `Question No. ${idx + 1}`; document.getElementById('q-text').innerText = q.q;
         
-        // 🔥 Show/Hide Passage 🔥
         let passDiv = document.getElementById('q-passage');
         if(q.passage) { passDiv.innerText = q.passage; passDiv.style.display = 'block'; } else { passDiv.style.display = 'none'; }
 
@@ -992,6 +996,8 @@
             optHtml += `<label class="opt-label ${highlightClass}" id="lbl-${opt.id}"><input type="radio" name="option" value="${opt.id}" ${isChecked} onchange="markAnswered('${opt.id}')"> <b>${opt.id}.</b> ${opt.text}</label>`;
         });
         document.getElementById('options-box').innerHTML = optHtml;
+
+        updateMiniPalette();
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
         if(examData.qTime > 0) {
@@ -1005,10 +1011,10 @@
 
     function markAnswered(val) { 
         userAnswers[currentQ] = val; qStatus[currentQ] = 2; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-answered`; 
-        document.querySelectorAll('.opt-label').forEach(el => el.classList.remove('selected')); document.getElementById(`lbl-${val}`).classList.add('selected'); updateCounts(); 
+        document.querySelectorAll('.opt-label').forEach(el => el.classList.remove('selected')); document.getElementById(`lbl-${val}`).classList.add('selected'); updateCounts(); updateMiniPalette();
     }
 
-    function clearResponse() { userAnswers[currentQ] = null; qStatus[currentQ] = 1; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-not-answered`; renderQuestion(currentQ); updateCounts(); }
+    function clearResponse() { userAnswers[currentQ] = null; qStatus[currentQ] = 1; document.getElementById(`pal-${currentQ}`).className = `palette-btn status-not-answered`; renderQuestion(currentQ); updateCounts(); updateMiniPalette(); }
     
     function nextQ(isAuto) { 
         if(currentQ < examData.questions.length - 1) { renderQuestion(currentQ + 1); 
@@ -1049,6 +1055,7 @@
         document.getElementById('btn-img-down').style.display = 'none'; 
         document.getElementById('btn-pdf-down').style.display = 'none';
         document.getElementById('btn-reattempt').style.display = 'none';
+        document.getElementById('analysis-box').style.display = 'none';
         document.getElementById('rank-loader').style.display = 'block';
         
         let submissionCode = isReattemptMode ? (examData.code + "-RE") : examData.code;
@@ -1072,55 +1079,68 @@
         });
     }
 
-    // 🔥 THE FIX: Full Screen Horizontal Format Analysis 🔥
+    // 🔥 NEW: One-by-One Anti-Screenshot Carousel Analysis 🔥
     function showAnalysis(type) {
-        let box = document.getElementById('fs-analysis-content'); let html = "";
-        let titles = { 'right': '✅ Correct Questions', 'wrong': '❌ Wrong Questions', 'blank': '⬜ Blank Questions' };
-        document.getElementById('fs-analysis-title').innerText = titles[type];
-
+        currentAnalysisArray = []; currentAnalysisType = type;
+        
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i]; let isRight = uAns === q.ans; let isBlank = uAns === null; let isWrong = !isBlank && !isRight;
             if((type === 'right' && isRight) || (type === 'wrong' && isWrong) || (type === 'blank' && isBlank)) {
-                let statusIcon = isRight ? "✅" : (isWrong ? "❌" : "⬜"); let ansColor = isRight ? "green" : (isWrong ? "red" : "gray");
-                
-                // Show passage if exists
-                let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:10px; font-size:14px; font-style:italic;">${q.passage}</div>` : ``;
-
-                // Horizontal Options Layout
-                let optsHtml = `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:10px;">`;
-                q.opts.forEach(o => {
-                    let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
-                    if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
-                    else if(o.id === uAns && !isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-                    optsHtml += `<div style="padding:6px 12px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:14px; flex:1; min-width:120px;">${o.id}. ${o.text}</div>`;
-                });
-                optsHtml += `</div>`;
-
-                html += `<div style="border-bottom: 2px solid #ccc; padding-bottom: 15px; margin-bottom: 15px;">
-                    ${passHtml}
-                    <b style="font-size:16px; color:#1f4e79; display:block; margin-bottom:10px;">${statusIcon} Q${i+1}. ${q.q}</b>
-                    ${optsHtml}
-                    <div style="font-size: 15px; color: #444; margin-top: 10px; line-height:1.5; background:#f9f9f9; padding:10px; border-radius:4px; border-left:3px solid #1f4e79;"><b>Explanation:</b> ${q.exp}</div>
-                </div>`;
+                currentAnalysisArray.push({q: q, originalIndex: i, uAns: uAns, isRight: isRight, isBlank: isBlank});
             }
         });
-        if(html === "") { html = `<div style="text-align:center; color:#777; padding:20px; font-size:16px;">इस केटेगरी में कोई प्रश्न नहीं है।</div>`; }
-        box.innerHTML = html; 
+
+        if(currentAnalysisArray.length === 0) {
+            document.getElementById('analysis-box').innerHTML = `<div style="text-align:center; padding:20px; color:#777; font-size:16px;">इस केटेगरी में कोई प्रश्न नहीं है।</div>`;
+            document.getElementById('analysis-box').style.display = 'block';
+            return;
+        }
         
-        document.getElementById('analysis-fullscreen').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-        history.pushState({analysisOpen: true}, "");
+        currentAnalysisIndex = 0;
+        renderAnalysisSlide();
+        document.getElementById('analysis-box').style.display = 'block';
+        setTimeout(() => { document.getElementById('analysis-box').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
     }
 
-    function closeAnalysis() {
-        document.getElementById('analysis-fullscreen').style.display = 'none';
-        document.body.style.overflow = ''; 
+    function renderAnalysisSlide() {
+        let data = currentAnalysisArray[currentAnalysisIndex];
+        let q = data.q; let i = data.originalIndex; let uAns = data.uAns;
+        let statusIcon = data.isRight ? "✅" : (data.isBlank ? "⬜" : "❌");
+        let titles = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
+        
+        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
+
+        // 2x2 Horizontal Options Grid
+        let optsHtml = `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;">`;
+        q.opts.forEach(o => {
+            let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
+            if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
+            else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
+            // calc(50% - 5px) ensures 2 items per row nicely
+            optsHtml += `<div style="width: calc(50% - 5px); padding:8px 10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box;">${o.id}. ${o.text}</div>`;
+        });
+        optsHtml += `</div>`;
+
+        let html = `
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #ccc; padding-bottom:10px; margin-bottom:15px;">
+                <b style="color:#1f4e79; font-size:16px;">${titles[currentAnalysisType]} Qs (${currentAnalysisIndex + 1} of ${currentAnalysisArray.length})</b>
+                <button class="btn btn-outline" style="margin:0; width:auto; padding:3px 10px; font-size:12px; background:#dc3545; color:white; border:none;" onclick="document.getElementById('analysis-box').style.display='none';">❌ Close</button>
+            </div>
+            ${passHtml}
+            <b style="font-size:18px; color:#222; display:block; margin-bottom:15px; line-height:1.4;">${statusIcon} Q${i+1}. ${q.q}</b>
+            ${optsHtml}
+            <div style="font-size: 15px; color: #444; margin-top: 15px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79;"><b>Explanation:</b> ${q.exp}</div>
+            
+            <div style="display:flex; justify-content:space-between; margin-top:20px; border-top:1px solid #ddd; padding-top:15px;">
+                <button class="btn btn-outline" style="width:auto; padding:8px 20px; margin:0;" onclick="prevAnalysis()" ${currentAnalysisIndex === 0 ? 'disabled' : ''}>⬅️ Prev</button>
+                <button class="btn btn-blue" style="width:auto; padding:8px 20px; margin:0;" onclick="nextAnalysis()" ${currentAnalysisIndex === currentAnalysisArray.length - 1 ? 'disabled' : ''}>Next ➡️</button>
+            </div>
+        `;
+        document.getElementById('analysis-box').innerHTML = html;
     }
 
-    window.addEventListener('popstate', function(event) {
-        if(document.getElementById('analysis-fullscreen').style.display === 'block') { closeAnalysis(); }
-        else if(document.getElementById('palette-overlay').style.display === 'block') { togglePaletteOverlay(false); }
-    });
+    function prevAnalysis() { if(currentAnalysisIndex > 0) { currentAnalysisIndex--; renderAnalysisSlide(); } }
+    function nextAnalysis() { if(currentAnalysisIndex < currentAnalysisArray.length - 1) { currentAnalysisIndex++; renderAnalysisSlide(); } }
 
     function drawReportCard(rank, totalStudents, maxScore) {
         const cvs = document.getElementById('reportCard'); const ctx = cvs.getContext('2d');
@@ -1192,7 +1212,6 @@
             let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && uAns !== q.ans && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
             let wrongMarkHtml = (isWrongAns && mode === 'full') ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
             
-            // Print Passage
             if(q.passage) { html += `<div class="print-passage">${q.passage}</div>`; }
 
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
