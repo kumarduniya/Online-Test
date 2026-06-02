@@ -5,27 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
-        /* 🔥 NORMAL BODY SCROLL (Yeh PDF blank page ko hamesha ke liye rokta hai) 🔥 */
-        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+        /* 🔥 APP-LIKE LAYOUT: Locks the main body from scrolling out of view 🔥 */
+        body, html { height: 100%; margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overflow: hidden; }
         
         /* 🔥 Admin can select text 🔥 */
         #admin-view { user-select: auto; -webkit-user-select: auto; }
 
-        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
+        .container { max-width: 1200px; margin: 0 auto; background: white; height: 100%; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
         
-        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        /* 🔥 FIXED TOP HEADERS 🔥 */
+        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
         .timer { font-size: 16px; font-weight: bold; background: #e74c3c; padding: 5px 10px; border-radius: 4px; display:flex; gap:10px;}
         
-        .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; }
+        .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; flex-shrink: 0; }
         .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; }
         .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
 
-        .view-section { padding: 20px; flex: 1; display: none; }
+        /* General scrolling for other views (Dashboard, Result) */
+        .view-section { padding: 20px; flex: 1; overflow-y: auto; display: none; }
         .active-view { display: block; }
         
-        /* 🔥 Exam view specific handling 🔥 */
-        #exam-view { padding: 0; display: none; flex-direction: column; }
+        /* 🔥 SPECIAL EXAM VIEW (Flex layout to lock header and footer) 🔥 */
+        #exam-view { padding: 0; display: none; flex-direction: column; overflow: hidden; }
         #exam-view.active-view { display: flex; }
 
         .form-group { margin-bottom: 15px; }
@@ -49,15 +51,17 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
-        /* 🔥 EXAM AREA LAYOUT 🔥 */
-        .exam-container { display: flex; flex-direction: column; flex: 1; min-height: calc(100vh - 100px); background: #fff;}
-        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px; box-sizing: border-box; }
+        /* 🔥 STRICT EXAM LAYOUT 🔥 */
+        .exam-container { display: flex; flex-direction: column; flex: 1; overflow: hidden; background: #fff;}
+        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px 10px 20px; box-sizing: border-box; overflow: hidden; }
         
-        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; flex-shrink: 0;}
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         
-        /* Question Area */
-        #q-scroll-area { flex: 1; padding-bottom: 15px; }
+        /* 🔥 ONLY THIS MIDDLE AREA WILL SCROLL FOR LARGE QUESTIONS 🔥 */
+        #q-scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 15px; }
+        #q-scroll-area::-webkit-scrollbar { width: 4px; }
+        #q-scroll-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
@@ -65,10 +69,10 @@
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        /* 🔥 NEW STICKY BOTTOM CONTROLS (Hamesha Niche Rahenge) 🔥 */
-        .bottom-controls { position: sticky; bottom: 0; background: white; z-index: 1000; padding: 25px 15px 10px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); margin-top: auto; }
+        /* 🔥 BOTTOM FIXED CONTROLS (Hamesha Niche Rahenge) 🔥 */
+        .bottom-controls { flex-shrink: 0; background: #fff; padding-top: 15px; border-top: 1px solid #e0e0e0; position: relative; z-index: 10; padding-bottom: 5px; }
         
-        .mini-palette-wrapper { position: relative; margin-bottom: 12px; }
+        .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 10px;}
         .pulse-btn { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(31, 78, 121, 0); } 100% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0); } }
         
@@ -113,12 +117,18 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 WAHI PURANA 100% PERFECT PDF PRINTING CSS 🔥 */
+        /* 🔥 RAAT 2 BAJE WALI MASTER CSS FOR PRINT (NO BLANK PAGES) 🔥 */
+        /* Jab PDF print button dabega, tab ye class add hogi aur saare locks khol degi */
+        body.print-pdf, body.print-pdf html { height: auto !important; overflow: visible !important; }
+        body.print-pdf #main-ui-container, body.print-pdf .fullscreen-overlay { display: none !important; }
+        body.print-pdf #print-area { display: block !important; position: static !important; }
+
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
-            body { background: white; margin: 0; padding: 0; }
+            
+            body, html { height: auto !important; overflow: visible !important; background: white; margin: 0; padding: 0; }
             #main-ui-container, .fullscreen-overlay { display: none !important; }
             
             #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; }
@@ -149,7 +159,7 @@
 
 <div class="container" id="main-ui-container">
     
-    <!-- 🔥 STICKY HEADER WRAPPER (Sada Top Par Chipka Rahega) 🔥 -->
+    <!-- 🔥 STICKY HEADER WRAPPER 🔥 -->
     <div style="position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         <div class="tcs-header">
             <h2 id="head-exam-name">Exam Portal</h2>
@@ -366,14 +376,14 @@
                     <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
                 </div>
                 
-                <!-- 🔥 SCROLLABLE AREA FOR QUESTION (Scroll yahi hoga) 🔥 -->
+                <!-- 🔥 SCROLLABLE AREA FOR QUESTION 🔥 -->
                 <div id="q-scroll-area">
                     <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
                     <div class="q-text" id="q-text">Loading question...</div>
                     <div class="options-div" id="options-box"></div>
                 </div>
 
-                <!-- 🔥 STICKY BOTTOM CONTROLS (Hamesha Niche Rahenge) 🔥 -->
+                <!-- 🔥 STICKY BOTTOM CONTROLS 🔥 -->
                 <div class="bottom-controls">
                     <!-- MINI PALETTE STRIP -->
                     <div class="mini-palette-wrapper">
@@ -1017,7 +1027,6 @@
 
         updateMiniPalette();
 
-        // 🔥 Scroll Fix - Scrolls inner div instead of window 🔥
         let scrollArea = document.getElementById('q-scroll-area');
         if(scrollArea) scrollArea.scrollTop = 0;
 
@@ -1209,6 +1218,7 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
+    // 🔥 THE FIX: RAAT 2 BAJE WALA PDF PRINTING (100% Guaranteed) 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1256,7 +1266,15 @@
         });
         
         printArea.innerHTML = html; 
-        window.print(); 
+        
+        // Raat 2 baje wala class-based lock break system
+        document.body.classList.add('print-pdf');
+        setTimeout(() => {
+            window.print();
+            setTimeout(() => {
+                document.body.classList.remove('print-pdf');
+            }, 500);
+        }, 100); 
     }
 </script>
 </body>
