@@ -5,29 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
-        /* 🔥 APP-LIKE LAYOUT: Locks the main body from scrolling out of view 🔥 */
-        body, html { height: 100%; margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overflow: hidden; }
+        /* 🔥 NORMAL BODY (Sab kuch normal scroll hoga, PDF ekdam perfect aayegi) 🔥 */
+        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
         
         /* 🔥 Admin can select text 🔥 */
         #admin-view { user-select: auto; -webkit-user-select: auto; }
 
-        .container { max-width: 1200px; margin: 0 auto; background: white; height: 100%; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
         
-        /* 🔥 FIXED TOP HEADERS 🔥 */
-        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        /* 🔥 STICKY TOP HEADER 🔥 */
+        #top-sticky-wrapper { position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; background: white; }
+
+        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
         .timer { font-size: 16px; font-weight: bold; background: #e74c3c; padding: 5px 10px; border-radius: 4px; display:flex; gap:10px;}
         
-        .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; flex-shrink: 0; }
+        .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; }
         .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; }
         .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
 
-        /* General scrolling for other views (Dashboard, Result) */
-        .view-section { padding: 20px; flex: 1; overflow-y: auto; display: none; }
+        /* General scrolling for other views */
+        .view-section { padding: 20px; flex: 1; display: none; }
         .active-view { display: block; }
         
-        /* 🔥 SPECIAL EXAM VIEW (Flex layout to lock header and footer) 🔥 */
-        #exam-view { padding: 0; display: none; flex-direction: column; overflow: hidden; }
+        /* Exam view specific handling */
+        #exam-view { padding: 0; display: none; flex-direction: column; }
         #exam-view.active-view { display: flex; }
 
         .form-group { margin-bottom: 15px; }
@@ -51,38 +53,48 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
-        /* 🔥 STRICT EXAM LAYOUT 🔥 */
-        .exam-container { display: flex; flex-direction: column; flex: 1; overflow: hidden; background: #fff;}
-        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px 10px 20px; box-sizing: border-box; overflow: hidden; }
+        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
+        .exam-container { display: flex; flex-direction: column; background: #fff;}
+        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } /* Bottom padding to clear fixed buttons */
         
-        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; flex-shrink: 0;}
+        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         
-        /* 🔥 ONLY THIS MIDDLE AREA WILL SCROLL FOR LARGE QUESTIONS 🔥 */
-        #q-scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 15px; }
-        #q-scroll-area::-webkit-scrollbar { width: 4px; }
-        #q-scroll-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
         .opt-label { display: block; padding: 10px 12px; border: 2px solid #e0e0e0; margin-bottom: 8px; border-radius: 6px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 15px; font-weight: normal; }
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        /* 🔥 BOTTOM FIXED CONTROLS (Hamesha Niche Rahenge) 🔥 */
-        .bottom-controls { flex-shrink: 0; background: #fff; padding-top: 15px; border-top: 1px solid #e0e0e0; position: relative; z-index: 10; padding-bottom: 5px; }
+        /* 🔥 NEW: FIXED BOTTOM CONTROLS (Hamesha Niche Fixed Rahenge) 🔥 */
+        #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px 15px 20px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         
-        .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 10px;}
-        .pulse-btn { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
+        .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px;}
+        .pulse-btn { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(31, 78, 121, 0); } 100% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0); } }
         
         .mini-strip { display: flex; gap: 8px; overflow: hidden; justify-content: center; background: #f8f9fa; padding: 15px 10px 10px 10px; border-radius: 8px; border: 1px solid #e9ecef; }
         .mini-box { width: 35px; height: 35px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; border: 1px solid #aaa; cursor: pointer; color: #333; background: #fff;}
         .mini-box.active-q { border: 3px solid #000; transform: scale(1.1); font-weight: 900;}
 
-        .action-buttons { display: flex; justify-content: space-between; gap:5px; flex-wrap:wrap;}
-        .action-btn { padding: 10px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; flex:1; min-width:80px; font-size:14px;}
-        .btn-prev { background: #6c757d; } .btn-next { background: #28a745; } .btn-clear { background: #ffc107; color: #333; } .btn-submit { background: #dc3545; }
+        /* 🔥 REDESIGNED PROFESSIONAL ACTION BUTTONS 🔥 */
+        .action-buttons { display: flex; justify-content: space-between; gap: 12px; flex-wrap: nowrap;}
+        .action-btn { 
+            padding: 15px 4px; /* Vertically bigger, horizontally smaller */
+            border: none; 
+            border-radius: 8px; /* Professional curves */
+            font-weight: bold; 
+            cursor: pointer; 
+            color: white; 
+            flex: 1; 
+            font-size: 13px; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* Professional 3D look */
+            text-align: center;
+            line-height: 1.2;
+        }
+        .btn-prev { background: #6c757d; } .btn-clear { background: #ffc107; color: #333; } .btn-next { background: #28a745; } .btn-submit { background: #dc3545; }
         
         /* 🔥 FULL SCREEN PALETTE OVERLAY 🔥 */
         .fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f6f8; z-index: 99999; overflow-y: auto; padding: 20px; box-sizing: border-box; }
@@ -117,20 +129,17 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 RAAT 2 BAJE WALI MASTER CSS FOR PRINT (NO BLANK PAGES) 🔥 */
-        /* Jab PDF print button dabega, tab ye class add hogi aur saare locks khol degi */
-        body.print-pdf, body.print-pdf html { height: auto !important; overflow: visible !important; }
-        body.print-pdf #main-ui-container, body.print-pdf .fullscreen-overlay { display: none !important; }
-        body.print-pdf #print-area { display: block !important; position: static !important; }
-
+        /* 🔥 WAHI PURANA 100% PERFECT PDF PRINTING CSS (NO BLANK PAGES) 🔥 */
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
+            body { background: white; margin: 0; padding: 0; }
             
-            body, html { height: auto !important; overflow: visible !important; background: white; margin: 0; padding: 0; }
-            #main-ui-container, .fullscreen-overlay { display: none !important; }
+            /* Saari UI ko hide karo */
+            #main-ui-container, .fullscreen-overlay, #exam-bottom-controls { display: none !important; }
             
+            /* Sirf print area ko show karo */
             #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; }
             #print-area * { visibility: visible !important; }
             
@@ -145,13 +154,11 @@
         }
 
         @media (max-width: 768px) {
-            .left-panel { padding: 10px 10px 0 10px; }
+            .left-panel { padding: 10px 10px 170px 10px; } /* Mobile par buttons ke liye space */
             .watermark { font-size: 80px; } 
             .admin-lock { bottom: 10px; right: 10px; font-size: 20px;}
             .fullscreen-overlay { padding: 0; }
             .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
-            .action-btn { font-size: 13px; padding: 8px 5px; }
-            .pulse-btn { top: -35px; font-size: 12px; padding: 4px 15px; }
         }
     </style>
 </head>
@@ -159,8 +166,7 @@
 
 <div class="container" id="main-ui-container">
     
-    <!-- 🔥 STICKY HEADER WRAPPER 🔥 -->
-    <div style="position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <div id="top-sticky-wrapper">
         <div class="tcs-header">
             <h2 id="head-exam-name">Exam Portal</h2>
             <div id="timer-box" class="timer" style="display:none;">
@@ -173,7 +179,6 @@
         </div>
     </div>
 
-    <!-- 🔥 STUDENT GLOBAL DASHBOARD 🔥 -->
     <div id="student-dashboard-view" class="view-section">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
@@ -218,7 +223,6 @@
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
-    <!-- 0. ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -235,7 +239,6 @@
         </div>
     </div>
 
-    <!-- 0. LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -247,7 +250,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
-    <!-- 1. ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -329,7 +331,6 @@
         </div>
     </div>
 
-    <!-- 2. TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -355,7 +356,7 @@
                 <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
                     🎉 यह PDF सभी के लिए Free है!
                 </div>
-                <input type="tel" id="pdf-phone" placeholder="अपना मोबाइल नंबर डालें..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
+                <input type="tel" id="pdf-phone" placeholder="अपना মোবাইল नंबर डालें..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
                 <input type="text" id="pdf-pass" placeholder="पासवर्ड डालें..." style="width:100%; padding:10px; box-sizing:border-box;">
                 <button class="btn btn-pdf" onclick="directDownloadPDF()">🔒 Unlock & Download PDF</button>
             </div>
@@ -366,7 +367,6 @@
         </div>
     </div>
 
-    <!-- 3. EXAM INTERFACE (Anti-Copy Enabled) -->
     <div id="exam-view" class="view-section" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -376,34 +376,27 @@
                     <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
                 </div>
                 
-                <!-- 🔥 SCROLLABLE AREA FOR QUESTION 🔥 -->
-                <div id="q-scroll-area">
-                    <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
-                    <div class="q-text" id="q-text">Loading question...</div>
-                    <div class="options-div" id="options-box"></div>
-                </div>
-
-                <!-- 🔥 STICKY BOTTOM CONTROLS 🔥 -->
-                <div class="bottom-controls">
-                    <!-- MINI PALETTE STRIP -->
-                    <div class="mini-palette-wrapper">
-                        <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
-                        <div id="mini-palette-strip" class="mini-strip"></div>
-                    </div>
-                    <!-- BUTTONS -->
-                    <div class="action-buttons">
-                        <button class="action-btn btn-prev" onclick="prevQ()">⬅️ Prev</button>
-                        <button class="action-btn btn-clear" onclick="clearResponse()">Clear</button>
-                        <button class="action-btn btn-next" onclick="nextQ(false)">Save & Next ➡️</button>
-                        <button class="action-btn btn-submit" onclick="submitExamConfirmation()">Submit</button>
-                    </div>
-                </div>
+                <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
+                <div class="q-text" id="q-text">Loading question...</div>
+                <div class="options-div" id="options-box"></div>
                 
             </div>
         </div>
     </div>
 
-    <!-- 🔥 PALETTE OVERLAY (FULL SCREEN) 🔥 -->
+    <div id="exam-bottom-controls">
+        <div class="mini-palette-wrapper">
+            <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
+            <div id="mini-palette-strip" class="mini-strip"></div>
+        </div>
+        <div class="action-buttons">
+            <button class="action-btn btn-prev" onclick="prevQ()">Prev</button>
+            <button class="action-btn btn-clear" onclick="clearResponse()">Clear</button>
+            <button class="action-btn btn-next" onclick="nextQ(false)">Save & Next</button>
+            <button class="action-btn btn-submit" onclick="submitExamConfirmation()">Submit</button>
+        </div>
+    </div>
+
     <div id="palette-overlay" class="fullscreen-overlay">
         <div class="fs-container" style="min-height: auto;">
             <div class="fs-header">
@@ -419,7 +412,6 @@
         </div>
     </div>
 
-    <!-- 4. RESULT & REPORT CARD (Anti-Copy Enabled) -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -437,14 +429,12 @@
                 <button id="btn-reattempt" class="btn btn-warning" style="display: none; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
-            <!-- Analysis Triggers -->
             <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
             
-            <!-- ONE-BY-ONE ANALYSIS BOX -->
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
 
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
@@ -471,7 +461,6 @@
         </div>
     </div>
 
-<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
@@ -962,7 +951,12 @@
         document.getElementById('top-sexam').innerText = examData.exam + (isReattemptMode ? " (Reattempt)" : "");
         document.getElementById('student-top-bar').style.display = 'flex';
 
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); document.getElementById('exam-view').classList.add('active-view');
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); 
+        document.getElementById('exam-view').classList.add('active-view');
+        
+        // Show fixed bottom controls
+        document.getElementById('exam-bottom-controls').style.display = 'block';
+        
         document.getElementById('timer-box').style.display = 'flex';
         initPalette(); renderQuestion(0);
         
@@ -1027,8 +1021,8 @@
 
         updateMiniPalette();
 
-        let scrollArea = document.getElementById('q-scroll-area');
-        if(scrollArea) scrollArea.scrollTop = 0;
+        // Let the body scroll normally to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
         if(examData.qTime > 0) {
@@ -1066,6 +1060,10 @@
     function calculateScoreAndSubmit() {
         clearInterval(globalTimer); clearInterval(qTimer);
         document.getElementById('student-top-bar').style.display = 'none'; 
+        
+        // Hide Fixed Bottom Controls
+        document.getElementById('exam-bottom-controls').style.display = 'none';
+        
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); document.getElementById('result-view').classList.add('active-view');
         document.getElementById('timer-box').style.display = 'none';
 
@@ -1218,7 +1216,7 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 THE FIX: RAAT 2 BAJE WALA PDF PRINTING (100% Guaranteed) 🔥
+    // 🔥 WAHI RAAT 2 BAJE WALA PDF PRINT CODE 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1267,14 +1265,10 @@
         
         printArea.innerHTML = html; 
         
-        // Raat 2 baje wala class-based lock break system
-        document.body.classList.add('print-pdf');
+        // CSS display ko load hone ka time dena chahiye
         setTimeout(() => {
-            window.print();
-            setTimeout(() => {
-                document.body.classList.remove('print-pdf');
-            }, 500);
-        }, 100); 
+            window.print(); 
+        }, 300);
     }
 </script>
 </body>
