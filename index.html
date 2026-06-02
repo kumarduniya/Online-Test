@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
-        /* 🔥 NORMAL BODY (Sab kuch normal scroll hoga, PDF ekdam perfect aayegi) 🔥 */
-        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+        /* 🔥 APP-LIKE LAYOUT: Locks the main body from scrolling out of view 🔥 */
+        html, body { height: 100%; margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overflow: hidden; }
         
         /* 🔥 Admin can select text 🔥 */
         #admin-view { user-select: auto; -webkit-user-select: auto; }
 
-        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+        .container { max-width: 1200px; margin: 0 auto; background: white; height: 100%; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
         
         /* 🔥 STICKY TOP HEADER 🔥 */
         #top-sticky-wrapper { position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; background: white; }
@@ -25,7 +25,7 @@
         .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
 
         /* General scrolling for other views */
-        .view-section { padding: 20px; flex: 1; display: none; }
+        .view-section { padding: 20px; flex: 1; overflow-y: auto; display: none; }
         .active-view { display: block; }
         
         /* Exam view specific handling */
@@ -54,19 +54,24 @@
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
         /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
-        .exam-container { display: flex; flex-direction: column; background: #fff;}
-        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } /* Bottom padding to clear fixed buttons */
+        .exam-container { display: flex; flex-direction: column; flex: 1; min-height: calc(100vh - 100px); background: #fff;}
+        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; }
         
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         
+        /* Question Scroll Area */
+        #q-scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 15px; }
+        #q-scroll-area::-webkit-scrollbar { width: 4px; }
+        #q-scroll-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
         .opt-label { display: block; padding: 10px 12px; border: 2px solid #e0e0e0; margin-bottom: 8px; border-radius: 6px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 15px; font-weight: normal; }
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        /* 🔥 NEW: FIXED BOTTOM CONTROLS (Hamesha Niche Fixed Rahenge) 🔥 */
+        /* 🔥 FIXED BOTTOM CONTROLS 🔥 */
         #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px 15px 20px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px;}
@@ -77,26 +82,12 @@
         .mini-box { width: 35px; height: 35px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; border: 1px solid #aaa; cursor: pointer; color: #333; background: #fff;}
         .mini-box.active-q { border: 3px solid #000; transform: scale(1.1); font-weight: 900;}
 
-        /* 🔥 REDESIGNED PROFESSIONAL ACTION BUTTONS 🔥 */
+        /* PROFESSIONAL ACTION BUTTONS */
         .action-buttons { display: flex; justify-content: space-between; gap: 12px; flex-wrap: nowrap;}
-        .action-btn { 
-            padding: 15px 4px; /* Vertically bigger, horizontally smaller */
-            border: none; 
-            border-radius: 8px; /* Professional curves */
-            font-weight: bold; 
-            cursor: pointer; 
-            color: white; 
-            flex: 1; 
-            font-size: 13px; 
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* Professional 3D look */
-            text-align: center;
-            line-height: 1.2;
-        }
+        .action-btn { padding: 15px 4px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; flex: 1; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); text-align: center; line-height: 1.2; }
         .btn-prev { background: #6c757d; } .btn-clear { background: #ffc107; color: #333; } .btn-next { background: #28a745; } .btn-submit { background: #dc3545; }
         
-        /* 🔥 FULL SCREEN PALETTE OVERLAY 🔥 */
+        /* FULL SCREEN PALETTE OVERLAY */
         .fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f6f8; z-index: 99999; overflow-y: auto; padding: 20px; box-sizing: border-box; }
         .fs-container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 95vh; }
         .fs-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 15px; margin-bottom: 20px; position: sticky; top: 0; background: white; z-index: 10; }
@@ -129,18 +120,21 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 WAHI PURANA 100% PERFECT PDF PRINTING CSS (NO BLANK PAGES) 🔥 */
+        /* 🔥 WAHI RAAT WALI PERFECT PDF PRINTING CSS (100% Guaranteed NO Blank Page) 🔥 */
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
-            body { background: white; margin: 0; padding: 0; }
             
-            /* Saari UI ko hide karo */
-            #main-ui-container, .fullscreen-overlay, #exam-bottom-controls { display: none !important; }
+            /* 🔥 THE MASTER FIX: Overriding the hidden overflow explicitly for printing 🔥 */
+            html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+            .container { height: auto !important; min-height: auto !important; overflow: visible !important; box-shadow: none !important; }
             
-            /* Sirf print area ko show karo */
-            #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; }
+            /* Saari UI Elements ko chupa do */
+            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view { display: none !important; height: 0 !important; overflow: hidden !important; }
+            
+            /* Sirf Print Area ko fully visible karo */
+            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; min-height: auto !important; }
             #print-area * { visibility: visible !important; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
@@ -151,10 +145,12 @@
             .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
             .print-passage { background:#eee; padding:5px; margin-bottom:5px; font-style:italic; border-left:3px solid #333; font-size:13px; }
+            
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
 
         @media (max-width: 768px) {
-            .left-panel { padding: 10px 10px 170px 10px; } /* Mobile par buttons ke liye space */
+            .left-panel { padding: 10px 10px 170px 10px; } 
             .watermark { font-size: 80px; } 
             .admin-lock { bottom: 10px; right: 10px; font-size: 20px;}
             .fullscreen-overlay { padding: 0; }
@@ -356,7 +352,7 @@
                 <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
                     🎉 यह PDF सभी के लिए Free है!
                 </div>
-                <input type="tel" id="pdf-phone" placeholder="अपना মোবাইল नंबर डालें..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
+                <input type="tel" id="pdf-phone" placeholder="अपना मोबाइल नंबर डालें..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
                 <input type="text" id="pdf-pass" placeholder="पासवर्ड डालें..." style="width:100%; padding:10px; box-sizing:border-box;">
                 <button class="btn btn-pdf" onclick="directDownloadPDF()">🔒 Unlock & Download PDF</button>
             </div>
@@ -376,9 +372,11 @@
                     <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
                 </div>
                 
-                <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
-                <div class="q-text" id="q-text">Loading question...</div>
-                <div class="options-div" id="options-box"></div>
+                <div id="q-scroll-area">
+                    <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
+                    <div class="q-text" id="q-text">Loading question...</div>
+                    <div class="options-div" id="options-box"></div>
+                </div>
                 
             </div>
         </div>
@@ -464,7 +462,6 @@
 <div id="print-area"></div>
 
 <script>
-    // 🚨 APNI LINK YAHAN HAI 🚨
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2cnrYrgNzObhZBEju6mDCVEftCRqMcTgk55RNfqsxGPJg0pLDtGJqZVnUWfco9AZ_aA/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
@@ -988,9 +985,9 @@
     
     function togglePaletteOverlay(forceState) {
         let overlay = document.getElementById('palette-overlay');
-        if(forceState === false) { overlay.style.display = 'none'; document.body.style.overflow = ''; return; }
-        if(overlay.style.display === 'block') { overlay.style.display = 'none'; document.body.style.overflow = ''; } 
-        else { overlay.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+        if(forceState === false) { overlay.style.display = 'none'; return; }
+        if(overlay.style.display === 'block') { overlay.style.display = 'none'; } 
+        else { overlay.style.display = 'block'; }
     }
 
     function updateMiniPalette() {
@@ -1021,8 +1018,9 @@
 
         updateMiniPalette();
 
-        // Let the body scroll normally to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // SCROLL FIX
+        let scrollArea = document.getElementById('q-scroll-area');
+        if(scrollArea) scrollArea.scrollTop = 0;
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
         if(examData.qTime > 0) {
@@ -1216,7 +1214,6 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 WAHI RAAT 2 BAJE WALA PDF PRINT CODE 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1265,10 +1262,7 @@
         
         printArea.innerHTML = html; 
         
-        // CSS display ko load hone ka time dena chahiye
-        setTimeout(() => {
-            window.print(); 
-        }, 300);
+        setTimeout(() => { window.print(); }, 200);
     }
 </script>
 </body>
