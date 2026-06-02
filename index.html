@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
-        /* 🔥 NORMAL BODY SCROLL FOR PERFECT PDF 🔥 */
+        /* 🔥 NORMAL BODY SCROLL (PDF Blank Page Fix) 🔥 */
         body, html { margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; scroll-behavior: smooth; }
         
         #admin-view { user-select: auto; -webkit-user-select: auto; }
@@ -60,11 +60,13 @@
 
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
+        /* 🔥 EXAM OPTIONS (Vertically Stacked as requested) 🔥 */
         .options-div { display: block; }
         .opt-label { display: block; width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; box-sizing: border-box;}
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
+        /* 🔥 FIXED BOTTOM CONTROLS 🔥 */
         #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px 15px 15px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px;}
@@ -94,6 +96,7 @@
         .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; justify-content:center;}
         .palette-btn { width: 45px; height: 45px; border-radius: 6px; border: 1px solid #999; font-weight: bold; font-size: 15px; cursor: pointer; }
 
+        /* ANALYSIS SCROLL */
         .analysis-scroll::-webkit-scrollbar { width: 5px; }
         .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
@@ -114,32 +117,31 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 PRINTING CSS FIX VIA CLASS TOGGLE (100% Guaranteed NO Blank Page) 🔥 */
-        body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; }
-        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view { display: none !important; }
-        body.print-pdf #print-area { display: block !important; position: static !important; width: 100% !important; overflow: visible !important; height: auto !important; }
-        
+        /* 🔥 PURE CSS PRINTING (ABSOLUTELY NO BLANK PAGES) 🔥 */
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
             
+            /* Remove all overflow restrictions for perfect printing */
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
-            .container { box-shadow: none !important; }
             
+            /* Hide ALL UI elements natively via CSS */
             #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view { display: none !important; }
             
+            /* Show ONLY PDF Area and make it normal static flow */
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
             #print-area * { visibility: visible !important; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #000000 !important; }
             
+            /* Print Options style */
             .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
             .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; color: #000000 !important; }
             
             .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
-            .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
+            .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.4; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
             .print-passage { background:#eee; padding:5px; margin-bottom:5px; font-style:italic; border-left:3px solid #333; font-size:13px; }
             
@@ -469,6 +471,8 @@
         </div>
     </div>
 
+</div> <!-- Close container -->
+
 <!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
@@ -751,7 +755,6 @@
             let line = lines[i].trim();
             if(!line) continue;
             
-            // Auto convert markdown **bold** to <b>bold</b>
             line = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             
             if(line.startsWith("!P")) { 
@@ -790,7 +793,6 @@
                 currentMode = "q";
             }
             else {
-                // If it's a multi-line explanation, append it to the current field
                 if(tempQ) {
                     if(currentMode === "exp") {
                         tempQ.exp += "<br>" + line;
@@ -1063,8 +1065,7 @@
 
         updateMiniPalette();
 
-        let scrollArea = document.getElementById('q-scroll-area');
-        if(scrollArea) scrollArea.scrollTop = 0;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
         if(examData.qTime > 0) {
@@ -1178,12 +1179,12 @@
         
         let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
 
-        let optsHtml = `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;">`;
+        let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
             if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
             else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-            optsHtml += `<div style="width: calc(50% - 5px); padding:8px 10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box;">${o.id}. ${o.text}</div>`;
+            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
         });
         optsHtml += `</div>`;
 
@@ -1256,7 +1257,6 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 THE MASTER FIX: PDF Print Logic without JS delays 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1305,17 +1305,8 @@
         
         printArea.innerHTML = html; 
         
-        // 🔥 WAHI RAAT WALI PERFECT PRINTING STRATEGY 🔥
-        document.body.classList.add('print-pdf');
-        
-        setTimeout(() => { 
-            window.print(); 
-            
-            setTimeout(() => {
-                document.body.classList.remove('print-pdf');
-            }, 500);
-            
-        }, 300); 
+        // 🔥 WAHI RAAT WALI PRINTING CSS (100% PURE CSS) 🔥
+        setTimeout(() => { window.print(); }, 500); 
     }
 </script>
 </body>
