@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
-        /* 🔥 NORMAL BODY SCROLL (PDF Blank Page Fix) 🔥 */
+        /* 🔥 NORMAL BODY SCROLL FOR PERFECT PDF 🔥 */
         body, html { margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; scroll-behavior: smooth; }
         
         #admin-view { user-select: auto; -webkit-user-select: auto; }
@@ -26,6 +26,7 @@
         .view-section { padding: 20px; flex: 1; display: none; }
         .active-view { display: block; }
         
+        /* 🔥 EXAM VIEW STRICT HIDE/SHOW 🔥 */
         #exam-view { padding: 0; display: none; flex-direction: column; position: relative; background: white; }
         #exam-view.active-view { display: flex; }
 
@@ -50,6 +51,7 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
+        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
         .exam-container { display: flex; flex-direction: column; background: #fff;}
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         
@@ -60,7 +62,6 @@
 
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
-        /* 🔥 EXAM OPTIONS (Vertically Stacked as requested) 🔥 */
         .options-div { display: block; }
         .opt-label { display: block; width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; box-sizing: border-box;}
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
@@ -70,7 +71,7 @@
         #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px 15px 15px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px;}
-        .pulse-btn { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
+        .pulse-btn { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(31, 78, 121, 0); } 100% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0); } }
         
         .mini-strip { display: flex; gap: 8px; overflow: hidden; justify-content: center; background: #f8f9fa; padding: 15px 10px 10px 10px; border-radius: 8px; border: 1px solid #e9ecef; }
@@ -117,33 +118,33 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 PURE CSS PRINTING (ABSOLUTELY NO BLANK PAGES) 🔥 */
+        /* 🔥 PURE CSS PRINTING (BADA FONT SIZE) 🔥 */
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
             
-            /* Remove all overflow restrictions for perfect printing */
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+            .container { box-shadow: none !important; }
             
-            /* Hide ALL UI elements natively via CSS */
             #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view { display: none !important; }
             
-            /* Show ONLY PDF Area and make it normal static flow */
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
             #print-area * { visibility: visible !important; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
-            .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #000000 !important; }
             
-            /* Print Options style */
-            .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
-            .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; color: #000000 !important; }
+            /* Professional Spacing & BADA FONT SIZE for Questions */
+            .print-q { margin-bottom: 20px; page-break-inside: avoid; border-bottom: 1px dashed #ccc; padding-bottom: 15px; font-size: 16px; line-height: 1.5; color: #000000 !important; }
             
-            .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
-            .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.4; }
-            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
-            .print-passage { background:#eee; padding:5px; margin-bottom:5px; font-style:italic; border-left:3px solid #333; font-size:13px; }
+            /* 🔥 THE FIX: Grid based 2-Column Options, Background wraps TEXT only 🔥 */
+            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; margin-bottom: 8px; }
+            .opt-item { font-size: 16px; box-sizing: border-box; color: #000000 !important; }
+            
+            .print-ans { font-weight: bold; font-size: 15px; color: #000000 !important; display: block; margin-top: 8px; margin-bottom: 5px;}
+            .print-exp { color: #222222 !important; font-size: 15px; margin-top: 5px; line-height: 1.5; }
+            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px; padding-bottom: 10px;}
+            .print-passage { background:#eee; padding:8px; margin-bottom:8px; font-style:italic; border-left:4px solid #333; font-size:15px; }
             
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
@@ -367,7 +368,7 @@
         </div>
     </div>
 
-    <!-- EXAM INTERFACE (Anti-Copy Enabled) -->
+    <!-- EXAM INTERFACE -->
     <div id="exam-view" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -377,7 +378,6 @@
                     <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
                 </div>
                 
-                <!-- SCROLLABLE AREA FOR QUESTION -->
                 <div id="q-scroll-area">
                     <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
                     <div class="q-text" id="q-text">Loading question...</div>
@@ -402,7 +402,7 @@
         </div>
     </div>
 
-    <!-- PALETTE OVERLAY (FULL SCREEN) -->
+    <!-- PALETTE OVERLAY -->
     <div id="palette-overlay" class="fullscreen-overlay">
         <div class="fs-container" style="min-height: auto;">
             <div class="fs-header">
@@ -418,7 +418,7 @@
         </div>
     </div>
 
-    <!-- RESULT & REPORT CARD (Anti-Copy Enabled) -->
+    <!-- RESULT & REPORT CARD -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -430,21 +430,18 @@
             <canvas id="reportCard" width="800" height="650" style="display:none;"></canvas>
             <img id="reportCardImg" style="max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display:none;" />
             
-            <!-- BUTTONS -->
             <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto; flex-wrap: wrap;">
                 <button id="btn-img-down" class="btn btn-blue" style="display: block; flex: 1; min-width: 150px;" onclick="downloadImage()">🖼️ Score Card</button>
                 <button id="btn-pdf-down" class="btn btn-pdf" style="display: block; flex: 1; min-width: 150px;" onclick="handleResultPDFClick()">📄 Q&A PDF</button>
                 <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
-            <!-- Analysis Triggers -->
             <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
             
-            <!-- ONE-BY-ONE ANALYSIS BOX -->
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
 
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
@@ -471,7 +468,7 @@
         </div>
     </div>
 
-</div> <!-- Close container -->
+</div> 
 
 <!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
@@ -745,7 +742,6 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
-    // 🔥 THE FIX: Upgraded Multi-line Parser & Bolder (**) 🔥
     function parseRawQuestions(rawText) {
         let parsedQs = []; let lines = rawText.split('\n'); let tempQ = null;
         let currentPassage = "";
@@ -1283,18 +1279,18 @@
 
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
-                let isRight = "";
+                let innerStyle = "padding: 2px 0; color: #000;";
                 if(mode !== 'q_only' && o.id === q.ans) {
-                    isRight = "background-color: #0f5132 !important; color: #ffffff !important; font-weight: bold; border-radius: 4px; -webkit-print-color-adjust: exact; print-color-adjust: exact;";
+                    innerStyle = "background-color: #0f5132 !important; color: #ffffff !important; font-weight: bold; padding: 2px 8px; border-radius: 4px; display: inline-block; -webkit-print-color-adjust: exact; print-color-adjust: exact;";
                 }
-                html += `<div class="opt-item" style="${isRight}">${o.id}. ${o.text}</div>`;
+                html += `<div class="opt-item"><span style="${innerStyle}">${o.id}. ${o.text}</span></div>`;
             });
             html += `</div>`;
             
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
                     let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
                 }
@@ -1305,8 +1301,7 @@
         
         printArea.innerHTML = html; 
         
-        // 🔥 WAHI RAAT WALI PRINTING CSS (100% PURE CSS) 🔥
-        setTimeout(() => { window.print(); }, 500); 
+        setTimeout(() => { window.print(); }, 200); 
     }
 </script>
 </body>
