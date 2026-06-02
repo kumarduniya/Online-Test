@@ -51,7 +51,6 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
-        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
         .exam-container { display: flex; flex-direction: column; background: #fff;}
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         
@@ -100,6 +99,9 @@
         .analysis-scroll::-webkit-scrollbar { width: 5px; }
         .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
+        /* 🔥 SCROLL CUT-OFF FIX: Analysis Box Top Margin Guard 🔥 */
+        #analysis-box { scroll-margin-top: 85px; }
+
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -117,9 +119,14 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 PRINTING CSS FIX VIA CLASS TOGGLE (100% Guaranteed NO Blank Page) 🔥 */
+        /* 🔥 CUSTOM BEAUTIFUL MODAL POPUP STYLES 🔥 */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s ease; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* 🔥 PURE CSS PRINTING (NO BLANK PAGES) 🔥 */
         body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; }
-        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view { display: none !important; height: 0 !important; overflow: hidden !important; }
+        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay { display: none !important; height: 0 !important; overflow: hidden !important; }
         body.print-pdf #print-area { display: block !important; position: static !important; width: 100% !important; overflow: visible !important; height: auto !important; }
         
         #print-area { display: none; background: white; color: black; text-align: left; }
@@ -130,14 +137,13 @@
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
             .container { box-shadow: none !important; }
             
-            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view { display: none !important; }
+            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay { display: none !important; }
             
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
             #print-area * { visibility: visible !important; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
-            /* Professional Spacing & BADA FONT SIZE for Questions */
             .print-q { margin-bottom: 20px; page-break-inside: avoid; border-bottom: 1px dashed #ccc; padding-bottom: 15px; font-size: 16px; line-height: 1.5; color: #000000 !important; }
             
             .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; margin-bottom: 8px; }
@@ -162,6 +168,20 @@
 </head>
 <body>
 
+<!-- 🔥 CUSTOM BEAUTIFUL POPUPS (Replaces alert, prompt, confirm) 🔥 -->
+<div id="custom-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
+        <h3 id="modal-title" style="margin: 0 0 10px 0; color: #1f4e79; font-size: 20px;">Alert</h3>
+        <p id="modal-desc" style="color: #555; font-size: 15px; margin-bottom: 20px; line-height: 1.4; font-weight:bold;"></p>
+        <input type="text" id="modal-input" style="display:none; width:100%; padding:12px; margin-bottom:20px; border:2px solid #1f4e79; border-radius:6px; box-sizing:border-box; font-size: 16px; outline: none; font-weight:bold; text-align:center;">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button id="modal-btn-cancel" class="btn btn-outline" style="display:none; margin:0; flex:1; border-radius:6px; padding:10px;">Cancel</button>
+            <button id="modal-btn-ok" class="btn btn-blue" style="margin:0; flex:1; border-radius:6px; padding:10px;">OK</button>
+        </div>
+    </div>
+</div>
+
 <div class="container" id="main-ui-container">
     
     <div id="top-sticky-wrapper">
@@ -177,14 +197,22 @@
         </div>
     </div>
 
+    <!-- STUDENT GLOBAL DASHBOARD -->
     <div id="student-dashboard-view" class="view-section active-view">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
             <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('history')">📈 My Performance</button>
         </div>
 
+        <!-- 🔥 SUBJECT DROPDOWN FILTER ADDED HERE 🔥 -->
         <div id="st-active-section">
-            <h3 style="color: #1f4e79; text-align: center; margin-bottom: 15px; font-size:16px;">वर्तमान में उपलब्ध टेस्ट</h3>
+            <h3 style="color: #1f4e79; text-align: center; margin-bottom: 10px; font-size:16px;">वर्तमान में उपलब्ध टेस्ट</h3>
+            <div style="text-align:center; margin-bottom:15px;">
+                <select id="st-subject-filter" onchange="renderActiveTestList()" style="width:100%; max-width:350px; padding:10px; border:2px solid #1f4e79; border-radius:6px; font-weight:bold; color:#1f4e79; display:none; outline:none; background:#f4f6f8;">
+                    <!-- Options populated by JS -->
+                </select>
+            </div>
+            
             <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading...</div>
             <div id="st-active-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
         </div>
@@ -221,6 +249,7 @@
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
+    <!-- ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -237,6 +266,7 @@
         </div>
     </div>
 
+    <!-- LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -248,6 +278,7 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
+    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -292,7 +323,7 @@
             
             <div id="linkContainer" style="display: none; margin-top: 20px; background: #e9ecef; padding: 15px; border-radius: 5px;">
                 <label style="color: #d35400;"><b>👇 यह लिंक कॉपी करके छात्रों को भेजें:</b></label>
-                <input type="text" id="generatedLink" readonly onclick="this.select(); document.execCommand('copy'); alert('Copied!');" style="font-weight: bold; cursor: copy; padding:15px; width:100%;">
+                <input type="text" id="generatedLink" readonly onclick="this.select(); document.execCommand('copy'); showCustomAlert('Copied', 'लिंक कॉपी हो गई!', '✅');" style="font-weight: bold; cursor: copy; padding:15px; width:100%;">
             </div>
         </div>
 
@@ -329,6 +360,7 @@
         </div>
     </div>
 
+    <!-- TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -365,6 +397,7 @@
         </div>
     </div>
 
+    <!-- EXAM INTERFACE -->
     <div id="exam-view" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -384,6 +417,7 @@
         </div>
     </div>
 
+    <!-- FIXED BOTTOM CONTROLS FOR EXAM -->
     <div id="exam-bottom-controls">
         <div class="mini-palette-wrapper">
             <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
@@ -397,6 +431,7 @@
         </div>
     </div>
 
+    <!-- PALETTE OVERLAY -->
     <div id="palette-overlay" class="fullscreen-overlay">
         <div class="fs-container" style="min-height: auto;">
             <div class="fs-header">
@@ -412,6 +447,7 @@
         </div>
     </div>
 
+    <!-- RESULT & REPORT CARD -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -463,6 +499,7 @@
 
 </div> 
 
+<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
@@ -479,6 +516,7 @@
     let globalTimeLeft = 0; let qTimeLeft = 0; let totalTimeSpent = 0;
     let isReattemptMode = false; let currentGeneratedPass = ""; 
     let currentAdminLbDataRaw = []; 
+    let globalActiveTests = [];
     
     let currentAnalysisArray = [];
     let currentAnalysisIndex = 0;
@@ -486,14 +524,47 @@
 
     window.onload = initApp;
 
+    // 🔥 CUSTOM BEAUTIFUL MODAL LOGIC 🔥
+    function showModal(icon, title, desc, showInput, onOk, onCancel) {
+        let modal = document.getElementById('custom-modal');
+        modal.style.display = 'flex';
+        document.getElementById('modal-icon').innerText = icon;
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-desc').innerHTML = desc;
+        
+        let inputEl = document.getElementById('modal-input');
+        if(showInput) { inputEl.style.display = 'block'; inputEl.value = ''; inputEl.focus(); } 
+        else { inputEl.style.display = 'none'; }
+        
+        let btnCancel = document.getElementById('modal-btn-cancel');
+        if(onCancel) { 
+            btnCancel.style.display = 'block'; 
+            btnCancel.onclick = () => { closeModal(); onCancel(); }; 
+        } else { 
+            btnCancel.style.display = 'none'; 
+        }
+        
+        let btnOk = document.getElementById('modal-btn-ok');
+        btnOk.onclick = () => { 
+            let val = inputEl.value; 
+            closeModal(); 
+            if(onOk) onOk(val); 
+        };
+    }
+    function closeModal() { document.getElementById('custom-modal').style.display = 'none'; }
+
+    function showCustomAlert(title, message, icon="⚠️") { showModal(icon, title, message, false, null, null); }
+    function showCustomConfirm(title, message, onYes, icon="❓") { showModal(icon, title, message, false, onYes, () => {}); }
+    function showCustomPrompt(title, message, onYes, icon="🔒") { showModal(icon, title, message, true, onYes, () => {}); }
+
     function closeAndRedirect() { window.location.href = BASE_URL; }
     function openAdminLogin() { document.getElementById('student-dashboard-view').classList.remove('active-view'); document.getElementById('admin-auth-view').classList.add('active-view'); }
 
     function clearAdminMemory() {
-        if(confirm("क्या आप एडमिन पैनल से सभी पुराने सेव किये गए टेस्ट हटाना चाहते हैं? (इससे डेटाबेस से कुछ डिलीट नहीं होगा)")) {
+        showCustomConfirm("Clear Memory", "क्या आप एडमिन पैनल से सभी पुराने सेव किये गए टेस्ट हटाना चाहते हैं?", () => {
             localStorage.removeItem('myMockTests');
             renderDashboard();
-        }
+        }, "🗑️");
     }
 
     function setPasswordKey(key) {
@@ -516,7 +587,7 @@
         let id = document.getElementById('admin-id').value; let pass = document.getElementById('admin-pass').value;
         if(btoa(id) === "ODI3MzY4NDkzOQ==" && btoa(pass) === "QW5rdXNoQDEyMzFAMTIz") {
             document.getElementById('admin-auth-view').classList.remove('active-view'); document.getElementById('admin-view').classList.add('active-view'); switchAdminTab('create');
-        } else { alert("❌ गलत Admin ID या Password!"); }
+        } else { showCustomAlert("Error", "❌ गलत Admin ID या Password!", "❌"); }
     }
 
     function showErrorView(msg) {
@@ -602,13 +673,42 @@
         document.body.appendChild(script);
     }
     
+    // 🔥 FILTER ACTIVE TESTS BY SUBJECT 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
         let list = document.getElementById('st-active-list');
-        if(!data.tests || data.tests.length === 0) { list.innerHTML = "<p>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>"; return; }
+        let filterEl = document.getElementById('st-subject-filter');
+        
+        if(!data.tests || data.tests.length === 0) { 
+            list.innerHTML = "<p>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>"; 
+            filterEl.style.display = 'none';
+            return; 
+        }
+        
+        globalActiveTests = data.tests.filter(t => !HIDDEN_TESTS.includes(t.code));
+        let subjects = [...new Set(globalActiveTests.map(t => t.sub))];
+        
+        if(subjects.length > 0) {
+            filterEl.style.display = 'inline-block';
+            let optHtml = `<option value="ALL">📚 सभी विषय (All Subjects)</option>`;
+            subjects.forEach(s => { optHtml += `<option value="${s}">${s}</option>`; });
+            filterEl.innerHTML = optHtml;
+        } else {
+            filterEl.style.display = 'none';
+        }
+        
+        renderActiveTestList();
+    };
+
+    function renderActiveTestList() {
+        let filterVal = document.getElementById('st-subject-filter').value;
+        let list = document.getElementById('st-active-list');
         let html = "";
-        data.tests.forEach(t => {
-            if(HIDDEN_TESTS.includes(t.code)) return; 
+        
+        globalActiveTests.forEach(t => {
+            if(filterVal !== "ALL" && t.sub !== filterVal) return;
+            let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
+            let priceText = isFreeStatus ? "Free" : "₹" + t.price;
             html += `<div style="background:#fff; border:1px solid #ccc; border-radius:8px; padding:15px; width:100%; max-width:350px; text-align:left; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
                 <h4 style="margin:0 0 5px 0; color:#1f4e79;">${t.exam}</h4>
                 <p style="margin:0 0 10px 0; font-size:13px; color:#555;"><b>${t.sub}</b> ${t.topic ? "("+t.topic+")" : ""}</p>
@@ -616,13 +716,14 @@
                 <button class="btn btn-blue" style="margin:0; padding:8px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>
             </div>`;
         });
-        if(html === "") html = "<p>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>";
+        
+        if(html === "") html = "<p>इस विषय का कोई टेस्ट उपलब्ध नहीं है।</p>";
         list.innerHTML = html;
-    };
+    }
 
     function fetchStudentHistory() {
         let phone = document.getElementById('hist-phone').value;
-        if(phone.length !== 10) { alert("कृपया सही 10 अंकों का नंबर डालें!"); return; }
+        if(phone.length !== 10) { showCustomAlert("Error", "कृपया सही 10 अंकों का नंबर डालें!", "❌"); return; }
         document.getElementById('st-hist-loader').style.display = 'block'; document.getElementById('st-hist-content').style.display = 'none';
         let cb = new Date().getTime(); let script = document.createElement('script');
         script.src = SCRIPT_URL + "?action=getStudentHistory&phone=" + phone + "&callback=handleStudentHistory&t=" + cb;
@@ -631,7 +732,7 @@
 
     window.handleStudentHistory = function(data) {
         document.getElementById('st-hist-loader').style.display = 'none';
-        if(data.error || !data.history || data.history.length === 0) { alert("इस नंबर से कोई टेस्ट रिकॉर्ड नहीं मिला।"); return; }
+        if(data.error || !data.history || data.history.length === 0) { showCustomAlert("Not Found", "इस नंबर से कोई टेस्ट रिकॉर्ड नहीं मिला।", "🔍"); return; }
         
         let h = data.history; let totRight = 0, totWrong = 0, totBlank = 0; let html = "";
         
@@ -666,23 +767,27 @@
         document.getElementById('st-hist-list').innerHTML = html; document.getElementById('st-hist-content').style.display = 'block';
     };
 
+    // 🔥 REVISION PDF SMART PASSWORD CHECK 🔥
     window.downloadHistoryPDF = function(code, phone) {
-        alert("Preparing Revision PDF, please wait...");
+        showCustomAlert("Processing", "Revision PDF तैयार हो रही है, कृपया प्रतीक्षा करें...", "⏳");
         let cb = new Date().getTime(); let script = document.createElement('script');
         let uniqueCallback = "handleHistTestLoad_" + code.replace(/-/g, '');
         script.src = SCRIPT_URL + "?action=getTest&testCode=" + code + "&callback=" + uniqueCallback + "&t=" + cb;
         
         window[uniqueCallback] = function(data) {
-            if(data.error) { alert("Test data unavailable."); return; }
+            if(data.error) { showCustomAlert("Error", "Test data unavailable.", "❌"); return; }
             let isFreeStatus = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
             
             if(!isFreeStatus) {
-                let pass = prompt("🔒 यह पेड (Paid) PDF है। कृपया अपना पासवर्ड डालें:");
-                if(pass === null) return; 
-                if(pass !== generateStrongPass(phone, data.key.toUpperCase())) { alert("❌ पासवर्ड गलत है!"); return; }
+                showCustomPrompt("Password Required", "🔒 यह पेड (Paid) PDF है। कृपया इसे अनलॉक करने के लिए अपना पासवर्ड डालें:", (pass) => {
+                    if(pass !== generateStrongPass(phone, data.key.toUpperCase())) { 
+                        showCustomAlert("Error", "❌ पासवर्ड गलत है!", "❌"); return; 
+                    }
+                    examData = data; userAnswers = []; executePDFPrint(phone, 'q_ans'); 
+                });
+            } else {
+                examData = data; userAnswers = []; executePDFPrint(phone, 'q_ans'); 
             }
-            examData = data; userAnswers = []; 
-            executePDFPrint(phone, 'q_ans'); 
         };
         document.body.appendChild(script);
     }
@@ -713,18 +818,19 @@
 
     function generatePass() {
         let phone = document.getElementById('gen-phone').value; let key = document.getElementById('gen-key').value.toUpperCase();
-        if(!key) { alert("Secret Key डालें!"); return; } if(phone.length < 10) { document.getElementById('show-gen-pass').innerText = "पूरा 10 अंकों का नंबर डालें!"; return; }
+        if(!key) { showCustomAlert("Error", "Secret Key डालें!", "⚠️"); return; } 
+        if(phone.length < 10) { document.getElementById('show-gen-pass').innerText = "पूरा 10 अंकों का नंबर डालें!"; return; }
         let pass = generateStrongPass(phone, key); currentGeneratedPass = pass; 
         document.getElementById('show-gen-pass').innerText = "पासवर्ड: " + pass; document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
     }
 
     function copyGeneratedPass() {
         if(!currentGeneratedPass) return;
-        try { navigator.clipboard.writeText(currentGeneratedPass).then(() => { alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass); }).catch(fallbackCopy);
+        try { navigator.clipboard.writeText(currentGeneratedPass).then(() => { showCustomAlert("Success", "✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass, "✅"); }).catch(fallbackCopy);
         } catch(e) { fallbackCopy(); }
         function fallbackCopy() {
             let tempInput = document.createElement("input"); tempInput.value = currentGeneratedPass; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput);
-            alert("✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass);
+            showCustomAlert("Success", "✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass, "✅");
         }
     }
 
@@ -734,14 +840,12 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
-    // 🔥 THE FIX: Super Smart & Fault Tolerant Parser (Spaces, Hidden Chars, Missing Newlines) 🔥
+    // 🔥 THE FIX: Super Smart Parser (Removes invisible chars, auto-adds newlines) 🔥
     function parseRawQuestions(rawText) {
-        // 1. Remove invisible Unicode characters (BOM, ZWNJ, etc.) that mobile keyboards insert
-        rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, '');
-        // 2. Normalize line endings (Fix for \r issues on older Android/iOS)
-        rawText = rawText.replace(/\r\n?/g, '\n');
+        rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, ''); // Clear zero-width spaces
+        rawText = rawText.replace(/\r\n?/g, '\n'); // Normalize returns
         
-        // 3. AUTO-FORMATTER: If copy-paste lost newlines, this forces them back before our tags!
+        // Auto-fix if copy-paste merged lines
         rawText = rawText.replace(/(\s*)(!!\s*\d+\s*!)/g, '\n$2');
         rawText = rawText.replace(/(\s*)(![A-D]\s)/gi, '\n$2');
         rawText = rawText.replace(/(\s*)(!!!\s*[A-D])/gi, '\n$2');
@@ -758,7 +862,6 @@
             
             line = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             
-            // Added [^!]* to skip any stray garbage characters before the tag
             if(line.match(/^[^!]*!P/i)) { 
                 let pText = line.replace(/^[^!]*!P\s*/i, '').trim();
                 if(pText.toLowerCase() === "none" || pText === "") currentPassage = "";
@@ -818,19 +921,17 @@
         let isFree = document.getElementById('a-pdf-type').value === "free";
         let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49");
         let eKey = document.getElementById('a-key').value || "ANK"; let rawText = document.getElementById('a-rawdata').value;
-        if(!rawText.trim()) { alert("Please paste questions!"); return; }
+        if(!rawText.trim()) { showCustomAlert("Empty Box", "Please paste questions!", "⚠️"); return; }
 
         let parsedQs = parseRawQuestions(rawText);
         
-        // 🔥 ERROR CATCHER: Test 0 sawalon ke sath save nahi hoga! 🔥
-        let btn = document.getElementById('btn-generate');
         if(parsedQs.length === 0) {
-            alert("❌ कोई भी सवाल सही फॉर्मेट (!!1!, !A, !B...) में नहीं मिला! कृपया अपना फॉर्मेट चेक करें।");
+            showCustomAlert("Format Error", "❌ कोई भी सवाल सही फॉर्मेट (!!1!, !A, !B...) में नहीं मिला! कृपया अपना फॉर्मेट चेक करें।", "⚠️");
             return;
         }
 
         let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, isActive: true };
-        btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
+        let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
         .then(res => res.json()).then(data => {
@@ -846,9 +947,10 @@
             if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
-            document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; alert(`✅ टेस्ट सफलतापूर्वक सेव हो गया! (${parsedQs.length} सवाल)`);
+            document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; 
+            showCustomAlert("Success", `✅ टेस्ट सफलतापूर्वक सेव हो गया! (${parsedQs.length} सवाल)`, "🎉");
             renderDashboard(); 
-        }).catch(err => { alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।"); btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false; });
+        }).catch(err => { showCustomAlert("Error", "टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।", "❌"); btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false; });
     }
 
     function renderDashboard() {
@@ -883,7 +985,7 @@
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_only')">📝 Qs Only</button>
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#17a2b8;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_ans')">✅ Qs+Ans</button>
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#28a745;" onclick="adminDownloadPDF(${t.originalIndex}, 'full')">📚 Full PDF</button>
-                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
+                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); showCustomAlert('Copied', 'लिंक कॉपी हो गई!', '✅');">📋 Copy Link</button>
                         <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="setPasswordKey('${t.key}')">🔑 Auto Pass</button>
                         <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: 100%; font-size:14px;" onclick="viewResults('${t.code}')">📊 View Results / Leaderboard</button>
                     </div>
@@ -901,7 +1003,7 @@
                 let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
                 if(savedTests[idx]) { savedTests[idx].isActive = newStatus; localStorage.setItem('myMockTests', JSON.stringify(savedTests)); }
                 renderDashboard();
-            } else { alert("Failed to update status."); }
+            } else { showCustomAlert("Error", "Failed to update status.", "❌"); }
         }; document.body.appendChild(script);
     }
 
@@ -915,11 +1017,13 @@
         if(isFreeStatus || t.price === "Free") { document.getElementById('a-pdf-type').value = "free"; } else { document.getElementById('a-pdf-type').value = "paid"; document.getElementById('a-price').value = t.price || ""; }
         
         document.getElementById('a-key').value = t.key || ""; document.getElementById('a-rawdata').value = t.rawText || "";
-        togglePriceBox(); switchAdminTab('create'); alert("टेस्ट का डेटा फॉर्म में आ गया है! बदलाव करके 'Generate & Save Test' दबाएं।");
+        togglePriceBox(); switchAdminTab('create'); showCustomAlert("Edit Mode", "टेस्ट का डेटा फॉर्म में आ गया है! बदलाव करके 'Generate & Save Test' दबाएं।", "✏️");
     }
 
     function deleteTest(idx) {
-        if(confirm("क्या आप सच में इस टेस्ट को हटाना चाहते हैं?")) { let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; savedTests.splice(idx, 1); localStorage.setItem('myMockTests', JSON.stringify(savedTests)); renderDashboard(); }
+        showCustomConfirm("Delete Test", "क्या आप सच में इस टेस्ट को हटाना चाहते हैं?", () => { 
+            let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; savedTests.splice(idx, 1); localStorage.setItem('myMockTests', JSON.stringify(savedTests)); renderDashboard(); 
+        }, "🗑️");
     }
 
     function viewResults(testCode) {
@@ -990,7 +1094,7 @@
     }
 
     function adminDownloadPDF(idx, mode) {
-        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t || !t.rawText) { alert("डेटा नहीं मिला!"); return; }
+        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t || !t.rawText) { showCustomAlert("Error", "डेटा नहीं मिला!", "❌"); return; }
         let parsedQs = parseRawQuestions(t.rawText); examData = { exam: t.exam, subject: t.sub, topic: t.topic, code: t.code, questions: parsedQs };
         studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; }); executePDFPrint(studentInfo.name, mode);
     }
@@ -998,11 +1102,11 @@
     function startExam(isReattempt) {
         if(!isReattempt) {
             studentInfo.name = document.getElementById('s-name').value; studentInfo.phone = document.getElementById('s-phone').value;
-            if(!studentInfo.name || studentInfo.phone.length !== 10) { alert("कृपया सही नाम और 10 अंकों का नंबर डालें!"); return; }
+            if(!studentInfo.name || studentInfo.phone.length !== 10) { showCustomAlert("Required", "कृपया सही नाम और 10 अंकों का नंबर डालें!", "⚠️"); return; }
         }
         
         if(!examData.questions || examData.questions.length === 0) {
-            alert("❌ इस टेस्ट में कोई प्रश्न नहीं मिला! कृपया इसे एडमिन पैनल से दोबारा सही फॉर्मेट में सेव करें।");
+            showCustomAlert("Empty Test", "❌ इस टेस्ट में कोई प्रश्न नहीं मिला! कृपया इसे एडमिन पैनल से दोबारा सही फॉर्मेट में सेव करें।", "⚠️");
             document.getElementById('loading-view').classList.remove('active-view');
             document.getElementById('student-dashboard-view').classList.add('active-view');
             return;
@@ -1031,7 +1135,7 @@
             if(examData.totTime > 0) {
                 globalTimeLeft--; let m = Math.floor(globalTimeLeft / 60); let s = globalTimeLeft % 60;
                 document.getElementById('main-time').innerText = `Time Left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-                if(globalTimeLeft <= 0) { clearInterval(globalTimer); alert("⏳ समय समाप्त! आपका टेस्ट आटोमेटिक सबमिट हो रहा है।"); calculateScoreAndSubmit(); }
+                if(globalTimeLeft <= 0) { clearInterval(globalTimer); showCustomAlert("Time Up", "⏳ समय समाप्त! आपका टेस्ट आटोमेटिक सबमिट हो रहा है।", "⏳"); calculateScoreAndSubmit(); }
             } else {
                 let m = Math.floor(totalTimeSpent / 60); let s = totalTimeSpent % 60;
                 document.getElementById('main-time').innerText = `Time: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
@@ -1039,7 +1143,7 @@
         }, 1000);
     }
 
-    function startReattempt() { if(confirm("क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं?")) { startExam(true); } }
+    function startReattempt() { showCustomConfirm("Reattempt", "क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं?", () => { startExam(true); }, "🔄"); }
 
     function initPalette() {
         let grid = document.getElementById('palette-grid'); grid.innerHTML = "";
@@ -1051,12 +1155,27 @@
         updateCounts();
     }
     
+    // 🔥 BACK BUTTON / HISTORY API LOGIC 🔥
     function togglePaletteOverlay(forceState) {
         let overlay = document.getElementById('palette-overlay');
-        if(forceState === false) { overlay.style.display = 'none'; return; }
-        if(overlay.style.display === 'block') { overlay.style.display = 'none'; } 
-        else { overlay.style.display = 'block'; }
+        let isOpen = overlay.style.display === 'block';
+        
+        if (forceState === false) {
+            if (isOpen) { history.back(); } 
+            return;
+        }
+        if (isOpen) {
+            history.back(); // Pops the state, closing the overlay natively
+        } else {
+            overlay.style.display = 'block';
+            history.pushState({palette: true}, "");
+        }
     }
+    
+    window.addEventListener('popstate', function() {
+        let overlay = document.getElementById('palette-overlay');
+        if (overlay && overlay.style.display === 'block') { overlay.style.display = 'none'; }
+    });
 
     function updateMiniPalette() {
         let strip = document.getElementById('mini-palette-strip'); strip.innerHTML = "";
@@ -1087,6 +1206,7 @@
         document.getElementById('options-box').innerHTML = optHtml;
 
         updateMiniPalette();
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
@@ -1110,7 +1230,7 @@
         if(currentQ < examData.questions.length - 1) { renderQuestion(currentQ + 1); 
         } else {
             if(isAuto) { clearInterval(globalTimer); calculateScoreAndSubmit(); } 
-            else if(confirm("✅ टेस्ट के सभी प्रश्न पूरे हो गए हैं! क्या आप टेस्ट सबमिट करना चाहते हैं?")) { clearInterval(globalTimer); calculateScoreAndSubmit(); }
+            else { showCustomConfirm("Submit Exam", "✅ टेस्ट के सभी प्रश्न पूरे हो गए हैं! क्या आप टेस्ट सबमिट करना चाहते हैं?", () => { clearInterval(globalTimer); calculateScoreAndSubmit(); }, "✅"); }
         }
     }
     function prevQ() { if(currentQ > 0) renderQuestion(currentQ - 1); }
@@ -1120,7 +1240,7 @@
         document.getElementById('cnt-ans').innerText = ans; document.getElementById('cnt-notans').innerText = notans; document.getElementById('cnt-notvis').innerText = notvis;
     }
 
-    function submitExamConfirmation() { if(confirm("Are you sure you want to submit the test?")) { clearInterval(globalTimer); clearInterval(qTimer); calculateScoreAndSubmit(); } }
+    function submitExamConfirmation() { showCustomConfirm("Submit Exam", "क्या आप पक्का टेस्ट सबमिट करना चाहते हैं?", () => { clearInterval(globalTimer); clearInterval(qTimer); calculateScoreAndSubmit(); }, "📤"); }
 
     function calculateScoreAndSubmit() {
         clearInterval(globalTimer); clearInterval(qTimer);
@@ -1199,16 +1319,18 @@
         let statusIcon = data.isRight ? "✅" : (data.isBlank ? "⬜" : "❌");
         let titles = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
         
-        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
+        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333; max-height:100px; overflow-y:auto;" class="analysis-scroll">${q.passage}</div>` : ``;
 
         let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
             if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
             else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
+            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:14px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
         });
         optsHtml += `</div>`;
+
+        let expHtml = q.exp ? `<div style="font-size: 14px; color: #444; margin-top: 10px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79; max-height: 180px; overflow-y: auto;" class="analysis-scroll"><b>Explanation:</b><br> ${q.exp}</div>` : ``;
 
         let html = `
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #ccc; padding-bottom:10px; margin-bottom:15px;">
@@ -1218,7 +1340,7 @@
             ${passHtml}
             <b style="font-size:18px; color:#222; display:block; margin-bottom:15px; line-height:1.4;">${statusIcon} Q${i+1}. ${q.q}</b>
             ${optsHtml}
-            <div style="font-size: 15px; color: #444; margin-top: 15px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79; max-height: 180px; overflow-y: auto;" class="analysis-scroll"><b>Explanation:</b><br> ${q.exp}</div>
+            ${expHtml}
             
             <div style="display:flex; justify-content:space-between; margin-top:20px; border-top:1px solid #ddd; padding-top:15px;">
                 <button class="btn btn-outline" style="width:auto; padding:8px 20px; margin:0;" onclick="prevAnalysis()" ${currentAnalysisIndex === 0 ? 'disabled' : ''}>⬅️ Prev</button>
@@ -1262,20 +1384,21 @@
         let isFreeStatus = (examData.isFree === true || String(examData.isFree).toLowerCase() === "true");
         if(isFreeStatus) { executePDFPrint(studentInfo.name, 'full');
         } else {
-            alert("🔒 यह पेड (Paid) PDF है। कृपया पेज के नीचे दिए गए बॉक्स में पासवर्ड डालें और 'Unlock PDF' पर क्लिक करें।");
+            showCustomAlert("Unlock First", "🔒 यह पेड (Paid) PDF है। कृपया पेज के नीचे दिए गए बॉक्स में पासवर्ड डालें और 'Unlock PDF' पर क्लिक करें।", "🔒");
             document.getElementById('s-pass-result').focus();
         }
     }
 
     function directDownloadPDF() {
         let phone = document.getElementById('pdf-phone').value; let pass = document.getElementById('pdf-pass').value;
-        if(!phone) { alert("अपना नंबर डालें!"); return; } if(!checkPass(phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
+        if(!phone) { showCustomAlert("Required", "अपना नंबर डालें!", "⚠️"); return; } 
+        if(!checkPass(phone, pass)) { showCustomAlert("Error", "पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।", "❌"); return; }
         studentInfo.name = "Student"; executePDFPrint(phone, 'full'); 
     }
 
     function resultDownloadPDF() {
         let pass = document.getElementById('s-pass-result').value;
-        if(!checkPass(studentInfo.phone, pass)) { alert("पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।"); return; }
+        if(!checkPass(studentInfo.phone, pass)) { showCustomAlert("Error", "पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।", "❌"); return; }
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
@@ -1316,7 +1439,7 @@
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
                     let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
                 }
@@ -1327,7 +1450,8 @@
         
         printArea.innerHTML = html; 
         
-        setTimeout(() => { window.print(); }, 200); 
+        document.body.classList.add('print-pdf');
+        setTimeout(() => { window.print(); setTimeout(() => { document.body.classList.remove('print-pdf'); }, 500); }, 300); 
     }
 </script>
 </body>
