@@ -71,7 +71,7 @@
         #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px 15px 15px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px;}
-        .pulse-btn { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
+        .pulse-btn { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(31, 78, 121, 0); } 100% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0); } }
         
         .mini-strip { display: flex; gap: 8px; overflow: hidden; justify-content: center; background: #f8f9fa; padding: 15px 10px 10px 10px; border-radius: 8px; border: 1px solid #e9ecef; }
@@ -118,7 +118,7 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 PURE CSS PRINTING (BADA FONT SIZE) 🔥 */
+        /* 🔥 PURE CSS PRINTING (ABSOLUTELY NO BLANK PAGES) 🔥 */
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
@@ -132,12 +132,12 @@
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
             #print-area * { visibility: visible !important; }
             
-            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
+            /* 🔥 THE FIX: WATERMARK BROUGHT TO FRONT WITH OPACITY 🔥 */
+            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: #000000; opacity: 0.08; z-index: 9999 !important; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
             /* Professional Spacing & BADA FONT SIZE for Questions */
             .print-q { margin-bottom: 20px; page-break-inside: avoid; border-bottom: 1px dashed #ccc; padding-bottom: 15px; font-size: 16px; line-height: 1.5; color: #000000 !important; }
             
-            /* 🔥 THE FIX: Grid based 2-Column Options, Background wraps TEXT only 🔥 */
             .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; margin-bottom: 8px; }
             .opt-item { font-size: 16px; box-sizing: border-box; color: #000000 !important; }
             
@@ -1173,16 +1173,18 @@
         let statusIcon = data.isRight ? "✅" : (data.isBlank ? "⬜" : "❌");
         let titles = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
         
-        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
+        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333; max-height:100px; overflow-y:auto;" class="analysis-scroll">${q.passage}</div>` : ``;
 
         let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
             if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
             else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
+            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:14px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
         });
         optsHtml += `</div>`;
+
+        let expHtml = q.exp ? `<div style="font-size: 14px; color: #444; margin-top: 10px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79; max-height: 180px; overflow-y: auto;" class="analysis-scroll"><b>Explanation:</b><br> ${q.exp}</div>` : ``;
 
         let html = `
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #ccc; padding-bottom:10px; margin-bottom:15px;">
@@ -1192,7 +1194,7 @@
             ${passHtml}
             <b style="font-size:18px; color:#222; display:block; margin-bottom:15px; line-height:1.4;">${statusIcon} Q${i+1}. ${q.q}</b>
             ${optsHtml}
-            <div style="font-size: 15px; color: #444; margin-top: 15px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79; max-height: 180px; overflow-y: auto;"><b>Explanation:</b><br> ${q.exp}</div>
+            ${expHtml}
             
             <div style="display:flex; justify-content:space-between; margin-top:20px; border-top:1px solid #ddd; padding-top:15px;">
                 <button class="btn btn-outline" style="width:auto; padding:8px 20px; margin:0;" onclick="prevAnalysis()" ${currentAnalysisIndex === 0 ? 'disabled' : ''}>⬅️ Prev</button>
@@ -1290,7 +1292,7 @@
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
                     let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
                 }
@@ -1301,6 +1303,7 @@
         
         printArea.innerHTML = html; 
         
+        // Let CSS block rules handle print natively without any JS timeouts
         setTimeout(() => { window.print(); }, 200); 
     }
 </script>
