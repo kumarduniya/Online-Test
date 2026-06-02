@@ -85,14 +85,18 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 WAHI PURANA SOLID PRINT CSS (NO JS HACKS, NO BLANK PAGES) 🔥 */
-        #print-area { display: none; }
+        /* 🔥 FULL SCREEN ANALYSIS CSS 🔥 */
+        #analysis-fullscreen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f6f8; z-index: 99999; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        .fs-container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 95vh; }
+        .fs-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 15px; margin-bottom: 20px; position: sticky; top: 0; background: white; z-index: 10; }
+
+        /* 🔥 WAHI PURANA 100% PERFECT PDF PRINTING CSS 🔥 */
+        #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
-            
             body { background: white; margin: 0; padding: 0; }
-            #main-ui-container { display: none !important; }
+            #main-ui-container, #analysis-fullscreen { display: none !important; }
             
             #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; }
             #print-area * { visibility: visible !important; }
@@ -117,6 +121,8 @@
             .palette-legend { font-size: 10px; padding: 10px 5px;}
             .box { width: 14px; height: 14px; line-height: 14px; }
             .admin-lock { bottom: 10px; right: 10px; font-size: 20px;}
+            #analysis-fullscreen { padding: 0; }
+            .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
         }
     </style>
 </head>
@@ -370,18 +376,19 @@
             <canvas id="reportCard" width="800" height="650" style="display:none;"></canvas>
             <img id="reportCardImg" style="max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display:none;" />
             
-            <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto;">
-                <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1;" onclick="downloadImage()">🖼️ Download Score Card</button>
-                <button id="btn-pdf-down" class="btn btn-pdf" style="display: none; flex: 1;" onclick="handleResultPDFClick()">📄 Download Question Paper</button>
+            <!-- 🔥 THE FIX 1: Reattempt Button Added Back 🔥 -->
+            <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto; flex-wrap: wrap;">
+                <button id="btn-img-down" class="btn btn-blue" style="display: none; flex: 1; min-width: 150px;" onclick="downloadImage()">🖼️ Score Card</button>
+                <button id="btn-pdf-down" class="btn btn-pdf" style="display: none; flex: 1; min-width: 150px;" onclick="handleResultPDFClick()">📄 Q&A PDF</button>
+                <button id="btn-reattempt" class="btn btn-warning" style="display: none; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
+            <!-- Analysis Buttons -->
             <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
-            
-            <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 600px; margin: 15px auto; padding: 15px; text-align: left; max-height: 350px; overflow-y: auto; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);"></div>
             
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
                 <h4 style="margin: 0 0 10px 0; color: #856404;">📥 PDF + Solution कैसे लें?</h4>
@@ -408,11 +415,21 @@
     </div>
 </div>
 
+<!-- 🔥 THE FIX 2: FULL SCREEN ANALYSIS VIEW 🔥 -->
+<div id="analysis-fullscreen">
+    <div class="fs-container">
+        <div class="fs-header">
+            <h2 id="fs-analysis-title" style="margin: 0; color: #1f4e79;">Analysis</h2>
+            <button class="btn btn-outline" style="margin: 0; padding: 6px 15px; width: auto; font-size:14px; background:#dc3545; color:white; border:none;" onclick="closeAnalysis()">🔙 Back</button>
+        </div>
+        <div id="fs-analysis-content" style="text-align: left;"></div>
+    </div>
+</div>
+
 <!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
-    // 🚨 YAHAN APNI NAYI GOOGLE SCRIPT LINK PASTE KARI GAYI HAI 🚨
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2cnrYrgNzObhZBEju6mDCVEftCRqMcTgk55RNfqsxGPJg0pLDtGJqZVnUWfco9AZ_aA/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
@@ -487,7 +504,6 @@
         }
     }
 
-    // 🔥 THE FIX: Free/Paid Bug Strict Logic 🔥
     window.handleTestLoad = function(data) {
         if(data.error) { showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")"); return; }
         if(data.isActive === false) { showErrorView("❌ यह टेस्ट अभी एडमिन द्वारा बंद (Inactive) कर दिया गया है।"); return; }
@@ -495,8 +511,6 @@
         examData = data; 
         examData.marks = data.marks || 2; examData.neg = data.neg || 0;
         examData.totTime = data.totTime || 0; examData.qTime = data.qTime || 0;
-        
-        // Ensure backend data translates string "false" into actual boolean false
         examData.isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
         
         setupLoginScreen();
@@ -612,7 +626,6 @@
         document.getElementById('st-hist-list').innerHTML = html; document.getElementById('st-hist-content').style.display = 'block';
     };
 
-    // 🔥 THE FIX: Strict Password Check for History Page PDF Download 🔥
     window.downloadHistoryPDF = function(code, phone) {
         alert("Preparing Revision PDF, please wait...");
         let cb = new Date().getTime(); let script = document.createElement('script');
@@ -675,7 +688,6 @@
         }
     }
 
-    // 🔥 THE FIX: Strict Password Function 🔥
     function checkPass(enteredPhone, enteredPass) {
         let isFreeStatus = (examData.isFree === true || String(examData.isFree).toLowerCase() === "true");
         if(isFreeStatus) return true; 
@@ -706,8 +718,7 @@
         let eCode = document.getElementById('a-code').value || "T-" + Math.floor(Math.random() * 1000);
         let eMarks = parseFloat(document.getElementById('a-marks').value) || 2; let eNeg = parseFloat(document.getElementById('a-neg').value) || 0;
         let tTime = parseInt(document.getElementById('a-tot-time').value) || 0; let qTime = parseInt(document.getElementById('a-q-time').value) || 0;
-        
-        let isFree = document.getElementById('a-pdf-type').value === "free"; // Strictly boolean
+        let isFree = document.getElementById('a-pdf-type').value === "free";
         let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49");
         let eKey = document.getElementById('a-key').value || "ANK"; let rawText = document.getElementById('a-rawdata').value;
         if(!rawText.trim()) { alert("Please paste questions!"); return; }
@@ -724,7 +735,6 @@
             
             let testLink = BASE_URL + "?test=" + eCode;
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
-            // 🔥 THE FIX: Update logic in Local Storage so Admin panel also avoids duplicate! 🔥
             let existingIdx = savedTests.findIndex(t => t.code === eCode);
             let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
             
@@ -732,7 +742,7 @@
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
             document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; alert("टेस्ट सफलतापूर्वक Database में सेव/अपडेट हो गया!");
-            renderDashboard(); // Refresh list automatically
+            renderDashboard(); 
         }).catch(err => { alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।"); btn.innerText = "🚀 Generate & Save Test"; btn.disabled = false; });
     }
 
@@ -990,6 +1000,7 @@
         drawReportCard("...", "...", maxScore);
         document.getElementById('btn-img-down').style.display = 'none'; 
         document.getElementById('btn-pdf-down').style.display = 'none';
+        document.getElementById('btn-reattempt').style.display = 'none';
         document.getElementById('rank-loader').style.display = 'block';
         
         let submissionCode = isReattemptMode ? (examData.code + "-RE") : examData.code;
@@ -1002,17 +1013,23 @@
             document.getElementById('rank-loader').style.display = 'none'; 
             document.getElementById('btn-img-down').style.display = 'block';
             document.getElementById('btn-pdf-down').style.display = 'block'; 
+            document.getElementById('btn-reattempt').style.display = 'block';
             let finalRank = (isReattemptMode && data.totalStudents <= 1) ? "N/A" : data.rank; drawReportCard(finalRank, data.totalStudents, maxScore);
         }).catch(err => {
             document.getElementById('rank-loader').style.display = 'none'; 
             document.getElementById('btn-img-down').style.display = 'block'; 
             document.getElementById('btn-pdf-down').style.display = 'block';
+            document.getElementById('btn-reattempt').style.display = 'block';
             drawReportCard("N/A", "N/A", maxScore);
         });
     }
 
+    // 🔥 THE FIX 2: FULL SCREEN ANALYSIS LOGIC 🔥
     function showAnalysis(type) {
-        let box = document.getElementById('analysis-box'); let html = "";
+        let box = document.getElementById('fs-analysis-content'); let html = "";
+        let titles = { 'right': '✅ Correct Questions', 'wrong': '❌ Wrong Questions', 'blank': '⬜ Blank Questions' };
+        document.getElementById('fs-analysis-title').innerText = titles[type];
+
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i]; let isRight = uAns === q.ans; let isBlank = uAns === null; let isWrong = !isBlank && !isRight;
             if((type === 'right' && isRight) || (type === 'wrong' && isWrong) || (type === 'blank' && isBlank)) {
@@ -1020,19 +1037,38 @@
                 let correctOpt = q.opts.find(o => o.id === q.ans); let correctStr = correctOpt ? `${correctOpt.id}. ${correctOpt.text}` : q.ans;
                 let userOpt = q.opts.find(o => o.id === uAns); let userStr = isBlank ? "N/A" : (userOpt ? `${userOpt.id}. ${userOpt.text}` : uAns);
 
-                html += `<div style="border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px;">
-                    <b style="font-size:15px; color:#1f4e79;">${statusIcon} Q${i+1}. ${q.q}</b>
-                    <div style="margin-top:6px; font-size: 14px; display:flex; flex-direction:column; gap:5px;">
-                        <div style="background: #e6f9ec; color: #155724; padding: 4px 8px; border-radius: 4px; border: 1px solid #c3e6cb; font-weight:bold;">✅ Correct: ${correctStr}</div>
-                        <div style="color: ${ansColor}; font-weight: bold; padding: 0 8px;">👉 Your Ans: ${userStr}</div>
+                html += `<div style="border-bottom: 1px solid #ddd; padding-bottom: 15px; margin-bottom: 15px;">
+                    <b style="font-size:16px; color:#1f4e79;">${statusIcon} Q${i+1}. ${q.q}</b>
+                    <div style="margin-top:10px; font-size: 15px; display:flex; flex-direction:column; gap:6px;">
+                        <div style="background: #e6f9ec; color: #155724; padding: 6px 10px; border-radius: 4px; border: 1px solid #c3e6cb; font-weight:bold;">✅ Correct: ${correctStr}</div>
+                        <div style="color: ${ansColor}; font-weight: bold; padding: 0 10px;">👉 Your Ans: ${userStr}</div>
                     </div>
-                    <div style="font-size: 14px; color: #444; margin-top: 6px; line-height:1.4;"><b>Explanation:</b> ${q.exp}</div>
+                    <div style="font-size: 15px; color: #444; margin-top: 10px; line-height:1.5;"><b>Explanation:</b> ${q.exp}</div>
                 </div>`;
             }
         });
-        if(html === "") { html = `<div style="text-align:center; color:#777; padding:20px;">इस केटेगरी में कोई प्रश्न नहीं है।</div>`; }
-        box.innerHTML = html; box.style.display = 'block';
+        if(html === "") { html = `<div style="text-align:center; color:#777; padding:20px; font-size:16px;">इस केटेगरी में कोई प्रश्न नहीं है।</div>`; }
+        box.innerHTML = html; 
+        
+        // Show Full Screen & Lock background scroll
+        document.getElementById('analysis-fullscreen').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+
+        // Add history state for Hardware Back Button Support
+        history.pushState({analysisOpen: true}, "");
     }
+
+    function closeAnalysis() {
+        document.getElementById('analysis-fullscreen').style.display = 'none';
+        document.body.style.overflow = ''; // Release background scroll
+    }
+
+    // Hardware Back Button Listener
+    window.addEventListener('popstate', function(event) {
+        if(document.getElementById('analysis-fullscreen').style.display === 'block') {
+            closeAnalysis();
+        }
+    });
 
     function drawReportCard(rank, totalStudents, maxScore) {
         const cvs = document.getElementById('reportCard'); const ctx = cvs.getContext('2d');
@@ -1061,7 +1097,6 @@
 
     function downloadImage() { const link = document.createElement('a'); link.download = studentInfo.name + '_Scorecard.png'; link.href = document.getElementById('reportCardImg').src; link.click(); }
 
-    // 🔥 THE FIX: Strict Paid/Free Result Lock Check 🔥
     function handleResultPDFClick() {
         let isFreeStatus = (examData.isFree === true || String(examData.isFree).toLowerCase() === "true");
         if(isFreeStatus) {
@@ -1084,7 +1119,6 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 WAHI PURANA 100% PERFECT CSS PRINTING FUNCTION (NO JS TRICKS) 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1130,8 +1164,6 @@
         });
         
         printArea.innerHTML = html; 
-        
-        // सीधे नेटिव ब्राउज़र प्रिंट (No setTimeout logic)
         window.print(); 
     }
 </script>
