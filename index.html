@@ -734,8 +734,20 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
-    // 🔥 THE FIX: Super Smart & Fault Tolerant Parser (Spaces ke sath bhi kaam karega) 🔥
+    // 🔥 THE FIX: Super Smart & Fault Tolerant Parser (Spaces, Hidden Chars, Missing Newlines) 🔥
     function parseRawQuestions(rawText) {
+        // 1. Remove invisible Unicode characters (BOM, ZWNJ, etc.) that mobile keyboards insert
+        rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, '');
+        // 2. Normalize line endings (Fix for \r issues on older Android/iOS)
+        rawText = rawText.replace(/\r\n?/g, '\n');
+        
+        // 3. AUTO-FORMATTER: If copy-paste lost newlines, this forces them back before our tags!
+        rawText = rawText.replace(/(\s*)(!!\s*\d+\s*!)/g, '\n$2');
+        rawText = rawText.replace(/(\s*)(![A-D]\s)/gi, '\n$2');
+        rawText = rawText.replace(/(\s*)(!!!\s*[A-D])/gi, '\n$2');
+        rawText = rawText.replace(/(\s*)(!!!!)/g, '\n$2');
+        rawText = rawText.replace(/(\s*)(!P\s)/gi, '\n$2');
+
         let parsedQs = []; let lines = rawText.split('\n'); let tempQ = null;
         let currentPassage = "";
         let currentMode = ""; 
@@ -746,39 +758,40 @@
             
             line = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             
-            if(line.match(/^!P/i)) { 
-                let pText = line.replace(/^!P\s*/i, '').trim();
+            // Added [^!]* to skip any stray garbage characters before the tag
+            if(line.match(/^[^!]*!P/i)) { 
+                let pText = line.replace(/^[^!]*!P\s*/i, '').trim();
                 if(pText.toLowerCase() === "none" || pText === "") currentPassage = "";
                 else currentPassage = pText;
                 currentMode = "P";
             }
-            else if(line.match(/^!!!!/)) { 
-                if(tempQ) tempQ.exp = line.replace(/^!!!!\s*/, '').trim(); 
+            else if(line.match(/^[^!]*!!!!/)) { 
+                if(tempQ) tempQ.exp = line.replace(/^[^!]*!!!!\s*/, '').trim(); 
                 currentMode = "exp";
             }
-            else if(line.match(/^!!!/)) { 
-                if(tempQ) tempQ.ans = line.replace(/^!!!\s*/, '').trim().charAt(0).toUpperCase(); 
+            else if(line.match(/^[^!]*!!!/)) { 
+                if(tempQ) tempQ.ans = line.replace(/^[^!]*!!!\s*/, '').trim().charAt(0).toUpperCase(); 
                 currentMode = "ans";
             }
-            else if(line.match(/^!A/i)) { 
-                if(tempQ) tempQ.opts.push({id:"A", text:line.replace(/^!A\s*/i, '').trim()}); 
+            else if(line.match(/^[^!]*!A/i)) { 
+                if(tempQ) tempQ.opts.push({id:"A", text:line.replace(/^[^!]*!A\s*/i, '').trim()}); 
                 currentMode = "A";
             }
-            else if(line.match(/^!B/i)) { 
-                if(tempQ) tempQ.opts.push({id:"B", text:line.replace(/^!B\s*/i, '').trim()}); 
+            else if(line.match(/^[^!]*!B/i)) { 
+                if(tempQ) tempQ.opts.push({id:"B", text:line.replace(/^[^!]*!B\s*/i, '').trim()}); 
                 currentMode = "B";
             }
-            else if(line.match(/^!C/i)) { 
-                if(tempQ) tempQ.opts.push({id:"C", text:line.replace(/^!C\s*/i, '').trim()}); 
+            else if(line.match(/^[^!]*!C/i)) { 
+                if(tempQ) tempQ.opts.push({id:"C", text:line.replace(/^[^!]*!C\s*/i, '').trim()}); 
                 currentMode = "C";
             }
-            else if(line.match(/^!D/i)) { 
-                if(tempQ) tempQ.opts.push({id:"D", text:line.replace(/^!D\s*/i, '').trim()}); 
+            else if(line.match(/^[^!]*!D/i)) { 
+                if(tempQ) tempQ.opts.push({id:"D", text:line.replace(/^[^!]*!D\s*/i, '').trim()}); 
                 currentMode = "D";
             }
-            else if(line.match(/^!!\s*\d+\s*!/)) {
+            else if(line.match(/^[^!]*!!\s*\d+\s*!/)) {
                 if(tempQ && tempQ.q) parsedQs.push(tempQ);
-                tempQ = { q: line.replace(/^!!\s*\d+\s*!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: currentPassage };
+                tempQ = { q: line.replace(/^[^!]*!!\s*\d+\s*!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: currentPassage };
                 currentMode = "q";
             }
             else {
@@ -988,7 +1001,6 @@
             if(!studentInfo.name || studentInfo.phone.length !== 10) { alert("कृपया सही नाम और 10 अंकों का नंबर डालें!"); return; }
         }
         
-        // 🔥 LOADING FIX: Agar questions array khali hai toh rok do 🔥
         if(!examData.questions || examData.questions.length === 0) {
             alert("❌ इस टेस्ट में कोई प्रश्न नहीं मिला! कृपया इसे एडमिन पैनल से दोबारा सही फॉर्मेट में सेव करें।");
             document.getElementById('loading-view').classList.remove('active-view');
@@ -1062,7 +1074,6 @@
         if(qStatus[idx] === 0) { qStatus[idx] = 1; document.getElementById(`pal-${idx}`).className = `palette-btn status-not-answered`; updateCounts(); }
         document.getElementById('q-no-header').innerText = `Question No. ${idx + 1}`; 
         
-        // 🔥 Changed to innerHTML to support bold & breaks 🔥
         document.getElementById('q-text').innerHTML = q.q; 
         
         let passDiv = document.getElementById('q-passage');
@@ -1316,12 +1327,7 @@
         
         printArea.innerHTML = html; 
         
-        document.body.classList.add('print-pdf');
-        
-        setTimeout(() => { 
-            window.print(); 
-            setTimeout(() => { document.body.classList.remove('print-pdf'); }, 500);
-        }, 300); 
+        setTimeout(() => { window.print(); }, 200); 
     }
 </script>
 </body>
