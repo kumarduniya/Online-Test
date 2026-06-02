@@ -101,7 +101,7 @@
         .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
         /* 🔥 FIX FOR SCROLLING BEHAVIOR IN ANALYSIS 🔥 */
-        #analysis-box { margin-top: 20px; }
+        #analysis-box { margin-top: 20px; scroll-margin-top: 85px; }
         
         /* 🔥 STICKY ANALYSIS BUTTONS 🔥 */
         #analysis-btn-container { position: sticky; top: 60px; z-index: 900; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee; }
@@ -395,7 +395,7 @@
                 <button class="btn btn-pdf" onclick="directDownloadPDF()">🔒 Unlock & Download PDF</button>
             </div>
             
-            <div style="text-align: center; margin: 25px 0;">
+            <div style="text-align: center; margin: 15px;">
                 <button class="btn btn-outline" style="width:auto; padding:8px 20px;" onclick="closeAndRedirect()">🏠 Back to Home</button>
             </div>
         </div>
@@ -936,7 +936,8 @@
             return;
         }
 
-        let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, isActive: true };
+        // 🔥 FIX: Added both 'subject' and 'sub' mapping to be bulletproof 🔥
+        let finalObj = { exam: eName, subject: eSub, sub: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, isActive: true };
         let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
@@ -948,7 +949,7 @@
             let testLink = BASE_URL + "?test=" + eCode;
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
             let existingIdx = savedTests.findIndex(t => t.code === eCode);
-            let testObj = { code: eCode, exam: eName, subject: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
+            let testObj = { code: eCode, exam: eName, subject: eSub, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
             
             if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
