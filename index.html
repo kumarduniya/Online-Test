@@ -97,7 +97,6 @@
         .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; justify-content:center;}
         .palette-btn { width: 45px; height: 45px; border-radius: 6px; border: 1px solid #999; font-weight: bold; font-size: 15px; cursor: pointer; }
 
-        /* ANALYSIS SCROLL */
         .analysis-scroll::-webkit-scrollbar { width: 5px; }
         .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
@@ -118,9 +117,13 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 PURE CSS PRINTING (ABSOLUTELY NO BLANK PAGES) 🔥 */
-        #print-area { display: none; background: white; color: black; text-align: left; }
+        /* 🔥 PRINTING CSS FIX VIA CLASS TOGGLE (100% Guaranteed NO Blank Page) 🔥 */
+        body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; }
+        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view { display: none !important; height: 0 !important; overflow: hidden !important; }
+        body.print-pdf #print-area { display: block !important; position: static !important; width: 100% !important; overflow: visible !important; height: auto !important; }
         
+        #print-area { display: none; background: white; color: black; text-align: left; }
+
         @media print {
             @page { margin: 8mm; } 
             
@@ -132,8 +135,7 @@
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
             #print-area * { visibility: visible !important; }
             
-            /* 🔥 THE FIX: WATERMARK BROUGHT TO FRONT WITH OPACITY 🔥 */
-            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: #000000; opacity: 0.08; z-index: 9999 !important; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
+            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
             /* Professional Spacing & BADA FONT SIZE for Questions */
             .print-q { margin-bottom: 20px; page-break-inside: avoid; border-bottom: 1px dashed #ccc; padding-bottom: 15px; font-size: 16px; line-height: 1.5; color: #000000 !important; }
@@ -175,7 +177,6 @@
         </div>
     </div>
 
-    <!-- STUDENT GLOBAL DASHBOARD -->
     <div id="student-dashboard-view" class="view-section active-view">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
@@ -220,7 +221,6 @@
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
-    <!-- ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -237,7 +237,6 @@
         </div>
     </div>
 
-    <!-- LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -249,7 +248,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -331,7 +329,6 @@
         </div>
     </div>
 
-    <!-- TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -368,7 +365,6 @@
         </div>
     </div>
 
-    <!-- EXAM INTERFACE -->
     <div id="exam-view" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -388,7 +384,6 @@
         </div>
     </div>
 
-    <!-- FIXED BOTTOM CONTROLS FOR EXAM -->
     <div id="exam-bottom-controls">
         <div class="mini-palette-wrapper">
             <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
@@ -402,7 +397,6 @@
         </div>
     </div>
 
-    <!-- PALETTE OVERLAY -->
     <div id="palette-overlay" class="fullscreen-overlay">
         <div class="fs-container" style="min-height: auto;">
             <div class="fs-header">
@@ -418,7 +412,6 @@
         </div>
     </div>
 
-    <!-- RESULT & REPORT CARD -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -470,7 +463,6 @@
 
 </div> 
 
-<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
@@ -742,6 +734,7 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
+    // 🔥 THE FIX: Super Smart & Fault Tolerant Parser (Spaces ke sath bhi kaam karega) 🔥
     function parseRawQuestions(rawText) {
         let parsedQs = []; let lines = rawText.split('\n'); let tempQ = null;
         let currentPassage = "";
@@ -753,52 +746,55 @@
             
             line = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             
-            if(line.startsWith("!P")) { 
-                let pText = line.substring(2).trim();
+            if(line.match(/^!P/i)) { 
+                let pText = line.replace(/^!P\s*/i, '').trim();
                 if(pText.toLowerCase() === "none" || pText === "") currentPassage = "";
                 else currentPassage = pText;
                 currentMode = "P";
             }
-            else if(line.startsWith("!!!!")) { 
-                if(tempQ) tempQ.exp = line.substring(4).trim(); 
+            else if(line.match(/^!!!!/)) { 
+                if(tempQ) tempQ.exp = line.replace(/^!!!!\s*/, '').trim(); 
                 currentMode = "exp";
             }
-            else if(line.startsWith("!!!")) { 
-                if(tempQ) tempQ.ans = line.substring(3).trim().charAt(0).toUpperCase(); 
+            else if(line.match(/^!!!/)) { 
+                if(tempQ) tempQ.ans = line.replace(/^!!!\s*/, '').trim().charAt(0).toUpperCase(); 
                 currentMode = "ans";
             }
-            else if(line.startsWith("!A")) { 
-                if(tempQ) tempQ.opts.push({id:"A", text:line.substring(2).trim()}); 
+            else if(line.match(/^!A/i)) { 
+                if(tempQ) tempQ.opts.push({id:"A", text:line.replace(/^!A\s*/i, '').trim()}); 
                 currentMode = "A";
             }
-            else if(line.startsWith("!B")) { 
-                if(tempQ) tempQ.opts.push({id:"B", text:line.substring(2).trim()}); 
+            else if(line.match(/^!B/i)) { 
+                if(tempQ) tempQ.opts.push({id:"B", text:line.replace(/^!B\s*/i, '').trim()}); 
                 currentMode = "B";
             }
-            else if(line.startsWith("!C")) { 
-                if(tempQ) tempQ.opts.push({id:"C", text:line.substring(2).trim()}); 
+            else if(line.match(/^!C/i)) { 
+                if(tempQ) tempQ.opts.push({id:"C", text:line.replace(/^!C\s*/i, '').trim()}); 
                 currentMode = "C";
             }
-            else if(line.startsWith("!D")) { 
-                if(tempQ) tempQ.opts.push({id:"D", text:line.substring(2).trim()}); 
+            else if(line.match(/^!D/i)) { 
+                if(tempQ) tempQ.opts.push({id:"D", text:line.replace(/^!D\s*/i, '').trim()}); 
                 currentMode = "D";
             }
-            else if(line.match(/^!!\d+!/)) {
+            else if(line.match(/^!!\s*\d+\s*!/)) {
                 if(tempQ && tempQ.q) parsedQs.push(tempQ);
-                tempQ = { q: line.replace(/^!!\d+!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: currentPassage };
+                tempQ = { q: line.replace(/^!!\s*\d+\s*!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: currentPassage };
                 currentMode = "q";
             }
             else {
                 if(tempQ) {
                     if(currentMode === "exp") {
-                        tempQ.exp += "<br>" + line;
+                        tempQ.exp += (tempQ.exp ? "<br>" : "") + line;
                     } else if(currentMode === "q") {
-                        tempQ.q += "<br>" + line;
+                        tempQ.q += (tempQ.q ? "<br>" : "") + line;
+                    } else if(currentMode === "P") {
+                        currentPassage += (currentPassage ? "<br>" : "") + line;
                     }
                 }
             }
         }
-        if(tempQ && tempQ.q) parsedQs.push(tempQ); return parsedQs;
+        if(tempQ && tempQ.q) parsedQs.push(tempQ); 
+        return parsedQs;
     }
 
     function generateAndSaveLink() {
@@ -812,8 +808,16 @@
         if(!rawText.trim()) { alert("Please paste questions!"); return; }
 
         let parsedQs = parseRawQuestions(rawText);
+        
+        // 🔥 ERROR CATCHER: Test 0 sawalon ke sath save nahi hoga! 🔥
+        let btn = document.getElementById('btn-generate');
+        if(parsedQs.length === 0) {
+            alert("❌ कोई भी सवाल सही फॉर्मेट (!!1!, !A, !B...) में नहीं मिला! कृपया अपना फॉर्मेट चेक करें।");
+            return;
+        }
+
         let finalObj = { exam: eName, subject: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, isActive: true };
-        let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
+        btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
         .then(res => res.json()).then(data => {
@@ -829,7 +833,7 @@
             if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
-            document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; alert("टेस्ट सफलतापूर्वक Database में सेव/अपडेट हो गया!");
+            document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; alert(`✅ टेस्ट सफलतापूर्वक सेव हो गया! (${parsedQs.length} सवाल)`);
             renderDashboard(); 
         }).catch(err => { alert("टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।"); btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false; });
     }
@@ -983,6 +987,15 @@
             studentInfo.name = document.getElementById('s-name').value; studentInfo.phone = document.getElementById('s-phone').value;
             if(!studentInfo.name || studentInfo.phone.length !== 10) { alert("कृपया सही नाम और 10 अंकों का नंबर डालें!"); return; }
         }
+        
+        // 🔥 LOADING FIX: Agar questions array khali hai toh rok do 🔥
+        if(!examData.questions || examData.questions.length === 0) {
+            alert("❌ इस टेस्ट में कोई प्रश्न नहीं मिला! कृपया इसे एडमिन पैनल से दोबारा सही फॉर्मेट में सेव करें।");
+            document.getElementById('loading-view').classList.remove('active-view');
+            document.getElementById('student-dashboard-view').classList.add('active-view');
+            return;
+        }
+
         isReattemptMode = isReattempt; studentInfo.score = 0; studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0; totalTimeSpent = 0;
         
         if(examData.totTime > 0) { globalTimeLeft = examData.totTime * 60; } else { globalTimeLeft = 0; }
@@ -1047,10 +1060,13 @@
     function renderQuestion(idx) {
         currentQ = idx; let q = examData.questions[idx];
         if(qStatus[idx] === 0) { qStatus[idx] = 1; document.getElementById(`pal-${idx}`).className = `palette-btn status-not-answered`; updateCounts(); }
-        document.getElementById('q-no-header').innerText = `Question No. ${idx + 1}`; document.getElementById('q-text').innerText = q.q;
+        document.getElementById('q-no-header').innerText = `Question No. ${idx + 1}`; 
+        
+        // 🔥 Changed to innerHTML to support bold & breaks 🔥
+        document.getElementById('q-text').innerHTML = q.q; 
         
         let passDiv = document.getElementById('q-passage');
-        if(q.passage) { passDiv.innerText = q.passage; passDiv.style.display = 'block'; } else { passDiv.style.display = 'none'; }
+        if(q.passage) { passDiv.innerHTML = q.passage; passDiv.style.display = 'block'; } else { passDiv.style.display = 'none'; }
 
         let optHtml = "";
         q.opts.forEach(opt => {
@@ -1060,7 +1076,6 @@
         document.getElementById('options-box').innerHTML = optHtml;
 
         updateMiniPalette();
-
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
@@ -1173,18 +1188,16 @@
         let statusIcon = data.isRight ? "✅" : (data.isBlank ? "⬜" : "❌");
         let titles = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
         
-        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333; max-height:100px; overflow-y:auto;" class="analysis-scroll">${q.passage}</div>` : ``;
+        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
 
         let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
             if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
             else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:14px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
+            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
         });
         optsHtml += `</div>`;
-
-        let expHtml = q.exp ? `<div style="font-size: 14px; color: #444; margin-top: 10px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79; max-height: 180px; overflow-y: auto;" class="analysis-scroll"><b>Explanation:</b><br> ${q.exp}</div>` : ``;
 
         let html = `
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #ccc; padding-bottom:10px; margin-bottom:15px;">
@@ -1194,7 +1207,7 @@
             ${passHtml}
             <b style="font-size:18px; color:#222; display:block; margin-bottom:15px; line-height:1.4;">${statusIcon} Q${i+1}. ${q.q}</b>
             ${optsHtml}
-            ${expHtml}
+            <div style="font-size: 15px; color: #444; margin-top: 15px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79; max-height: 180px; overflow-y: auto;" class="analysis-scroll"><b>Explanation:</b><br> ${q.exp}</div>
             
             <div style="display:flex; justify-content:space-between; margin-top:20px; border-top:1px solid #ddd; padding-top:15px;">
                 <button class="btn btn-outline" style="width:auto; padding:8px 20px; margin:0;" onclick="prevAnalysis()" ${currentAnalysisIndex === 0 ? 'disabled' : ''}>⬅️ Prev</button>
@@ -1292,7 +1305,7 @@
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
                     let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
                 }
@@ -1303,8 +1316,12 @@
         
         printArea.innerHTML = html; 
         
-        // Let CSS block rules handle print natively without any JS timeouts
-        setTimeout(() => { window.print(); }, 200); 
+        document.body.classList.add('print-pdf');
+        
+        setTimeout(() => { 
+            window.print(); 
+            setTimeout(() => { document.body.classList.remove('print-pdf'); }, 500);
+        }, 300); 
     }
 </script>
 </body>
