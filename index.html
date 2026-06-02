@@ -5,29 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
-        /* 🔥 APP-LIKE LAYOUT: Locks the main body from scrolling out of view 🔥 */
-        body, html { height: 100%; margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overflow: hidden; }
+        /* 🔥 NORMAL BODY SCROLL (Yeh PDF blank page ko hamesha ke liye rokta hai) 🔥 */
+        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
         
         /* 🔥 Admin can select text 🔥 */
         #admin-view { user-select: auto; -webkit-user-select: auto; }
 
-        .container { max-width: 1200px; margin: 0 auto; background: white; height: 100%; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
         
-        /* 🔥 FIXED TOP HEADERS 🔥 */
-        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; }
         .timer { font-size: 16px; font-weight: bold; background: #e74c3c; padding: 5px 10px; border-radius: 4px; display:flex; gap:10px;}
         
-        .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; flex-shrink: 0; }
+        .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; }
         .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; }
         .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
 
-        /* General scrolling for other views (Dashboard, Result) */
-        .view-section { padding: 20px; flex: 1; overflow-y: auto; display: none; }
+        .view-section { padding: 20px; flex: 1; display: none; }
         .active-view { display: block; }
         
-        /* 🔥 SPECIAL EXAM VIEW (Flex layout to lock header and footer) 🔥 */
-        #exam-view { padding: 0; display: none; flex-direction: column; overflow: hidden; }
+        /* 🔥 Exam view specific handling 🔥 */
+        #exam-view { padding: 0; display: none; flex-direction: column; }
         #exam-view.active-view { display: flex; }
 
         .form-group { margin-bottom: 15px; }
@@ -51,17 +49,15 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
-        /* 🔥 STRICT EXAM LAYOUT 🔥 */
-        .exam-container { display: flex; flex-direction: column; flex: 1; overflow: hidden; background: #fff;}
-        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px 10px 20px; box-sizing: border-box; overflow: hidden; }
+        /* 🔥 EXAM AREA LAYOUT 🔥 */
+        .exam-container { display: flex; flex-direction: column; flex: 1; min-height: calc(100vh - 100px); background: #fff;}
+        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px; box-sizing: border-box; }
         
-        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; flex-shrink: 0;}
+        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         
-        /* 🔥 ONLY THIS MIDDLE AREA WILL SCROLL FOR LARGE QUESTIONS 🔥 */
-        #q-scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 15px; }
-        #q-scroll-area::-webkit-scrollbar { width: 4px; }
-        #q-scroll-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        /* Question Area */
+        #q-scroll-area { flex: 1; padding-bottom: 15px; }
 
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
@@ -69,11 +65,11 @@
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        /* 🔥 BOTTOM FIXED CONTROLS (Buttons & Mini Palette) 🔥 */
-        .bottom-controls { flex-shrink: 0; background: #fff; padding-top: 15px; border-top: 1px solid #e0e0e0; position: relative; z-index: 10; padding-bottom: 5px; }
+        /* 🔥 NEW STICKY BOTTOM CONTROLS (Hamesha Niche Rahenge) 🔥 */
+        .bottom-controls { position: sticky; bottom: 0; background: white; z-index: 1000; padding: 25px 15px 10px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); margin-top: auto; }
         
-        .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 10px;}
-        .pulse-btn { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
+        .mini-palette-wrapper { position: relative; margin-bottom: 12px; }
+        .pulse-btn { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(31, 78, 121, 0); } 100% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0); } }
         
         .mini-strip { display: flex; gap: 8px; overflow: hidden; justify-content: center; background: #f8f9fa; padding: 15px 10px 10px 10px; border-radius: 8px; border: 1px solid #e9ecef; }
@@ -122,10 +118,7 @@
         
         @media print {
             @page { margin: 8mm; } 
-            
-            /* Print needs normal scrolling */
-            body, html { height: auto !important; overflow: visible !important; background: white; margin: 0; padding: 0; }
-            
+            body { background: white; margin: 0; padding: 0; }
             #main-ui-container, .fullscreen-overlay { display: none !important; }
             
             #print-area { display: block !important; position: static !important; width: 100%; font-family: Arial, sans-serif; }
@@ -141,31 +134,33 @@
             .print-passage { background:#eee; padding:5px; margin-bottom:5px; font-style:italic; border-left:3px solid #333; font-size:13px; }
         }
 
-        /* Mobile specific spacing */
         @media (max-width: 768px) {
-            .left-panel { padding: 10px 15px; }
+            .left-panel { padding: 10px 10px 0 10px; }
             .watermark { font-size: 80px; } 
             .admin-lock { bottom: 10px; right: 10px; font-size: 20px;}
             .fullscreen-overlay { padding: 0; }
             .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
-            .action-btn { font-size: 13px; padding: 8px; }
-            .pulse-btn { top: -25px; font-size: 12px; padding: 4px 15px; }
+            .action-btn { font-size: 13px; padding: 8px 5px; }
+            .pulse-btn { top: -35px; font-size: 12px; padding: 4px 15px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container" id="main-ui-container">
-    <div class="tcs-header">
-        <h2 id="head-exam-name">Exam Portal</h2>
-        <div id="timer-box" class="timer" style="display:none;">
-            <div id="main-time">Time: 00:00</div>
-        </div>
-    </div>
     
-    <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
-        <div class="s-name" id="top-sname">Student Name</div>
-        <div class="s-exam" id="top-sexam">Exam Name</div>
+    <!-- 🔥 STICKY HEADER WRAPPER (Sada Top Par Chipka Rahega) 🔥 -->
+    <div style="position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <div class="tcs-header">
+            <h2 id="head-exam-name">Exam Portal</h2>
+            <div id="timer-box" class="timer" style="display:none;">
+                <div id="main-time">Time: 00:00</div>
+            </div>
+        </div>
+        <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
+            <div class="s-name" id="top-sname">Student Name</div>
+            <div class="s-exam" id="top-sexam">Exam Name</div>
+        </div>
     </div>
 
     <!-- 🔥 STUDENT GLOBAL DASHBOARD 🔥 -->
@@ -371,14 +366,14 @@
                     <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
                 </div>
                 
-                <!-- 🔥 SCROLLABLE AREA FOR QUESTION 🔥 -->
+                <!-- 🔥 SCROLLABLE AREA FOR QUESTION (Scroll yahi hoga) 🔥 -->
                 <div id="q-scroll-area">
                     <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
                     <div class="q-text" id="q-text">Loading question...</div>
                     <div class="options-div" id="options-box"></div>
                 </div>
 
-                <!-- 🔥 BOTTOM FIXED CONTROLS 🔥 -->
+                <!-- 🔥 STICKY BOTTOM CONTROLS (Hamesha Niche Rahenge) 🔥 -->
                 <div class="bottom-controls">
                     <!-- MINI PALETTE STRIP -->
                     <div class="mini-palette-wrapper">
@@ -1022,8 +1017,9 @@
 
         updateMiniPalette();
 
-        // 🔥 Scroll back to top only within the question area 🔥
-        document.getElementById('q-scroll-area').scrollTop = 0;
+        // 🔥 Scroll Fix - Scrolls inner div instead of window 🔥
+        let scrollArea = document.getElementById('q-scroll-area');
+        if(scrollArea) scrollArea.scrollTop = 0;
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
         if(examData.qTime > 0) {
