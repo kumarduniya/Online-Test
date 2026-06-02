@@ -26,7 +26,6 @@
         .view-section { padding: 20px; flex: 1; display: none; }
         .active-view { display: block; }
         
-        /* 🔥 EXAM VIEW STRICT HIDE/SHOW 🔥 */
         #exam-view { padding: 0; display: none; flex-direction: column; position: relative; background: white; }
         #exam-view.active-view { display: flex; }
 
@@ -51,7 +50,6 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
-        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
         .exam-container { display: flex; flex-direction: column; background: #fff;}
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         
@@ -67,7 +65,6 @@
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        /* 🔥 FIXED BOTTOM CONTROLS 🔥 */
         #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px 15px 15px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px;}
@@ -97,7 +94,6 @@
         .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; justify-content:center;}
         .palette-btn { width: 45px; height: 45px; border-radius: 6px; border: 1px solid #999; font-weight: bold; font-size: 15px; cursor: pointer; }
 
-        /* ANALYSIS SCROLL */
         .analysis-scroll::-webkit-scrollbar { width: 5px; }
         .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
@@ -118,7 +114,11 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 PRINTING CSS (100% Guaranteed NO Blank Page) 🔥 */
+        /* 🔥 PRINTING CSS FIX VIA CLASS TOGGLE (100% Guaranteed NO Blank Page) 🔥 */
+        body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; }
+        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view { display: none !important; }
+        body.print-pdf #print-area { display: block !important; position: static !important; width: 100% !important; overflow: visible !important; height: auto !important; }
+        
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
@@ -139,7 +139,7 @@
             .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; color: #000000 !important; }
             
             .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
-            .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.4; }
+            .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
             .print-passage { background:#eee; padding:5px; margin-bottom:5px; font-style:italic; border-left:3px solid #333; font-size:13px; }
             
@@ -172,6 +172,7 @@
         </div>
     </div>
 
+    <!-- STUDENT GLOBAL DASHBOARD -->
     <div id="student-dashboard-view" class="view-section active-view">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
@@ -216,6 +217,7 @@
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
+    <!-- ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -232,6 +234,7 @@
         </div>
     </div>
 
+    <!-- LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
@@ -243,6 +246,7 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
     </div>
 
+    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
@@ -324,6 +328,7 @@
         </div>
     </div>
 
+    <!-- TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -360,6 +365,7 @@
         </div>
     </div>
 
+    <!-- EXAM INTERFACE (Anti-Copy Enabled) -->
     <div id="exam-view" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -369,6 +375,7 @@
                     <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
                 </div>
                 
+                <!-- SCROLLABLE AREA FOR QUESTION -->
                 <div id="q-scroll-area">
                     <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
                     <div class="q-text" id="q-text">Loading question...</div>
@@ -379,6 +386,7 @@
         </div>
     </div>
 
+    <!-- FIXED BOTTOM CONTROLS FOR EXAM -->
     <div id="exam-bottom-controls">
         <div class="mini-palette-wrapper">
             <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
@@ -392,6 +400,7 @@
         </div>
     </div>
 
+    <!-- PALETTE OVERLAY (FULL SCREEN) -->
     <div id="palette-overlay" class="fullscreen-overlay">
         <div class="fs-container" style="min-height: auto;">
             <div class="fs-header">
@@ -407,6 +416,7 @@
         </div>
     </div>
 
+    <!-- RESULT & REPORT CARD (Anti-Copy Enabled) -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -418,18 +428,21 @@
             <canvas id="reportCard" width="800" height="650" style="display:none;"></canvas>
             <img id="reportCardImg" style="max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display:none;" />
             
+            <!-- BUTTONS -->
             <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto; flex-wrap: wrap;">
                 <button id="btn-img-down" class="btn btn-blue" style="display: block; flex: 1; min-width: 150px;" onclick="downloadImage()">🖼️ Score Card</button>
                 <button id="btn-pdf-down" class="btn btn-pdf" style="display: block; flex: 1; min-width: 150px;" onclick="handleResultPDFClick()">📄 Q&A PDF</button>
                 <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
+            <!-- Analysis Triggers -->
             <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
             
+            <!-- ONE-BY-ONE ANALYSIS BOX -->
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
 
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
@@ -456,6 +469,7 @@
         </div>
     </div>
 
+<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
@@ -1164,12 +1178,12 @@
         
         let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
 
-        let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
+        let optsHtml = `<div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
             if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
             else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
+            optsHtml += `<div style="width: calc(50% - 5px); padding:8px 10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box;">${o.id}. ${o.text}</div>`;
         });
         optsHtml += `</div>`;
 
@@ -1242,6 +1256,7 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
+    // 🔥 THE MASTER FIX: PDF Print Logic without JS delays 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1290,7 +1305,17 @@
         
         printArea.innerHTML = html; 
         
-        setTimeout(() => { window.print(); }, 300); 
+        // 🔥 WAHI RAAT WALI PERFECT PRINTING STRATEGY 🔥
+        document.body.classList.add('print-pdf');
+        
+        setTimeout(() => { 
+            window.print(); 
+            
+            setTimeout(() => {
+                document.body.classList.remove('print-pdf');
+            }, 500);
+            
+        }, 300); 
     }
 </script>
 </body>
