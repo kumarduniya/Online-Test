@@ -172,7 +172,6 @@
 </head>
 <body>
 
-<!-- 🔥 CUSTOM BEAUTIFUL POPUPS 🔥 -->
 <div id="custom-modal" class="modal-overlay">
     <div class="modal-box">
         <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
@@ -201,20 +200,17 @@
         </div>
     </div>
 
-    <!-- STUDENT GLOBAL DASHBOARD -->
     <div id="student-dashboard-view" class="view-section active-view">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
             <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('history')">📈 My Performance</button>
         </div>
 
-        <!-- 🔥 SUBJECT DROPDOWN FILTER 🔥 -->
         <div id="st-active-section">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 10px; font-size:16px;">📚 Currently Available Tests</h3>
             <div style="text-align:center; margin-bottom:15px;">
                 <select id="st-subject-filter" onchange="renderActiveTestList()" style="width:100%; max-width:350px; padding:10px; border:2px solid #1f4e79; border-radius:6px; font-weight:bold; color:#1f4e79; display:none; outline:none; background:#f4f6f8;">
-                    <!-- Options populated by JS -->
-                </select>
+                    </select>
             </div>
             
             <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading data, please wait...</div>
@@ -253,7 +249,6 @@
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
-    <!-- ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -270,7 +265,6 @@
         </div>
     </div>
 
-    <!-- LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">Loading data, please wait...</h3>
@@ -282,7 +276,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 Refresh Page</button>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -364,7 +357,6 @@
         </div>
     </div>
 
-    <!-- TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -401,7 +393,6 @@
         </div>
     </div>
 
-    <!-- EXAM INTERFACE -->
     <div id="exam-view" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -421,7 +412,6 @@
         </div>
     </div>
 
-    <!-- FIXED BOTTOM CONTROLS FOR EXAM -->
     <div id="exam-bottom-controls">
         <div class="mini-palette-wrapper">
             <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
@@ -435,7 +425,6 @@
         </div>
     </div>
 
-    <!-- PALETTE OVERLAY -->
     <div id="palette-overlay" class="fullscreen-overlay">
         <div class="fs-container" style="min-height: auto;">
             <div class="fs-header">
@@ -451,7 +440,6 @@
         </div>
     </div>
 
-    <!-- RESULT & REPORT CARD -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -469,7 +457,6 @@
                 <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
-            <!-- 🔥 STICKY ANALYSIS BUTTONS 🔥 -->
             <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 999; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
@@ -504,7 +491,6 @@
 
 </div> 
 
-<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
@@ -678,7 +664,7 @@
         document.body.appendChild(script);
     }
     
-    // 🔥 FILTER ACTIVE TESTS BY SUBJECT (UNDEFINED BUG FIXED) 🔥
+    // 🔥 FILTER ACTIVE TESTS BY SUBJECT 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
         let list = document.getElementById('st-active-list');
@@ -920,13 +906,16 @@
     }
 
     function generateAndSaveLink() {
-        let eName = document.getElementById('a-exam').value || "Mock Test"; let eSub = document.getElementById('a-sub').value || "Subject"; let eTopic = document.getElementById('a-topic').value || "";
+        let eName = document.getElementById('a-exam').value || "Mock Test"; 
+        let eSub = document.getElementById('a-sub').value || "Subject"; 
+        let eTopic = document.getElementById('a-topic').value || "";
         let eCode = document.getElementById('a-code').value || "T-" + Math.floor(Math.random() * 1000);
         let eMarks = parseFloat(document.getElementById('a-marks').value) || 2; let eNeg = parseFloat(document.getElementById('a-neg').value) || 0;
         let tTime = parseInt(document.getElementById('a-tot-time').value) || 0; let qTime = parseInt(document.getElementById('a-q-time').value) || 0;
         let isFree = document.getElementById('a-pdf-type').value === "free";
         let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49");
         let eKey = document.getElementById('a-key').value || "ANK"; let rawText = document.getElementById('a-rawdata').value;
+        
         if(!rawText.trim()) { showCustomAlert("Empty Box", "Please paste questions!", "⚠️"); return; }
 
         let parsedQs = parseRawQuestions(rawText);
@@ -936,7 +925,7 @@
             return;
         }
 
-        // 🔥 FIX: Added both 'subject' and 'sub' mapping to be bulletproof 🔥
+        // 🔥 THE FIX: Storing 'subject' AND 'sub' so that it never becomes 'undefined' again! 🔥
         let finalObj = { exam: eName, subject: eSub, sub: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, isActive: true };
         let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
 
@@ -1015,17 +1004,38 @@
         }; document.body.appendChild(script);
     }
 
+    // 🔥 THE FIX: REVERSE PARSER FOR OLD TESTS 🔥
     function editTest(idx) {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t) return;
-        document.getElementById('a-exam').value = t.exam || ""; document.getElementById('a-sub').value = t.subject || t.sub || ""; document.getElementById('a-topic').value = t.topic || "";
-        document.getElementById('a-code').value = t.code || ""; document.getElementById('a-marks').value = t.marks || 2; document.getElementById('a-neg').value = t.neg || 0;
-        document.getElementById('a-tot-time').value = t.totTime || 0; document.getElementById('a-q-time').value = t.qTime || 0;
+        document.getElementById('a-exam').value = t.exam || ""; 
+        document.getElementById('a-sub').value = t.subject || t.sub || ""; 
+        document.getElementById('a-topic').value = t.topic || "";
+        document.getElementById('a-code').value = t.code || ""; 
+        document.getElementById('a-marks').value = t.marks || 2; 
+        document.getElementById('a-neg').value = t.neg || 0;
+        document.getElementById('a-tot-time').value = t.totTime || 0; 
+        document.getElementById('a-q-time').value = t.qTime || 0;
         
         let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
         if(isFreeStatus || t.price === "Free") { document.getElementById('a-pdf-type').value = "free"; } else { document.getElementById('a-pdf-type').value = "paid"; document.getElementById('a-price').value = t.price || ""; }
         
-        document.getElementById('a-key').value = t.key || ""; document.getElementById('a-rawdata').value = t.rawText || "";
-        togglePriceBox(); switchAdminTab('create'); showCustomAlert("Edit Mode", "Test data loaded in form! Make changes and click 'Generate/Update Test'.", "✏️");
+        // This reconstructs the text if it was missing in the old version!
+        let raw = t.rawText;
+        if (!raw && t.questions && t.questions.length > 0) {
+            raw = t.questions.map((q, i) => {
+                let p = q.passage ? `!P ${q.passage.replace(/<br>/g, '\n')}\n` : "";
+                let qs = `!!${i+1}! ${q.q.replace(/<br>/g, '\n').replace(/<b>(.*?)<\/b>/g, '**$1**')}\n`;
+                let opts = q.opts.map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
+                let ans = `!!! ${q.ans}\n`;
+                let exp = q.exp ? `!!!! ${q.exp.replace(/<br>/g, '\n').replace(/<b>(.*?)<\/b>/g, '**$1**')}\n` : "";
+                return p + qs + opts + ans + exp;
+            }).join('\n');
+        }
+
+        document.getElementById('a-key').value = t.key || ""; 
+        document.getElementById('a-rawdata').value = raw || "";
+        togglePriceBox(); switchAdminTab('create'); 
+        showCustomAlert("Edit Mode", "Test data loaded in form! Make changes and click 'Generate/Update Test'.", "✏️");
     }
 
     function deleteTest(idx) {
@@ -1319,7 +1329,6 @@
         renderAnalysisSlide();
         document.getElementById('analysis-box').style.display = 'block';
         
-        // 🔥 SCROLL CUT-OFF FIX: Safe margin to avoid header overlap 🔥
         setTimeout(() => { 
             const el = document.getElementById('analysis-box');
             const y = el.getBoundingClientRect().top + window.scrollY - 130;
@@ -1371,7 +1380,7 @@
         const cvs = document.getElementById('reportCard'); const ctx = cvs.getContext('2d');
         ctx.fillStyle = '#fdfdfd'; ctx.fillRect(0, 0, 800, 650); ctx.fillStyle = '#1f4e79'; ctx.fillRect(0, 0, 800, 140);
         ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.font = 'bold 36px Arial'; ctx.fillText(examData.exam.toUpperCase(), 400, 50);
-        ctx.font = '22px Arial'; ctx.fillText(examData.subject + (examData.topic ? " - " + examData.topic : ""), 400, 85); ctx.font = '16px Arial'; ctx.fillStyle = '#f39c12'; ctx.fillText("TEST CODE: " + examData.code, 400, 115);
+        ctx.font = '22px Arial'; ctx.fillText((examData.subject || "Subject") + (examData.topic ? " - " + examData.topic : ""), 400, 85); ctx.font = '16px Arial'; ctx.fillStyle = '#f39c12'; ctx.fillText("TEST CODE: " + examData.code, 400, 115);
         
         ctx.fillStyle = '#333'; ctx.textAlign = 'left'; ctx.font = 'bold 28px Arial'; 
         let phoneText = studentInfo.phone ? ` (${studentInfo.phone})` : ""; ctx.fillText("Name: " + studentInfo.name + phoneText, 80, 200);
@@ -1431,7 +1440,7 @@
         </div>`;
         
         let headerSub = mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)");
-        html += `<div class="print-header"><h2>${examData.exam.toUpperCase()} ${headerSub}</h2><h3>${examData.subject || "Subject"} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>`;
+        html += `<div class="print-header"><h2>${examData.exam.toUpperCase()} ${headerSub}</h2><h3>${examData.subject || examData.sub || "Subject"} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>`;
         
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
@@ -1453,7 +1462,7 @@
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
                     let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
                 }
