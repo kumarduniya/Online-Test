@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,6 +51,7 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
+        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
         .exam-container { display: flex; flex-direction: column; background: #fff;}
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         
@@ -99,8 +100,8 @@
         .analysis-scroll::-webkit-scrollbar { width: 5px; }
         .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
-        /* 🔥 SCROLL CUT-OFF FIX: Analysis Box Top Margin Guard 🔥 */
-        #analysis-box { scroll-margin-top: 85px; }
+        /* 🔥 FIX FOR SCROLLING BEHAVIOR IN ANALYSIS 🔥 */
+        #analysis-box { margin-top: 20px; }
 
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
@@ -168,7 +169,7 @@
 </head>
 <body>
 
-<!-- 🔥 CUSTOM BEAUTIFUL POPUPS (Replaces alert, prompt, confirm) 🔥 -->
+<!-- 🔥 CUSTOM BEAUTIFUL POPUPS 🔥 -->
 <div id="custom-modal" class="modal-overlay">
     <div class="modal-box">
         <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
@@ -204,23 +205,23 @@
             <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('history')">📈 My Performance</button>
         </div>
 
-        <!-- 🔥 SUBJECT DROPDOWN FILTER ADDED HERE 🔥 -->
+        <!-- 🔥 SUBJECT DROPDOWN FILTER 🔥 -->
         <div id="st-active-section">
-            <h3 style="color: #1f4e79; text-align: center; margin-bottom: 10px; font-size:16px;">वर्तमान में उपलब्ध टेस्ट</h3>
+            <h3 style="color: #1f4e79; text-align: center; margin-bottom: 10px; font-size:16px;">📚 Currently Available Tests</h3>
             <div style="text-align:center; margin-bottom:15px;">
                 <select id="st-subject-filter" onchange="renderActiveTestList()" style="width:100%; max-width:350px; padding:10px; border:2px solid #1f4e79; border-radius:6px; font-weight:bold; color:#1f4e79; display:none; outline:none; background:#f4f6f8;">
                     <!-- Options populated by JS -->
                 </select>
             </div>
             
-            <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading...</div>
+            <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading data, please wait...</div>
             <div id="st-active-list" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;"></div>
         </div>
 
         <div id="st-history-section" style="display: none;">
             <div style="background: #f4f6f8; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align:center;">
-                <h3 style="color:#1f4e79; margin-top:0;">🔍 अपनी परफॉर्मेंस देखें</h3>
-                <input type="tel" id="hist-phone" placeholder="अपना 10 अंकों का मोबाइल नंबर डालें" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;" maxlength="10">
+                <h3 style="color:#1f4e79; margin-top:0;">🔍 Check Your Performance</h3>
+                <input type="tel" id="hist-phone" placeholder="Enter your 10-digit mobile number" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;" maxlength="10">
                 <button class="btn btn-blue" style="max-width:300px; margin:0 auto;" onclick="fetchStudentHistory()">Search History</button>
             </div>
             
@@ -269,27 +270,27 @@
     <!-- LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
-        <h3 style="color:#1f4e79; margin-top: 20px;">डेटा लोड हो रहा है, कृपया प्रतीक्षा करें...</h3>
+        <h3 style="color:#1f4e79; margin-top: 20px;">Loading data, please wait...</h3>
     </div>
 
     <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
-        <h2 style="color:#dc3545;">❌ टेस्ट लोड नहीं हो पाया</h2>
-        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">कृपया अपना इंटरनेट कनेक्शन चेक करें और ब्राउज़र की History/Cache डिलीट करके दोबारा प्रयास करें।</p>
-        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 पेज रीफ्रेश करें</button>
+        <h2 style="color:#dc3545;">❌ Failed to load test</h2>
+        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">Please check your internet connection or clear browser cache and try again.</p>
+        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 Refresh Page</button>
     </div>
 
     <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
-            <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ नया टेस्ट बनाएं / एडिट करें</button>
-            <button class="tab-btn" id="tab-manage" onclick="switchAdminTab('manage')">📂 मेरे सेव किये गए टेस्ट</button>
+            <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ Create / Edit Test</button>
+            <button class="tab-btn" id="tab-manage" onclick="switchAdminTab('manage')">📂 Saved Tests (Local)</button>
         </div>
 
         <div id="admin-create-section">
             <div class="flex-row">
                 <div class="form-group"><label>Exam Name:</label><input type="text" id="a-exam" placeholder="UP Police Constable"></div>
-                <div class="form-group"><label>Subject:</label><input type="text" id="a-sub" placeholder="सामान्य हिंदी"></div>
-                <div class="form-group"><label>Sub-topic:</label><input type="text" id="a-topic" placeholder="साहित्य"></div>
+                <div class="form-group"><label>Subject:</label><input type="text" id="a-sub" placeholder="GK/GS"></div>
+                <div class="form-group"><label>Sub-topic:</label><input type="text" id="a-topic" placeholder="History"></div>
             </div>
             
             <div class="flex-row">
@@ -316,14 +317,14 @@
             </div>
 
             <div class="form-group">
-                <label style="color: #dc3545;"><b>यहाँ क्वेश्चंस पेस्ट करें:</b> (गद्यांश/टॉपिक के लिए <b>!P</b> पैसेज टेक्स्ट, हटाने के लिए <b>!P none</b>)</label>
-                <textarea id="a-rawdata" placeholder="!P निम्नलिखित गद्यांश को पढ़ें...&#10;!!1! प्रश्न 1...&#10;!A Option 1...&#10;!!! A&#10;!!!! Explanation..."></textarea>
+                <label style="color: #dc3545;"><b>Paste Questions Here:</b> (Use <b>!P</b> for Passage/Topic, <b>!P none</b> to remove)</label>
+                <textarea id="a-rawdata" placeholder="!P Read the passage carefully...&#10;!!1! Question 1...&#10;!A Option 1...&#10;!!! A&#10;!!!! Explanation..."></textarea>
             </div>
             <button id="btn-generate" class="btn btn-blue" onclick="generateAndSaveLink()">🚀 Generate / Update Test</button>
             
             <div id="linkContainer" style="display: none; margin-top: 20px; background: #e9ecef; padding: 15px; border-radius: 5px;">
-                <label style="color: #d35400;"><b>👇 यह लिंक कॉपी करके छात्रों को भेजें:</b></label>
-                <input type="text" id="generatedLink" readonly onclick="this.select(); document.execCommand('copy'); showCustomAlert('Copied', 'लिंक कॉपी हो गई!', '✅');" style="font-weight: bold; cursor: copy; padding:15px; width:100%;">
+                <label style="color: #d35400;"><b>👇 Copy this link and share with students:</b></label>
+                <input type="text" id="generatedLink" readonly onclick="this.select(); document.execCommand('copy'); showCustomAlert('Copied', 'Link copied successfully!', '✅');" style="font-weight: bold; cursor: copy; padding:15px; width:100%;">
             </div>
         </div>
 
@@ -336,7 +337,7 @@
                     <button class="btn btn-blue" style="margin: 0; flex: 1;" onclick="generatePass()">Generate</button>
                 </div>
                 <div style="margin: 10px 0 0 0; font-weight: bold; color: #dc3545; display: flex; align-items: center; gap: 10px;">
-                    <span id="show-gen-pass">पासवर्ड यहाँ दिखेगा...</span>
+                    <span id="show-gen-pass">Password will appear here...</span>
                     <button id="copy-pass-btn" class="btn btn-outline" style="display: none; padding: 2px 8px; margin: 0; font-size: 12px; width: auto; background:white;" onclick="copyGeneratedPass()">📋 Copy Pass</button>
                 </div>
             </div>
@@ -369,25 +370,25 @@
             <p id="disp-time-info" style="text-align:center; color:#1f4e79; font-size:12px; margin-top:-5px; font-weight:bold;"></p>
             
             <div style="background: #f4f6f8; padding: 15px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 20px;">
-                <h4 style="margin: 0 0 10px 0; color: #333;">📝 नया टेस्ट शुरू करें</h4>
+                <h4 style="margin: 0 0 10px 0; color: #333;">📝 Start New Test</h4>
                 <p style="text-align: center; color: #28a745; font-size: 13px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 10px;">
-                    ✅ टेस्ट देने के लिए कोई रजिस्ट्रेशन की जरूरत नहीं है, बस अपना नाम और मोबाइल नंबर डालें और टेस्ट शुरू करें!
+                    ✅ No registration required! Enter your name and mobile number to begin the test.
                 </p>
-                <input type="text" id="s-name" placeholder="अपना नाम भरें" required style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
-                <input type="tel" id="s-phone" placeholder="अपना 10 अंकों का मोबाइल नंबर भरें" required style="width:100%; padding:10px; box-sizing:border-box;" maxlength="10">
+                <input type="text" id="s-name" placeholder="Enter your name" required style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
+                <input type="tel" id="s-phone" placeholder="Enter your 10-digit mobile number" required style="width:100%; padding:10px; box-sizing:border-box;" maxlength="10">
                 <button class="btn" onclick="startExam(false)">Start Test 🚀</button>
             </div>
 
             <div id="direct-pdf-box" style="background: #fff3cd; padding: 15px; border-radius: 6px; border: 1px solid #ffeeba;">
-                <h4 style="margin: 0 0 10px 0; color: #856404;">📥 बिना टेस्ट दिए डायरेक्ट PDF डाउनलोड</h4>
+                <h4 style="margin: 0 0 10px 0; color: #856404;">📥 Direct PDF Download (Without Test)</h4>
                 <div id="paid-instructions" style="font-size: 13px; color: #856404; margin-bottom: 10px;">
-                    PDF मूल्य: <b>₹<span id="disp-price">0</span></b><br>पासवर्ड पाने के लिए <b>8273684939</b> पर पेमेंट करें और स्क्रीनशॉट WhatsApp करें।
+                    PDF Price: <b>₹<span id="disp-price">0</span></b><br>Pay at <b>8273684939</b> and WhatsApp the screenshot for the password.
                 </div>
                 <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
-                    🎉 यह PDF सभी के लिए Free है!
+                    🎉 This PDF is Free for everyone!
                 </div>
-                <input type="tel" id="pdf-phone" placeholder="अपना मोबाइल नंबर डालें..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
-                <input type="text" id="pdf-pass" placeholder="पासवर्ड डालें..." style="width:100%; padding:10px; box-sizing:border-box;">
+                <input type="tel" id="pdf-phone" placeholder="Enter mobile number..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
+                <input type="text" id="pdf-pass" placeholder="Enter password..." style="width:100%; padding:10px; box-sizing:border-box;">
                 <button class="btn btn-pdf" onclick="directDownloadPDF()">🔒 Unlock & Download PDF</button>
             </div>
             
@@ -452,7 +453,7 @@
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
         <div id="rank-loader" style="margin-bottom: 15px; color: #1f4e79; font-weight: bold; display: none;">
-            <div class="loader" style="width:20px; height:20px; border-width:3px;"></div> <span>रैंक कैलकुलेट हो रही है...</span>
+            <div class="loader" style="width:20px; height:20px; border-width:3px;"></div> <span>Calculating rank, please wait...</span>
         </div>
 
         <div id="report-section">
@@ -474,19 +475,19 @@
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
 
             <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
-                <h4 style="margin: 0 0 10px 0; color: #856404;">📥 PDF + Solution कैसे लें?</h4>
+                <h4 style="margin: 0 0 10px 0; color: #856404;">📥 How to get PDF + Solution?</h4>
                 <p style="margin: 0 0 10px 0; font-size: 14px; color: #dc3545; font-weight:bold;">
-                    📌 निर्देश: भविष्य में इस टेस्ट की PDF के लिए इसी लिंक को दोबारा ओपन करें और Test Code: <span id="res-code"></span> याद रखें।
+                    📌 Note: Save this Test Code to download the PDF in the future: <span id="res-code"></span>
                 </p>
                 <div id="res-paid-instructions" style="font-size: 13px; color: #333;">
-                    PDF मूल्य: <b>₹<span id="res-price">0</span></b> | पासवर्ड के लिए <b>8273684939</b> पर Payment करके स्क्रीनशॉट WhatsApp करें।
+                    PDF Price: <b>₹<span id="res-price">0</span></b> | Pay at <b>8273684939</b> and WhatsApp the screenshot for the password.
                 </div>
                 <div id="res-free-instructions" style="font-size: 13px; color: #28a745; display: none; font-weight:bold;">
-                    🎉 यह PDF सभी के लिए Free है!
+                    🎉 This PDF is Free for everyone!
                 </div>
 
                 <div id="res-pass-box" style="display: flex; gap: 10px; margin-top: 15px;">
-                    <input type="text" id="s-pass-result" placeholder="अपना पासवर्ड डालें" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                    <input type="text" id="s-pass-result" placeholder="Enter your password" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
                     <button class="btn-pdf action-btn" style="border-radius: 4px; padding: 10px 20px;" onclick="resultDownloadPDF()">🔒 Unlock PDF</button>
                 </div>
             </div>
@@ -561,7 +562,7 @@
     function openAdminLogin() { document.getElementById('student-dashboard-view').classList.remove('active-view'); document.getElementById('admin-auth-view').classList.add('active-view'); }
 
     function clearAdminMemory() {
-        showCustomConfirm("Clear Memory", "क्या आप एडमिन पैनल से सभी पुराने सेव किये गए टेस्ट हटाना चाहते हैं?", () => {
+        showCustomConfirm("Clear Memory", "Do you want to clear all saved tests from the Admin Panel memory?", () => {
             localStorage.removeItem('myMockTests');
             renderDashboard();
         }, "🗑️");
@@ -587,7 +588,7 @@
         let id = document.getElementById('admin-id').value; let pass = document.getElementById('admin-pass').value;
         if(btoa(id) === "ODI3MzY4NDkzOQ==" && btoa(pass) === "QW5rdXNoQDEyMzFAMTIz") {
             document.getElementById('admin-auth-view').classList.remove('active-view'); document.getElementById('admin-view').classList.add('active-view'); switchAdminTab('create');
-        } else { showCustomAlert("Error", "❌ गलत Admin ID या Password!", "❌"); }
+        } else { showCustomAlert("Error", "❌ Invalid Admin ID or Password!", "❌"); }
     }
 
     function showErrorView(msg) {
@@ -607,7 +608,7 @@
             document.getElementById('loading-view').classList.add('active-view');
             let cb = new Date().getTime(); let script = document.createElement('script');
             script.src = SCRIPT_URL + "?action=getTest&testCode=" + testCode + "&callback=handleTestLoad&t=" + cb;
-            script.onerror = function() { showErrorView("❌ नेटवर्क एरर! सुनिश्चित करें कि Apps Script में Who has access 'Anyone' है।"); };
+            script.onerror = function() { showErrorView("❌ Network Error! Please check your connection."); };
             document.body.appendChild(script);
         } else {
             document.getElementById('student-dashboard-view').classList.add('active-view');
@@ -616,8 +617,8 @@
     }
 
     window.handleTestLoad = function(data) {
-        if(data.error) { showErrorView("❌ टेस्ट नहीं मिला! (Error: " + data.error + ")"); return; }
-        if(data.isActive === false) { showErrorView("❌ यह टेस्ट अभी एडमिन द्वारा बंद (Inactive) कर दिया गया है।"); return; }
+        if(data.error) { showErrorView("❌ Test not found! (Error: " + data.error + ")"); return; }
+        if(data.isActive === false) { showErrorView("❌ This test is currently inactive by the admin."); return; }
         
         examData = data; 
         examData.marks = data.marks || 2; examData.neg = data.neg || 0;
@@ -633,7 +634,7 @@
         document.getElementById('specific-test-login').style.display = 'block'; 
         
         document.getElementById('head-exam-name').innerText = examData.exam;
-        document.getElementById('login-test-name').innerText = examData.exam + " (" + examData.subject + ")";
+        document.getElementById('login-test-name').innerText = examData.exam + " (" + (examData.subject || "Subject") + ")";
         document.getElementById('disp-code').innerText = examData.code;
         document.getElementById('disp-marks').innerText = examData.marks;
         document.getElementById('disp-neg').innerText = examData.neg;
@@ -673,24 +674,24 @@
         document.body.appendChild(script);
     }
     
-    // 🔥 FILTER ACTIVE TESTS BY SUBJECT 🔥
+    // 🔥 FILTER ACTIVE TESTS BY SUBJECT (UNDEFINED BUG FIXED) 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
         let list = document.getElementById('st-active-list');
         let filterEl = document.getElementById('st-subject-filter');
         
         if(!data.tests || data.tests.length === 0) { 
-            list.innerHTML = "<p>अभी कोई एक्टिव टेस्ट उपलब्ध नहीं है।</p>"; 
+            list.innerHTML = "<p>No active tests available right now.</p>"; 
             filterEl.style.display = 'none';
             return; 
         }
         
         globalActiveTests = data.tests.filter(t => !HIDDEN_TESTS.includes(t.code));
-        let subjects = [...new Set(globalActiveTests.map(t => t.sub))];
+        let subjects = [...new Set(globalActiveTests.map(t => t.sub || t.subject || "General"))];
         
         if(subjects.length > 0) {
             filterEl.style.display = 'inline-block';
-            let optHtml = `<option value="ALL">📚 सभी विषय (All Subjects)</option>`;
+            let optHtml = `<option value="ALL">📚 All Subjects</option>`;
             subjects.forEach(s => { optHtml += `<option value="${s}">${s}</option>`; });
             filterEl.innerHTML = optHtml;
         } else {
@@ -706,24 +707,25 @@
         let html = "";
         
         globalActiveTests.forEach(t => {
-            if(filterVal !== "ALL" && t.sub !== filterVal) return;
+            let currentSub = t.sub || t.subject || "General";
+            if(filterVal !== "ALL" && currentSub !== filterVal) return;
             let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
             let priceText = isFreeStatus ? "Free" : "₹" + t.price;
             html += `<div style="background:#fff; border:1px solid #ccc; border-radius:8px; padding:15px; width:100%; max-width:350px; text-align:left; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
                 <h4 style="margin:0 0 5px 0; color:#1f4e79;">${t.exam}</h4>
-                <p style="margin:0 0 10px 0; font-size:13px; color:#555;"><b>${t.sub}</b> ${t.topic ? "("+t.topic+")" : ""}</p>
+                <p style="margin:0 0 10px 0; font-size:13px; color:#555;"><b>${currentSub}</b> ${t.topic ? "("+t.topic+")" : ""}</p>
                 <div style="font-size:12px; margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time || 0} Min</span> <span class="badge">Marks: ${t.marks || 2}</span></div>
                 <button class="btn btn-blue" style="margin:0; padding:8px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>
             </div>`;
         });
         
-        if(html === "") html = "<p>इस विषय का कोई टेस्ट उपलब्ध नहीं है।</p>";
+        if(html === "") html = "<p>No tests available for this subject.</p>";
         list.innerHTML = html;
     }
 
     function fetchStudentHistory() {
         let phone = document.getElementById('hist-phone').value;
-        if(phone.length !== 10) { showCustomAlert("Error", "कृपया सही 10 अंकों का नंबर डालें!", "❌"); return; }
+        if(phone.length !== 10) { showCustomAlert("Error", "Please enter a valid 10-digit mobile number!", "❌"); return; }
         document.getElementById('st-hist-loader').style.display = 'block'; document.getElementById('st-hist-content').style.display = 'none';
         let cb = new Date().getTime(); let script = document.createElement('script');
         script.src = SCRIPT_URL + "?action=getStudentHistory&phone=" + phone + "&callback=handleStudentHistory&t=" + cb;
@@ -732,7 +734,7 @@
 
     window.handleStudentHistory = function(data) {
         document.getElementById('st-hist-loader').style.display = 'none';
-        if(data.error || !data.history || data.history.length === 0) { showCustomAlert("Not Found", "इस नंबर से कोई टेस्ट रिकॉर्ड नहीं मिला।", "🔍"); return; }
+        if(data.error || !data.history || data.history.length === 0) { showCustomAlert("Not Found", "No test records found for this number.", "🔍"); return; }
         
         let h = data.history; let totRight = 0, totWrong = 0, totBlank = 0; let html = "";
         
@@ -769,19 +771,20 @@
 
     // 🔥 REVISION PDF SMART PASSWORD CHECK 🔥
     window.downloadHistoryPDF = function(code, phone) {
-        showCustomAlert("Processing", "Revision PDF तैयार हो रही है, कृपया प्रतीक्षा करें...", "⏳");
+        showCustomAlert("Processing", "Preparing Revision PDF, please wait...", "⏳");
         let cb = new Date().getTime(); let script = document.createElement('script');
         let uniqueCallback = "handleHistTestLoad_" + code.replace(/-/g, '');
         script.src = SCRIPT_URL + "?action=getTest&testCode=" + code + "&callback=" + uniqueCallback + "&t=" + cb;
         
         window[uniqueCallback] = function(data) {
+            closeModal(); // Hide processing alert
             if(data.error) { showCustomAlert("Error", "Test data unavailable.", "❌"); return; }
             let isFreeStatus = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
             
             if(!isFreeStatus) {
-                showCustomPrompt("Password Required", "🔒 यह पेड (Paid) PDF है। कृपया इसे अनलॉक करने के लिए अपना पासवर्ड डालें:", (pass) => {
+                showCustomPrompt("Password Required", "🔒 This is a Paid PDF. Please enter your password to unlock:", (pass) => {
                     if(pass !== generateStrongPass(phone, data.key.toUpperCase())) { 
-                        showCustomAlert("Error", "❌ पासवर्ड गलत है!", "❌"); return; 
+                        showCustomAlert("Error", "❌ Incorrect password!", "❌"); return; 
                     }
                     examData = data; userAnswers = []; executePDFPrint(phone, 'q_ans'); 
                 });
@@ -818,19 +821,19 @@
 
     function generatePass() {
         let phone = document.getElementById('gen-phone').value; let key = document.getElementById('gen-key').value.toUpperCase();
-        if(!key) { showCustomAlert("Error", "Secret Key डालें!", "⚠️"); return; } 
-        if(phone.length < 10) { document.getElementById('show-gen-pass').innerText = "पूरा 10 अंकों का नंबर डालें!"; return; }
+        if(!key) { showCustomAlert("Error", "Please enter Secret Key!", "⚠️"); return; } 
+        if(phone.length < 10) { document.getElementById('show-gen-pass').innerText = "Please enter a 10-digit number!"; return; }
         let pass = generateStrongPass(phone, key); currentGeneratedPass = pass; 
-        document.getElementById('show-gen-pass').innerText = "पासवर्ड: " + pass; document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
+        document.getElementById('show-gen-pass').innerText = "Password: " + pass; document.getElementById('copy-pass-btn').style.display = 'inline-block'; 
     }
 
     function copyGeneratedPass() {
         if(!currentGeneratedPass) return;
-        try { navigator.clipboard.writeText(currentGeneratedPass).then(() => { showCustomAlert("Success", "✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass, "✅"); }).catch(fallbackCopy);
+        try { navigator.clipboard.writeText(currentGeneratedPass).then(() => { showCustomAlert("Success", "✅ Password copied: " + currentGeneratedPass, "✅"); }).catch(fallbackCopy);
         } catch(e) { fallbackCopy(); }
         function fallbackCopy() {
             let tempInput = document.createElement("input"); tempInput.value = currentGeneratedPass; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput);
-            showCustomAlert("Success", "✅ पासवर्ड कॉपी हो गया: " + currentGeneratedPass, "✅");
+            showCustomAlert("Success", "✅ Password copied: " + currentGeneratedPass, "✅");
         }
     }
 
@@ -926,7 +929,7 @@
         let parsedQs = parseRawQuestions(rawText);
         
         if(parsedQs.length === 0) {
-            showCustomAlert("Format Error", "❌ कोई भी सवाल सही फॉर्मेट (!!1!, !A, !B...) में नहीं मिला! कृपया अपना फॉर्मेट चेक करें।", "⚠️");
+            showCustomAlert("Format Error", "❌ No questions found in the correct format (!!1!, !A, !B...). Please check your format.", "⚠️");
             return;
         }
 
@@ -948,15 +951,15 @@
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
             document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; 
-            showCustomAlert("Success", `✅ टेस्ट सफलतापूर्वक सेव हो गया! (${parsedQs.length} सवाल)`, "🎉");
+            showCustomAlert("Success", `✅ Test saved successfully! (${parsedQs.length} questions)`, "🎉");
             renderDashboard(); 
-        }).catch(err => { showCustomAlert("Error", "टेस्ट सेव करने में दिक्कत आई, इंटरनेट चेक करें।", "❌"); btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false; });
+        }).catch(err => { showCustomAlert("Error", "Error saving test, please check your internet connection.", "❌"); btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false; });
     }
 
     function renderDashboard() {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         let listDiv = document.getElementById('dashboard-list');
-        if(savedTests.length === 0) { listDiv.innerHTML = "<p>अभी तक कोई टेस्ट सेव नहीं है।</p>"; return; }
+        if(savedTests.length === 0) { listDiv.innerHTML = "<p>No tests saved yet.</p>"; return; }
         
         let savedTestsWithId = savedTests.map((t, index) => ({...t, originalIndex: index}));
         let grouped = {}; savedTestsWithId.forEach(t => { if(!grouped[t.exam]) grouped[t.exam] = []; grouped[t.exam].push(t); });
@@ -965,6 +968,7 @@
         for(let exam in grouped) {
             html += `<h3 style="background:#1f4e79; color:white; padding:10px; border-radius:4px; margin-top:20px;">${exam}</h3>`;
             grouped[exam].forEach(t => {
+                let currentSub = t.sub || t.subject || "Subject";
                 let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
                 let priceText = isFreeStatus ? "Free" : "₹" + t.price;
                 let isActive = t.isActive !== false; 
@@ -972,7 +976,7 @@
                                          : `<button class="btn" style="background:#6c757d; margin:0; padding:5px; font-size:12px; width:auto;" onclick="toggleTestStatus('${t.code}', true, ${t.originalIndex})">🔴 Inactive</button>`;
 
                 html += `<div class="test-card">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><h4 style="margin:0;">${t.sub} (${t.code})</h4> ${statusBtn}</div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><h4 style="margin:0;">${currentSub} (${t.code})</h4> ${statusBtn}</div>
                     <div style="margin-bottom: 10px;">
                         <span class="badge">Qs: ${t.qs}</span><span class="badge">${priceText}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
                         <span class="badge">T: ${t.totTime||0}m / Q: ${t.qTime||0}s</span><span class="badge">Date: ${t.date}</span>
@@ -985,7 +989,7 @@
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_only')">📝 Qs Only</button>
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#17a2b8;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_ans')">✅ Qs+Ans</button>
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#28a745;" onclick="adminDownloadPDF(${t.originalIndex}, 'full')">📚 Full PDF</button>
-                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); showCustomAlert('Copied', 'लिंक कॉपी हो गई!', '✅');">📋 Copy Link</button>
+                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); showCustomAlert('Copied', 'Link copied successfully!', '✅');">📋 Copy Link</button>
                         <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="setPasswordKey('${t.key}')">🔑 Auto Pass</button>
                         <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: 100%; font-size:14px;" onclick="viewResults('${t.code}')">📊 View Results / Leaderboard</button>
                     </div>
@@ -1009,7 +1013,7 @@
 
     function editTest(idx) {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t) return;
-        document.getElementById('a-exam').value = t.exam || ""; document.getElementById('a-sub').value = t.sub || ""; document.getElementById('a-topic').value = t.topic || "";
+        document.getElementById('a-exam').value = t.exam || ""; document.getElementById('a-sub').value = t.sub || t.subject || ""; document.getElementById('a-topic').value = t.topic || "";
         document.getElementById('a-code').value = t.code || ""; document.getElementById('a-marks').value = t.marks || 2; document.getElementById('a-neg').value = t.neg || 0;
         document.getElementById('a-tot-time').value = t.totTime || 0; document.getElementById('a-q-time').value = t.qTime || 0;
         
@@ -1017,11 +1021,11 @@
         if(isFreeStatus || t.price === "Free") { document.getElementById('a-pdf-type').value = "free"; } else { document.getElementById('a-pdf-type').value = "paid"; document.getElementById('a-price').value = t.price || ""; }
         
         document.getElementById('a-key').value = t.key || ""; document.getElementById('a-rawdata').value = t.rawText || "";
-        togglePriceBox(); switchAdminTab('create'); showCustomAlert("Edit Mode", "टेस्ट का डेटा फॉर्म में आ गया है! बदलाव करके 'Generate & Save Test' दबाएं।", "✏️");
+        togglePriceBox(); switchAdminTab('create'); showCustomAlert("Edit Mode", "Test data loaded in form! Make changes and click 'Generate/Update Test'.", "✏️");
     }
 
     function deleteTest(idx) {
-        showCustomConfirm("Delete Test", "क्या आप सच में इस टेस्ट को हटाना चाहते हैं?", () => { 
+        showCustomConfirm("Delete Test", "Are you sure you want to delete this test?", () => { 
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; savedTests.splice(idx, 1); localStorage.setItem('myMockTests', JSON.stringify(savedTests)); renderDashboard(); 
         }, "🗑️");
     }
@@ -1035,7 +1039,7 @@
 
     window.handleResultsLoad = function(data) {
         if(data.error) { document.getElementById('leaderboard-content').innerHTML = "<p style='color:red;'>"+data.error+"</p>"; return; }
-        let res = data.results; if(!res || res.length === 0) { document.getElementById('leaderboard-content').innerHTML = "<p>अभी तक किसी ने यह टेस्ट नहीं दिया है।</p>"; return; }
+        let res = data.results; if(!res || res.length === 0) { document.getElementById('leaderboard-content').innerHTML = "<p>No attempts for this test yet.</p>"; return; }
         
         currentAdminLbDataRaw = res; 
         
@@ -1094,19 +1098,19 @@
     }
 
     function adminDownloadPDF(idx, mode) {
-        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t || !t.rawText) { showCustomAlert("Error", "डेटा नहीं मिला!", "❌"); return; }
-        let parsedQs = parseRawQuestions(t.rawText); examData = { exam: t.exam, subject: t.sub, topic: t.topic, code: t.code, questions: parsedQs };
+        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t || !t.rawText) { showCustomAlert("Error", "Data not found!", "❌"); return; }
+        let parsedQs = parseRawQuestions(t.rawText); examData = { exam: t.exam, subject: t.sub || t.subject || "Subject", topic: t.topic, code: t.code, questions: parsedQs };
         studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; }); executePDFPrint(studentInfo.name, mode);
     }
 
     function startExam(isReattempt) {
         if(!isReattempt) {
             studentInfo.name = document.getElementById('s-name').value; studentInfo.phone = document.getElementById('s-phone').value;
-            if(!studentInfo.name || studentInfo.phone.length !== 10) { showCustomAlert("Required", "कृपया सही नाम और 10 अंकों का नंबर डालें!", "⚠️"); return; }
+            if(!studentInfo.name || studentInfo.phone.length !== 10) { showCustomAlert("Required", "Please enter your correct name and 10-digit mobile number!", "⚠️"); return; }
         }
         
         if(!examData.questions || examData.questions.length === 0) {
-            showCustomAlert("Empty Test", "❌ इस टेस्ट में कोई प्रश्न नहीं मिला! कृपया इसे एडमिन पैनल से दोबारा सही फॉर्मेट में सेव करें।", "⚠️");
+            showCustomAlert("Empty Test", "❌ No questions found in this test! Please save it again in the correct format from the admin panel.", "⚠️");
             document.getElementById('loading-view').classList.remove('active-view');
             document.getElementById('student-dashboard-view').classList.add('active-view');
             return;
@@ -1135,7 +1139,7 @@
             if(examData.totTime > 0) {
                 globalTimeLeft--; let m = Math.floor(globalTimeLeft / 60); let s = globalTimeLeft % 60;
                 document.getElementById('main-time').innerText = `Time Left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-                if(globalTimeLeft <= 0) { clearInterval(globalTimer); showCustomAlert("Time Up", "⏳ समय समाप्त! आपका टेस्ट आटोमेटिक सबमिट हो रहा है।", "⏳"); calculateScoreAndSubmit(); }
+                if(globalTimeLeft <= 0) { clearInterval(globalTimer); showCustomAlert("Time Up", "⏳ Time's up! Your test is being auto-submitted.", "⏳"); calculateScoreAndSubmit(); }
             } else {
                 let m = Math.floor(totalTimeSpent / 60); let s = totalTimeSpent % 60;
                 document.getElementById('main-time').innerText = `Time: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
@@ -1143,7 +1147,7 @@
         }, 1000);
     }
 
-    function startReattempt() { showCustomConfirm("Reattempt", "क्या आप इस टेस्ट को दोबारा शुरू करना चाहते हैं?", () => { startExam(true); }, "🔄"); }
+    function startReattempt() { showCustomConfirm("Reattempt", "Do you want to reattempt this test?", () => { startExam(true); }, "🔄"); }
 
     function initPalette() {
         let grid = document.getElementById('palette-grid'); grid.innerHTML = "";
@@ -1230,7 +1234,7 @@
         if(currentQ < examData.questions.length - 1) { renderQuestion(currentQ + 1); 
         } else {
             if(isAuto) { clearInterval(globalTimer); calculateScoreAndSubmit(); } 
-            else { showCustomConfirm("Submit Exam", "✅ टेस्ट के सभी प्रश्न पूरे हो गए हैं! क्या आप टेस्ट सबमिट करना चाहते हैं?", () => { clearInterval(globalTimer); calculateScoreAndSubmit(); }, "✅"); }
+            else { showCustomConfirm("Submit Exam", "✅ All questions completed! Do you want to submit the test?", () => { clearInterval(globalTimer); calculateScoreAndSubmit(); }, "✅"); }
         }
     }
     function prevQ() { if(currentQ > 0) renderQuestion(currentQ - 1); }
@@ -1240,7 +1244,7 @@
         document.getElementById('cnt-ans').innerText = ans; document.getElementById('cnt-notans').innerText = notans; document.getElementById('cnt-notvis').innerText = notvis;
     }
 
-    function submitExamConfirmation() { showCustomConfirm("Submit Exam", "क्या आप पक्का टेस्ट सबमिट करना चाहते हैं?", () => { clearInterval(globalTimer); clearInterval(qTimer); calculateScoreAndSubmit(); }, "📤"); }
+    function submitExamConfirmation() { showCustomConfirm("Submit Exam", "Are you sure you want to submit the test?", () => { clearInterval(globalTimer); clearInterval(qTimer); calculateScoreAndSubmit(); }, "📤"); }
 
     function calculateScoreAndSubmit() {
         clearInterval(globalTimer); clearInterval(qTimer);
@@ -1264,7 +1268,7 @@
         let maxScore = examData.questions.length * examData.marks; let percentage = (studentInfo.score / maxScore) * 100;
 
         let resHeading = document.getElementById('result-heading');
-        if(percentage >= 80) { resHeading.innerText = "🎉 आपने बहुत अच्छा टेस्ट दिया! शानदार! 🎉"; resHeading.style.color = "#28a745"; blastConfetti(); } else { resHeading.innerText = "💪 कोई बात नहीं, अगली बार और बेहतर होगा! लगे रहो!"; resHeading.style.color = "#e74c3c"; }
+        if(percentage >= 80) { resHeading.innerText = "🎉 Excellent Performance! Outstanding! 🎉"; resHeading.style.color = "#28a745"; blastConfetti(); } else { resHeading.innerText = "💪 Good Effort! Keep it up, you'll do better next time!"; resHeading.style.color = "#e74c3c"; }
 
         drawReportCard("...", "...", maxScore);
         
@@ -1302,7 +1306,7 @@
         });
 
         if(currentAnalysisArray.length === 0) {
-            document.getElementById('analysis-box').innerHTML = `<div style="text-align:center; padding:20px; color:#777; font-size:16px;">इस केटेगरी में कोई प्रश्न नहीं है।</div>`;
+            document.getElementById('analysis-box').innerHTML = `<div style="text-align:center; padding:20px; color:#777; font-size:16px;">No questions found in this category.</div>`;
             document.getElementById('analysis-box').style.display = 'block';
             return;
         }
@@ -1310,7 +1314,13 @@
         currentAnalysisIndex = 0;
         renderAnalysisSlide();
         document.getElementById('analysis-box').style.display = 'block';
-        setTimeout(() => { document.getElementById('analysis-box').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+        
+        // 🔥 SCROLL CUT-OFF FIX: Safe margin to avoid header overlap 🔥
+        setTimeout(() => { 
+            const el = document.getElementById('analysis-box');
+            const y = el.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({top: y, behavior: 'smooth'});
+        }, 100);
     }
 
     function renderAnalysisSlide() {
@@ -1319,7 +1329,7 @@
         let statusIcon = data.isRight ? "✅" : (data.isBlank ? "⬜" : "❌");
         let titles = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
         
-        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333; max-height:100px; overflow-y:auto;" class="analysis-scroll">${q.passage}</div>` : ``;
+        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
 
         let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
@@ -1384,21 +1394,21 @@
         let isFreeStatus = (examData.isFree === true || String(examData.isFree).toLowerCase() === "true");
         if(isFreeStatus) { executePDFPrint(studentInfo.name, 'full');
         } else {
-            showCustomAlert("Unlock First", "🔒 यह पेड (Paid) PDF है। कृपया पेज के नीचे दिए गए बॉक्स में पासवर्ड डालें और 'Unlock PDF' पर क्लिक करें।", "🔒");
+            showCustomAlert("Unlock First", "🔒 This is a Paid PDF. Please enter your password in the box below and click 'Unlock PDF'.", "🔒");
             document.getElementById('s-pass-result').focus();
         }
     }
 
     function directDownloadPDF() {
         let phone = document.getElementById('pdf-phone').value; let pass = document.getElementById('pdf-pass').value;
-        if(!phone) { showCustomAlert("Required", "अपना नंबर डालें!", "⚠️"); return; } 
-        if(!checkPass(phone, pass)) { showCustomAlert("Error", "पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।", "❌"); return; }
+        if(!phone) { showCustomAlert("Required", "Please enter your mobile number!", "⚠️"); return; } 
+        if(!checkPass(phone, pass)) { showCustomAlert("Error", "Incorrect password! Please pay to get the correct password.", "❌"); return; }
         studentInfo.name = "Student"; executePDFPrint(phone, 'full'); 
     }
 
     function resultDownloadPDF() {
         let pass = document.getElementById('s-pass-result').value;
-        if(!checkPass(studentInfo.phone, pass)) { showCustomAlert("Error", "पासवर्ड गलत है! पेमेंट करके सही पासवर्ड लें।", "❌"); return; }
+        if(!checkPass(studentInfo.phone, pass)) { showCustomAlert("Error", "Incorrect password! Please pay to get the correct password.", "❌"); return; }
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
@@ -1413,11 +1423,11 @@
                 <a href="https://studynotesmanager.netlify.app/" target="_blank" style="color: #1f4e79; text-decoration: none; font-weight: bold; padding-left: 10px;">🌐 Study Notes Manager</a>
                 <a href="${safeTestUrl}" target="_blank" style="color: #dc3545; text-decoration: none; font-weight: bold; padding-right: 10px;">📝 Give Online Test</a>
             </div>
-            <div style="text-align: center; color: #444; font-size: 12px; margin-top: 5px;"><i>निर्देश: और सब्जेक्ट के टेस्ट फ्री में देने के लिए Study Notes Manager लिंक पर टैप करें।</i></div>
+            <div style="text-align: center; color: #444; font-size: 12px; margin-top: 5px;"><i>Note: Tap on the Study Notes Manager link to give free tests for other subjects.</i></div>
         </div>`;
         
         let headerSub = mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)");
-        html += `<div class="print-header"><h2>${examData.exam.toUpperCase()} ${headerSub}</h2><h3>${examData.subject} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>`;
+        html += `<div class="print-header"><h2>${examData.exam.toUpperCase()} ${headerSub}</h2><h3>${examData.subject || "Subject"} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>`;
         
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
@@ -1439,7 +1449,7 @@
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
                     let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
                 }
