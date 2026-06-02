@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
-        /* 🔥 APP-LIKE LAYOUT: Locks the main body from scrolling out of view 🔥 */
-        html, body { height: 100%; margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overflow: hidden; }
+        /* 🔥 THE FIX: Sabse pehle overflow: hidden hataya! Ab page normal scroll hoga aur PDF perfect aayegi 🔥 */
+        body, html { margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; scroll-behavior: smooth; }
         
         /* 🔥 Admin can select text 🔥 */
         #admin-view { user-select: auto; -webkit-user-select: auto; }
 
-        .container { max-width: 1200px; margin: 0 auto; background: white; height: 100%; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
         
-        /* 🔥 STICKY TOP HEADER 🔥 */
+        /* 🔥 STICKY TOP HEADER (Sada upar chipka rahega) 🔥 */
         #top-sticky-wrapper { position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; background: white; }
 
         .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
@@ -24,12 +24,12 @@
         .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; }
         .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
 
-        /* General scrolling for other views */
-        .view-section { padding: 20px; flex: 1; overflow-y: auto; display: none; }
+        /* General views */
+        .view-section { padding: 20px; flex: 1; display: none; }
         .active-view { display: block; }
         
-        /* Exam view specific handling */
-        #exam-view { padding: 0; display: none; flex-direction: column; }
+        /* Exam view */
+        #exam-view { padding: 0; display: none; flex-direction: column; position: relative; }
         #exam-view.active-view { display: flex; }
 
         .form-group { margin-bottom: 15px; }
@@ -54,16 +54,15 @@
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
         /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
-        .exam-container { display: flex; flex-direction: column; flex: 1; min-height: calc(100vh - 100px); background: #fff;}
-        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; }
+        .exam-container { display: flex; flex-direction: column; background: #fff;}
+        /* Humne bottom padding 180px kardi hai taaki last question fixed button ke peeche na chupe */
+        .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         
-        /* Question Scroll Area */
-        #q-scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 15px; }
-        #q-scroll-area::-webkit-scrollbar { width: 4px; }
-        #q-scroll-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        /* Normal div without internal scroll, let the page scroll naturally */
+        #q-scroll-area { padding-bottom: 10px; }
 
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
         
@@ -71,8 +70,8 @@
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); }
         .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
-        /* 🔥 FIXED BOTTOM CONTROLS 🔥 */
-        #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px 15px 20px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
+        /* 🔥 FIXED BOTTOM CONTROLS (Niche Fix Rahenge) 🔥 */
+        #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px 15px 15px 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px;}
         .pulse-btn { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
@@ -120,20 +119,20 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 WAHI RAAT WALI PERFECT PDF PRINTING CSS (100% Guaranteed NO Blank Page) 🔥 */
+        /* 🔥 PRINTING CSS (100% Guaranteed NO Blank Page) 🔥 */
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
             
-            /* 🔥 THE MASTER FIX: Overriding the hidden overflow explicitly for printing 🔥 */
-            html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+            /* The absolute master fix for printing full pages */
+            body, html { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
             .container { height: auto !important; min-height: auto !important; overflow: visible !important; box-shadow: none !important; }
             
-            /* Saari UI Elements ko chupa do */
-            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view { display: none !important; height: 0 !important; overflow: hidden !important; }
+            /* Hide saari normal UI */
+            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view { display: none !important; }
             
-            /* Sirf Print Area ko fully visible karo */
+            /* Show sirf PDF content */
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; min-height: auto !important; }
             #print-area * { visibility: visible !important; }
             
@@ -150,7 +149,7 @@
         }
 
         @media (max-width: 768px) {
-            .left-panel { padding: 10px 10px 170px 10px; } 
+            .left-panel { padding: 15px 15px 170px 15px; } /* Bottom padding for fixed footer */
             .watermark { font-size: 80px; } 
             .admin-lock { bottom: 10px; right: 10px; font-size: 20px;}
             .fullscreen-overlay { padding: 0; }
@@ -462,6 +461,7 @@
 <div id="print-area"></div>
 
 <script>
+    // 🚨 APNI LINK YAHAN HAI 🚨
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2cnrYrgNzObhZBEju6mDCVEftCRqMcTgk55RNfqsxGPJg0pLDtGJqZVnUWfco9AZ_aA/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
 
@@ -1018,9 +1018,8 @@
 
         updateMiniPalette();
 
-        // SCROLL FIX
-        let scrollArea = document.getElementById('q-scroll-area');
-        if(scrollArea) scrollArea.scrollTop = 0;
+        // 100% Guaranteed Scroll to Top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
         if(examData.qTime > 0) {
@@ -1262,7 +1261,8 @@
         
         printArea.innerHTML = html; 
         
-        setTimeout(() => { window.print(); }, 200);
+        // 🔥 WAHI ASLI RAAT WALI PRINTING (No SetTimeout required for pure CSS print) 🔥
+        window.print(); 
     }
 </script>
 </body>
