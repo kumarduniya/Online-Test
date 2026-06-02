@@ -102,6 +102,9 @@
 
         /* 🔥 FIX FOR SCROLLING BEHAVIOR IN ANALYSIS 🔥 */
         #analysis-box { margin-top: 20px; }
+        
+        /* 🔥 STICKY ANALYSIS BUTTONS 🔥 */
+        #analysis-btn-container { position: sticky; top: 60px; z-index: 900; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee; }
 
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
@@ -392,7 +395,7 @@
                 <button class="btn btn-pdf" onclick="directDownloadPDF()">🔒 Unlock & Download PDF</button>
             </div>
             
-            <div style="text-align: center; margin-top: 15px;">
+            <div style="text-align: center; margin: 25px 0;">
                 <button class="btn btn-outline" style="width:auto; padding:8px 20px;" onclick="closeAndRedirect()">🏠 Back to Home</button>
             </div>
         </div>
@@ -466,7 +469,8 @@
                 <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
-            <div style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap;">
+            <!-- 🔥 STICKY ANALYSIS BUTTONS 🔥 -->
+            <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 999; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
@@ -634,7 +638,7 @@
         document.getElementById('specific-test-login').style.display = 'block'; 
         
         document.getElementById('head-exam-name').innerText = examData.exam;
-        document.getElementById('login-test-name').innerText = examData.exam + " (" + (examData.subject || "Subject") + ")";
+        document.getElementById('login-test-name').innerText = examData.exam + " (" + (examData.subject || examData.sub || "Subject") + ")";
         document.getElementById('disp-code').innerText = examData.code;
         document.getElementById('disp-marks').innerText = examData.marks;
         document.getElementById('disp-neg').innerText = examData.neg;
@@ -687,7 +691,7 @@
         }
         
         globalActiveTests = data.tests.filter(t => !HIDDEN_TESTS.includes(t.code));
-        let subjects = [...new Set(globalActiveTests.map(t => t.sub || t.subject || "General"))];
+        let subjects = [...new Set(globalActiveTests.map(t => t.subject || t.sub || "General"))];
         
         if(subjects.length > 0) {
             filterEl.style.display = 'inline-block';
@@ -707,7 +711,7 @@
         let html = "";
         
         globalActiveTests.forEach(t => {
-            let currentSub = t.sub || t.subject || "General";
+            let currentSub = t.subject || t.sub || "General";
             if(filterVal !== "ALL" && currentSub !== filterVal) return;
             let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
             let priceText = isFreeStatus ? "Free" : "₹" + t.price;
@@ -777,7 +781,7 @@
         script.src = SCRIPT_URL + "?action=getTest&testCode=" + code + "&callback=" + uniqueCallback + "&t=" + cb;
         
         window[uniqueCallback] = function(data) {
-            closeModal(); // Hide processing alert
+            closeModal(); 
             if(data.error) { showCustomAlert("Error", "Test data unavailable.", "❌"); return; }
             let isFreeStatus = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
             
@@ -845,10 +849,9 @@
 
     // 🔥 THE FIX: Super Smart Parser (Removes invisible chars, auto-adds newlines) 🔥
     function parseRawQuestions(rawText) {
-        rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, ''); // Clear zero-width spaces
-        rawText = rawText.replace(/\r\n?/g, '\n'); // Normalize returns
+        rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, ''); 
+        rawText = rawText.replace(/\r\n?/g, '\n'); 
         
-        // Auto-fix if copy-paste merged lines
         rawText = rawText.replace(/(\s*)(!!\s*\d+\s*!)/g, '\n$2');
         rawText = rawText.replace(/(\s*)(![A-D]\s)/gi, '\n$2');
         rawText = rawText.replace(/(\s*)(!!!\s*[A-D])/gi, '\n$2');
@@ -945,7 +948,7 @@
             let testLink = BASE_URL + "?test=" + eCode;
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
             let existingIdx = savedTests.findIndex(t => t.code === eCode);
-            let testObj = { code: eCode, exam: eName, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
+            let testObj = { code: eCode, exam: eName, subject: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
             
             if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
@@ -968,7 +971,7 @@
         for(let exam in grouped) {
             html += `<h3 style="background:#1f4e79; color:white; padding:10px; border-radius:4px; margin-top:20px;">${exam}</h3>`;
             grouped[exam].forEach(t => {
-                let currentSub = t.sub || t.subject || "Subject";
+                let currentSub = t.subject || t.sub || "Subject";
                 let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
                 let priceText = isFreeStatus ? "Free" : "₹" + t.price;
                 let isActive = t.isActive !== false; 
@@ -1013,7 +1016,7 @@
 
     function editTest(idx) {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t) return;
-        document.getElementById('a-exam').value = t.exam || ""; document.getElementById('a-sub').value = t.sub || t.subject || ""; document.getElementById('a-topic').value = t.topic || "";
+        document.getElementById('a-exam').value = t.exam || ""; document.getElementById('a-sub').value = t.subject || t.sub || ""; document.getElementById('a-topic').value = t.topic || "";
         document.getElementById('a-code').value = t.code || ""; document.getElementById('a-marks').value = t.marks || 2; document.getElementById('a-neg').value = t.neg || 0;
         document.getElementById('a-tot-time').value = t.totTime || 0; document.getElementById('a-q-time').value = t.qTime || 0;
         
@@ -1099,7 +1102,7 @@
 
     function adminDownloadPDF(idx, mode) {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t || !t.rawText) { showCustomAlert("Error", "Data not found!", "❌"); return; }
-        let parsedQs = parseRawQuestions(t.rawText); examData = { exam: t.exam, subject: t.sub || t.subject || "Subject", topic: t.topic, code: t.code, questions: parsedQs };
+        let parsedQs = parseRawQuestions(t.rawText); examData = { exam: t.exam, subject: t.subject || t.sub || "Subject", topic: t.topic, code: t.code, questions: parsedQs };
         studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; }); executePDFPrint(studentInfo.name, mode);
     }
 
@@ -1318,7 +1321,7 @@
         // 🔥 SCROLL CUT-OFF FIX: Safe margin to avoid header overlap 🔥
         setTimeout(() => { 
             const el = document.getElementById('analysis-box');
-            const y = el.getBoundingClientRect().top + window.scrollY - 100;
+            const y = el.getBoundingClientRect().top + window.scrollY - 130;
             window.scrollTo({top: y, behavior: 'smooth'});
         }, 100);
     }
@@ -1336,7 +1339,7 @@
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
             if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
             else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:14px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
+            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
         });
         optsHtml += `</div>`;
 
