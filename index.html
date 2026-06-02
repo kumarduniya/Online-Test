@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Pro Mock Test Portal</title>
     <style>
-        /* 🔥 NORMAL BODY 🔥 */
+        /* 🔥 NORMAL BODY SCROLL FOR PERFECT PDF 🔥 */
         body, html { margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; scroll-behavior: smooth; }
         
         #admin-view { user-select: auto; -webkit-user-select: auto; }
@@ -26,6 +26,7 @@
         .view-section { padding: 20px; flex: 1; display: none; }
         .active-view { display: block; }
         
+        /* 🔥 EXAM VIEW STRICT HIDE/SHOW 🔥 */
         #exam-view { padding: 0; display: none; flex-direction: column; position: relative; background: white; }
         #exam-view.active-view { display: flex; }
 
@@ -50,6 +51,7 @@
         .test-card h4 { margin: 0 0 10px 0; color: #1f4e79; }
         .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
         
+        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
         .exam-container { display: flex; flex-direction: column; background: #fff;}
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         
@@ -95,6 +97,10 @@
         .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; justify-content:center;}
         .palette-btn { width: 45px; height: 45px; border-radius: 6px; border: 1px solid #999; font-weight: bold; font-size: 15px; cursor: pointer; }
 
+        /* ANALYSIS SCROLL */
+        .analysis-scroll::-webkit-scrollbar { width: 5px; }
+        .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -112,31 +118,28 @@
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
-        /* 🔥 PRINTING CSS (ABSOLUTELY NO BLANK PAGES - DECOUPLED FROM MAIN CONTAINER) 🔥 */
+        /* 🔥 PRINTING CSS (100% Guaranteed NO Blank Page) 🔥 */
         #print-area { display: none; background: white; color: black; text-align: left; }
         
         @media print {
             @page { margin: 8mm; } 
             
-            /* Remove all restrictions for perfect printing */
-            html, body { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+            html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+            .container { box-shadow: none !important; }
             
-            /* 🔥 THE MASTER FIX: Hide MAIN CONTAINER completely to kill the blank page 🔥 */
-            #main-ui-container { display: none !important; } 
+            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view { display: none !important; }
             
-            /* Show ONLY PDF Area */
-            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; min-height: auto !important; }
+            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
             #print-area * { visibility: visible !important; }
             
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             .print-q { margin-bottom: 5px; page-break-inside: avoid; border-bottom: 1px dotted #ccc; padding-bottom: 5px; font-size: 14px; line-height: 1.3; color: #000000 !important; }
             
-            /* Standard PDF Options style */
             .opt-grid { display: flex; flex-wrap: wrap; margin-top: 3px; }
             .opt-item { width: 48%; margin-bottom: 2px; font-size: 14px; padding: 2px 4px; box-sizing: border-box; color: #000000 !important; }
             
             .print-ans { font-weight: bold; font-size: 13px; color: #000000 !important; }
-            .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.2; }
+            .print-exp { color: #222222 !important; font-size: 12px; margin-top: 3px; line-height: 1.4; }
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px; padding-bottom: 5px;}
             .print-passage { background:#eee; padding:5px; margin-bottom:5px; font-style:italic; border-left:3px solid #333; font-size:13px; }
             
@@ -453,7 +456,7 @@
         </div>
     </div>
 
-</div> <div id="print-area"></div>
+<div id="print-area"></div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2cnrYrgNzObhZBEju6mDCVEftCRqMcTgk55RNfqsxGPJg0pLDtGJqZVnUWfco9AZ_aA/exec";
@@ -724,28 +727,63 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
+    // 🔥 THE FIX: Upgraded Multi-line Parser & Bolder (**) 🔥
     function parseRawQuestions(rawText) {
         let parsedQs = []; let lines = rawText.split('\n'); let tempQ = null;
         let currentPassage = "";
+        let currentMode = ""; 
         
         for(let i=0; i<lines.length; i++) {
             let line = lines[i].trim();
             if(!line) continue;
             
+            // Auto convert markdown **bold** to <b>bold</b>
+            line = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            
             if(line.startsWith("!P")) { 
                 let pText = line.substring(2).trim();
                 if(pText.toLowerCase() === "none" || pText === "") currentPassage = "";
                 else currentPassage = pText;
+                currentMode = "P";
             }
-            else if(line.startsWith("!!!!")) { if(tempQ) tempQ.exp = line.substring(4).trim(); }
-            else if(line.startsWith("!!!")) { if(tempQ) tempQ.ans = line.substring(3).trim().charAt(0).toUpperCase(); }
-            else if(line.startsWith("!A")) { if(tempQ) tempQ.opts.push({id:"A", text:line.substring(2).trim()}); }
-            else if(line.startsWith("!B")) { if(tempQ) tempQ.opts.push({id:"B", text:line.substring(2).trim()}); }
-            else if(line.startsWith("!C")) { if(tempQ) tempQ.opts.push({id:"C", text:line.substring(2).trim()}); }
-            else if(line.startsWith("!D")) { if(tempQ) tempQ.opts.push({id:"D", text:line.substring(2).trim()}); }
+            else if(line.startsWith("!!!!")) { 
+                if(tempQ) tempQ.exp = line.substring(4).trim(); 
+                currentMode = "exp";
+            }
+            else if(line.startsWith("!!!")) { 
+                if(tempQ) tempQ.ans = line.substring(3).trim().charAt(0).toUpperCase(); 
+                currentMode = "ans";
+            }
+            else if(line.startsWith("!A")) { 
+                if(tempQ) tempQ.opts.push({id:"A", text:line.substring(2).trim()}); 
+                currentMode = "A";
+            }
+            else if(line.startsWith("!B")) { 
+                if(tempQ) tempQ.opts.push({id:"B", text:line.substring(2).trim()}); 
+                currentMode = "B";
+            }
+            else if(line.startsWith("!C")) { 
+                if(tempQ) tempQ.opts.push({id:"C", text:line.substring(2).trim()}); 
+                currentMode = "C";
+            }
+            else if(line.startsWith("!D")) { 
+                if(tempQ) tempQ.opts.push({id:"D", text:line.substring(2).trim()}); 
+                currentMode = "D";
+            }
             else if(line.match(/^!!\d+!/)) {
                 if(tempQ && tempQ.q) parsedQs.push(tempQ);
                 tempQ = { q: line.replace(/^!!\d+!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: currentPassage };
+                currentMode = "q";
+            }
+            else {
+                // If it's a multi-line explanation, append it to the current field
+                if(tempQ) {
+                    if(currentMode === "exp") {
+                        tempQ.exp += "<br>" + line;
+                    } else if(currentMode === "q") {
+                        tempQ.q += "<br>" + line;
+                    }
+                }
             }
         }
         if(tempQ && tempQ.q) parsedQs.push(tempQ); return parsedQs;
@@ -816,7 +854,7 @@
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_only')">📝 Qs Only</button>
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#17a2b8;" onclick="adminDownloadPDF(${t.originalIndex}, 'q_ans')">✅ Qs+Ans</button>
                         <button class="btn btn-pdf" style="margin:0; padding:5px 10px; font-size:12px; width:auto; background:#28a745;" onclick="adminDownloadPDF(${t.originalIndex}, 'full')">📚 Full PDF</button>
-                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी خो गई!');">📋 Copy Link</button>
+                        <button class="btn btn-outline" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}'); alert('लिंक कॉपी हो गई!');">📋 Copy Link</button>
                         <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: auto; font-size:12px;" onclick="setPasswordKey('${t.key}')">🔑 Auto Pass</button>
                         <button class="btn btn-warning" style="margin:0; padding: 5px 10px; width: 100%; font-size:14px;" onclick="viewResults('${t.code}')">📊 View Results / Leaderboard</button>
                     </div>
@@ -1011,7 +1049,8 @@
 
         updateMiniPalette();
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        let scrollArea = document.getElementById('q-scroll-area');
+        if(scrollArea) scrollArea.scrollTop = 0;
 
         clearInterval(qTimer); let badge = document.getElementById('q-timer-badge');
         if(examData.qTime > 0) {
@@ -1050,7 +1089,6 @@
         clearInterval(globalTimer); clearInterval(qTimer);
         document.getElementById('student-top-bar').style.display = 'none'; 
         
-        // HIDE EXAM VIEW AND BUTTONS COMPLETELY
         document.getElementById('exam-bottom-controls').style.display = 'none';
         document.getElementById('exam-view').classList.remove('active-view');
         document.getElementById('exam-view').style.display = 'none';
@@ -1096,7 +1134,6 @@
         });
     }
 
-    // 🔥 NEW: 2x2 Options and Scrollable Explanation for Analysis 🔥
     function showAnalysis(type) {
         currentAnalysisArray = []; currentAnalysisType = type;
         
@@ -1125,21 +1162,16 @@
         let statusIcon = data.isRight ? "✅" : (data.isBlank ? "⬜" : "❌");
         let titles = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
         
-        // Scrollable Passage (if exists)
-        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333; max-height:100px; overflow-y:auto;" class="analysis-scroll">${q.passage}</div>` : ``;
+        let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
 
-        // 🔥 2x2 Grid Layout for Options 🔥
         let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
             if(o.id === q.ans) { bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; }
             else if(o.id === uAns && !data.isRight) { bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; }
-            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:14px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
+            optsHtml += `<div style="padding:10px; border:${border}; border-radius:4px; background:${bg}; color:${col}; font-weight:${fw}; font-size:15px; box-sizing:border-box; word-break:break-word;">${o.id}. ${o.text}</div>`;
         });
         optsHtml += `</div>`;
-
-        // 🔥 Scrollable Explanation Box 🔥
-        let expHtml = q.exp ? `<div style="font-size: 14px; color: #444; margin-top: 10px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79; max-height: 180px; overflow-y: auto;" class="analysis-scroll"><b>Explanation:</b> ${q.exp}</div>` : ``;
 
         let html = `
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #ccc; padding-bottom:10px; margin-bottom:15px;">
@@ -1149,7 +1181,7 @@
             ${passHtml}
             <b style="font-size:18px; color:#222; display:block; margin-bottom:15px; line-height:1.4;">${statusIcon} Q${i+1}. ${q.q}</b>
             ${optsHtml}
-            ${expHtml}
+            <div style="font-size: 15px; color: #444; margin-top: 15px; line-height:1.5; background:#f9f9f9; padding:12px; border-radius:4px; border-left:4px solid #1f4e79; max-height: 180px; overflow-y: auto;"><b>Explanation:</b><br> ${q.exp}</div>
             
             <div style="display:flex; justify-content:space-between; margin-top:20px; border-top:1px solid #ddd; padding-top:15px;">
                 <button class="btn btn-outline" style="width:auto; padding:8px 20px; margin:0;" onclick="prevAnalysis()" ${currentAnalysisIndex === 0 ? 'disabled' : ''}>⬅️ Prev</button>
@@ -1251,7 +1283,7 @@
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
                 }
-                if(mode === 'full' && q.exp) { html += `<div class="print-exp"><b>Explanation:</b> ${q.exp}</div>`; }
+                if(mode === 'full' && q.exp) { html += `<div class="print-exp"><b>Explanation:</b><br> ${q.exp}</div>`; }
             }
             html += `</div>`; 
         });
