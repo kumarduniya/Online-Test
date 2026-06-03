@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Pro Mock Test Portal</title>
+    <title>Ankush online test</title>
     <style>
         /* 🔥 NORMAL BODY SCROLL FOR PERFECT PDF 🔥 */
         body, html { margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; scroll-behavior: smooth; }
@@ -16,7 +16,7 @@
         #top-sticky-wrapper { position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; background: white; }
 
         .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; cursor: default; user-select: none; }
+        .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; cursor: default; }
         .timer { font-size: 16px; font-weight: bold; background: #e74c3c; padding: 5px 10px; border-radius: 4px; display:flex; gap:10px;}
         
         .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; }
@@ -114,6 +114,9 @@
         .res-table th { background-color: #1f4e79; color: white; }
         .res-table tr:nth-child(even){background-color: #f2f2f2;}
 
+        /* 🔥 ULTRA SECURE ADMIN LOCK 🔥 */
+        #s-box { position: fixed; bottom: 30px; right: 20px; z-index: 999999; background: white; border: 2px solid #1f4e79; border-radius: 6px; padding: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+        #s-inp { border: none; outline: none; padding: 6px 10px; font-weight: bold; color: #1f4e79; font-size: 13px; width: 180px; text-align: center; border-radius: 4px; background:#f4f6f8; }
         .admin-lock { position: fixed; bottom: 30px; right: 20px; font-size: 26px; cursor: pointer; opacity: 0.9; transition: 0.3s; z-index: 999999; background: #fff; border: 3px solid #1f4e79; border-radius: 50%; width: 55px; height: 55px; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .admin-lock:hover { transform: scale(1.1); background: #1f4e79; color: white; border-color: white;}
 
@@ -128,7 +131,7 @@
            🔥 THE ULTIMATE PDF PRINTING FIX (Native Table, Big Watermark, Links) 🔥
            ========================================================================= */
         body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
-        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
+        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock, body.print-pdf #s-box { display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
         
         #print-area { display: none; background: white; color: black; text-align: left; position: relative; z-index: 1;}
 
@@ -137,7 +140,7 @@
             
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
             .container { box-shadow: none !important; }
-            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay, .admin-lock { display: none !important; }
+            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay, .admin-lock, #s-box { display: none !important; }
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; background: transparent !important; }
             #print-area * { visibility: visible !important; position: relative; }
             
@@ -200,6 +203,7 @@
         @media (max-width: 768px) {
             .left-panel { padding: 10px 10px 170px 10px; } 
             .admin-lock { bottom: 20px; right: 20px; width: 45px; height: 45px; font-size: 22px; }
+            #s-box { bottom: 20px; right: 20px; }
             .fullscreen-overlay { padding: 0; }
             .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
         }
@@ -224,7 +228,7 @@
     
     <div id="top-sticky-wrapper">
         <div class="tcs-header">
-            <h2 id="head-exam-name" onclick="_sT()">Exam Portal</h2>
+            <h2 id="head-exam-name">Exam Portal</h2>
             <div id="timer-box" class="timer" style="display:none;">
                 <div id="main-time">Time: 00:00</div>
             </div>
@@ -281,7 +285,10 @@
             </div>
         </div>
         
-        <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
+        <div id="s-box">
+            <input type="text" id="s-inp" oninput="_cS(this.value)" autocomplete="off">
+        </div>
+        <div class="admin-lock" id="admin-lock-btn" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
@@ -556,21 +563,14 @@
     const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
     const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
 
-    // 🔥 ADMIN LOCK LOGIC 🔥
-    let _cT; window._hC = 0;
-    function _sT() {
-        window._hC++; clearTimeout(_cT); _cT = setTimeout(() => { window._hC = 0; }, 1000);
-        if(window._hC === 3) {
-            window._hC = 0;
-            let _1 = [87,104,97,116,32,100,111,32,121,111,117,32,119,97,110,116,32,116,111,32,100,111,63];
-            let _2 = [97,105,119,97,108,97];
-            showCustomPrompt("Verification", String.fromCharCode(..._1), (v) => {
-                if(v && v.toLowerCase().trim() === String.fromCharCode(..._2)) {
-                    document.querySelector('.admin-lock').style.display = 'flex';
-                }
-            });
+    // 🔥 ADMIN SECURE LOCK LOGIC 🔥
+    let _sA = [97,105,119,97,108,97];
+    window._cS = function(v) {
+        if(v && v.toLowerCase().trim() === String.fromCharCode(..._sA)) {
+            document.getElementById('s-box').style.display = 'none';
+            document.getElementById('admin-lock-btn').style.display = 'flex';
         }
-    }
+    };
 
     function updateQsCount() {
         let text = document.getElementById('a-rawdata').value;
@@ -658,6 +658,10 @@
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('student-top-bar').style.display = 'none';
         
+        // Setup secure placeholder
+        let _q = [84,117,109,32,107,121,97,32,107,97,114,110,97,32,99,104,97,104,116,101,32,104,111,63];
+        document.getElementById('s-inp').placeholder = String.fromCharCode(..._q);
+
         let rawDataInput = document.getElementById('a-rawdata');
         if(rawDataInput) {
             rawDataInput.addEventListener('input', updateQsCount);
@@ -686,6 +690,11 @@
         examData.marks = data.marks || 2; examData.neg = data.neg || 0;
         examData.totTime = data.totTime || 0; examData.qTime = data.qTime || 0;
         examData.isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
+        
+        // Dynamically set title for Android download trick
+        let cleanSubject = examData.subject || examData.sub || "Subject";
+        let cleanTopic = examData.topic ? examData.topic.split("|||QS:")[0] + " " : "";
+        document.title = `${cleanSubject} ${cleanTopic}Ankush online test`;
         
         setupLoginScreen();
     }
@@ -1462,7 +1471,6 @@
 
         fetch(SCRIPT_URL, {
             method: 'POST', 
-            // 🔥 FIXED: new URLSearchParams is correct format for post request 🔥
             body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(res => res.json()).then(data => {
@@ -1716,7 +1724,6 @@
         // 🔥 PDF NAME TRICK 🔥
         let cleanSubject = examData.subject || examData.sub || "Subject";
         let cleanTopic = dTopic ? dTopic + " " : "";
-        let originalTitle = document.title;
         let newFileName = `${cleanSubject} ${cleanTopic}Ankush online test`;
         document.title = newFileName; 
         
@@ -1726,7 +1733,6 @@
             window.print(); 
             setTimeout(() => { 
                 document.body.classList.remove('print-pdf'); 
-                document.title = originalTitle; 
             }, 1000); 
         }, 800); 
     }
