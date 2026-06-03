@@ -138,11 +138,11 @@
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
             .container { box-shadow: none !important; }
             #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay, .admin-lock { display: none !important; }
-            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
+            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; background: transparent !important; }
             #print-area * { visibility: visible !important; position: relative; }
             
-            /* 🔥 WATERMARK (z-index -1 to stay behind text but visible) 🔥 */
-            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08) !important; z-index: -1 !important; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
+            /* 🔥 WATERMARK FIX 🔥 */
+            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 100px; font-weight: bold; color: rgba(0, 0, 0, 0.08) !important; z-index: 0 !important; white-space: nowrap; pointer-events: none; width: 100%; text-align: center; }
             
             /* 🔥 PAGE BORDER HACK 🔥 */
             .pdf-page-border { position: fixed; top: 0; bottom: 0; left: 0; right: 0; border: 2px solid #1f4e79 !important; z-index: -2 !important; pointer-events: none; border-radius: 4px; }
@@ -1596,18 +1596,27 @@
         let rawTopic = examData.topic || ""; let dTopic = rawTopic.split("|||QS:")[0] || "";
 
         let html = `
-        <table class="pdf-main-table">
+        <div class="pdf-header-strip">
+            <span class="f-left">🌐 Study Notes Manager</span>
+            <span class="f-right"><a href="${safeTestUrl}" style="color:#f39c12; text-decoration:none;">📝 Give Online Test</a></span>
+        </div>
+
+        <div class="pdf-footer-strip">
+            <span class="f-left">📞 Contact: +91-8273684939</span>
+            <span class="f-right"><a href="${BASE_URL}" style="color:#ffffff; text-decoration:none;">🌐 ankushonlinetest.netlify.app</a></span>
+        </div>
+
+        <div class="watermark">${watermarkText}</div>
+
+        <table class="pdf-main-table" style="position: relative; z-index: 2;">
             <thead style="display: table-header-group;">
-                <tr><th style="padding: 0; border: none;">
-                    <div class="pdf-header-strip">
-                        <span class="f-left">🌐 Study Notes Manager</span>
-                        <span class="f-right"><a href="${safeTestUrl}" style="color:#f39c12; text-decoration:none;">📝 Give Online Test</a></span>
-                    </div>
-                </th></tr>
+                <tr><th style="height: 45px; padding: 0; border: none; background: transparent;"></th></tr>
             </thead>
+            <tfoot style="display: table-footer-group;">
+                <tr><td style="height: 45px; padding: 0; border: none; background: transparent;"></td></tr>
+            </tfoot>
             <tbody style="position: relative;">
-                <tr><td style="position: relative;">
-                    <div class="watermark">${watermarkText}</div>
+                <tr><td style="position: relative; padding: 0 20px;">
                     <div class="print-header"><h2>${examData.exam.toUpperCase()} ${mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)")}</h2><h3>${examData.subject || examData.sub || "Subject"} (${dTopic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>
         `;
         
@@ -1647,14 +1656,6 @@
         html += `
                 </td></tr>
             </tbody>
-            <tfoot style="display: table-footer-group;">
-                <tr><td style="padding: 0; border: none;">
-                    <div class="pdf-footer-strip">
-                        <span class="f-left">📞 Contact: +91-8273684939</span>
-                        <span class="f-right"><a href="${BASE_URL}" style="color:#ffffff; text-decoration:none;">🌐 ankushonlinetest.netlify.app</a></span>
-                    </div>
-                </td></tr>
-            </tfoot>
         </table>
         `;
         
