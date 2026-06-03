@@ -125,7 +125,7 @@
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* =========================================================================
-           🔥 THE ULTIMATE PDF PRINTING FIX (Native Table, Big Watermark, No Gaps) 🔥
+           🔥 THE ULTIMATE PDF PRINTING FIX (Native Table, Big Watermark, Links) 🔥
            ========================================================================= */
         body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
         body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
@@ -141,19 +141,19 @@
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; background: transparent !important; }
             #print-area * { visibility: visible !important; position: relative; }
             
-            /* 🔥 SUPER WATERMARK: BIG, DIAGONAL, ON TOP OF TEXT 🔥 */
+            /* 🔥 SUPER WATERMARK: PERFECT SIZE, LIGHT OPACITY, ON TOP 🔥 */
             .watermark { 
                 position: fixed !important; 
                 top: 50vh !important; 
                 left: 50vw !important; 
                 transform: translate(-50%, -50%) rotate(-45deg) !important; 
-                font-size: 160px !important; 
+                font-size: 110px !important; /* Size reduced for perfect fit */
                 font-weight: 900 !important; 
-                color: rgba(0, 0, 0, 0.12) !important; 
-                z-index: 999999 !important; /* Forces it over the text */
+                color: rgba(0, 0, 0, 0.06) !important; /* Lighter opacity */
+                z-index: 999999 !important; /* Over text */
                 white-space: nowrap; 
                 pointer-events: none; 
-                width: 200%; 
+                width: 100%; 
                 text-align: center; 
                 text-transform: uppercase;
                 display: block !important;
@@ -167,24 +167,21 @@
                 print-color-adjust: exact; 
                 border-bottom: 2px solid #1f4e79; 
                 border-radius: 2px 2px 0 0; 
-                margin-bottom: 5px;
+                margin-bottom: 8px;
                 display: block;
             }
-            .pdf-header-strip a { color: #f39c12 !important; text-decoration: none !important; }
-
+            
             .pdf-footer-strip { 
                 background-color: #1f4e79 !important; 
-                padding: 10px 15px !important; 
+                padding: 10px 10px !important; 
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
                 border-top: 2px solid #1f4e79; 
                 border-radius: 0 0 2px 2px; 
-                margin-top: 5px;
+                margin-top: 8px;
                 display: block;
             }
-            .pdf-footer-strip a { color: #ffffff !important; text-decoration: none !important; }
 
-            /* TABLE OVERRIDES TO PREVENT HIDDEN TEXT AND ALIGNMENT ISSUES */
             table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; z-index: 10; position: relative;}
             table.pdf-main-table th, table.pdf-main-table td { padding: 0 !important; border: none !important; background: transparent !important; }
             
@@ -551,6 +548,13 @@
     let currentAnalysisArray = [];
     let currentAnalysisIndex = 0;
     let currentAnalysisType = "";
+
+    // Professional SVG Icons for PDF
+    const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+    const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
+    const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
+    const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
+    const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
 
     function updateQsCount() {
         let text = document.getElementById('a-rawdata').value;
@@ -1442,7 +1446,7 @@
 
         fetch(SCRIPT_URL, {
             method: 'POST', 
-            body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
+            body: newSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(res => res.json()).then(data => {
             studentInfo.attempt = data.attempt || (isReattemptMode ? "Reattempt" : 1);
@@ -1602,7 +1606,7 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 PDF PRINTING FIX (Native Table Layout, Big Watermark, Social Links, File Name) 🔥
+    // 🔥 PDF PRINTING (Name, Watermark, Social Icons, Formatting FIX) 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1617,8 +1621,12 @@
                     <div class="pdf-header-strip">
                         <table style="width:100%; border:none; background:transparent;">
                             <tr>
-                                <td style="text-align:left; color:#ffffff; font-weight:bold; font-size:15px; border:none; padding:0;">🌐 Study Notes Manager</td>
-                                <td style="text-align:right; border:none; padding:0;"><a href="${safeTestUrl}" style="color:#f39c12; font-weight:bold; font-size:15px; text-decoration:none;">📝 Give Online Test</a></td>
+                                <td style="text-align:left; border:none; padding:0;">
+                                    <span style="color:#ffffff; font-weight:bold; font-size:15px;">${iconGlobe} Study Notes Manager</span>
+                                </td>
+                                <td style="text-align:right; border:none; padding:0;">
+                                    <a href="${safeTestUrl}" style="color:#f39c12; font-weight:bold; font-size:15px; text-decoration:none;">📝 Give Online Test</a>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -1627,18 +1635,17 @@
             <tfoot style="display: table-footer-group;">
                 <tr><td style="padding: 0; border: none; font-weight: normal;">
                     <div class="pdf-footer-strip">
-                        <table style="width:100%; border:none; background:transparent;">
-                            <tr>
-                                <td style="text-align:left; color:#ffffff; font-size:13px; font-weight:bold; border:none; padding:0;">
-                                    📞 Contact: +91-8273684939 | 🌐 ankushonlinetest.netlify.app
-                                </td>
-                                <td style="text-align:right; border:none; padding:0;">
-                                    <a href="https://www.youtube.com/@ankushonlinetest" style="color:#ffffff; text-decoration:none; margin-left:12px; font-size:13px; font-weight:bold;">▶️ Join YouTube</a>
-                                    <a href="https://t.me/ankushonlinetest" style="color:#ffffff; text-decoration:none; margin-left:12px; font-size:13px; font-weight:bold;">✈️ Join Telegram</a>
-                                    <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k" style="color:#ffffff; text-decoration:none; margin-left:12px; font-size:13px; font-weight:bold;">💬 Join WhatsApp</a>
-                                </td>
-                            </tr>
-                        </table>
+                        <div style="text-align: center; width: 100%; font-size:12px; font-weight:bold; color:#fff;">
+                            <a href="tel:+918273684939" style="color:#fff; text-decoration:none;">${iconPhone} +91-8273684939</a> 
+                            <span style="margin:0 4px; color:#ccc;">|</span> 
+                            <a href="${BASE_URL}" style="color:#fff; text-decoration:none;">${iconGlobe} Website</a>
+                            <span style="margin:0 4px; color:#ccc;">|</span>
+                            <a href="https://t.me/ankushonlinetest" style="color:#fff; text-decoration:none;">${iconTelegram} Telegram</a>
+                            <span style="margin:0 4px; color:#ccc;">|</span>
+                            <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k" style="color:#fff; text-decoration:none;">${iconWhatsApp} WhatsApp</a>
+                            <span style="margin:0 4px; color:#ccc;">|</span>
+                            <a href="https://www.youtube.com/@ankushonlinetest" style="color:#fff; text-decoration:none;">${iconYouTube} YouTube</a>
+                        </div>
                     </div>
                 </td></tr>
             </tfoot>
@@ -1689,7 +1696,7 @@
         
         printArea.innerHTML = html; 
 
-        // 🔥 MAGIC TRICK: Change Title for PDF Name 🔥
+        // 🔥 PDF NAME TRICK 🔥
         let cleanSubject = examData.subject || examData.sub || "Subject";
         let cleanTopic = dTopic ? dTopic + " " : "";
         let originalTitle = document.title;
@@ -1703,8 +1710,8 @@
             setTimeout(() => { 
                 document.body.classList.remove('print-pdf'); 
                 document.title = originalTitle; 
-            }, 500); 
-        }, 300); 
+            }, 1000); // Wait extended to guarantee original title is restored properly
+        }, 800); // 800ms wait ensures PDF generator catches the updated document title
     }
 </script>
 </body>
