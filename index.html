@@ -144,30 +144,40 @@
             /* 🔥 WATERMARK FIX 🔥 */
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 100px; font-weight: bold; color: rgba(0, 0, 0, 0.08) !important; z-index: 0 !important; white-space: nowrap; pointer-events: none; width: 100%; text-align: center; }
             
-            /* 🔥 PAGE BORDER HACK 🔥 */
-            .pdf-page-border { position: fixed; top: 0; bottom: 0; left: 0; right: 0; border: 2px solid #1f4e79 !important; z-index: -2 !important; pointer-events: none; border-radius: 4px; }
-            
-            /* 🔥 FIXED HEADER STRIP (Never moves, Stays at very top) 🔥 */
-            .pdf-header-strip { position: fixed; top: 0; left: 0; right: 0; background-color: #1f4e79 !important; color: #ffffff !important; padding: 8px 15px !important; font-size: 15px !important; font-weight: bold !important; z-index: 100 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-bottom: 2px solid #1f4e79; border-radius: 2px 2px 0 0; }
+            /* 🔥 NO POSITION FIXED FOR STRIPS - NATIVE TABLE LAYOUT INSTEAD 🔥 */
+            .pdf-header-strip { 
+                background-color: #1f4e79 !important; 
+                color: #ffffff !important; 
+                padding: 8px 15px !important; 
+                font-size: 15px !important; 
+                font-weight: bold !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                border-bottom: 2px solid #1f4e79; 
+                border-radius: 2px 2px 0 0; 
+                margin-bottom: 10px;
+            }
             .pdf-header-strip a { color: #f39c12 !important; text-decoration: none !important; }
             .pdf-header-strip .f-left { float: left; }
             .pdf-header-strip .f-right { float: right; }
             .pdf-header-strip::after { content: ""; display: table; clear: both; }
 
-            /* 🔥 FIXED FOOTER STRIP (Stays at very bottom) 🔥 */
-            .pdf-footer-strip { position: fixed; bottom: 0; left: 0; right: 0; background-color: #1f4e79 !important; color: #ffffff !important; padding: 8px 15px !important; font-size: 15px !important; font-weight: bold !important; z-index: 100 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-top: 2px solid #1f4e79; border-radius: 0 0 2px 2px; }
+            .pdf-footer-strip { 
+                background-color: #1f4e79 !important; 
+                color: #ffffff !important; 
+                padding: 8px 15px !important; 
+                font-size: 15px !important; 
+                font-weight: bold !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                border-top: 2px solid #1f4e79; 
+                border-radius: 0 0 2px 2px; 
+                margin-top: 10px;
+            }
             .pdf-footer-strip a { color: #ffffff !important; text-decoration: none !important; }
             .pdf-footer-strip .f-left { float: left; }
             .pdf-footer-strip .f-right { float: right; }
             .pdf-footer-strip::after { content: ""; display: table; clear: both; }
-
-            /* 🔥 MAGIC TABLE TO PREVENT HEADER OVERLAP & HANDLE PADDING 🔥 */
-            table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; }
-            table.pdf-main-table th, table.pdf-main-table td { padding: 0 !important; border: none !important; background: transparent !important; }
-            
-            /* SPACING TO KEEP TEXT AWAY FROM HEADER/FOOTER AND SIDE BORDERS */
-            .header-space, .footer-space { height: 45px; } /* Ensures text doesn't hide behind the blue strips */
-            .pdf-content-cell { padding: 0 20px !important; } /* Left and right padding to keep away from border */
             
             /* 🔥 NO EMPTY SPACE AT BOTTOM (AUTO PAGE BREAKS) & BIG FONT 🔥 */
             .print-q { margin-bottom: 10px !important; page-break-inside: auto !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 10px !important; font-size: 18px !important; line-height: 1.35 !important; color: #000000 !important; background: transparent !important;}
@@ -478,7 +488,7 @@
                 <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
-            <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 999; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
+            <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 900; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
                 <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
@@ -914,19 +924,21 @@
         return match ? match[0].toUpperCase() : "";
     }
 
+    // 🔥 COMPLETELY REWRITTEN AND BULLETPROOF PARSER 🔥
     function parseRawQuestions(rawText) {
         rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, ''); 
         rawText = rawText.replace(/\r\n?/g, '\n'); 
         
-        rawText = rawText.replace(/(\s*)(!!\s*\d+\s*!)/g, '\n$2');
-        rawText = rawText.replace(/(\s*)(![A-D]\s)/gi, '\n$2');
-        rawText = rawText.replace(/(\s*)(!!!\s*[A-D])/gi, '\n$2');
-        rawText = rawText.replace(/(\s*)(!!!!)/g, '\n$2');
-        rawText = rawText.replace(/(\s*)(!P\s)/gi, '\n$2');
+        rawText = rawText.replace(/(\n|^)\s*(!!\s*\d+\s*!)/g, '\n$2');
+        rawText = rawText.replace(/(\n|^)\s*(![A-D]\s)/gi, '\n$2');
+        rawText = rawText.replace(/(\n|^)\s*(!!!\s*[A-D])/gi, '\n$2');
+        rawText = rawText.replace(/(\n|^)\s*(!!!!)/g, '\n$2');
+        rawText = rawText.replace(/(\n|^)\s*(!P\s)/gi, '\n$2');
 
-        let parsedQs = []; let lines = rawText.split('\n'); let tempQ = null;
-        let currentPassage = "";
-        let currentMode = ""; 
+        let parsedQs = []; let tempQ = null;
+        let currentPassage = ""; let currentMode = ""; 
+        
+        let lines = rawText.split('\n'); 
         
         for(let i=0; i<lines.length; i++) {
             let line = lines[i].trim();
@@ -934,52 +946,47 @@
             
             line = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             
-            if(line.match(/^[^!]*!P/i)) { 
-                let pText = line.replace(/^[^!]*!P\s*/i, '').trim();
-                if(pText.toLowerCase() === "none" || pText === "") currentPassage = "";
-                else currentPassage = pText;
+            if(line.match(/^!P/i)) { 
+                currentPassage = line.replace(/^!P\s*/i, '').trim();
+                if(currentPassage.toLowerCase() === "none") currentPassage = "";
                 currentMode = "P";
             }
-            else if(line.match(/^[^!]*!!!!/)) { 
-                if(tempQ) tempQ.exp = line.replace(/^[^!]*!!!!\s*/, '').trim(); 
-                currentMode = "exp";
+            else if(line.match(/^!!\s*\d+\s*!/)) {
+                if(tempQ && tempQ.q) parsedQs.push(tempQ);
+                tempQ = { q: line.replace(/^!!\s*\d+\s*!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: currentPassage };
+                currentMode = "q";
             }
-            else if(line.match(/^[^!]*!!!/)) { 
+            else if(line.match(/^!A/i)) { 
+                if(tempQ) tempQ.opts.push({id:"A", text:line.replace(/^!A\s*/i, '').trim()}); 
+                currentMode = "A";
+            }
+            else if(line.match(/^!B/i)) { 
+                if(tempQ) tempQ.opts.push({id:"B", text:line.replace(/^!B\s*/i, '').trim()}); 
+                currentMode = "B";
+            }
+            else if(line.match(/^!C/i)) { 
+                if(tempQ) tempQ.opts.push({id:"C", text:line.replace(/^!C\s*/i, '').trim()}); 
+                currentMode = "C";
+            }
+            else if(line.match(/^!D/i)) { 
+                if(tempQ) tempQ.opts.push({id:"D", text:line.replace(/^!D\s*/i, '').trim()}); 
+                currentMode = "D";
+            }
+            else if(line.match(/^!!!/)) { 
                 if(tempQ) {
-                    tempQ.ans = getCleanAns(line.replace(/^[^!]*!!!\s*/i, ''));
+                    tempQ.ans = getCleanAns(line.replace(/^!!!\s*/i, '').trim());
                 }
                 currentMode = "ans";
             }
-            else if(line.match(/^[^!]*!A/i)) { 
-                if(tempQ) tempQ.opts.push({id:"A", text:line.replace(/^[^!]*!A\s*/i, '').trim()}); 
-                currentMode = "A";
-            }
-            else if(line.match(/^[^!]*!B/i)) { 
-                if(tempQ) tempQ.opts.push({id:"B", text:line.replace(/^[^!]*!B\s*/i, '').trim()}); 
-                currentMode = "B";
-            }
-            else if(line.match(/^[^!]*!C/i)) { 
-                if(tempQ) tempQ.opts.push({id:"C", text:line.replace(/^[^!]*!C\s*/i, '').trim()}); 
-                currentMode = "C";
-            }
-            else if(line.match(/^[^!]*!D/i)) { 
-                if(tempQ) tempQ.opts.push({id:"D", text:line.replace(/^[^!]*!D\s*/i, '').trim()}); 
-                currentMode = "D";
-            }
-            else if(line.match(/^[^!]*!!\s*\d+\s*!/)) {
-                if(tempQ && tempQ.q) parsedQs.push(tempQ);
-                tempQ = { q: line.replace(/^[^!]*!!\s*\d+\s*!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: currentPassage };
-                currentMode = "q";
+            else if(line.match(/^!!!!/)) { 
+                if(tempQ) tempQ.exp = line.replace(/^!!!!\s*/, '').trim(); 
+                currentMode = "exp";
             }
             else {
                 if(tempQ) {
-                    if(currentMode === "exp") {
-                        tempQ.exp += (tempQ.exp ? "<br>" : "") + line;
-                    } else if(currentMode === "q") {
-                        tempQ.q += (tempQ.q ? "<br>" : "") + line;
-                    } else if(currentMode === "P") {
-                        currentPassage += (currentPassage ? "<br>" : "") + line;
-                    }
+                    if(currentMode === "exp") tempQ.exp += (tempQ.exp ? "<br>" : "") + line;
+                    else if(currentMode === "q") tempQ.q += (tempQ.q ? "<br>" : "") + line;
+                    else if(currentMode === "P") currentPassage += (currentPassage ? "<br>" : "") + line;
                 }
             }
         }
@@ -1007,7 +1014,6 @@
             return;
         }
 
-        // 🔥 THE FIX: Magic Topic Hack to bypass Google Sheet column limits 🔥
         let finalQsCount = updateQsCount();
         if(finalQsCount === 0) finalQsCount = parsedQs.length;
         let eTopic = eTopicRaw + "|||QS:" + finalQsCount; 
@@ -1055,7 +1061,6 @@
                 let statusBtn = isActive ? `<button class="btn" style="background:#28a745; margin:0; padding:5px; font-size:12px; width:auto;" onclick="toggleTestStatus('${t.code}', false, ${t.originalIndex})">🟢 Active</button>` 
                                          : `<button class="btn" style="background:#6c757d; margin:0; padding:5px; font-size:12px; width:auto;" onclick="toggleTestStatus('${t.code}', true, ${t.originalIndex})">🔴 Inactive</button>`;
 
-                // Extract Qs from Topic Hack
                 let rawTopic = t.topic || "";
                 let displayTopic = rawTopic;
                 let hackQs = "N/A";
@@ -1306,7 +1311,6 @@
         }
     }
     
-    // 🔥 THE FIX: Smoothly return to Dashboard without closing browser 🔥
     window.addEventListener('popstate', function(event) {
         let overlay = document.getElementById('palette-overlay');
         if (overlay && overlay.style.display === 'block') { 
@@ -1493,6 +1497,15 @@
         
         let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
 
+        // 🔥 NAYA FEATURE: User ne kya choose kiya, wo clearly upar dikhayenge 🔥
+        let userSelectedText = "";
+        let textClass = "";
+        if(data.isBlank) { userSelectedText = "You Skipped this Question"; textClass = "color:#6c757d;"; }
+        else if(data.isRight) { userSelectedText = `Your Answer: ${uAns} (Correct ✅)`; textClass = "color:#28a745;"; }
+        else { userSelectedText = `Your Answer: ${uAns} (Wrong ❌) | Correct Answer is: ${cAns || "Not Given"}`; textClass = "color:#dc3545;"; }
+
+        let userSelectionHtml = `<div style="${textClass} font-weight:bold; margin-bottom:15px; padding:10px; border-radius:4px; background:#f8f9fa; border:1px solid #ccc;">${userSelectedText}</div>`;
+
         let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
@@ -1523,6 +1536,7 @@
             </div>
             ${passHtml}
             <b style="font-size:18px; color:#222; display:block; margin-bottom:15px; line-height:1.4;">${statusIcon} Q${i+1}. ${q.q}</b>
+            ${userSelectionHtml}
             ${optsHtml}
             ${expHtml}
             
@@ -1588,7 +1602,7 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 THE FIX: TABLE-BASED BORDER WITH PADDING TO PREVENT OVERLAP 🔥
+    // 🔥 COMPLETELY FIXED PDF PRINTING LOGIC 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1596,27 +1610,26 @@
         let rawTopic = examData.topic || ""; let dTopic = rawTopic.split("|||QS:")[0] || "";
 
         let html = `
-        <div class="pdf-header-strip">
-            <span class="f-left">🌐 Study Notes Manager</span>
-            <span class="f-right"><a href="${safeTestUrl}" style="color:#f39c12; text-decoration:none;">📝 Give Online Test</a></span>
-        </div>
-
-        <div class="pdf-footer-strip">
-            <span class="f-left">📞 Contact: +91-8273684939</span>
-            <span class="f-right"><a href="${BASE_URL}" style="color:#ffffff; text-decoration:none;">🌐 ankushonlinetest.netlify.app</a></span>
-        </div>
-
-        <div class="watermark">${watermarkText}</div>
-
-        <table class="pdf-main-table" style="position: relative; z-index: 2;">
+        <table class="pdf-main-table" style="width:100%; border-collapse: collapse;">
             <thead style="display: table-header-group;">
-                <tr><th style="height: 45px; padding: 0; border: none; background: transparent;"></th></tr>
+                <tr><th style="padding:0; border:none; text-align:left;">
+                    <div class="pdf-header-strip">
+                        <span class="f-left">🌐 Study Notes Manager</span>
+                        <span class="f-right"><a href="${safeTestUrl}" style="color:#f39c12; text-decoration:none;">📝 Give Online Test</a></span>
+                    </div>
+                </th></tr>
             </thead>
             <tfoot style="display: table-footer-group;">
-                <tr><td style="height: 45px; padding: 0; border: none; background: transparent;"></td></tr>
+                <tr><td style="padding:0; border:none; text-align:left;">
+                    <div class="pdf-footer-strip">
+                        <span class="f-left">📞 Contact: +91-8273684939</span>
+                        <span class="f-right"><a href="${BASE_URL}" style="color:#ffffff; text-decoration:none;">🌐 ankushonlinetest.netlify.app</a></span>
+                    </div>
+                </td></tr>
             </tfoot>
-            <tbody style="position: relative;">
-                <tr><td style="position: relative; padding: 0 20px;">
+            <tbody>
+                <tr><td style="padding: 0 15px; position: relative;">
+                    <div class="watermark">${watermarkText}</div>
                     <div class="print-header"><h2>${examData.exam.toUpperCase()} ${mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)")}</h2><h3>${examData.subject || examData.sub || "Subject"} (${dTopic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>
         `;
         
@@ -1644,9 +1657,10 @@
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
                     let ansColor = (gAns === cAns) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:16px; ${ansColor}">Your Ans: ${gAns || uAns}</span></div>`;
+                    let uAnsDisplay = (gAns && uAns !== "N/A") ? gAns : "Skipped";
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans || "Not Given"}</span> <span style="margin-left:15px; font-weight:bold; font-size:16px; ${ansColor}">Your Ans: ${uAnsDisplay}</span></div>`;
                 } else {
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans || "Not Given"}</span></div>`;
                 }
                 if(mode === 'full' && q.exp) { html += `<div class="print-exp"><b>Explanation:</b><br> ${q.exp}</div>`; }
             }
