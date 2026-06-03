@@ -174,7 +174,6 @@
 </head>
 <body>
 
-<!-- 🔥 CUSTOM BEAUTIFUL POPUPS 🔥 -->
 <div id="custom-modal" class="modal-overlay">
     <div class="modal-box">
         <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
@@ -203,7 +202,6 @@
         </div>
     </div>
 
-    <!-- STUDENT GLOBAL DASHBOARD -->
     <div id="student-dashboard-view" class="view-section active-view">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
@@ -214,8 +212,7 @@
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 10px; font-size:16px;">📚 Currently Available Tests</h3>
             <div style="text-align:center; margin-bottom:15px;">
                 <select id="st-subject-filter" onchange="renderActiveTestList()" style="width:100%; max-width:350px; padding:10px; border:2px solid #1f4e79; border-radius:6px; font-weight:bold; color:#1f4e79; display:none; outline:none; background:#f4f6f8;">
-                    <!-- Options populated by JS -->
-                </select>
+                    </select>
             </div>
             
             <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading data, please wait...</div>
@@ -254,7 +251,6 @@
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
-    <!-- ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -271,7 +267,6 @@
         </div>
     </div>
 
-    <!-- LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">Loading data, please wait...</h3>
@@ -283,7 +278,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 Refresh Page</button>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -365,7 +359,6 @@
         </div>
     </div>
 
-    <!-- TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -402,7 +395,6 @@
         </div>
     </div>
 
-    <!-- EXAM INTERFACE -->
     <div id="exam-view" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -422,7 +414,6 @@
         </div>
     </div>
 
-    <!-- FIXED BOTTOM CONTROLS FOR EXAM -->
     <div id="exam-bottom-controls">
         <div class="mini-palette-wrapper">
             <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
@@ -436,7 +427,6 @@
         </div>
     </div>
 
-    <!-- PALETTE OVERLAY -->
     <div id="palette-overlay" class="fullscreen-overlay">
         <div class="fs-container" style="min-height: auto;">
             <div class="fs-header">
@@ -452,7 +442,6 @@
         </div>
     </div>
 
-    <!-- RESULT & REPORT CARD -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -470,7 +459,6 @@
                 <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
-            <!-- 🔥 STICKY ANALYSIS BUTTONS 🔥 -->
             <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 999; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
@@ -505,7 +493,6 @@
 
 </div> 
 
-<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
@@ -679,6 +666,7 @@
         document.body.appendChild(script);
     }
     
+    // 🔥 FILTER ACTIVE TESTS BY SUBJECT 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
         let list = document.getElementById('st-active-list');
@@ -705,7 +693,7 @@
         renderActiveTestList();
     };
 
-    // 🔥 Added "Qs: count" to Active Tests View 🔥
+    // 🔥 Added Fallback for "Qs: count" in Active Tests 🔥
     function renderActiveTestList() {
         let filterVal = document.getElementById('st-subject-filter').value;
         let list = document.getElementById('st-active-list');
@@ -716,13 +704,17 @@
             if(filterVal !== "ALL" && currentSub !== filterVal) return;
             let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
             let priceText = isFreeStatus ? "Free" : "₹" + t.price;
+            
+            // Smart Qs Fallback
+            let qsCount = t.qs || (t.questions ? t.questions.length : "N/A");
+
             html += `<div style="background:#fff; border:1px solid #ccc; border-radius:8px; padding:15px; width:100%; max-width:350px; text-align:left; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
                 <h4 style="margin:0 0 5px 0; color:#1f4e79;">${t.exam}</h4>
                 <p style="margin:0 0 10px 0; font-size:13px; color:#555;"><b>${currentSub}</b> ${t.topic ? "("+t.topic+")" : ""}</p>
                 <div style="font-size:12px; margin-bottom:10px;">
                     <span class="badge">Code: ${t.code}</span> 
                     <span class="badge">⏱️ ${t.time || t.totTime || 0} Min</span> 
-                    <span class="badge">Qs: ${t.qs || 0}</span>
+                    <span class="badge">Qs: ${qsCount}</span>
                     <span class="badge">Marks: ${t.marks || 2}</span>
                 </div>
                 <button class="btn btn-blue" style="margin:0; padding:8px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>
@@ -852,7 +844,14 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
-    // 🔥 THE FIX: Super Smart Evaluator & Parser 🔥
+    // 🔥 THE FIX: Super Smart Evaluator (Extracts exactly A, B, C, or D) 🔥
+    function getCleanAns(val) {
+        if(!val) return "";
+        // Extract ONLY the first matching A, B, C, or D regardless of stars, spaces, or html tags
+        let match = val.toString().replace(/<[^>]*>/g, '').match(/[A-D]/i);
+        return match ? match[0].toUpperCase() : "";
+    }
+
     function parseRawQuestions(rawText) {
         rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, ''); 
         rawText = rawText.replace(/\r\n?/g, '\n'); 
@@ -883,12 +882,9 @@
                 if(tempQ) tempQ.exp = line.replace(/^[^!]*!!!!\s*/, '').trim(); 
                 currentMode = "exp";
             }
-            // 🔥 ANSWER BUG FIXED HERE 🔥
             else if(line.match(/^[^!]*!!!/)) { 
                 if(tempQ) {
-                    let cleanAns = line.replace(/<[^>]*>/g, '').replace(/\*/g, '').replace(/^[^!]*!!!\s*/i, '').trim().toUpperCase();
-                    let matched = cleanAns.match(/[A-D]/);
-                    if(matched) tempQ.ans = matched[0];
+                    tempQ.ans = getCleanAns(line.replace(/^[^!]*!!!\s*/i, ''));
                 }
                 currentMode = "ans";
             }
@@ -994,7 +990,7 @@
                 html += `<div class="test-card">
                     <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><h4 style="margin:0;">${currentSub} (${t.code})</h4> ${statusBtn}</div>
                     <div style="margin-bottom: 10px;">
-                        <span class="badge">Qs: ${t.qs}</span><span class="badge">${priceText}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
+                        <span class="badge">Qs: ${t.qs || 0}</span><span class="badge">${priceText}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
                         <span class="badge">T: ${t.totTime||0}m / Q: ${t.qTime||0}s</span><span class="badge">Date: ${t.date}</span>
                         <span class="badge" style="background:#ffc107;">Key: ${t.key}</span>
                     </div>
@@ -1027,7 +1023,6 @@
         }; document.body.appendChild(script);
     }
 
-    // 🔥 THE FIX: REVERSE PARSER FOR OLD TESTS 🔥
     function editTest(idx) {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t) return;
         document.getElementById('a-exam').value = t.exam || ""; 
@@ -1048,7 +1043,7 @@
                 let p = q.passage ? `!P ${q.passage.replace(/<br>/g, '\n')}\n` : "";
                 let qs = `!!${i+1}! ${q.q.replace(/<br>/g, '\n').replace(/<b>(.*?)<\/b>/g, '**$1**')}\n`;
                 let opts = q.opts.map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
-                let ans = `!!! ${q.ans}\n`;
+                let ans = `!!! ${q.ans ? getCleanAns(q.ans) : ""}\n`;
                 let exp = q.exp ? `!!!! ${q.exp.replace(/<br>/g, '\n').replace(/<b>(.*?)<\/b>/g, '**$1**')}\n` : "";
                 return p + qs + opts + ans + exp;
             }).join('\n');
@@ -1136,7 +1131,7 @@
     function adminDownloadPDF(idx, mode) {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t || !t.rawText) { showCustomAlert("Error", "Data not found!", "❌"); return; }
         let parsedQs = parseRawQuestions(t.rawText); examData = { exam: t.exam, subject: t.subject || t.sub || "Subject", topic: t.topic, code: t.code, questions: parsedQs };
-        studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = q.ans; }); executePDFPrint(studentInfo.name, mode);
+        studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; userAnswers = []; parsedQs.forEach((q, i) => { userAnswers[i] = getCleanAns(q.ans); }); executePDFPrint(studentInfo.name, mode);
     }
 
     function startExam(isReattempt) {
@@ -1281,6 +1276,7 @@
 
     function submitExamConfirmation() { showCustomConfirm("Submit Exam", "Are you sure you want to submit the test?", () => { clearInterval(globalTimer); clearInterval(qTimer); calculateScoreAndSubmit(); }, "📤"); }
 
+    // 🔥 THE FIX: Super Evaluator Implementation for Correct Scoring 🔥
     function calculateScoreAndSubmit() {
         clearInterval(globalTimer); clearInterval(qTimer);
         document.getElementById('student-top-bar').style.display = 'none'; 
@@ -1293,8 +1289,19 @@
         document.getElementById('timer-box').style.display = 'none';
 
         studentInfo.right = 0; studentInfo.wrong = 0; studentInfo.blank = 0;
+        
         for(let i=0; i<examData.questions.length; i++) { 
-            if(userAnswers[i] === null) { studentInfo.blank++; } else if(userAnswers[i] === examData.questions[i].ans) { studentInfo.right++; } else { studentInfo.wrong++; }
+            let uAns = userAnswers[i];
+            let cAns = getCleanAns(examData.questions[i].ans);
+            let gAns = getCleanAns(uAns);
+
+            if(!uAns) { 
+                studentInfo.blank++; 
+            } else if(gAns === cAns) { 
+                studentInfo.right++; 
+            } else { 
+                studentInfo.wrong++; 
+            }
         }
         
         document.getElementById('btn-cnt-right').innerText = studentInfo.right; document.getElementById('btn-cnt-wrong').innerText = studentInfo.wrong; document.getElementById('btn-cnt-blank').innerText = studentInfo.blank;
@@ -1318,7 +1325,7 @@
 
         fetch(SCRIPT_URL, {
             method: 'POST', 
-            body: newSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
+            body: new URLSearchParams({'action': 'submitScore', 'name': studentInfo.name, 'phone': studentInfo.phone, 'score': studentInfo.score, 'testCode': submissionCode, 'right': studentInfo.right, 'wrong': studentInfo.wrong, 'blank': studentInfo.blank, 'timeSpent': totalTimeSpent}),
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }).then(res => res.json()).then(data => {
             studentInfo.attempt = data.attempt || (isReattemptMode ? "Reattempt" : 1);
@@ -1334,7 +1341,13 @@
         currentAnalysisArray = []; currentAnalysisType = type;
         
         examData.questions.forEach((q, i) => {
-            let uAns = userAnswers[i]; let isRight = uAns === q.ans; let isBlank = uAns === null; let isWrong = !isBlank && !isRight;
+            let uAns = userAnswers[i]; 
+            let cAns = getCleanAns(q.ans);
+            let gAns = getCleanAns(uAns);
+            let isRight = (gAns === cAns) && (uAns !== null);
+            let isBlank = uAns === null;
+            let isWrong = !isBlank && !isRight;
+
             if((type === 'right' && isRight) || (type === 'wrong' && isWrong) || (type === 'blank' && isBlank)) {
                 currentAnalysisArray.push({q: q, originalIndex: i, uAns: uAns, isRight: isRight, isBlank: isBlank});
             }
@@ -1350,7 +1363,6 @@
         renderAnalysisSlide();
         document.getElementById('analysis-box').style.display = 'block';
         
-        // 🔥 SCROLL CUT-OFF FIX: Safe margin to avoid header overlap 🔥
         setTimeout(() => { 
             const el = document.getElementById('analysis-box');
             const y = el.getBoundingClientRect().top + window.scrollY - 130;
@@ -1361,22 +1373,26 @@
     function renderAnalysisSlide() {
         let data = currentAnalysisArray[currentAnalysisIndex];
         let q = data.q; let i = data.originalIndex; let uAns = data.uAns;
+        let cAns = getCleanAns(q.ans);
+        let gAns = getCleanAns(uAns);
+        
         let statusIcon = data.isRight ? "✅" : (data.isBlank ? "⬜" : "❌");
         let titles = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
         
         let passHtml = q.passage ? `<div style="background:#e9ecef; padding:10px; border-left:4px solid #f39c12; margin-bottom:15px; font-size:14px; font-style:italic; color:#333;">${q.passage}</div>` : ``;
 
-        // 🔥 ADDED ✅ AND ❌ SYMBOLS INSIDE OPTIONS BOX 🔥
+        // 🔥 THE FIX: Added ✅ and ❌ symbols inside options 🔥
         let optsHtml = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;">`;
         q.opts.forEach(o => {
             let bg = "#fff"; let border = "1px solid #ccc"; let fw = "normal"; let col = "#333";
+            let oClean = getCleanAns(o.id);
             let iconHtml = `<span style="margin-right:8px; font-size:16px; visibility:hidden;">✅</span>`;
             
-            if(o.id === q.ans) { 
+            if(oClean === cAns) { 
                 bg = "#e6f9ec"; border = "1px solid #28a745"; fw = "bold"; col = "#155724"; 
                 iconHtml = `<span style="margin-right:8px; font-size:16px;">✅</span>`;
             }
-            else if(o.id === uAns && !data.isRight) { 
+            else if(oClean === gAns && !data.isRight) { 
                 bg = "#f8d7da"; border = "1px solid #dc3545"; fw = "bold"; col = "#721c24"; 
                 iconHtml = `<span style="margin-right:8px; font-size:16px;">❌</span>`;
             }
@@ -1478,7 +1494,11 @@
         
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
-            let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && uAns !== q.ans && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
+            
+            // 🔥 THE FIX: Super Evaluator Implementation for Print 🔥
+            let cAns = getCleanAns(q.ans);
+            let gAns = getCleanAns(uAns);
+            let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && gAns !== cAns && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
             let wrongMarkHtml = (isWrongAns && mode === 'full') ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
             
             if(q.passage) { html += `<div class="print-passage">${q.passage}</div>`; }
@@ -1486,7 +1506,8 @@
             html += `<div class="print-q"><b>${wrongMarkHtml}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
             q.opts.forEach(o => {
                 let innerStyle = "padding: 2px 0; color: #000;";
-                if(mode !== 'q_only' && o.id === q.ans) {
+                let oClean = getCleanAns(o.id);
+                if(mode !== 'q_only' && oClean === cAns) {
                     innerStyle = "background-color: #0f5132 !important; color: #ffffff !important; font-weight: bold; padding: 2px 8px; border-radius: 4px; display: inline-block; -webkit-print-color-adjust: exact; print-color-adjust: exact;";
                 }
                 html += `<div class="opt-item"><span style="${innerStyle}">${o.id}. ${o.text}</span></div>`;
@@ -1495,10 +1516,10 @@
             
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
-                    let ansColor = (uAns === q.ans) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:15px; ${ansColor}">Your Ans: ${uAns}</span></div>`;
+                    let ansColor = (gAns === cAns) ? "color: green;" : "color: red;";
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${gAns || uAns}</span></div>`;
                 } else {
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${q.ans}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans}</span></div>`;
                 }
                 if(mode === 'full' && q.exp) { html += `<div class="print-exp"><b>Explanation:</b><br> ${q.exp}</div>`; }
             }
