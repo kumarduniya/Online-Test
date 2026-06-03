@@ -143,11 +143,11 @@
             
             /* 🔥 SUPER WATERMARK: BIG, DIAGONAL, ON TOP OF TEXT 🔥 */
             .watermark { 
-                position: fixed; 
-                top: 50%; 
-                left: 50%; 
-                transform: translate(-50%, -50%) rotate(-55deg); 
-                font-size: 180px !important; 
+                position: fixed !important; 
+                top: 50vh !important; 
+                left: 50vw !important; 
+                transform: translate(-50%, -50%) rotate(-45deg) !important; 
+                font-size: 160px !important; 
                 font-weight: 900 !important; 
                 color: rgba(0, 0, 0, 0.12) !important; 
                 z-index: 999999 !important; /* Forces it over the text */
@@ -156,39 +156,36 @@
                 width: 200%; 
                 text-align: center; 
                 text-transform: uppercase;
+                display: block !important;
             }
             
             /* 🔥 NATIVE TABLE STRIPS (NO POSITION FIXED) 🔥 */
             .pdf-header-strip { 
                 background-color: #1f4e79 !important; 
-                color: #ffffff !important; 
                 padding: 10px 15px !important; 
-                font-size: 14px !important; 
-                font-weight: bold !important; 
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
                 border-bottom: 2px solid #1f4e79; 
                 border-radius: 2px 2px 0 0; 
                 margin-bottom: 5px;
+                display: block;
             }
             .pdf-header-strip a { color: #f39c12 !important; text-decoration: none !important; }
 
             .pdf-footer-strip { 
                 background-color: #1f4e79 !important; 
-                color: #ffffff !important; 
                 padding: 10px 15px !important; 
-                font-size: 14px !important; 
-                font-weight: bold !important; 
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
                 border-top: 2px solid #1f4e79; 
                 border-radius: 0 0 2px 2px; 
                 margin-top: 5px;
+                display: block;
             }
             .pdf-footer-strip a { color: #ffffff !important; text-decoration: none !important; }
 
-            /* TABLE OVERRIDES TO PREVENT HIDDEN TEXT */
-            table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; z-index: 10;}
+            /* TABLE OVERRIDES TO PREVENT HIDDEN TEXT AND ALIGNMENT ISSUES */
+            table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; z-index: 10; position: relative;}
             table.pdf-main-table th, table.pdf-main-table td { padding: 0 !important; border: none !important; background: transparent !important; }
             
             /* 🔥 BLANK SPACE KILLER: PAGE BREAK AUTO 🔥 */
@@ -1605,7 +1602,7 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 COMPLETELY FIXED PDF PRINTING LOGIC (Name, Watermark, Layout) 🔥
+    // 🔥 PDF PRINTING FIX (Native Table Layout, Big Watermark, Social Links, File Name) 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1618,16 +1615,30 @@
             <thead style="display: table-header-group;">
                 <tr><td style="padding: 0; border: none; font-weight: normal;">
                     <div class="pdf-header-strip">
-                        <span class="f-left">🌐 Study Notes Manager</span>
-                        <span class="f-right"><a href="${safeTestUrl}">📝 Give Online Test</a></span>
+                        <table style="width:100%; border:none; background:transparent;">
+                            <tr>
+                                <td style="text-align:left; color:#ffffff; font-weight:bold; font-size:15px; border:none; padding:0;">🌐 Study Notes Manager</td>
+                                <td style="text-align:right; border:none; padding:0;"><a href="${safeTestUrl}" style="color:#f39c12; font-weight:bold; font-size:15px; text-decoration:none;">📝 Give Online Test</a></td>
+                            </tr>
+                        </table>
                     </div>
                 </td></tr>
             </thead>
             <tfoot style="display: table-footer-group;">
                 <tr><td style="padding: 0; border: none; font-weight: normal;">
                     <div class="pdf-footer-strip">
-                        <span class="f-left">📞 Contact: +91-8273684939</span>
-                        <span class="f-right"><a href="${BASE_URL}">🌐 ankushonlinetest.netlify.app</a></span>
+                        <table style="width:100%; border:none; background:transparent;">
+                            <tr>
+                                <td style="text-align:left; color:#ffffff; font-size:13px; font-weight:bold; border:none; padding:0;">
+                                    📞 Contact: +91-8273684939 | 🌐 ankushonlinetest.netlify.app
+                                </td>
+                                <td style="text-align:right; border:none; padding:0;">
+                                    <a href="https://www.youtube.com/@ankushonlinetest" style="color:#ffffff; text-decoration:none; margin-left:12px; font-size:13px; font-weight:bold;">▶️ Join YouTube</a>
+                                    <a href="https://t.me/ankushonlinetest" style="color:#ffffff; text-decoration:none; margin-left:12px; font-size:13px; font-weight:bold;">✈️ Join Telegram</a>
+                                    <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k" style="color:#ffffff; text-decoration:none; margin-left:12px; font-size:13px; font-weight:bold;">💬 Join WhatsApp</a>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </td></tr>
             </tfoot>
@@ -1681,6 +1692,7 @@
         // 🔥 MAGIC TRICK: Change Title for PDF Name 🔥
         let cleanSubject = examData.subject || examData.sub || "Subject";
         let cleanTopic = dTopic ? dTopic + " " : "";
+        let originalTitle = document.title;
         let newFileName = `${cleanSubject} ${cleanTopic}ankushonlinetest.netlify.app`;
         document.title = newFileName; 
         
@@ -1690,6 +1702,7 @@
             window.print(); 
             setTimeout(() => { 
                 document.body.classList.remove('print-pdf'); 
+                document.title = originalTitle; 
             }, 500); 
         }, 300); 
     }
