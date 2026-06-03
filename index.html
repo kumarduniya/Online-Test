@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -127,59 +127,78 @@
         .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* 🔥 PURE CSS PRINTING - PERFECT TABLE HACK FOR BORDER/HEADER/FOOTER 🔥 */
-        body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; }
-        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; }
-        body.print-pdf #print-area { display: block !important; position: static !important; width: 100% !important; overflow: visible !important; height: auto !important; }
+        /* =========================================================================
+           🔥 ULTIMATE PDF PRINTING FIX: BORDERS, MARGINS, FIXED HEADER/FOOTER 🔥
+           ========================================================================= */
+        body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
         
-        #print-area { display: none; background: white; color: black; text-align: left; position: relative; z-index: 1;}
+        #print-area { display: none; background: white; color: black; text-align: left; }
 
         @media print {
-            @page { size: A4; margin: 10mm; } 
+            /* Uniform Page Margin */
+            @page { size: A4; margin: 8mm; } 
             
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
             .container { box-shadow: none !important; }
-            
             #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay, .admin-lock { display: none !important; }
             
-            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
-            #print-area * { visibility: visible !important; position: relative; }
-            
-            /* 🔥 THE FIX: WATERMARK (z-index 0 to stay behind text but visible) 🔥 */
-            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08) !important; z-index: -1 !important; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
-            
-            /* 🔥 TABLE HACK FOR PERFECT LAYOUT EVERY PAGE 🔥 */
-            table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; }
-            table.pdf-main-table th, table.pdf-main-table td { padding: 0 !important; border: none !important; }
-            
-            /* 🔥 LEFT & RIGHT BORDER + PADDING FOR TEXT (Solves sticking issue) 🔥 */
-            table.pdf-main-table tbody td {
-                border-left: 2px solid #1f4e79 !important;
-                border-right: 2px solid #1f4e79 !important;
-                padding: 25px 15px 15px 25px !important; /* Top:25px, Right:15px, Bottom:15px, Left:25px */
+            /* The Main Printable Container */
+            #print-area { 
+                display: block !important; 
+                width: 100% !important; 
+                overflow: visible !important; 
+                height: auto !important; 
+                font-family: Arial, sans-serif !important; 
+                /* Padding to push content away from fixed borders and header/footer */
+                padding-top: 55px !important; 
+                padding-bottom: 45px !important; 
+                position: relative;
             }
+            #print-area * { visibility: visible !important; }
             
-            /* 🔥 NO FIXED POSITIONING - USE TABLE HEADER/FOOTER GROUPS 🔥 */
-            .pdf-header-strip { background-color: #1f4e79 !important; color: #ffffff !important; padding: 10px 15px !important; font-size: 15px !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 4px 4px 0 0; }
+            /* 🔥 FIXED HEADER STRIP (Never moves) 🔥 */
+            .pdf-header-strip { 
+                position: fixed; top: 0; left: 0; right: 0; height: 25px;
+                background-color: #1f4e79 !important; color: #ffffff !important; 
+                padding: 10px 15px; font-size: 15px; font-weight: bold; 
+                z-index: 100 !important; border-bottom: 2px solid #1f4e79;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
             .pdf-header-strip a { color: #f39c12 !important; text-decoration: none !important; }
             .pdf-header-strip .f-left { float: left; }
             .pdf-header-strip .f-right { float: right; }
-            .pdf-header-strip::after { content: ""; display: table; clear: both; }
-
-            .pdf-footer-strip { background-color: #1f4e79 !important; color: #ffffff !important; padding: 10px 15px !important; font-size: 15px !important; font-weight: bold !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 0 0 4px 4px; }
+            
+            /* 🔥 FIXED FOOTER STRIP (Sticks exactly to bottom of every page) 🔥 */
+            .pdf-footer-strip { 
+                position: fixed; bottom: 0; left: 0; right: 0; height: 25px;
+                background-color: #1f4e79 !important; color: #ffffff !important; 
+                padding: 10px 15px; font-size: 15px; font-weight: bold; 
+                z-index: 100 !important; border-top: 2px solid #1f4e79;
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
             .pdf-footer-strip a { color: #ffffff !important; text-decoration: none !important; }
             .pdf-footer-strip .f-left { float: left; }
             .pdf-footer-strip .f-right { float: right; }
-            .pdf-footer-strip::after { content: ""; display: table; clear: both; }
             
-            /* 🔥 ALLOW PAGE BREAKS TO FILL EMPTY SPACE + BADA FONT 🔥 */
-            .print-q { margin-bottom: 8px !important; page-break-inside: auto !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 8px !important; font-size: 18px !important; line-height: 1.3 !important; color: #000000 !important; background: transparent !important;}
-            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px !important; margin-top: 4px !important; margin-bottom: 4px !important; background: transparent !important; page-break-inside: auto !important;}
-            .opt-item { font-size: 18px !important; box-sizing: border-box; color: #000000 !important; background: transparent !important;}
-            .print-ans { font-weight: bold; font-size: 16px !important; color: #000000 !important; display: block; margin-top: 4px !important; margin-bottom: 2px !important; page-break-inside: avoid !important;}
-            .print-exp { color: #222222 !important; font-size: 16px !important; margin-top: 2px !important; line-height: 1.3 !important; page-break-inside: auto !important;}
-            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px !important; padding-bottom: 5px !important;}
-            .print-passage { padding:4px !important; margin-bottom:4px !important; font-style:italic; border-left:4px solid #333; font-size:18px !important; background: transparent !important; page-break-inside: auto !important;}
+            /* 🔥 FIXED OUTER PAGE BORDER 🔥 */
+            .pdf-page-border { 
+                position: fixed; top: 0; bottom: 0; left: 0; right: 0; 
+                border: 2px solid #1f4e79 !important; 
+                z-index: -2 !important; pointer-events: none; 
+            }
+            
+            /* 🔥 LIGHT WATERMARK IN CENTER 🔥 */
+            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08) !important; z-index: -1 !important; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
+            
+            /* 🔥 CONTENT FORMATTING (NO XXX GAP, PERFECT PADDING) 🔥 */
+            .print-header { text-align: center; margin-bottom: 15px !important; margin-top: 0 !important; padding: 0 15px !important; }
+            .print-q { margin: 0 15px 12px 15px !important; page-break-inside: avoid !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 12px !important; font-size: 18px !important; line-height: 1.35 !important; color: #000000 !important; }
+            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px !important; margin-top: 8px !important; margin-bottom: 8px !important; page-break-inside: avoid;}
+            .opt-item { font-size: 18px !important; box-sizing: border-box; color: #000000 !important; }
+            .print-ans { font-weight: bold; font-size: 16px !important; color: #000000 !important; display: block; margin-top: 8px !important; margin-bottom: 4px !important; page-break-inside: avoid !important;}
+            .print-exp { color: #222222 !important; font-size: 16px !important; margin-top: 4px !important; line-height: 1.35 !important; page-break-inside: auto !important;}
+            .print-passage { margin: 0 15px 10px 15px !important; padding:8px !important; font-style:italic; border-left:4px solid #333; font-size:18px !important; background: transparent !important; page-break-inside: avoid;}
             
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
@@ -267,12 +286,13 @@
                         <span style="color:#6c757d;">⬜ Blank (<span id="gr-b">0</span>)</span>
                     </div>
                 </div>
+
                 <h3 style="color: #1f4e79; border-bottom:2px solid #ccc; padding-bottom:5px;">📜 Individual Test Records</h3>
                 <div id="st-hist-list"></div>
             </div>
         </div>
         
-        <!-- 🔥 THE FIX: VISIBLE FLOATING ADMIN LOCK 🔥 -->
+        <!-- 🔥 VISIBLE FLOATING ADMIN LOCK 🔥 -->
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
@@ -346,7 +366,7 @@
 
             <div class="form-group">
                 <label style="color: #dc3545;"><b>Paste Questions Here:</b> (Use <b>!P</b> for Passage/Topic, <b>!P none</b> to remove)</label>
-                <textarea id="a-rawdata" placeholder="!P Read the passage carefully...&#10;!!1! Question 1...&#10;!A Option 1...&#10;!!! A&#10;!!!! Explanation..."></textarea>
+                <textarea id="a-rawdata" onkeyup="updateQsCount()" onchange="updateQsCount()" placeholder="!P Read the passage carefully...&#10;!!1! Question 1...&#10;!A Option 1...&#10;!!! A&#10;!!!! Explanation..."></textarea>
             </div>
             <button id="btn-generate" class="btn btn-blue" onclick="generateAndSaveLink()">🚀 Generate / Update Test</button>
             
@@ -494,6 +514,7 @@
                 <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
+            <!-- 🔥 STICKY ANALYSIS BUTTONS 🔥 -->
             <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 999; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
@@ -550,6 +571,16 @@
     let currentAnalysisArray = [];
     let currentAnalysisIndex = 0;
     let currentAnalysisType = "";
+
+    // 🔥 THE FIX: SUPER SMART QS COUNTER FUNCTION 🔥
+    function updateQsCount() {
+        let text = document.getElementById('a-rawdata').value;
+        let matches = text.match(/!!\s*\d+\s*!/g);
+        let count = matches ? matches.length : 0;
+        let countBox = document.getElementById('a-qs-count');
+        if(countBox) countBox.value = count;
+        return count;
+    }
 
     window.onload = initApp;
 
@@ -629,13 +660,10 @@
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('student-top-bar').style.display = 'none';
         
-        // 🔥 SMART AUTO-COUNT LISTENER 🔥
+        // 🔥 LISTENER ATTACHED 🔥
         let rawDataInput = document.getElementById('a-rawdata');
         if(rawDataInput) {
-            rawDataInput.addEventListener('input', function() {
-                let parsed = parseRawQuestions(this.value);
-                document.getElementById('a-qs-count').value = parsed.length;
-            });
+            rawDataInput.addEventListener('input', updateQsCount);
         }
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -711,7 +739,6 @@
         document.body.appendChild(script);
     }
     
-    // 🔥 FILTER ACTIVE TESTS & SUPER SYNC WITH LOCAL STORAGE 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
         let list = document.getElementById('st-active-list');
@@ -721,6 +748,7 @@
         let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         let allTests = [...serverTests];
         
+        // Merge Local tests if server response is delayed
         localTests.forEach(lt => {
             if(lt.isActive && !allTests.find(st => st.code === lt.code)) {
                 allTests.push(lt);
@@ -759,17 +787,17 @@
             let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
             let priceText = isFreeStatus ? "Free" : "₹" + t.price;
             
-            // 🔥 BULLETPROOF QS COUNTING FALLBACK 🔥
+            // 🔥 THE FIX: NEVER SHOW 0 OR N/A AGAIN. Always calculate if missing. 🔥
             let qsCount = t.qs;
-            if (!qsCount) {
+            if (!qsCount || qsCount === 0 || qsCount === "N/A") {
                 if (t.questions && Array.isArray(t.questions) && t.questions.length > 0) {
                     qsCount = t.questions.length;
                 } else if (t.rawText) {
                     let match = t.rawText.match(/!!\s*\d+\s*!/g);
-                    if(match) qsCount = match.length;
+                    qsCount = match ? match.length : 0;
                 }
             }
-            if (!qsCount) qsCount = 0;
+            if (!qsCount) qsCount = 0; // Absolute fallback
 
             html += `<div style="background:#fff; border:1px solid #ccc; border-radius:8px; padding:15px; width:100%; max-width:350px; text-align:left; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
                 <h4 style="margin:0 0 5px 0; color:#1f4e79;">${t.exam}</h4>
@@ -1006,8 +1034,9 @@
             return;
         }
 
-        // 🔥 THE FIX: Storing 'qs' explicitly for instant update 🔥
-        let finalQsCount = parseInt(document.getElementById('a-qs-count').value) || parsedQs.length;
+        // 🔥 GET QS COUNT FORCIBLY 🔥
+        let finalQsCount = updateQsCount();
+        if(finalQsCount === 0) finalQsCount = parsedQs.length;
 
         let finalObj = { exam: eName, subject: eSub, sub: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, qs: finalQsCount, isActive: true };
         let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
@@ -1052,10 +1081,23 @@
                 let statusBtn = isActive ? `<button class="btn" style="background:#28a745; margin:0; padding:5px; font-size:12px; width:auto;" onclick="toggleTestStatus('${t.code}', false, ${t.originalIndex})">🟢 Active</button>` 
                                          : `<button class="btn" style="background:#6c757d; margin:0; padding:5px; font-size:12px; width:auto;" onclick="toggleTestStatus('${t.code}', true, ${t.originalIndex})">🔴 Inactive</button>`;
 
+                // Local Dashboard Counter logic
+                let qsCount = t.qs;
+                if (!qsCount || qsCount === 0 || qsCount === "N/A") {
+                    if (t.questions && Array.isArray(t.questions) && t.questions.length > 0) {
+                        qsCount = t.questions.length;
+                    } else if (t.rawText) {
+                        let match = t.rawText.match(/!!\s*\d+\s*!/g);
+                        qsCount = match ? match.length : 0;
+                    }
+                }
+                if (!qsCount) qsCount = 0;
+
                 html += `<div class="test-card">
                     <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><h4 style="margin:0;">${currentSub} (${t.code})</h4> ${statusBtn}</div>
                     <div style="margin-bottom: 10px;">
-                        <span class="badge">Qs: ${t.qs || 0}</span><span class="badge">${priceText}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
+                        <span class="badge" style="background:#1f4e79; color:white;">Qs: ${qsCount}</span>
+                        <span class="badge">${priceText}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
                         <span class="badge">T: ${t.totTime||0}m / Q: ${t.qTime||0}s</span><span class="badge">Date: ${t.date}</span>
                         <span class="badge" style="background:#ffc107;">Key: ${t.key}</span>
                     </div>
@@ -1116,7 +1158,7 @@
 
         document.getElementById('a-key').value = t.key || ""; 
         document.getElementById('a-rawdata').value = raw || "";
-        document.getElementById('a-qs-count').value = parseRawQuestions(raw || "").length; // Auto count on edit
+        updateQsCount();
 
         togglePriceBox(); switchAdminTab('create'); 
         showCustomAlert("Edit Mode", "Test data loaded! Please review and click 'Generate/Update Test' to fix any missing data.", "✏️");
@@ -1225,10 +1267,11 @@
 
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); 
         
-        // 🔥 HISTORY API & BACK BUTTON FIX: Record test entry 🔥
         document.getElementById('exam-view').style.display = '';
         document.getElementById('exam-view').classList.add('active-view');
         document.getElementById('exam-bottom-controls').style.display = 'block';
+        
+        // 🔥 BACK BUTTON HISTORY LOGIC 🔥
         history.pushState({ inTest: true }, "Test Started", "#test");
         
         document.getElementById('timer-box').style.display = 'flex';
@@ -1260,7 +1303,6 @@
         updateCounts();
     }
     
-    // 🔥 HISTORY API & BACK BUTTON FIX: Directs to Home if back is pressed in test 🔥
     function togglePaletteOverlay(forceState) {
         let overlay = document.getElementById('palette-overlay');
         let isOpen = overlay.style.display === 'block';
@@ -1277,13 +1319,13 @@
         }
     }
     
+    // 🔥 BACK BUTTON FIX: PROPER REDIRECT WITHOUT CLOSING BROWSER 🔥
     window.addEventListener('popstate', function(event) {
         let overlay = document.getElementById('palette-overlay');
         if (overlay && overlay.style.display === 'block') { 
             overlay.style.display = 'none'; 
             history.pushState({ inTest: true }, "Test Started", "#test");
         } else if (document.getElementById('exam-view').classList.contains('active-view')) {
-            // 🔥 User pressed Back Button during the test -> Return to Home Safely 🔥
             window.location.href = BASE_URL; 
         }
     });
@@ -1550,30 +1592,32 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
+    // 🔥 THE FIX: PERFECT PDF BORDER, HEADER & FOOTER 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
 
-        // 🔥 THE FIX: TABLE-BASED BORDER, HEADER & FOOTER WITH CLICKABLE LINKS 🔥
         let html = `
-        <table class="pdf-main-table">
-            <thead style="display: table-header-group;">
-                <tr><th style="padding: 0; border: none;">
-                    <div class="pdf-header-strip">
-                        <span class="f-left">🌐 Study Notes Manager</span>
-                        <span class="f-right"><a href="${safeTestUrl}" style="color:#f39c12; text-decoration:none;">📝 Give Online Test</a></span>
-                    </div>
-                </th></tr>
-            </thead>
-            <tbody style="position: relative;">
-                <tr><td style="padding: 25px 15px 15px 25px; position: relative;">
-                    <div class="watermark">${watermarkText}</div>
-                    <div class="print-header"><h2>${examData.exam.toUpperCase()} ${mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)")}</h2><h3>${examData.subject || examData.sub || "Subject"} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>
+        <div class="pdf-header-strip">
+            <span class="f-left">🌐 Study Notes Manager</span>
+            <span class="f-right"><a href="${safeTestUrl}">📝 Give Online Test</a></span>
+        </div>
+        <div class="pdf-footer-strip">
+            <span class="f-left">📞 Contact: +91-8273684939</span>
+            <span class="f-right"><a href="${BASE_URL}">🌐 ankushonlinetest.netlify.app</a></span>
+        </div>
+        <div class="pdf-page-border"></div>
+        <div class="watermark">${watermarkText}</div>
+        
+        <div class="print-header">
+            <h2>${examData.exam.toUpperCase()} ${mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)")}</h2>
+            <h3>${examData.subject || examData.sub || "Subject"} (${examData.topic})</h3>
+            <p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p>
+        </div>
         `;
         
         examData.questions.forEach((q, i) => {
             let uAns = userAnswers[i] ? userAnswers[i] : "N/A";
-            
             let cAns = getCleanAns(q.ans);
             let gAns = getCleanAns(uAns);
             let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && gAns !== cAns && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
@@ -1603,20 +1647,6 @@
             }
             html += `</div>`; 
         });
-        
-        html += `
-                </td></tr>
-            </tbody>
-            <tfoot style="display: table-footer-group;">
-                <tr><td style="padding: 0; border: none;">
-                    <div class="pdf-footer-strip">
-                        <span class="f-left">📞 Contact: +91-8273684939</span>
-                        <span class="f-right"><a href="${BASE_URL}" style="color:#ffffff; text-decoration:none;">🌐 ankushonlinetest.netlify.app</a></span>
-                    </div>
-                </td></tr>
-            </tfoot>
-        </table>
-        `;
         
         printArea.innerHTML = html; 
         
