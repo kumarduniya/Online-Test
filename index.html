@@ -125,7 +125,7 @@
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* =========================================================================
-           🔥 THE ULTIMATE PDF PRINTING FIX (Fixed Strips + Spaced Table) 🔥
+           🔥 THE ULTIMATE PDF PRINTING FIX (Clean Layout, Big Watermark) 🔥
            ========================================================================= */
         body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
         body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
@@ -141,56 +141,56 @@
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; background: transparent !important; }
             #print-area * { visibility: visible !important; position: relative; }
             
-            /* 🔥 WATERMARK FIX 🔥 */
-            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 100px; font-weight: bold; color: rgba(0, 0, 0, 0.08) !important; z-index: 0 !important; white-space: nowrap; pointer-events: none; width: 100%; text-align: center; }
+            /* 🔥 SUPER WATERMARK: BIG, IN FRONT, DIAGONAL 🔥 */
+            .watermark { 
+                position: fixed; 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%) rotate(-45deg); 
+                font-size: 130px !important; 
+                font-weight: bold !important; 
+                color: rgba(0, 0, 0, 0.12) !important; /* Extremely readable transparency */
+                z-index: 9999 !important; /* Stays in front of the text */
+                white-space: nowrap; 
+                pointer-events: none; /* Prevents text selection issues */
+                width: 100%; 
+                text-align: center; 
+            }
             
-            /* 🔥 FIXED STRIPS (ABSOLUTE BOTTOM AND TOP JUGAD) 🔥 */
+            /* 🔥 NATIVE TABLE STRIPS - OVERLAP IMPOSSIBLE 🔥 */
             .pdf-header-strip { 
-                position: fixed; top: 0; left: 0; right: 0; /* Hamesha uper fix rahegi */
                 background-color: #1f4e79 !important; 
                 color: #ffffff !important; 
-                padding: 8px 15px !important; 
-                font-size: 15px !important; 
+                padding: 10px 15px !important; 
+                font-size: 14px !important; 
                 font-weight: bold !important; 
-                z-index: 100 !important;
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
                 border-bottom: 2px solid #1f4e79; 
                 border-radius: 2px 2px 0 0; 
+                margin-bottom: 10px;
             }
             .pdf-header-strip a { color: #f39c12 !important; text-decoration: none !important; }
-            .pdf-header-strip .f-left { float: left; }
-            .pdf-header-strip .f-right { float: right; }
-            .pdf-header-strip::after { content: ""; display: table; clear: both; }
 
             .pdf-footer-strip { 
-                position: fixed; bottom: 0; left: 0; right: 0; /* Hamesha page ke end par fix rahegi */
                 background-color: #1f4e79 !important; 
                 color: #ffffff !important; 
-                padding: 8px 15px !important; 
-                font-size: 15px !important; 
+                padding: 10px 15px !important; 
+                font-size: 14px !important; 
                 font-weight: bold !important; 
-                z-index: 100 !important;
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
                 border-top: 2px solid #1f4e79; 
                 border-radius: 0 0 2px 2px; 
+                margin-top: 10px;
             }
             .pdf-footer-strip a { color: #ffffff !important; text-decoration: none !important; }
-            .pdf-footer-strip .f-left { float: left; }
-            .pdf-footer-strip .f-right { float: right; }
-            .pdf-footer-strip::after { content: ""; display: table; clear: both; }
 
-            /* 🔥 TABLE MAGIC: PREVENTS TEXT OVERLAPPING WITH FIXED STRIPS 🔥 */
+            /* NATIVE TABLE OVERRIDES */
             table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; }
             table.pdf-main-table th, table.pdf-main-table td { padding: 0 !important; border: none !important; background: transparent !important; }
             
-            /* IN KHAAALI DIBBO KI WAJAH SE TEXT PATTI KE NEECHE NAHI DABEGA */
-            .header-space { height: 50px; } 
-            .footer-space { height: 50px; } 
-            
-            /* 🔥 NO EMPTY SPACE AT BOTTOM (AUTO PAGE BREAKS) & BIG FONT 🔥 */
-            .print-q { margin-bottom: 10px !important; page-break-inside: auto !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 10px !important; font-size: 18px !important; line-height: 1.35 !important; color: #000000 !important; background: transparent !important;}
+            .print-q { margin-bottom: 10px !important; page-break-inside: avoid !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 10px !important; font-size: 18px !important; line-height: 1.35 !important; color: #000000 !important; background: transparent !important;}
             .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px !important; margin-top: 6px !important; margin-bottom: 6px !important; background: transparent !important; page-break-inside: auto !important;}
             .opt-item { font-size: 18px !important; box-sizing: border-box; color: #000000 !important; background: transparent !important;}
             .print-ans { font-weight: bold; font-size: 16px !important; color: #000000 !important; display: block; margin-top: 6px !important; margin-bottom: 3px !important; page-break-inside: avoid !important;}
@@ -554,7 +554,6 @@
     let currentAnalysisIndex = 0;
     let currentAnalysisType = "";
 
-    // 🔥 THE FIX: SUPER SMART QS COUNTER FUNCTION 🔥
     function updateQsCount() {
         let text = document.getElementById('a-rawdata').value;
         let matches = text.match(/!!\s*\d+\s*!/g);
@@ -566,7 +565,6 @@
 
     window.onload = initApp;
 
-    // 🔥 CUSTOM BEAUTIFUL MODAL LOGIC 🔥
     function showModal(icon, title, desc, showInput, onOk, onCancel) {
         let modal = document.getElementById('custom-modal');
         modal.style.display = 'flex';
@@ -642,7 +640,6 @@
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('student-top-bar').style.display = 'none';
         
-        // 🔥 SMART AUTO-COUNT LISTENER 🔥
         let rawDataInput = document.getElementById('a-rawdata');
         if(rawDataInput) {
             rawDataInput.addEventListener('input', updateQsCount);
@@ -721,7 +718,6 @@
         document.body.appendChild(script);
     }
     
-    // 🔥 FILTER ACTIVE TESTS & SUPER SYNC WITH LOCAL STORAGE 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
         let list = document.getElementById('st-active-list');
@@ -769,7 +765,6 @@
             let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
             let priceText = isFreeStatus ? "Free" : "₹" + t.price;
             
-            // 🔥 BULLETPROOF QS COUNTING FALLBACK 🔥
             let rawTopic = t.topic || "";
             let displayTopic = rawTopic;
             let hackQs = "N/A";
@@ -934,7 +929,6 @@
         return match ? match[0].toUpperCase() : "";
     }
 
-    // 🔥 COMPLETELY REWRITTEN AND BULLETPROOF PARSER 🔥
     function parseRawQuestions(rawText) {
         rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, ''); 
         rawText = rawText.replace(/\r\n?/g, '\n'); 
@@ -982,7 +976,6 @@
                 if(tempQ) tempQ.opts.push({id:"D", text:line.replace(/^!D\s*/i, '').trim()}); 
                 currentMode = "D";
             }
-            // 🚨 BUG FIX: '!!!!' pehle check hoga, phir '!!!' check hoga
             else if(line.match(/^!!!!/)) { 
                 if(tempQ) tempQ.exp = line.replace(/^!!!!\s*/, '').trim(); 
                 currentMode = "exp";
@@ -1129,7 +1122,6 @@
         }; document.body.appendChild(script);
     }
 
-    // 🚨 IMPORTANT FOR ADMIN: Re-save tests so the new parser can fix the missing answers
     function editTest(idx) {
         let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; let t = savedTests[idx]; if(!t) return;
         
@@ -1162,7 +1154,7 @@
 
         document.getElementById('a-key').value = t.key || ""; 
         document.getElementById('a-rawdata').value = raw || "";
-        document.getElementById('a-qs-count').value = parseRawQuestions(raw || "").length; // Auto count on edit
+        document.getElementById('a-qs-count').value = parseRawQuestions(raw || "").length; 
 
         togglePriceBox(); switchAdminTab('create'); 
         showCustomAlert("Update Required", "Aapke code mein naya update aaya hai! Kripya 'Generate/Update Test' button dabayein taaki answers sahi se save ho jayein.", "✏️");
@@ -1275,7 +1267,6 @@
         document.getElementById('exam-view').classList.add('active-view');
         document.getElementById('exam-bottom-controls').style.display = 'block';
         
-        // 🔥 HISTORY API & BACK BUTTON FIX: Safely route to Home 🔥
         history.pushState({ inTest: true }, "Test Started", "#test");
         
         document.getElementById('timer-box').style.display = 'flex';
@@ -1613,7 +1604,7 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 COMPLETELY FIXED PDF PRINTING LOGIC 🔥
+    // 🔥 PDF PRINTING (NAME TRICK, BIG DIAGONAL WATERMARK & SECURE LAYOUT) 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1621,27 +1612,26 @@
         let rawTopic = examData.topic || ""; let dTopic = rawTopic.split("|||QS:")[0] || "";
 
         let html = `
-        <div class="pdf-header-strip">
-            <span class="f-left">🌐 Study Notes Manager</span>
-            <span class="f-right"><a href="${safeTestUrl}" style="color:#f39c12; text-decoration:none;">📝 Give Online Test</a></span>
-        </div>
-
-        <div class="pdf-footer-strip">
-            <span class="f-left">📞 Contact: +91-8273684939</span>
-            <span class="f-right"><a href="${BASE_URL}" style="color:#ffffff; text-decoration:none;">🌐 ankushonlinetest.netlify.app</a></span>
-        </div>
-
         <div class="watermark">${watermarkText}</div>
-
         <table class="pdf-main-table">
             <thead style="display: table-header-group;">
-                <tr><th style="padding:0; border:none;"><div class="header-space"></div></th></tr>
+                <tr><th style="padding: 0; border: none; font-weight: normal;">
+                    <div class="pdf-header-strip">
+                        <span class="f-left">🌐 Study Notes Manager</span>
+                        <span class="f-right"><a href="${safeTestUrl}">📝 Give Online Test</a></span>
+                    </div>
+                </th></tr>
             </thead>
             <tfoot style="display: table-footer-group;">
-                <tr><td style="padding:0; border:none;"><div class="footer-space"></div></td></tr>
+                <tr><td style="padding: 0; border: none; font-weight: normal;">
+                    <div class="pdf-footer-strip">
+                        <span class="f-left">📞 Contact: +91-8273684939</span>
+                        <span class="f-right"><a href="${BASE_URL}">🌐 ankushonlinetest.netlify.app</a></span>
+                    </div>
+                </td></tr>
             </tfoot>
             <tbody>
-                <tr><td style="padding: 0 15px; position: relative;">
+                <tr><td style="padding: 10px 20px; position: relative;">
                     <div class="print-header"><h2>${examData.exam.toUpperCase()} ${mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)")}</h2><h3>${examData.subject || examData.sub || "Subject"} (${dTopic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>
         `;
         
@@ -1686,9 +1676,22 @@
         `;
         
         printArea.innerHTML = html; 
+
+        // 🔥 MAGIC TRICK: Change Document Title for PDF Download Name 🔥
+        let originalTitle = document.title;
+        let pdfName = examData.exam;
+        if(examData.subject || examData.sub) pdfName += " - " + (examData.subject || examData.sub);
+        document.title = pdfName; 
         
         document.body.classList.add('print-pdf');
-        setTimeout(() => { window.print(); setTimeout(() => { document.body.classList.remove('print-pdf'); }, 500); }, 300); 
+        
+        setTimeout(() => { 
+            window.print(); 
+            setTimeout(() => { 
+                document.body.classList.remove('print-pdf'); 
+                document.title = originalTitle; // Wapas theek kar diya
+            }, 500); 
+        }, 300); 
     }
 </script>
 </body>
