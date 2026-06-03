@@ -665,7 +665,6 @@
         document.body.appendChild(script);
     }
     
-    // 🔥 FILTER ACTIVE TESTS BY SUBJECT 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
         let list = document.getElementById('st-active-list');
@@ -703,7 +702,7 @@
             let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
             let priceText = isFreeStatus ? "Free" : "₹" + t.price;
             
-            // Smart Fallback for Question Count
+            // 🔥 SMART FALLBACK FOR QS COUNT 🔥
             let qsCount = 0;
             if (t.questions && t.questions.length > 0) {
                 qsCount = t.questions.length;
@@ -849,6 +848,7 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
+    // 🔥 THE FIX: Super Evaluator Implementation for Correct Scoring 🔥
     function getCleanAns(val) {
         if(!val) return "";
         let match = val.toString().replace(/<[^>]*>/g, '').match(/[A-D]/i);
@@ -887,9 +887,7 @@
             }
             else if(line.match(/^[^!]*!!!/)) { 
                 if(tempQ) {
-                    let cleanAns = line.replace(/<[^>]*>/g, '').replace(/\*/g, '').replace(/^[^!]*!!!\s*/i, '').trim().toUpperCase();
-                    let matched = cleanAns.match(/[A-D]/);
-                    if(matched) tempQ.ans = matched[0];
+                    tempQ.ans = getCleanAns(line.replace(/^[^!]*!!!\s*/i, ''));
                 }
                 currentMode = "ans";
             }
@@ -950,6 +948,7 @@
             return;
         }
 
+        // 🔥 THE FIX: Storing 'qs' (length) along with the test 🔥
         let finalObj = { exam: eName, subject: eSub, sub: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, qs: parsedQs.length, isActive: true };
         let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
 
