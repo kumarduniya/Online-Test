@@ -100,8 +100,10 @@
         .analysis-scroll::-webkit-scrollbar { width: 5px; }
         .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
-        /* 🔥 ANALYSIS BOX SCROLL FIX 🔥 */
+        /* 🔥 FIX FOR SCROLLING BEHAVIOR IN ANALYSIS 🔥 */
         #analysis-box { margin-top: 20px; scroll-margin-top: 85px; }
+        
+        /* 🔥 STICKY ANALYSIS BUTTONS 🔥 */
         #analysis-btn-container { position: sticky; top: 60px; z-index: 900; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee; }
 
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
@@ -127,7 +129,7 @@
         .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* 🔥 PURE CSS PRINTING - BORDER, HEADER, FOOTER, EVERY PAGE 🔥 */
+        /* 🔥 PURE CSS PRINTING - BADA FONT, KAM GAP, TABLE BORDERS 🔥 */
         body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; }
         body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; }
         body.print-pdf #print-area { display: block !important; position: static !important; width: 100% !important; overflow: visible !important; height: auto !important; }
@@ -145,37 +147,37 @@
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
             #print-area * { visibility: visible !important; position: relative; }
             
-            /* 🔥 THE FIX: WATERMARK (TOP LEVEL, LIGHT OPACITY) 🔥 */
+            /* 🔥 THE FIX: WATERMARK 🔥 */
             .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.08) !important; z-index: -1 !important; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; }
             
-            /* 🔥 PDF EVERY PAGE BORDER 🔥 */
-            .pdf-page-border { position: fixed; top: 0; bottom: 0; left: 0; right: 0; border: 2px solid #1f4e79 !important; z-index: -2 !important; pointer-events: none; border-radius: 4px; }
+            /* 🔥 TABLE SIDE BORDERS 🔥 */
+            table.pdf-content-table { width: 100%; border-collapse: collapse; border: none; }
+            table.pdf-content-table tbody td { border-left: 2px solid #1f4e79 !important; border-right: 2px solid #1f4e79 !important; padding: 0 15px !important; }
             
             /* 🔥 PDF EVERY PAGE HEADER STRIP 🔥 */
-            .pdf-header-strip { position: fixed; top: 0; left: 0; right: 0; background-color: #1f4e79 !important; color: #ffffff !important; padding: 8px 12px; font-size: 14px; font-weight: bold; z-index: 100 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 2px 2px 0 0;}
+            .pdf-header-strip { position: fixed; top: 0; left: 0; right: 0; background-color: #1f4e79 !important; color: #ffffff !important; padding: 6px 12px; font-size: 14px; font-weight: bold; z-index: 100 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 2px 2px 0 0;}
             .pdf-header-strip .f-left { float: left; }
             .pdf-header-strip .f-right { float: right; color: #f39c12 !important; }
             .pdf-header-strip::after { content: ""; display: table; clear: both; }
 
             /* 🔥 PDF EVERY PAGE FOOTER STRIP 🔥 */
-            .pdf-footer-strip { position: fixed; bottom: 0; left: 0; right: 0; background-color: #1f4e79 !important; color: #ffffff !important; padding: 8px 12px; font-size: 14px; font-weight: bold; z-index: 100 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 0 0 2px 2px;}
+            .pdf-footer-strip { position: fixed; bottom: 0; left: 0; right: 0; background-color: #1f4e79 !important; color: #ffffff !important; padding: 6px 12px; font-size: 14px; font-weight: bold; z-index: 100 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 0 0 2px 2px;}
             .pdf-footer-strip .f-left { float: left; }
             .pdf-footer-strip .f-right { float: right; color: #f39c12 !important; }
             .pdf-footer-strip::after { content: ""; display: table; clear: both; }
 
-            /* 🔥 ENSURE CONTENT DOES NOT OVERLAP HEADER & FOOTER 🔥 */
-            table.pdf-content-table { width: 100%; border-collapse: collapse; border: none; }
-            table.pdf-content-table thead tr td { height: 45px; } /* Header spacer */
-            table.pdf-content-table tfoot tr td { height: 45px; } /* Footer spacer */
+            /* Spacers to prevent overlap with Header/Footer strips */
+            table.pdf-content-table thead tr td { height: 35px; } 
+            table.pdf-content-table tfoot tr td { height: 35px; }
             
-            /* 🔥 AUTO-FIT MAGIC: Avoid breaks, optimized gaps 🔥 */
-            .print-q { margin-bottom: 12px; page-break-inside: avoid !important; border-bottom: 1px dashed #ccc; padding-bottom: 10px; font-size: 17px; line-height: 1.3; color: #000000 !important; background: transparent !important;}
-            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 6px; margin-bottom: 6px; background: transparent !important; page-break-inside: avoid;}
-            .opt-item { font-size: 17px; box-sizing: border-box; color: #000000 !important; background: transparent !important;}
-            .print-ans { font-weight: bold; font-size: 16px; color: #000000 !important; display: block; margin-top: 4px; margin-bottom: 2px;}
-            .print-exp { color: #222222 !important; font-size: 16px; margin-top: 2px; line-height: 1.3; }
-            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px; padding-bottom: 5px;}
-            .print-passage { padding:5px; margin-bottom:5px; font-style:italic; border-left:4px solid #333; font-size:16px; background: transparent !important; page-break-inside: avoid;}
+            /* 🔥 FONT SIZE INCREASED TO 18px & GAPS TIGHTENED (REMOVED 'XXX' SPACE) 🔥 */
+            .print-q { margin-bottom: 6px !important; page-break-inside: avoid !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 6px !important; font-size: 19px !important; line-height: 1.25 !important; color: #000000 !important; background: transparent !important;}
+            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px !important; margin-top: 4px !important; margin-bottom: 4px !important; background: transparent !important; page-break-inside: avoid;}
+            .opt-item { font-size: 18px !important; box-sizing: border-box; color: #000000 !important; background: transparent !important;}
+            .print-ans { font-weight: bold; font-size: 17px !important; color: #000000 !important; display: block; margin-top: 4px !important; margin-bottom: 2px !important;}
+            .print-exp { color: #222222 !important; font-size: 17px !important; margin-top: 2px !important; line-height: 1.25 !important; }
+            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 8px !important; padding-bottom: 4px !important;}
+            .print-passage { padding:4px !important; margin-bottom:4px !important; font-style:italic; border-left:4px solid #333; font-size:17px !important; background: transparent !important; page-break-inside: avoid;}
             
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
@@ -330,6 +332,7 @@
                 </div>
                 <div class="form-group" id="price-box"><label>PDF Price (₹):</label><input type="number" id="a-price" placeholder="49"></div>
                 <div class="form-group"><label>Secret Key:</label><input type="text" id="a-key" placeholder="ANK"></div>
+                <div class="form-group"><label>Total Qs (Auto):</label><input type="number" id="a-qs-count" readonly style="background:#e9ecef; color:#1f4e79; font-weight:bold;" placeholder="0"></div>
             </div>
 
             <div class="form-group">
@@ -614,6 +617,15 @@
         const urlParams = new URLSearchParams(window.location.search);
         const testCode = urlParams.get('test');
 
+        // 🔥 LISTEN TO TEXTAREA TO AUTO-COUNT QS 🔥
+        let rawDataInput = document.getElementById('a-rawdata');
+        if(rawDataInput) {
+            rawDataInput.addEventListener('input', function() {
+                let parsed = parseRawQuestions(this.value);
+                document.getElementById('a-qs-count').value = parsed.length;
+            });
+        }
+
         if(testCode) {
             document.getElementById('loading-view').classList.add('active-view');
             let cb = new Date().getTime(); let script = document.createElement('script');
@@ -734,14 +746,7 @@
             let priceText = isFreeStatus ? "Free" : "₹" + t.price;
             
             // 🔥 SMART FALLBACK FOR QS COUNT 🔥
-            let qsCount = 0;
-            if (t.questions && t.questions.length > 0) {
-                qsCount = t.questions.length;
-            } else if (t.qs && t.qs > 0) {
-                qsCount = t.qs;
-            } else {
-                qsCount = "N/A"; 
-            }
+            let qsCount = t.qs || 0;
 
             html += `<div style="background:#fff; border:1px solid #ccc; border-radius:8px; padding:15px; width:100%; max-width:350px; text-align:left; box-shadow:0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #28a745;">
                 <h4 style="margin:0 0 5px 0; color:#1f4e79;">${t.exam}</h4>
@@ -879,7 +884,6 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
-    // 🔥 THE FIX: Strict extraction of purely A, B, C, or D for correct evaluation 🔥
     function getCleanAns(val) {
         if(!val) return "";
         let match = val.toString().replace(/<[^>]*>/g, '').match(/[A-D]/i);
@@ -979,7 +983,10 @@
             return;
         }
 
-        let finalObj = { exam: eName, subject: eSub, sub: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, qs: parsedQs.length, isActive: true };
+        // Fetching the explicitly calculated qs length
+        let finalQsCount = parseInt(document.getElementById('a-qs-count').value) || parsedQs.length;
+
+        let finalObj = { exam: eName, subject: eSub, sub: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, qs: finalQsCount, isActive: true };
         let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
 
         fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams({ 'action': 'saveTest', 'testCode': eCode, 'testData': JSON.stringify(finalObj) }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
@@ -987,17 +994,18 @@
             btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false;
             document.getElementById('a-exam').value = ""; document.getElementById('a-sub').value = ""; document.getElementById('a-topic').value = "";
             document.getElementById('a-code').value = ""; document.getElementById('a-price').value = ""; document.getElementById('a-key').value = ""; document.getElementById('a-rawdata').value = "";
+            document.getElementById('a-qs-count').value = "";
             
             let testLink = BASE_URL + "?test=" + eCode;
             let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
             let existingIdx = savedTests.findIndex(t => t.code === eCode);
-            let testObj = { code: eCode, exam: eName, subject: eSub, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: parsedQs.length, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
+            let testObj = { code: eCode, exam: eName, subject: eSub, sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: finalQsCount, link: testLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true };
             
             if(existingIdx >= 0) { savedTests[existingIdx] = testObj; } else { savedTests.push(testObj); }
             localStorage.setItem('myMockTests', JSON.stringify(savedTests));
 
             document.getElementById('generatedLink').value = testLink; document.getElementById('linkContainer').style.display = 'block'; 
-            showCustomAlert("Success", `✅ Test saved successfully! (${parsedQs.length} questions)`, "🎉");
+            showCustomAlert("Success", `✅ Test saved successfully! (${finalQsCount} questions)`, "🎉");
             renderDashboard(); 
         }).catch(err => { showCustomAlert("Error", "Error saving test, please check your internet connection.", "❌"); btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false; });
     }
@@ -1085,8 +1093,10 @@
 
         document.getElementById('a-key').value = t.key || ""; 
         document.getElementById('a-rawdata').value = raw || "";
+        document.getElementById('a-qs-count').value = parseRawQuestions(raw || "").length; // Auto count on edit
+
         togglePriceBox(); switchAdminTab('create'); 
-        showCustomAlert("Edit Mode", "Test data loaded in form! Make changes and click 'Generate/Update Test'.", "✏️");
+        showCustomAlert("Edit Mode", "Test data loaded! Please review and click 'Generate/Update Test' to fix any missing data.", "✏️");
     }
 
     function deleteTest(idx) {
@@ -1192,10 +1202,11 @@
 
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); 
         
-        // 🔥 HISTORY API & BACK BUTTON FIX: Record test entry 🔥
         document.getElementById('exam-view').style.display = '';
         document.getElementById('exam-view').classList.add('active-view');
         document.getElementById('exam-bottom-controls').style.display = 'block';
+        
+        // 🔥 BACK BUTTON FIX: Record test entry in browser history 🔥
         history.pushState({ inTest: true }, "Test Started", "#test");
         
         document.getElementById('timer-box').style.display = 'flex';
@@ -1227,7 +1238,6 @@
         updateCounts();
     }
     
-    // 🔥 HISTORY API & BACK BUTTON FIX: Directs to Home if back is pressed in test 🔥
     function togglePaletteOverlay(forceState) {
         let overlay = document.getElementById('palette-overlay');
         let isOpen = overlay.style.display === 'block';
@@ -1244,13 +1254,14 @@
         }
     }
     
+    // 🔥 BACK BUTTON FIX: Safely navigates to Home without closing browser 🔥
     window.addEventListener('popstate', function(event) {
         let overlay = document.getElementById('palette-overlay');
         if (overlay && overlay.style.display === 'block') { 
             overlay.style.display = 'none'; 
             history.pushState({ inTest: true }, "Test Started", "#test");
         } else if (document.getElementById('exam-view').classList.contains('active-view')) {
-            location.reload(); 
+            window.location.href = BASE_URL; 
         }
     });
 
@@ -1520,7 +1531,7 @@
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
 
-        // 🔥 BEAUTIFUL PDF BORDER & FOOTER IMPLEMENTED HERE 🔥
+        // 🔥 BEAUTIFUL PDF PAGE BORDERS & HEADER/FOOTER 🔥
         let html = `
         <table class="pdf-content-table">
             <thead>
@@ -1532,7 +1543,7 @@
                 </td></tr>
             </thead>
             <tbody>
-                <tr><td style="padding: 10px 15px;">
+                <tr><td>
                     <div class="print-header"><h2>${examData.exam.toUpperCase()} ${mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)")}</h2><h3>${examData.subject || examData.sub || "Subject"} (${examData.topic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>
         `;
         
@@ -1581,7 +1592,6 @@
                 </td></tr>
             </tfoot>
         </table>
-        <div class="pdf-page-border"></div>
         <div class="watermark">${watermarkText}</div>
         `;
         
