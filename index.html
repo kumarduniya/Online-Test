@@ -100,7 +100,10 @@
         .analysis-scroll::-webkit-scrollbar { width: 5px; }
         .analysis-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
+        /* 🔥 FIX FOR SCROLLING BEHAVIOR IN ANALYSIS 🔥 */
         #analysis-box { margin-top: 20px; scroll-margin-top: 85px; }
+        
+        /* 🔥 STICKY ANALYSIS BUTTONS 🔥 */
         #analysis-btn-container { position: sticky; top: 60px; z-index: 900; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee; }
 
         #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
@@ -114,20 +117,21 @@
         .res-table th { background-color: #1f4e79; color: white; }
         .res-table tr:nth-child(even){background-color: #f2f2f2;}
 
-        /* 🔥 THE FIX: VISIBLE FLOATING ADMIN LOCK 🔥 */
+        /* 🔥 VISIBLE FLOATING ADMIN LOCK 🔥 */
         .admin-lock { position: fixed; bottom: 30px; right: 20px; font-size: 26px; cursor: pointer; opacity: 0.9; transition: 0.3s; z-index: 999999; background: #fff; border: 3px solid #1f4e79; border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .admin-lock:hover { transform: scale(1.1); background: #1f4e79; color: white; border-color: white;}
 
         .progress-bar-container { display: flex; height: 25px; border-radius: 8px; overflow: hidden; margin-top: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); width: 100%;}
         .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; overflow:hidden;}
 
+        /* 🔥 CUSTOM BEAUTIFUL MODAL POPUP STYLES 🔥 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        /* 🔥 PURE CSS PRINTING - BADA FONT SIZE (18px) & PROPER FILL 🔥 */
+        /* 🔥 PURE CSS PRINTING - BORDER, FOOTER, NO BLANK PAGES 🔥 */
         body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; }
-        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay { display: none !important; height: 0 !important; overflow: hidden !important; }
+        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; }
         body.print-pdf #print-area { display: block !important; position: static !important; width: 100% !important; overflow: visible !important; height: auto !important; }
         
         #print-area { display: none; background: white; color: black; text-align: left; position: relative; z-index: 1;}
@@ -138,23 +142,31 @@
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
             .container { box-shadow: none !important; }
             
-            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay { display: none !important; }
+            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay, .admin-lock { display: none !important; }
             
-            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; }
-            #print-area * { visibility: visible !important; }
+            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; padding: 15px 15px 50px 15px !important; }
+            #print-area * { visibility: visible !important; position: relative; z-index: 1; }
             
-            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.15) !important; z-index: 999999 !important; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; mix-blend-mode: multiply; }
+            /* 🔥 THE FIX: WATERMARK ADJUSTED 🔥 */
+            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-55deg); font-size: 130px; font-weight: bold; color: rgba(0, 0, 0, 0.12) !important; z-index: -1 !important; white-space: nowrap; pointer-events: none; width: 200%; text-align: center; mix-blend-mode: multiply; }
             
-            /* 🔥 FONT SIZE INCREASED TO 18px & GAPS ADJUSTED 🔥 */
-            .print-q { margin-bottom: 10px; page-break-inside: auto !important; border-bottom: 1px dashed #ccc; padding-bottom: 10px; font-size: 18px; line-height: 1.4; color: #000000 !important; background: transparent !important;}
+            /* 🔥 NEW FEATURE: PAGE BORDER 🔥 */
+            .pdf-page-border { position: fixed; top: 0; bottom: 0; left: 0; right: 0; border: 2px solid #1f4e79; z-index: -2 !important; pointer-events: none; border-radius: 4px; }
             
-            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px; margin-bottom: 5px; background: transparent !important; page-break-inside: avoid;}
-            .opt-item { font-size: 18px; box-sizing: border-box; color: #000000 !important; background: transparent !important;}
+            /* 🔥 NEW FEATURE: BEAUTIFUL FOOTER 🔥 */
+            .pdf-footer { position: fixed; bottom: 0; left: 0; right: 0; background-color: #1f4e79 !important; color: #ffffff !important; padding: 8px 15px; font-size: 14px; font-weight: bold; z-index: 10 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 0 0 2px 2px;}
+            .pdf-footer .f-left { float: left; }
+            .pdf-footer .f-right { float: right; color: #f39c12 !important; }
+            .pdf-footer::after { content: ""; display: table; clear: both; }
             
-            .print-ans { font-weight: bold; font-size: 16px; color: #000000 !important; display: block; margin-top: 5px; margin-bottom: 3px;}
-            .print-exp { color: #222222 !important; font-size: 16px; margin-top: 3px; line-height: 1.4; }
-            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 12px; padding-bottom: 5px;}
-            .print-passage { padding:5px; margin-bottom:5px; font-style:italic; border-left:4px solid #333; font-size:16px; background: transparent !important; page-break-inside: avoid;}
+            /* 🔥 AUTO-FIT MAGIC 🔥 */
+            .print-q { margin-bottom: 12px; page-break-inside: avoid !important; border-bottom: 1px dashed #ccc; padding-bottom: 10px; font-size: 16px; line-height: 1.3; color: #000000 !important; background: transparent !important;}
+            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 6px; margin-bottom: 6px; background: transparent !important; page-break-inside: avoid;}
+            .opt-item { font-size: 16px; box-sizing: border-box; color: #000000 !important; background: transparent !important;}
+            .print-ans { font-weight: bold; font-size: 15px; color: #000000 !important; display: block; margin-top: 4px; margin-bottom: 2px;}
+            .print-exp { color: #222222 !important; font-size: 15px; margin-top: 2px; line-height: 1.3; }
+            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 15px; padding-bottom: 5px;}
+            .print-passage { padding:5px; margin-bottom:5px; font-style:italic; border-left:4px solid #333; font-size:15px; background: transparent !important; page-break-inside: avoid;}
             
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
@@ -162,6 +174,7 @@
         @media (max-width: 768px) {
             .left-panel { padding: 10px 10px 170px 10px; } 
             .watermark { font-size: 80px; } 
+            .admin-lock { bottom: 20px; right: 20px; width: 45px; height: 45px; font-size: 22px; }
             .fullscreen-overlay { padding: 0; }
             .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
         }
@@ -169,6 +182,7 @@
 </head>
 <body>
 
+<!-- 🔥 CUSTOM BEAUTIFUL POPUPS 🔥 -->
 <div id="custom-modal" class="modal-overlay">
     <div class="modal-box">
         <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
@@ -197,6 +211,7 @@
         </div>
     </div>
 
+    <!-- STUDENT GLOBAL DASHBOARD -->
     <div id="student-dashboard-view" class="view-section active-view">
         <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
             <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="switchStudentTab('active')">📝 Active Tests</button>
@@ -243,9 +258,11 @@
             </div>
         </div>
         
+        <!-- 🔥 THE FIX: VISIBLE FLOATING ADMIN LOCK 🔥 -->
         <div class="admin-lock" onclick="openAdminLogin()" title="Admin Login">🔒</div>
     </div>
 
+    <!-- ADMIN LOGIN SECURE OVERLAY -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -262,6 +279,7 @@
         </div>
     </div>
 
+    <!-- LOADING & ERROR SCREEN -->
     <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div class="loader"></div>
         <h3 style="color:#1f4e79; margin-top: 20px;">Loading data, please wait...</h3>
@@ -273,6 +291,7 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 Refresh Page</button>
     </div>
 
+    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -354,6 +373,7 @@
         </div>
     </div>
 
+    <!-- TEST SPECIFIC LOGIN -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
@@ -390,6 +410,7 @@
         </div>
     </div>
 
+    <!-- EXAM INTERFACE -->
     <div id="exam-view" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -409,6 +430,7 @@
         </div>
     </div>
 
+    <!-- FIXED BOTTOM CONTROLS FOR EXAM -->
     <div id="exam-bottom-controls">
         <div class="mini-palette-wrapper">
             <button onclick="togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
@@ -422,6 +444,7 @@
         </div>
     </div>
 
+    <!-- PALETTE OVERLAY -->
     <div id="palette-overlay" class="fullscreen-overlay">
         <div class="fs-container" style="min-height: auto;">
             <div class="fs-header">
@@ -437,6 +460,7 @@
         </div>
     </div>
 
+    <!-- RESULT & REPORT CARD -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -454,6 +478,7 @@
                 <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="startReattempt()">🔄 Reattempt</button>
             </div>
 
+            <!-- 🔥 STICKY ANALYSIS BUTTONS 🔥 -->
             <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 999; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
@@ -488,6 +513,7 @@
 
 </div> 
 
+<!-- 🔥 INVISIBLE PRINT CONTAINER 🔥 -->
 <div id="print-area"></div>
 
 <script>
@@ -512,7 +538,6 @@
 
     window.onload = initApp;
 
-    // 🔥 CUSTOM BEAUTIFUL MODAL LOGIC 🔥
     function showModal(icon, title, desc, showInput, onOk, onCancel) {
         let modal = document.getElementById('custom-modal');
         modal.style.display = 'flex';
@@ -661,7 +686,7 @@
         document.body.appendChild(script);
     }
     
-    // 🔥 FILTER ACTIVE TESTS AND SYNC LOCAL STORAGE 🔥
+    // 🔥 FILTER ACTIVE TESTS & SUPER SYNC WITH LOCAL STORAGE 🔥
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display = 'none';
         let list = document.getElementById('st-active-list');
@@ -710,6 +735,7 @@
             let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true");
             let priceText = isFreeStatus ? "Free" : "₹" + t.price;
             
+            // 🔥 SMART FALLBACK FOR QS COUNT 🔥
             let qsCount = 0;
             if (t.questions && t.questions.length > 0) {
                 qsCount = t.questions.length;
@@ -855,13 +881,13 @@
         return enteredPass === generateStrongPass(enteredPhone, examData.key.toUpperCase());
     }
 
+    // 🔥 THE FIX: Super Evaluator Implementation for Correct Scoring 🔥
     function getCleanAns(val) {
         if(!val) return "";
         let match = val.toString().replace(/<[^>]*>/g, '').match(/[A-D]/i);
         return match ? match[0].toUpperCase() : "";
     }
 
-    // 🔥 THE FIX: Super Smart Parser (Handles Multi-line Explanations & Incorrect Spacing) 🔥
     function parseRawQuestions(rawText) {
         rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, ''); 
         rawText = rawText.replace(/\r\n?/g, '\n'); 
@@ -955,7 +981,6 @@
             return;
         }
 
-        // 🔥 THE FIX: Storing 'qs' (length) along with the test to fix the 0 Questions Bug 🔥
         let finalObj = { exam: eName, subject: eSub, sub: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, qs: parsedQs.length, isActive: true };
         let btn = document.getElementById('btn-generate'); btn.innerText = "⏳ Saving Test..."; btn.disabled = true;
 
@@ -1169,6 +1194,8 @@
 
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); 
         
+        // 🔥 REATTEMPT FIX: Ensure display is reset properly 🔥
+        document.getElementById('exam-view').style.display = '';
         document.getElementById('exam-view').classList.add('active-view');
         document.getElementById('exam-bottom-controls').style.display = 'block';
         
@@ -1433,7 +1460,7 @@
     }
 
     function prevAnalysis() { if(currentAnalysisIndex > 0) { currentAnalysisIndex--; renderAnalysisSlide(); } }
-    function nextAnalysis() { if(currentAnalysisIndex < currentAnalysisArray.length - 1) { currentAnalysisIndex++; renderAnalysisSlide(); } }
+    function nextAnalysis() { if(currentAnalysisIndex < currentAnalysisArraylength - 1) { currentAnalysisIndex++; renderAnalysisSlide(); } }
 
     function drawReportCard(rank, totalStudents, maxScore) {
         const cvs = document.getElementById('reportCard'); const ctx = cvs.getContext('2d');
@@ -1488,14 +1515,22 @@
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
 
-        let html = `<div class="watermark">${watermarkText}</div>`;
+        // 🔥 BEAUTIFUL PDF BORDER & FOOTER IMPLEMENTED HERE 🔥
+        let html = `<div class="pdf-page-border"></div>`;
         html += `
-        <div style="font-size: 14px; border-bottom: 2px solid #1f4e79; padding: 10px 20px; margin-bottom: 5px; box-sizing: border-box;">
+        <div class="pdf-footer">
+            <span class="f-left">📞 Contact: +91-8273684939</span>
+            <span class="f-right">🌐 ankushonlinetest.netlify.app</span>
+        </div>`;
+        
+        html += `<div class="watermark">${watermarkText}</div>`;
+        html += `
+        <div style="font-size: 15px; border-bottom: 2px solid #1f4e79; padding: 10px 20px; margin-bottom: 10px; box-sizing: border-box;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                 <a href="https://studynotesmanager.netlify.app/" target="_blank" style="color: #1f4e79; text-decoration: none; font-weight: bold; padding-left: 10px;">🌐 Study Notes Manager</a>
                 <a href="${safeTestUrl}" target="_blank" style="color: #dc3545; text-decoration: none; font-weight: bold; padding-right: 10px;">📝 Give Online Test</a>
             </div>
-            <div style="text-align: center; color: #444; font-size: 12px; margin-top: 5px;"><i>Note: Tap on the Study Notes Manager link to give free tests for other subjects.</i></div>
+            <div style="text-align: center; color: #444; font-size: 13px; margin-top: 5px;"><i>Note: Tap on the Study Notes Manager link to give free tests for other subjects.</i></div>
         </div>`;
         
         let headerSub = mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)");
@@ -1507,7 +1542,7 @@
             let cAns = getCleanAns(q.ans);
             let gAns = getCleanAns(uAns);
             let isWrongAns = userAnswers.length > 0 && uAns !== "N/A" && gAns !== cAns && studentInfo.name !== "Ankush Kumar S/O Manoj Kumar";
-            let wrongMarkHtml = (isWrongAns && mode === 'full') ? `<span style="color:red; font-size:16px; margin-right:5px;">❌</span>` : ``;
+            let wrongMarkHtml = (isWrongAns && mode === 'full') ? `<span style="color:red; font-size:18px; margin-right:5px;">❌</span>` : ``;
             
             if(q.passage) { html += `<div class="print-passage">${q.passage}</div>`; }
 
@@ -1525,7 +1560,7 @@
             if(mode !== 'q_only') {
                 if(userAnswers.length > 0 && (document.getElementById('result-view').classList.contains('active-view') || studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') {
                     let ansColor = (gAns === cAns) ? "color: green;" : "color: red;";
-                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:13px; ${ansColor}">Your Ans: ${gAns || uAns}</span></div>`;
+                    html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans}</span> <span style="margin-left:15px; font-weight:bold; font-size:15px; ${ansColor}">Your Ans: ${gAns || uAns}</span></div>`;
                 } else {
                     html += `<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cAns || q.ans}</span></div>`;
                 }
