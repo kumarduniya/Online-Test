@@ -125,7 +125,7 @@
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* =========================================================================
-           🔥 THE ULTIMATE PDF PRINTING FIX (Clean Layout, Big Watermark) 🔥
+           🔥 THE ULTIMATE PDF PRINTING FIX (Native Table, Big Watermark, No Gaps) 🔥
            ========================================================================= */
         body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
         body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
@@ -133,7 +133,7 @@
         #print-area { display: none; background: white; color: black; text-align: left; position: relative; z-index: 1;}
 
         @media print {
-            @page { size: A4; margin: 10mm; } 
+            @page { size: A4; margin: 8mm; } 
             
             html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
             .container { box-shadow: none !important; }
@@ -141,23 +141,24 @@
             #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; background: transparent !important; }
             #print-area * { visibility: visible !important; position: relative; }
             
-            /* 🔥 SUPER WATERMARK: BIG, IN FRONT, DIAGONAL 🔥 */
+            /* 🔥 SUPER WATERMARK: BIG, DIAGONAL, ON TOP OF TEXT 🔥 */
             .watermark { 
                 position: fixed; 
                 top: 50%; 
                 left: 50%; 
-                transform: translate(-50%, -50%) rotate(-45deg); 
-                font-size: 130px !important; 
-                font-weight: bold !important; 
-                color: rgba(0, 0, 0, 0.12) !important; /* Extremely readable transparency */
-                z-index: 9999 !important; /* Stays in front of the text */
+                transform: translate(-50%, -50%) rotate(-55deg); 
+                font-size: 180px !important; 
+                font-weight: 900 !important; 
+                color: rgba(0, 0, 0, 0.12) !important; 
+                z-index: 999999 !important; /* Forces it over the text */
                 white-space: nowrap; 
-                pointer-events: none; /* Prevents text selection issues */
-                width: 100%; 
+                pointer-events: none; 
+                width: 200%; 
                 text-align: center; 
+                text-transform: uppercase;
             }
             
-            /* 🔥 NATIVE TABLE STRIPS - OVERLAP IMPOSSIBLE 🔥 */
+            /* 🔥 NATIVE TABLE STRIPS (NO POSITION FIXED) 🔥 */
             .pdf-header-strip { 
                 background-color: #1f4e79 !important; 
                 color: #ffffff !important; 
@@ -168,7 +169,7 @@
                 print-color-adjust: exact; 
                 border-bottom: 2px solid #1f4e79; 
                 border-radius: 2px 2px 0 0; 
-                margin-bottom: 10px;
+                margin-bottom: 5px;
             }
             .pdf-header-strip a { color: #f39c12 !important; text-decoration: none !important; }
 
@@ -182,17 +183,18 @@
                 print-color-adjust: exact; 
                 border-top: 2px solid #1f4e79; 
                 border-radius: 0 0 2px 2px; 
-                margin-top: 10px;
+                margin-top: 5px;
             }
             .pdf-footer-strip a { color: #ffffff !important; text-decoration: none !important; }
 
-            /* NATIVE TABLE OVERRIDES */
-            table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; }
+            /* TABLE OVERRIDES TO PREVENT HIDDEN TEXT */
+            table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; z-index: 10;}
             table.pdf-main-table th, table.pdf-main-table td { padding: 0 !important; border: none !important; background: transparent !important; }
             
-            .print-q { margin-bottom: 10px !important; page-break-inside: avoid !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 10px !important; font-size: 18px !important; line-height: 1.35 !important; color: #000000 !important; background: transparent !important;}
+            /* 🔥 BLANK SPACE KILLER: PAGE BREAK AUTO 🔥 */
+            .print-q { margin-bottom: 12px !important; page-break-inside: auto !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 12px !important; font-size: 18px !important; line-height: 1.35 !important; color: #000000 !important; background: transparent !important;}
             .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px !important; margin-top: 6px !important; margin-bottom: 6px !important; background: transparent !important; page-break-inside: auto !important;}
-            .opt-item { font-size: 18px !important; box-sizing: border-box; color: #000000 !important; background: transparent !important;}
+            .opt-item { font-size: 18px !important; box-sizing: border-box; color: #000000 !important; background: transparent !important; page-break-inside: avoid !important;}
             .print-ans { font-weight: bold; font-size: 16px !important; color: #000000 !important; display: block; margin-top: 6px !important; margin-bottom: 3px !important; page-break-inside: avoid !important;}
             .print-exp { color: #222222 !important; font-size: 16px !important; margin-top: 3px !important; line-height: 1.35 !important; page-break-inside: auto !important;}
             .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 12px !important; padding-bottom: 5px !important;}
@@ -203,7 +205,6 @@
 
         @media (max-width: 768px) {
             .left-panel { padding: 10px 10px 170px 10px; } 
-            .watermark { font-size: 80px; } 
             .admin-lock { bottom: 20px; right: 20px; width: 45px; height: 45px; font-size: 22px; }
             .fullscreen-overlay { padding: 0; }
             .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
@@ -1604,7 +1605,7 @@
         executePDFPrint(studentInfo.name, 'full'); 
     }
 
-    // 🔥 PDF PRINTING (NAME TRICK, BIG DIAGONAL WATERMARK & SECURE LAYOUT) 🔥
+    // 🔥 COMPLETELY FIXED PDF PRINTING LOGIC (Name, Watermark, Layout) 🔥
     function executePDFPrint(watermarkText, mode) {
         let printArea = document.getElementById('print-area'); 
         let safeTestUrl = BASE_URL + "?test=" + examData.code;
@@ -1615,12 +1616,12 @@
         <div class="watermark">${watermarkText}</div>
         <table class="pdf-main-table">
             <thead style="display: table-header-group;">
-                <tr><th style="padding: 0; border: none; font-weight: normal;">
+                <tr><td style="padding: 0; border: none; font-weight: normal;">
                     <div class="pdf-header-strip">
                         <span class="f-left">🌐 Study Notes Manager</span>
                         <span class="f-right"><a href="${safeTestUrl}">📝 Give Online Test</a></span>
                     </div>
-                </th></tr>
+                </td></tr>
             </thead>
             <tfoot style="display: table-footer-group;">
                 <tr><td style="padding: 0; border: none; font-weight: normal;">
@@ -1631,7 +1632,7 @@
                 </td></tr>
             </tfoot>
             <tbody>
-                <tr><td style="padding: 10px 20px; position: relative;">
+                <tr><td style="padding: 10px 20px; position: relative; z-index: 10;">
                     <div class="print-header"><h2>${examData.exam.toUpperCase()} ${mode === 'q_only' ? "(Questions Only)" : (mode === 'q_ans' ? "(Questions + Answer Key)" : "(Full Solution)")}</h2><h3>${examData.subject || examData.sub || "Subject"} (${dTopic})</h3><p><b>Test Code:</b> ${examData.code} | <b>Watermark:</b> ${watermarkText}</p></div>
         `;
         
@@ -1677,11 +1678,11 @@
         
         printArea.innerHTML = html; 
 
-        // 🔥 MAGIC TRICK: Change Document Title for PDF Download Name 🔥
-        let originalTitle = document.title;
-        let pdfName = examData.exam;
-        if(examData.subject || examData.sub) pdfName += " - " + (examData.subject || examData.sub);
-        document.title = pdfName; 
+        // 🔥 MAGIC TRICK: Change Title for PDF Name 🔥
+        let cleanSubject = examData.subject || examData.sub || "Subject";
+        let cleanTopic = dTopic ? dTopic + " " : "";
+        let newFileName = `${cleanSubject} ${cleanTopic}ankushonlinetest.netlify.app`;
+        document.title = newFileName; 
         
         document.body.classList.add('print-pdf');
         
@@ -1689,7 +1690,6 @@
             window.print(); 
             setTimeout(() => { 
                 document.body.classList.remove('print-pdf'); 
-                document.title = originalTitle; // Wapas theek kar diya
             }, 500); 
         }, 300); 
     }
