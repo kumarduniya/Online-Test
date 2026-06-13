@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ankush online test</title>
 <style>
+/* 🔥 CSS STYLES 🔥 */
 body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-serif;user-select:none;-webkit-user-select:none;scroll-behavior:smooth;}
 .container{max-width:1200px;margin:0 auto;background:white;min-height:100vh;display:flex;flex-direction:column;position:relative;box-shadow:0 0 10px rgba(0,0,0,0.1);}
 #top-sticky-wrapper{position:sticky;top:0;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.1);width:100%;background:white;}
 .tcs-header{background:#1f4e79;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;}
-.tcs-header h2{margin:0;font-size:20px;text-transform:uppercase;cursor:pointer;}
+.tcs-header h2{margin:0;font-size:20px;text-transform:uppercase;}
 .timer{font-size:16px;font-weight:bold;background:#e74c3c;padding:5px 10px;border-radius:4px;display:flex;gap:10px;}
 .tcs-sub-header{background:#e9ecef;padding:8px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #f39c12;}
 .tcs-sub-header .s-name{font-weight:bold;color:#1f4e79;font-size:15px;} .tcs-sub-header .s-exam{font-size:13px;color:#dc3545;font-weight:bold;}
@@ -18,43 +19,42 @@ body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-ser
 .form-group input,.form-group textarea,.form-group select{width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box;}
 .form-group textarea{height:180px;font-family:monospace;background:#fdfdfd;}
 .flex-row{display:flex;gap:10px;flex-wrap:wrap;} .flex-row .form-group{flex:1;min-width:180px;}
-.btn{background:#28a745;color:white;border:none;padding:12px 20px;font-size:16px;font-weight:bold;cursor:pointer;border-radius:4px;width:100%;margin-top:10px;transition:0.3s;box-sizing:border-box;}
-.btn-blue{background:#1f4e79;} .btn-pdf{background:#dc3545;} .btn-outline{background:transparent;border:2px solid #1f4e79;color:#1f4e79;} .btn-warning{background:#f39c12;color:#fff;}
+.btn{background:#28a745;color:white;border:none;padding:12px 20px;font-size:16px;font-weight:bold;cursor:pointer;border-radius:4px;width:100%;margin-top:10px;transition:0.3s;}
+.btn-blue{background:#1f4e79;} .btn-pdf{background:#dc3545;} .btn-outline{background:transparent;border:2px solid #1f4e79;color:#1f4e79;}
 .btn:disabled{background:#6c757d;cursor:not-allowed;opacity:0.6;}
 
 .admin-tabs{display:flex;border-bottom:2px solid #1f4e79;margin-bottom:20px;flex-wrap:wrap;}
 .tab-btn{flex:1;padding:15px;font-weight:bold;font-size:15px;cursor:pointer;background:#e9ecef;border:none;outline:none;white-space:nowrap;min-width:130px;}
 .tab-btn.active{background:#1f4e79;color:white;}
 
-/* 🔥 ICONS & FOLDERS 🔥 */
-.exam-grid{display:flex;flex-wrap:wrap;gap:25px;justify-content:center;padding:10px 0;width:100%;}
+.exam-grid{display:flex;flex-wrap:wrap;gap:25px;justify-content:center;padding:10px 0;}
 .exam-icon-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;cursor:pointer;width:130px;transition:0.3s;text-align:center;}
 .exam-icon-card:hover{transform:translateY(-5px);}
 .exam-icon-img{width:90px;height:90px;object-fit:contain;border-radius:50%;margin-bottom:12px;box-shadow:0 4px 10px rgba(0,0,0,0.12);background:#fff;display:flex;align-items:center;justify-content:center;border:2px solid #e9ecef;padding:5px;}
 .exam-icon-title{font-size:14px;font-weight:900;color:#1f4e79;margin:0;line-height:1.3;text-transform:uppercase;}
 
-.folder-card{background:#fff;border:2px solid #1f4e79;border-radius:12px;padding:25px 15px;text-align:center;cursor:pointer;transition:0.3s;box-shadow:0 4px 6px rgba(0,0,0,0.05);width:45%;min-width:140px;max-width:250px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.folder-card{background:#fff;border:2px solid #1f4e79;border-radius:12px;padding:25px 15px;text-align:center;cursor:pointer;transition:0.3s;box-shadow:0 4px 6px rgba(0,0,0,0.05);width:45%;min-width:140px;max-width:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .folder-card:hover{transform:translateY(-5px);background:#f8f9fa;box-shadow:0 8px 15px rgba(0,0,0,0.1);border-color:#f39c12;}
 .folder-icon{font-size:45px;margin-bottom:10px;} .folder-title{font-size:16px;font-weight:900;color:#1f4e79;margin:0;line-height:1.3;}
 .breadcrumb-nav{background:#e9ecef;padding:12px 15px;border-radius:8px;margin-bottom:20px;font-weight:bold;font-size:13px;color:#555;display:flex;align-items:center;gap:8px;flex-wrap:wrap;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
 .bc-link{color:#1f4e79;cursor:pointer;text-decoration:none;padding:2px 6px;border-radius:4px;transition:0.2s;} .bc-link:hover{background:#1f4e79;color:white;}
 .test-card{background:#fff;border:1px solid #ddd;border-left:5px solid #1f4e79;padding:15px;margin-bottom:15px;border-radius:6px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
-.test-card h4{margin:0 0 10px 0;color:#1f4e79;} .badge{background:#e9ecef;padding:3px 8px;border-radius:12px;font-size:12px;font-weight:bold;margin-right:5px;color:#333;display:inline-block;margin-bottom:5px;}
+.badge{background:#e9ecef;padding:3px 8px;border-radius:12px;font-size:12px;font-weight:bold;margin-right:5px;color:#333;display:inline-block;margin-bottom:5px;}
 
-/* 🔥 SMART SPLIT-SCREEN APP LAYOUT 🔥 */
+/* 🔥 SPLIT-SCREEN APP LAYOUT 🔥 */
 .app-layout{display:flex;gap:20px;align-items:flex-start;margin-top:10px;width:100%;}
-.sidebar-menu{width:220px;background:#fff;border-radius:8px;border:1px solid #ddd;padding:15px;flex-shrink:0;box-shadow:0 2px 5px rgba(0,0,0,0.05);position:sticky;top:70px;}
+.sidebar-menu{width:240px;background:#fff;border-radius:8px;border:1px solid #ddd;padding:15px;flex-shrink:0;box-shadow:0 2px 5px rgba(0,0,0,0.05);position:sticky;top:70px;}
 .content-area{flex-grow:1;min-height:400px;width:100%;}
 .sb-item{padding:12px 15px;margin-bottom:8px;border-radius:6px;cursor:pointer;font-weight:bold;color:#555;transition:0.2s;border-left:4px solid transparent;background:#f8f9fa;display:flex;align-items:center;gap:10px;font-size:14px;}
 .sb-item:hover{background:#e9ecef;} .sb-item.active{background:#e3f2fd;color:#1f4e79;border-left-color:#1f4e79;}
 
-/* 🔥 EXAM CONTAINER LAYOUT 🔥 */
-.exam-container{display:flex;flex-direction:column;background:#fff;} .left-panel{display:flex;flex-direction:column;padding:15px 20px 180px 20px;box-sizing:border-box;} 
+.exam-container{display:flex;flex-direction:column;background:#fff;} .left-panel{display:flex;flex-direction:column;padding:15px 20px 180px 20px;} 
 .q-header{font-size:18px;font-weight:bold;border-bottom:1px solid #ccc;padding-bottom:10px;margin-bottom:15px;color:#1f4e79;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
 .q-timer-badge{background:#ffc107;color:#000;padding:4px 10px;border-radius:4px;font-size:14px;font-weight:bold;} #q-scroll-area{padding-bottom:10px;}
-.q-text{font-size:17px;line-height:1.5;color:#222;margin-bottom:15px;font-weight:bold;} .options-div{display:block;}
-.opt-label{display:block;width:100%;padding:12px 15px;border:2px solid #e0e0e0;margin-bottom:10px;border-radius:8px;cursor:pointer;background:#fff;transition:0.2s ease-in-out;font-size:16px;font-weight:normal;box-sizing:border-box;}
+.q-text{font-size:17px;line-height:1.5;color:#222;margin-bottom:15px;font-weight:bold;} 
+.opt-label{display:block;width:100%;padding:12px 15px;border:2px solid #e0e0e0;margin-bottom:10px;border-radius:8px;cursor:pointer;background:#fff;transition:0.2s ease-in-out;font-size:16px;}
 .opt-label.selected{background:#e3f2fd;border-color:#1f4e79;color:#1f4e79;font-weight:bold;box-shadow:0 2px 8px rgba(31,78,121,0.2);} .opt-label input[type="radio"]{margin-right:12px;transform:scale(1.3);accent-color:#1f4e79;}
+
 #exam-bottom-controls{position:fixed;bottom:0;left:0;right:0;background:#fff;z-index:1000;padding:15px;border-top:1px solid #e0e0e0;box-shadow:0 -4px 15px rgba(0,0,0,0.1);display:none;}
 .mini-palette-wrapper{position:relative;margin-bottom:12px;margin-top:5px;}
 .pulse-btn{position:absolute;top:-35px;left:50%;transform:translateX(-50%);background:#1f4e79;color:white;border:none;border-radius:20px;padding:5px 20px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 0 0 0 rgba(31,78,121,0.7);animation:pulse 1.5s infinite;z-index:10;white-space:nowrap;}
@@ -63,9 +63,10 @@ body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-ser
 .mini-box{width:35px;height:35px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;border:1px solid #aaa;cursor:pointer;color:#333;background:#fff;}
 .mini-box.active-q{border:3px solid #000;transform:scale(1.1);font-weight:900;}
 .action-buttons{display:flex;justify-content:space-between;gap:12px;flex-wrap:nowrap;}
-.action-btn{padding:15px 4px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;color:white;flex:1;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;box-shadow:0 3px 6px rgba(0,0,0,0.15);text-align:center;line-height:1.2;}
+.action-btn{padding:15px 4px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;color:white;flex:1;font-size:13px;text-transform:uppercase;text-align:center;}
 .btn-prev{background:#6c757d;} .btn-clear{background:#ffc107;color:#333;} .btn-next{background:#28a745;} .btn-submit{background:#dc3545;}
-.fullscreen-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#f4f6f8;z-index:99999;overflow-y:auto;padding:20px;box-sizing:border-box;}
+
+.fullscreen-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#f4f6f8;z-index:99999;overflow-y:auto;padding:20px;}
 .fs-container{max-width:800px;margin:0 auto;background:white;padding:20px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-height:95vh;}
 .fs-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ccc;padding-bottom:15px;margin-bottom:20px;position:sticky;top:0;background:white;z-index:10;}
 .palette-legend{display:flex;flex-wrap:wrap;justify-content:space-around;padding:10px;border-bottom:1px solid #ccc;font-size:13px;background:#fff;margin-bottom:15px;}
@@ -75,8 +76,7 @@ body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-ser
 .question-palette{padding:10px;display:flex;flex-wrap:wrap;gap:10px;overflow-y:auto;align-content:flex-start;justify-content:center;}
 .palette-btn{width:45px;height:45px;border-radius:6px;border:1px solid #999;font-weight:bold;font-size:15px;cursor:pointer;}
 
-#analysis-box{margin-top:20px;scroll-margin-top:85px;} #analysis-btn-container{position:sticky;top:60px;z-index:900;background:#fdfdfd;padding:10px;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.05);border:1px solid #eee;}
-#result-view{text-align:center;padding:30px;position:relative;overflow:hidden;}
+#analysis-box{margin-top:20px;scroll-margin-top:85px;} #analysis-btn-container{position:sticky;top:60px;z-index:900;background:#fdfdfd;padding:10px;border-radius:8px;border:1px solid #eee;}
 .loader{border:4px solid #f3f3f3;border-top:4px solid #1f4e79;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:10px;}
 @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}} .confetti{position:absolute;font-size:24px;z-index:9999;pointer-events:none;animation:fall 3s linear forwards;} @keyframes fall{to{transform:translateY(100vh) rotate(720deg);}}
 .res-table{width:100%;border-collapse:collapse;margin-top:15px;font-size:13px;text-align:center;} .res-table th,.res-table td{border:1px solid #ddd;padding:8px;} .res-table th{background-color:#1f4e79;color:white;} .res-table tr:nth-child(even){background-color:#f2f2f2;}
@@ -84,16 +84,15 @@ body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-ser
 /* 🔥 ALWAYS VISIBLE ADMIN LOCK 🔥 */
 .admin-lock{position:fixed;bottom:30px;right:20px;font-size:26px;cursor:pointer;opacity:0.9;transition:0.3s;z-index:999999;background:#fff;border:3px solid #1f4e79;border-radius:50%;width:55px;height:55px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
 .admin-lock:hover{transform:scale(1.1);background:#1f4e79;color:white;border-color:white;}
-.progress-bar-container{display:flex;height:25px;border-radius:8px;overflow:hidden;margin-top:15px;box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);width:100%;}
-.progress-segment{display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:12px;overflow:hidden;}
+
 .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:999999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
 .modal-box{background:white;padding:25px;border-radius:12px;width:90%;max-width:350px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);animation:popIn 0.3s ease;}
 @keyframes popIn{from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1;}}
 
-/* 🔥 PRINT PDF SETTINGS 🔥 */
 body.print-pdf,body.print-pdf html{height:auto !important;min-height:auto !important;max-height:none !important;overflow:visible !important;background:white !important;margin:0 !important;padding:0 !important;}
 body.print-pdf #main-ui-container,body.print-pdf #top-sticky-wrapper,body.print-pdf .fullscreen-overlay,body.print-pdf #exam-bottom-controls,body.print-pdf #admin-auth-view,body.print-pdf .modal-overlay,body.print-pdf .admin-lock{display:none !important;}
 #print-area{display:none;background:white;color:black;text-align:left;position:relative;z-index:1;}
+
 @media print{
 @page{size:A4;margin:8mm;} html,body{height:auto !important;min-height:auto !important;overflow:visible !important;background:white !important;margin:0 !important;padding:0 !important;} .container{box-shadow:none !important;} #main-ui-container,#top-sticky-wrapper,.fullscreen-overlay,#exam-bottom-controls,#admin-auth-view,.modal-overlay,.admin-lock{display:none !important;} #print-area{display:block !important;position:static !important;width:100% !important;font-family:Arial,sans-serif !important;overflow:visible !important;height:auto !important;background:transparent !important;} #print-area *{visibility:visible !important;position:relative;}
 .watermark{position:fixed !important;top:50vh !important;left:50vw !important;transform:translate(-50%,-50%) rotate(-45deg) !important;font-size:110px !important;font-weight:900 !important;color:rgba(0,0,0,0.06) !important;z-index:999999 !important;white-space:nowrap;pointer-events:none;width:100%;text-align:center;text-transform:uppercase;display:block !important;}
@@ -109,20 +108,14 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
 .print-passage{padding:5px !important;margin-bottom:5px !important;font-style:italic;border-left:4px solid #333;font-size:18px !important;background:transparent !important;page-break-inside:auto !important;} *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
 
-/* 🔥 MOBILE RESPONSIVE FIX FOR SPLIT SCREEN 🔥 */
 @media (max-width: 768px) {
     .left-panel{padding:10px 10px 170px 10px;} 
     .admin-lock{bottom:20px;right:20px;width:45px;height:45px;font-size:22px;}
     .fullscreen-overlay{padding:0;} .fs-container{border-radius:0;min-height:100vh;padding:15px;}
-    
-    /* Mobile App-Layout Menu (Side-by-Side) */
-    .app-layout { flex-direction: row; gap: 10px; }
-    .sidebar-menu { width: 100px; display: flex; flex-direction: column; overflow-y: auto; padding: 5px; position: sticky; top: 60px; height: calc(100vh - 100px); box-sizing: border-box; border-radius: 0; border-right: 1px solid #ddd; box-shadow: none; }
-    .content-area { width: calc(100% - 110px); }
-    .sb-item { margin-bottom: 5px; flex-shrink: 0; border-left: 3px solid transparent; font-size: 11px; padding: 10px 5px; flex-direction: column; text-align: center; gap: 5px; }
-    .sb-item.active { border-left-color: #1f4e79; }
-    .test-card { padding: 10px; }
-    .test-card h4 { font-size: 14px; }
+    .app-layout { flex-direction: column; gap: 10px; }
+    .sidebar-menu { width: 100%; display: flex; overflow-x: auto; white-space: nowrap; padding: 10px; position: static; box-sizing: border-box; border-radius: 6px; }
+    .sb-item { margin-bottom: 0; margin-right: 10px; flex-shrink: 0; border-left: none; border-bottom: 3px solid transparent; font-size: 13px; padding: 10px; }
+    .sb-item.active { border-left-color: transparent; border-bottom-color: #1f4e79; }
 }
 </style>
 </head>
@@ -134,7 +127,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
 
 <div class="container" id="main-ui-container">
     <div id="top-sticky-wrapper">
-        <div class="tcs-header"><h2 id="head-exam-name">Exam Portal</h2><div id="timer-box" class="timer" style="display:none;"><div id="main-time">Time: 00:00</div></div></div>
+        <div class="tcs-header"><h2 id="head-exam-name" onclick="window.location.reload();">Exam Portal</h2><div id="timer-box" class="timer" style="display:none;"><div id="main-time">Time: 00:00</div></div></div>
         <div id="student-top-bar" class="tcs-sub-header" style="display:none;"><div class="s-name" id="top-sname">Student Name</div><div class="s-exam" id="top-sexam">Exam Name</div></div>
     </div>
 
@@ -186,7 +179,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
             <div id="dashboard-list"></div>
         </div>
         
-        <div id="admin-icons-section" style="display:none;"><div style="background:#fff3cd;border:1px solid #ffeeba;padding:15px;border-radius:6px;margin-bottom:20px;"><h4 style="margin:0 0 10px 0;color:#856404;">🏛️ Manage Main Icons / Boards</h4><p style="font-size:13px;color:#555;margin-bottom:15px;">Yahan se aap home page par dikhne wale aayog (icons) ka naam aur logo ek sath update kar sakte hain.</p><div class="form-group"><label>Select Icon to Edit/Delete:</label><select id="icon-select" onchange="window.onIconSelect()" style="border-color:#1f4e79;font-weight:bold;"></select></div><div class="flex-row"><div class="form-group"><label>Update Icon Name:</label><input type="text" id="icon-new-name"></div><div class="form-group"><label>Update Logo URL:</label><input type="text" id="icon-new-logo"></div></div><div style="display:flex;gap:10px;margin-top:10px;"><button class="btn btn-blue" onclick="window.updateAdminIcon()">🔄 Update Icon Info</button><button class="btn btn-pdf" onclick="window.deleteAdminIcon()">🗑️ Delete Entire Icon & Tests</button></div></div></div>
+        <div id="admin-icons-section" style="display:none;"><div style="background:#fff3cd;border:1px solid #ffeeba;padding:15px;border-radius:6px;margin-bottom:20px;"><h4 style="margin:0 0 10px 0;color:#856404;">🏛️ Manage Main Icons / Boards</h4><p style="font-size:13px;color:#555;margin-bottom:15px;">Update icons and names globally.</p><div class="form-group"><label>Select Icon to Edit/Delete:</label><select id="icon-select" onchange="window.onIconSelect()" style="border-color:#1f4e79;font-weight:bold;"></select></div><div class="flex-row"><div class="form-group"><label>Update Icon Name:</label><input type="text" id="icon-new-name"></div><div class="form-group"><label>Update Logo URL:</label><input type="text" id="icon-new-logo"></div></div><div style="display:flex;gap:10px;margin-top:10px;"><button class="btn btn-blue" onclick="window.updateAdminIcon()">🔄 Update Icon Info</button><button class="btn btn-pdf" onclick="window.deleteAdminIcon()">🗑️ Delete Entire Icon & Tests</button></div></div></div>
     </div>
 
     <div id="login-view" class="view-section"><div id="specific-test-login" style="max-width:450px;margin:30px auto;background:#fdfdfd;padding:30px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);border-top:4px solid #f39c12;"><h3 style="color:#1f4e79;text-align:center;margin-bottom:5px;" id="login-test-name">Test Login</h3><p style="text-align:center;color:#e74c3c;font-weight:bold;margin-top:0;">Test Code: <span id="disp-code">...</span></p><p style="text-align:center;color:#555;font-size:13px;margin-top:-5px;">(+<span id="disp-marks"></span> Marks / -<span id="disp-neg"></span> Negative)</p><p id="disp-time-info" style="text-align:center;color:#1f4e79;font-size:12px;margin-top:-5px;font-weight:bold;"></p><div style="background:#f4f6f8;padding:15px;border-radius:6px;border:1px solid #ccc;margin-bottom:20px;"><h4 style="margin:0 0 10px 0;color:#333;">📝 Start New Test</h4><p style="text-align:center;color:#28a745;font-size:13px;font-weight:bold;margin-bottom:15px;border-bottom:1px dashed #ccc;padding-bottom:10px;">✅ No registration required! Enter your name and mobile number to begin the test.</p><input type="text" id="s-name" placeholder="Enter your name" required style="width:100%;padding:10px;margin-bottom:10px;box-sizing:border-box;"><input type="tel" id="s-phone" placeholder="Enter your 10-digit mobile number" required style="width:100%;padding:10px;box-sizing:border-box;" maxlength="10"><button class="btn" onclick="window.startExam(false)">Start Test 🚀</button></div><div id="direct-pdf-box" style="background:#fff3cd;padding:15px;border-radius:6px;border:1px solid #ffeeba;"><h4 style="margin:0 0 10px 0;color:#856404;">📥 Direct PDF Download (Without Test)</h4><div id="paid-instructions" style="font-size:13px;color:#856404;margin-bottom:10px;">PDF Price: <b>₹<span id="disp-price">0</span></b><br>Pay at <b>8273684939</b> and WhatsApp screenshot for password.</div><div id="free-instructions" style="font-size:13px;color:#28a745;margin-bottom:10px;display:none;font-weight:bold;">🎉 This PDF is Free for everyone!</div><input type="tel" id="pdf-phone" placeholder="Enter mobile number..." style="width:100%;padding:10px;margin-bottom:10px;box-sizing:border-box;"><input type="text" id="pdf-pass" placeholder="Enter password..." style="width:100%;padding:10px;box-sizing:border-box;"><button class="btn btn-pdf" onclick="window.directDownloadPDF()">🔒 Unlock & Download PDF</button></div><div style="text-align:center;margin:15px;"><button class="btn btn-outline" style="width:auto;padding:8px 20px;" onclick="window.closeAndRedirect()">🏠 Back to Home</button></div></div></div>
@@ -211,20 +204,46 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     window.isReattemptMode=false; window.currentGeneratedPass=""; window.currentAdminLbDataRaw=[]; 
     window.globalActiveTests=[]; window.currentAnalysisArray=[]; window.currentAnalysisIndex=0; window.currentAnalysisType="";
 
+    // 🔥 GLOBAL LOCK TOGGLE 🔥
+    window.toggleAdminLock = function(show) {
+        let lock = document.getElementById('admin-lock-btn');
+        if(lock) lock.style.display = show ? 'flex' : 'none';
+    };
+
     window.parseHack = function(raw) {
-        let res={topic:raw||"",qs:0,cat:"Mock Tests",logo:"",board:""};
-        if(!raw)return res;
-        if(raw.includes("|||QS:")){
-            let p1=raw.split("|||QS:"); res.topic=p1[0]; let r1=p1[1]||"";
-            if(r1.includes("|||CAT:")){
-                let p2=r1.split("|||CAT:"); res.qs=p2[0]; let r2=p2[1]||"";
-                if(r2.includes("|||LOGO:")){
-                    let p3=r2.split("|||LOGO:"); res.cat=p3[0]; let r3=p3[1]||"";
-                    if(r3.includes("|||BOARD:")){ let p4=r3.split("|||BOARD:"); res.logo=p4[0]; res.board=p4[1]; } 
-                    else {res.logo=r3;}
-                } else {res.cat=r2;}
-            } else {res.qs=r1;}
-        } return res;
+        let res = { topic: raw || "", qs: 0, cat: "Mock Tests", logo: "", board: "", subcat: "" };
+        if(!raw) return res;
+        
+        if(raw.includes("|||QS:")) {
+            let p1 = raw.split("|||QS:");
+            res.topic = p1[0];
+            res.subcat = p1[0]; 
+            
+            let r1 = p1[1] || "";
+            let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/);
+            if (matchQs) res.qs = matchQs[1];
+            
+            let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/);
+            if (matchCat) res.cat = matchCat[1];
+            
+            let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/);
+            if (matchLogo) res.logo = matchLogo[1];
+            
+            let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/);
+            if (matchBoard) res.board = matchBoard[1];
+            
+            let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/);
+            if (matchExam) res.exam = matchExam[1];
+            
+            let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/);
+            if (matchSubcat) res.subcat = matchSubcat[1];
+            
+            return res;
+        } else {
+            res.topic = raw;
+            res.subcat = raw;
+            return res;
+        }
     };
 
     const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
@@ -236,20 +255,31 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     window.openAdminLogin = function() { 
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
         document.getElementById('admin-auth-view').classList.add('active-view'); 
-        document.getElementById('admin-lock-btn').style.display='none';
+        window.toggleAdminLock(false);
     };
 
-    window.qTree = {};
     window.initQuickFill = function() {
-        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; window.qTree = {};
-        savedTests.forEach(t => {
-            let p = window.parseHack(t.topic); let b = p.board||t.exam||"General Exam"; let e = t.exam||"Mock Test";
-            let c = p.cat||"Mock Tests"; let s = t.subject||t.sub||"Subject";
-            if(!window.qTree[b]) window.qTree[b]={}; if(!window.qTree[b][e]) window.qTree[b][e]={}; if(!window.qTree[b][e][c]) window.qTree[b][e][c]=new Set();
+        let allTests = window.globalActiveTests || [];
+        if(allTests.length === 0) { allTests = JSON.parse(localStorage.getItem('myMockTests')) || []; }
+        
+        window.qTree = {};
+        allTests.forEach(t => {
+            let p = window.parseHack(t.topic); 
+            let b = p.board||t.exam||"General Exam"; 
+            let e = t.exam||"Mock Test";
+            let c = p.cat||"Mock Tests"; 
+            let s = p.subcat || t.subject || t.sub || "Subject";
+            
+            if(!window.qTree[b]) window.qTree[b]={}; 
+            if(!window.qTree[b][e]) window.qTree[b][e]={}; 
+            if(!window.qTree[b][e][c]) window.qTree[b][e][c]=new Set();
             window.qTree[b][e][c].add(s);
         });
-        let qb = document.getElementById('quick-board'); qb.innerHTML = '<option value="">1. Select Board</option>';
+        
+        let qb = document.getElementById('quick-board'); 
+        qb.innerHTML = '<option value="">1. Select Board</option>';
         for(let b in window.qTree) { qb.innerHTML += `<option value="${b}">${b}</option>`; }
+        
         document.getElementById('quick-exam').innerHTML='<option value="">2. Select Exam</option>';
         document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>';
         document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
@@ -279,7 +309,8 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
 
     window.autoFillLogo = function() {
         let eName = document.getElementById('a-board').value.trim().toLowerCase(); if(!eName) return;
-        let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+        let savedTests = window.globalActiveTests || [];
+        if(savedTests.length === 0) savedTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         for(let i=0; i<savedTests.length; i++) {
             let p = window.parseHack(savedTests[i].topic); let bName = (p.board||savedTests[i].exam||"").toLowerCase();
             if(bName===eName && p.logo) { document.getElementById('a-logo').value=p.logo; return; }
@@ -339,6 +370,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         const urlParams = new URLSearchParams(window.location.search); const testCode = urlParams.get('test');
         if(testCode) {
             document.getElementById('loading-view').classList.add('active-view');
+            window.toggleAdminLock(false);
             let script = document.createElement('script'); script.src = SCRIPT_URL+"?action=getTest&testCode="+testCode+"&callback=handleTestLoad&t="+new Date().getTime();
             script.onerror = ()=>window.showErrorView("❌ Network Error!"); document.body.appendChild(script);
         } else {
@@ -357,6 +389,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     window.setupLoginScreen = function() {
         document.getElementById('loading-view').classList.remove('active-view'); document.getElementById('login-view').classList.add('active-view');
         document.getElementById('specific-test-login').style.display='block'; 
+        window.toggleAdminLock(false);
         document.getElementById('head-exam-name').innerText=window.examData.exam; document.getElementById('login-test-name').innerText=`${window.examData.exam} (${window.examData.subject||window.examData.sub||"Subject"})`;
         document.getElementById('disp-code').innerText=window.examData.code; document.getElementById('disp-marks').innerText=window.examData.marks; document.getElementById('disp-neg').innerText=window.examData.neg;
         let tInfo=""; if(window.examData.totTime>0) tInfo+=`Total Time: ${window.examData.totTime} Mins | `; if(window.examData.qTime>0) tInfo+=`Per Q: ${window.examData.qTime} Secs`; document.getElementById('disp-time-info').innerText=tInfo;
@@ -366,6 +399,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     };
 
     window.switchStudentTab = function(tab) {
+        window.toggleAdminLock(true);
         if(tab==='active'){
             document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
             document.getElementById('st-active-section').style.display='block'; document.getElementById('st-history-section').style.display='none'; window.fetchActiveTests();
@@ -413,6 +447,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         list.innerHTML=html;
     };
 
+    // 🔥 THE NEW SPLIT SCREEN (SIDEBAR) APP LAYOUT 🔥
     window.showAppLayout = function(boardName, subExamName, activeCat=null) {
         let bc=document.getElementById('breadcrumb-container'); bc.innerHTML=`<span class="bc-link" onclick="window.showExamsView()">🏠 Home</span> <span>👉</span> <span class="bc-link" onclick="window.showSubExamsView('${boardName}')">${boardName}</span> <span>👉</span> <span>${subExamName}</span>`;
         document.getElementById('st-folder-view').style.display='none'; 
@@ -436,10 +471,10 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     window.renderContentArea = function(boardName, subExamName, activeCat, examTests) {
         let contentArea=document.getElementById('st-content-area'); let catTests=examTests.filter(t=>window.parseHack(t.topic).cat===activeCat); let html="";
         if(activeCat==="Chapter Tests") {
-            let subjects=[...new Set(catTests.map(t=>t.subject||t.sub||"General Studies"))];
+            let subjects=[...new Set(catTests.map(t=>window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies"))];
             html=`<h3 style="margin:0 0 15px 0;color:#1f4e79;border-bottom:2px solid #eee;padding-bottom:10px;">Select Subject</h3><div style="display:flex;flex-wrap:wrap;gap:15px;">`;
             subjects.forEach(sub=>{
-                let count=catTests.filter(t=>(t.subject||t.sub||"General Studies")===sub).length;
+                let count=catTests.filter(t=>(window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies")===sub).length;
                 html+=`<div class="folder-card" style="width:100%;max-width:200px;padding:15px;border-width:1px;" onclick="window.renderDirectTests('${boardName}','${subExamName}','${activeCat}','${sub}')"><div class="folder-icon" style="font-size:30px;">📚</div><h4 class="folder-title" style="font-size:14px;">${sub}</h4><p style="margin:5px 0 0 0;font-size:11px;color:#777;">${count} Tests</p></div>`;
             }); html+=`</div>`; contentArea.innerHTML=html;
         } else { window.renderDirectTests(boardName, subExamName, activeCat, 'ALL', catTests); }
@@ -449,7 +484,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         let contentArea=document.getElementById('st-content-area'); let testsToRender=preFilteredTests;
         if(!testsToRender) {
             let examTests=window.globalActiveTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName && p.cat===activeCat;});
-            testsToRender=examTests.filter(t=>(t.subject||t.sub||"General Studies")===subjectName);
+            testsToRender=examTests.filter(t=>(window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies")===subjectName);
         }
         let titleText=(subjectName==='ALL')?`${activeCat}`:`${subjectName} - ${activeCat}`;
         let html=`<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px;"><h3 style="margin:0;color:#1f4e79;">${titleText}</h3>`;
@@ -457,8 +492,8 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         html+=`</div><div style="display:flex;flex-wrap:wrap;gap:15px;">`;
         if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found.</p>`;
         testsToRender.forEach(t=>{
-            let p=window.parseHack(t.topic); let currentSub=t.subject||t.sub||"General"; let isFreeStatus=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); let priceText=isFreeStatus?"Free":"₹"+t.price;
-            let displayTopic=p.topic; let qsCount=p.qs||t.qs||0; if(!qsCount||qsCount===0||qsCount==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qsCount=t.questions.length;else if(t.rawText){let match=t.rawText.match(/!!\s*\d+\s*!/g);if(match)qsCount=match.length;}} if(!qsCount)qsCount=0;
+            let p=window.parseHack(t.topic); let currentSub=p.subcat||t.subject||t.sub||"General"; let isFreeStatus=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); let priceText=isFreeStatus?"Free":"₹"+t.price;
+            let displayTopic=p.topic||p.title||t.subject||"Test"; let qsCount=p.qs||t.qs||0; if(!qsCount||qsCount===0||qsCount==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qsCount=t.questions.length;else if(t.rawText){let match=t.rawText.match(/!!\s*\d+\s*!/g);if(match)qsCount=match.length;}} if(!qsCount)qsCount=0;
             html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">Marks: ${t.marks||2}</span></div><button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button></div>`;
         }); html+=`</div>`; contentArea.innerHTML=html;
     };
@@ -520,6 +555,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     window.copyGeneratedPass = function() { if(!window.currentGeneratedPass) return; navigator.clipboard.writeText(window.currentGeneratedPass).then(()=>{window.showCustomAlert("Success","✅ Password copied!","✅");}).catch(()=>{window.showCustomAlert("Error","Copy failed","❌");}); };
     window.checkPass = function(ph, pa) { let isFree=(window.examData.isFree===true||String(window.examData.isFree).toLowerCase()==="true"); if(isFree) return true; return pa===window.generateStrongPass(ph,window.examData.key.toUpperCase()); };
     window.getCleanAns = function(val) { if(!val) return ""; let match=val.toString().replace(/<[^>]*>/g,'').match(/[A-D]/i); return match?match[0].toUpperCase():""; };
+    
     window.parseRawQuestions = function(rawText) {
         rawText=rawText.replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/\r\n?/g,'\n').replace(/(\n|^)\s*(!!\s*\d+\s*!)/g,'\n$2').replace(/(\n|^)\s*(![A-D]\s)/gi,'\n$2').replace(/(\n|^)\s*(!!!\s*[A-D])/gi,'\n$2').replace(/(\n|^)\s*(!!!!)/g,'\n$2').replace(/(\n|^)\s*(!P\s)/gi,'\n$2');
         let parsedQs=[]; let tempQ=null; let cPass=""; let cMode=""; let lines=rawText.split('\n');
@@ -540,7 +576,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         let rawText=document.getElementById('a-rawdata').value; if(!rawText.trim()) return window.showCustomAlert("Empty Box","Paste questions!","⚠️");
         let parsedQs=window.parseRawQuestions(rawText); if(parsedQs.length===0) return window.showCustomAlert("Format Error","❌ Incorrect format.","⚠️");
         let fQs=window.updateQsCount(); if(fQs===0) fQs=parsedQs.length;
-        let eTopic=eTopicRaw+"|||QS:"+fQs+"|||CAT:"+eCategory+"|||LOGO:"+eLogo+"|||BOARD:"+eBoard;
+        let eTopic=eTopicRaw+"|||QS:"+fQs+"|||CAT:"+eCategory+"|||LOGO:"+eLogo+"|||BOARD:"+eBoard+"|||EXAM:"+eName+"|||SUBCAT:"+eSub;
         let fObj={exam:eName,category:eCategory,logo:eLogo,subject:eSub,sub:eSub,topic:eTopic,code:eCode,marks:eMarks,neg:eNeg,totTime:tTime,qTime:qTime,isFree:isFree,price:ePrice,key:eKey,questions:parsedQs,qs:fQs,isActive:true};
         let btn=document.getElementById('btn-generate'); btn.innerText="⏳ Saving..."; btn.disabled=true;
         fetch(SCRIPT_URL, {method:'POST',body:new URLSearchParams({'action':'saveTest','testCode':eCode,'testData':JSON.stringify(fObj)}),headers:{'Content-Type':'application/x-www-form-urlencoded'}})
@@ -561,7 +597,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         let h=""; for(let b in grp){
             h+=`<h3 style="background:#1f4e79;color:white;padding:10px;border-radius:4px;margin-top:20px;">🏛️ ${b}</h3>`;
             grp[b].forEach(t=>{
-                let p=window.parseHack(t.topic); let cEx=t.exam||"Mock Test"; let cSu=t.subject||t.sub||"Subject"; let cCa=p.cat; let isF=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); let pT=isF?"Free":"₹"+t.price;
+                let p=window.parseHack(t.topic); let cEx=t.exam||"Mock Test"; let cSu=p.subcat||t.subject||t.sub||"Subject"; let cCa=p.cat; let isF=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); let pT=isF?"Free":"₹"+t.price;
                 let sBtn=(t.isActive!==false)?`<button class="btn" style="background:#28a745;margin:0;padding:5px;font-size:12px;width:auto;" onclick="window.toggleTestStatus('${t.code}',false,${t.orig})">🟢 Active</button>`:`<button class="btn" style="background:#6c757d;margin:0;padding:5px;font-size:12px;width:auto;" onclick="window.toggleTestStatus('${t.code}',true,${t.orig})">🔴 Inactive</button>`;
                 let qC=p.qs||t.qs||0; if(!qC||qC===0||qC==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qC=t.questions.length;else if(t.rawText){let m=t.rawText.match(/!!\s*\d+\s*!/g);if(m)qC=m.length;}}
                 h+=`<div class="test-card"><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><h4 style="margin:0;">🎓 ${cEx} | ${cSu} (${t.code})</h4> ${sBtn}</div><div style="margin-bottom:10px;"><span class="badge" style="background:#17a2b8;color:white;">📂 ${cCa}</span><span class="badge" style="background:#1f4e79;color:white;">Qs: ${qC}</span><span class="badge">${pT}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span><span class="badge">Date: ${t.date}</span><span class="badge" style="background:#ffc107;">Key: ${t.key}</span></div><input type="text" value="${t.link}" readonly style="width:100%;padding:5px;border:1px solid #ccc;font-size:12px;margin-bottom:5px;"><div style="margin-top:5px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid #eee;padding-top:10px;"><button class="btn btn-blue" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.editTest(${t.orig})">✏️ Edit</button><button class="btn" style="background:#dc3545;margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.deleteTest(${t.orig})">🗑️ Delete</button><button class="btn btn-outline" style="margin:0;padding:5px 10px;width:auto;font-size:12px;" onclick="navigator.clipboard.writeText('${t.link}');window.showCustomAlert('Copied','Link copied successfully!','✅');">📋 Copy Link</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.adminDownloadPDF(${t.orig},'q_only')">📝 Qs Only</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#17a2b8;" onclick="window.adminDownloadPDF(${t.orig},'q_ans')">✅ Qs+Ans</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#28a745;" onclick="window.adminDownloadPDF(${t.orig},'full')">📚 Full PDF</button></div></div>`;
@@ -579,7 +615,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         document.getElementById('a-board').value=p.board||t.exam||""; document.getElementById('a-exam').value=t.exam||""; document.getElementById('a-logo').value=p.logo||"";
         let cS=document.getElementById('a-category'); let opts=Array.from(cS.options).map(o=>o.value);
         if(opts.includes(p.cat)){cS.value=p.cat;document.getElementById('a-custom-cat').style.display='none';}else{cS.value="CUSTOM";document.getElementById('a-custom-cat').style.display='block';document.getElementById('a-custom-cat').value=p.cat;}
-        document.getElementById('a-sub').value=t.subject||t.sub||""; document.getElementById('a-topic').value=p.topic; document.getElementById('a-code').value=t.code||""; document.getElementById('a-marks').value=t.marks||2; document.getElementById('a-neg').value=t.neg||0; document.getElementById('a-tot-time').value=t.totTime||0; document.getElementById('a-q-time').value=t.qTime||0;
+        document.getElementById('a-sub').value=p.subcat||t.subject||t.sub||""; document.getElementById('a-topic').value=p.topic||""; document.getElementById('a-code').value=t.code||""; document.getElementById('a-marks').value=t.marks||2; document.getElementById('a-neg').value=t.neg||0; document.getElementById('a-tot-time').value=t.totTime||0; document.getElementById('a-q-time').value=t.qTime||0;
         let isF=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); if(isF||t.price==="Free"){document.getElementById('a-pdf-type').value="free";}else{document.getElementById('a-pdf-type').value="paid";document.getElementById('a-price').value=t.price||"";}
         let raw=t.rawText; if(!raw&&t.questions&&t.questions.length>0){raw=t.questions.map((q,i)=>{let pa=q.passage?`!P ${q.passage.replace(/<br>/g,'\n')}\n`:"";let qs=`!!${i+1}! ${q.q.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;let op=q.opts.map(o=>`!${o.id} ${o.text}`).join('\n')+'\n';let an=`!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;let ex=q.exp?`!!!! ${q.exp.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`:"";return pa+qs+op+an+ex;}).join('\n');}
         document.getElementById('a-key').value=t.key||""; document.getElementById('a-rawdata').value=raw||""; document.getElementById('a-qs-count').value=window.parseRawQuestions(raw||"").length;
@@ -595,22 +631,28 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     };
 
     window.startExam = function(isRe) {
-        if(!isRe){
-            window.studentInfo.name=document.getElementById('s-name').value; window.studentInfo.phone=document.getElementById('s-phone').value;
-            if(!window.studentInfo.name||window.studentInfo.phone.length!==10)return window.showCustomAlert("Required","Enter correct name and 10-digit number!","⚠️");
+        try {
+            if(!isRe){
+                window.studentInfo.name=document.getElementById('s-name').value; window.studentInfo.phone=document.getElementById('s-phone').value;
+                if(!window.studentInfo.name||window.studentInfo.phone.length!==10) { window.showCustomAlert("Required","Enter correct name and 10-digit number!","⚠️"); return; }
+            }
+            if(!window.examData.questions||window.examData.questions.length===0){
+                window.showCustomAlert("Empty Test","❌ No questions found.","⚠️");
+                document.getElementById('loading-view').classList.remove('active-view');document.getElementById('student-dashboard-view').classList.add('active-view');return;
+            }
+            window.isReattemptMode=isRe; window.studentInfo.score=0; window.studentInfo.right=0; window.studentInfo.wrong=0; window.studentInfo.blank=0; window.totalTimeSpent=0;
+            if(window.examData.totTime>0) window.globalTimeLeft=window.examData.totTime*60; else window.globalTimeLeft=0;
+            for(let i=0;i<window.examData.questions.length;i++){window.userAnswers[i]=null;window.qStatus[i]=0;}
+            document.getElementById('top-sname').innerText="👤 "+window.studentInfo.name; document.getElementById('top-sexam').innerText=window.examData.exam+(isRe?" (Reattempt)":""); document.getElementById('student-top-bar').style.display='flex';
+            document.querySelectorAll('.view-section').forEach(v=>v.classList.remove('active-view')); document.getElementById('exam-view').style.display=''; document.getElementById('exam-view').classList.add('active-view'); document.getElementById('exam-bottom-controls').style.display='block';
+            window.toggleAdminLock(false);
+            try{history.pushState({inTest:true},"Test Started","#test");}catch(e){} document.getElementById('timer-box').style.display='flex';
+            let g=document.getElementById('palette-grid'); g.innerHTML=""; for(let i=0;i<window.examData.questions.length;i++){let b=document.createElement('button');b.className=`palette-btn status-not-visited`;b.id=`pal-${i}`;b.innerText=i+1;b.onclick=()=>{window.renderQuestion(i);window.togglePaletteOverlay(false);};g.appendChild(b);} window.updateCounts(); window.renderQuestion(0);
+            clearInterval(window.globalTimer); window.globalTimer=setInterval(()=>{window.totalTimeSpent++;if(window.examData.totTime>0){window.globalTimeLeft--;let m=Math.floor(window.globalTimeLeft/60);let s=window.globalTimeLeft%60;document.getElementById('main-time').innerText=`Time Left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;if(window.globalTimeLeft<=0){clearInterval(window.globalTimer);window.showCustomAlert("Time Up","⏳ Time's up!","⏳");window.calculateScoreAndSubmit();}}else{let m=Math.floor(window.totalTimeSpent/60);let s=window.totalTimeSpent%60;document.getElementById('main-time').innerText=`Time: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;}},1000);
+        } catch(err) {
+            console.error(err);
+            window.showCustomAlert("Error", "Could not start test. Check code formatting.", "❌");
         }
-        if(!window.examData.questions||window.examData.questions.length===0){
-            window.showCustomAlert("Empty Test","❌ No questions found.","⚠️");
-            document.getElementById('loading-view').classList.remove('active-view');document.getElementById('student-dashboard-view').classList.add('active-view');return;
-        }
-        window.isReattemptMode=isRe; window.studentInfo.score=0; window.studentInfo.right=0; window.studentInfo.wrong=0; window.studentInfo.blank=0; window.totalTimeSpent=0;
-        if(window.examData.totTime>0) window.globalTimeLeft=window.examData.totTime*60; else window.globalTimeLeft=0;
-        for(let i=0;i<window.examData.questions.length;i++){window.userAnswers[i]=null;window.qStatus[i]=0;}
-        document.getElementById('top-sname').innerText="👤 "+window.studentInfo.name; document.getElementById('top-sexam').innerText=window.examData.exam+(isRe?" (Reattempt)":""); document.getElementById('student-top-bar').style.display='flex';
-        document.querySelectorAll('.view-section').forEach(v=>v.classList.remove('active-view')); document.getElementById('exam-view').style.display=''; document.getElementById('exam-view').classList.add('active-view'); document.getElementById('exam-bottom-controls').style.display='block';
-        try{history.pushState({inTest:true},"Test Started","#test");}catch(e){} document.getElementById('timer-box').style.display='flex';
-        let g=document.getElementById('palette-grid'); g.innerHTML=""; for(let i=0;i<window.examData.questions.length;i++){let b=document.createElement('button');b.className=`palette-btn status-not-visited`;b.id=`pal-${i}`;b.innerText=i+1;b.onclick=()=>{window.renderQuestion(i);window.togglePaletteOverlay(false);};g.appendChild(b);} window.updateCounts(); window.renderQuestion(0);
-        clearInterval(window.globalTimer); window.globalTimer=setInterval(()=>{window.totalTimeSpent++;if(window.examData.totTime>0){window.globalTimeLeft--;let m=Math.floor(window.globalTimeLeft/60);let s=window.globalTimeLeft%60;document.getElementById('main-time').innerText=`Time Left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;if(window.globalTimeLeft<=0){clearInterval(window.globalTimer);window.showCustomAlert("Time Up","⏳ Time's up!","⏳");window.calculateScoreAndSubmit();}}else{let m=Math.floor(window.totalTimeSpent/60);let s=window.totalTimeSpent%60;document.getElementById('main-time').innerText=`Time: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;}},1000);
     };
 
     window.startReattempt = function(){ window.showCustomConfirm("Reattempt","Do you want to reattempt this test?",()=>{window.startExam(true);},"🔄"); };
@@ -620,6 +662,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         let o=document.getElementById('palette-overlay'); if(o&&o.style.display==='block'){o.style.display='none';try{history.pushState({inTest:true},"Test Started","#test");}catch(err){}}
         else if(document.getElementById('exam-view').classList.contains('active-view')){
             document.getElementById('exam-view').classList.remove('active-view');document.getElementById('exam-bottom-controls').style.display='none';document.getElementById('student-top-bar').style.display='none';document.getElementById('timer-box').style.display='none';clearInterval(window.globalTimer);clearInterval(window.qTimer);document.getElementById('student-dashboard-view').classList.add('active-view');
+            window.toggleAdminLock(true);
             if(document.getElementById('admin-manage-section').style.display==='block') window.renderDashboard(); else window.showExamsView();
         }
     });
@@ -649,7 +692,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         document.getElementById('btn-cnt-right').innerText=window.studentInfo.right; document.getElementById('btn-cnt-wrong').innerText=window.studentInfo.wrong; document.getElementById('btn-cnt-blank').innerText=window.studentInfo.blank;
         let rS=(window.studentInfo.right*window.examData.marks)-(window.studentInfo.wrong*window.examData.neg); window.studentInfo.score=Math.max(0,Math.round(rS*100)/100); let mS=window.examData.questions.length*window.examData.marks; let p=(window.studentInfo.score/mS)*100;
         let rH=document.getElementById('result-heading'); if(p>=80){rH.innerText="🎉 Outstanding! 🎉";rH.style.color="#28a745";window.blastConfetti();}else{rH.innerText="💪 Keep it up!";rH.style.color="#e74c3c";}
-        window.drawReportCard("...", "...", mS); document.getElementById('btn-img-down').style.display='block'; document.getElementById('btn-pdf-down').style.display='block'; document.getElementById('btn-reattempt').style.display='block'; document.getElementById('analysis-box').style.display='none'; document.getElementById('rank-loader').style.display='block';
+        window.drawReportCard("...", "...", mS); document.getElementById('btn-img-down').style.display='block'; document.getElementById('btn-pdf-down').style.display='block'; document.getElementById('btn-reattempt').style.display='block'; document.getElementById('analysis-box').style.display='none'; document.getElementById('rank-loader').style.display='block'; window.toggleAdminLock(false);
         let sC=window.isReattemptMode?(window.examData.code+"-RE"):window.examData.code;
         fetch(SCRIPT_URL,{method:'POST',body:new URLSearchParams({'action':'submitScore','name':window.studentInfo.name,'phone':window.studentInfo.phone,'score':window.studentInfo.score,'testCode':sC,'right':window.studentInfo.right,'wrong':window.studentInfo.wrong,'blank':window.studentInfo.blank,'timeSpent':window.totalTimeSpent}),headers:{'Content-Type':'application/x-www-form-urlencoded'}})
         .then(r=>r.json()).then(d=>{window.studentInfo.attempt=d.attempt||(window.isReattemptMode?"Reattempt":1);document.getElementById('rank-loader').style.display='none';let fR=(window.isReattemptMode&&d.totalStudents<=1)?"N/A":d.rank;window.drawReportCard(fR,d.totalStudents,mS);}).catch(()=>{document.getElementById('rank-loader').style.display='none';window.drawReportCard("N/A","N/A",mS);});
@@ -668,7 +711,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         let uT=""; let tC=""; if(d.isBlank){uT="Skipped";tC="color:#6c757d;";}else if(d.isRight){uT=`Your Answer: ${uA} (Correct ✅)`;tC="color:#28a745;";}else{uT=`Your Answer: ${uA} (Wrong ❌) | Correct: ${cA||"N/A"}`;tC="color:#dc3545;";}
         let oH=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px;">`;
         q.opts.forEach(o=>{let b="#fff";let br="1px solid #ccc";let f="normal";let c="#333";let oC=window.getCleanAns(o.id);let ic=`<span style="margin-right:8px;visibility:hidden;">✅</span>`;if(oC===cA){b="#e6f9ec";br="1px solid #28a745";f="bold";c="#155724";ic=`<span style="margin-right:8px;">✅</span>`;}else if(oC===gA&&!d.isRight){b="#f8d7da";br="1px solid #dc3545";f="bold";c="#721c24";ic=`<span style="margin-right:8px;">❌</span>`;}oH+=`<div style="padding:10px;border:${br};border-radius:4px;background:${b};color:${c};font-weight:${f};font-size:15px;display:flex;align-items:flex-start;">${ic}<div><b>${o.id}.</b> ${o.text}</div></div>`;}); oH+=`</div>`;
-        let eH=q.exp?`<div style="font-size:14px;color:#444;margin-top:10px;line-height:1.5;background:#f9f9f9;padding:12px;border-radius:4px;border-left:4px solid #1f4e79;"><b>Explanation:</b><br>${q.exp}</div>`:"";
+        let eH=q.exp?`<div style="font-size:14px;color:#444;margin-top:10px;line-height:1.5;background:#f9f9f9;padding:12px;border-radius:4px;border-left:4px solid #1f4e79;max-height:180px;overflow-y:auto;" class="analysis-scroll"><b>Explanation:</b><br>${q.exp}</div>`:"";
         let h=`<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ccc;padding-bottom:10px;margin-bottom:15px;"><b style="color:#1f4e79;font-size:16px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b><button class="btn btn-outline" style="margin:0;width:auto;padding:3px 10px;font-size:12px;background:#dc3545;color:white;border:none;" onclick="document.getElementById('analysis-box').style.display='none';">❌ Close</button></div>${pH}<b style="font-size:18px;color:#222;display:block;margin-bottom:15px;line-height:1.4;">${sI} Q${i+1}. ${q.q}</b><div style="${tC} font-weight:bold;margin-bottom:15px;padding:10px;border-radius:4px;background:#f8f9fa;border:1px solid #ccc;">${uT}</div>${oH}${eH}<div style="display:flex;justify-content:space-between;margin-top:20px;border-top:1px solid #ddd;padding-top:15px;"><button class="btn btn-outline" style="width:auto;padding:8px 20px;margin:0;" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''}>⬅️ Prev</button><button class="btn btn-blue" style="width:auto;padding:8px 20px;margin:0;" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''}>Next ➡️</button></div>`;
         document.getElementById('analysis-box').innerHTML=h;
     };
@@ -716,7 +759,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
 
     window.executePDFPrint = function(wT, mode) {
         let pA=document.getElementById('print-area'); let sU=BASE_URL+"?test="+window.examData.code; let p=window.parseHack(window.examData.topic); let dT=p.topic||"";
-        let h=`<div class="watermark">${wT}</div><table class="pdf-main-table"><thead style="display:table-header-group;"><tr><td style="padding:0;border:none;"><div class="pdf-header-strip"><table style="width:100%;border:none;"><tr><td style="text-align:left;border:none;padding:0;"><a href="https://studynotesmanager.netlify.app/" style="color:#fff;font-weight:bold;font-size:15px;text-decoration:none;">${iconGlobe} Study Notes Manager</a></td><td style="text-align:right;border:none;padding:0;"><a href="${sU}" style="color:#f39c12;font-weight:bold;font-size:15px;text-decoration:none;">📝 Give Online Test</a></td></tr></table></div></td></tr></thead><tfoot style="display:table-footer-group;"><tr><td style="padding:0;border:none;"><div class="pdf-footer-strip"><div style="text-align:center;width:100%;font-size:12px;font-weight:bold;color:#fff;"><a href="tel:+918273684939" style="color:#fff;text-decoration:none;">${iconPhone} +91-8273684939</a> <span style="margin:0 4px;color:#ccc;">|</span> <a href="${BASE_URL}" style="color:#fff;text-decoration:none;">${iconGlobe} Website</a> <span style="margin:0 4px;color:#ccc;">|</span> <a href="https://t.me/ankushonlinetest" style="color:#fff;text-decoration:none;">${iconTelegram} Telegram</a> <span style="margin:0 4px;color:#ccc;">|</span> <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k" style="color:#fff;text-decoration:none;">${iconWhatsApp} WhatsApp</a> <span style="margin:0 4px;color:#ccc;">|</span> <a href="https://www.youtube.com/@ankushonlinetest" style="color:#fff;text-decoration:none;">${iconYouTube} YouTube</a></div></div></td></tr></tfoot><tbody><tr><td style="padding:10px 20px;position:relative;z-index:10;"><div class="print-header"><h2>${window.examData.exam.toUpperCase()} ${mode==='q_only'?"(Questions Only)":(mode==='q_ans'?"(Questions + Answer Key)":"(Full Solution)")}</h2><h3>${window.examData.subject||window.examData.sub||"Subject"} (${dT})</h3><p><b>Test Code:</b> ${window.examData.code} | <b>Watermark:</b> ${wT}</p></div>`;
+        let h=`<div class="watermark">${wT}</div><table class="pdf-main-table"><thead style="display:table-header-group;"><tr><td style="padding:0;border:none;"><div class="pdf-header-strip"><table style="width:100%;border:none;"><tr><td style="text-align:left;border:none;padding:0;"><a href="https://studynotesmanager.netlify.app/" style="color:#ffffff;font-weight:bold;font-size:15px;text-decoration:none;">${iconGlobe} Study Notes Manager</a></td><td style="text-align:right;border:none;padding:0;"><a href="${sU}" style="color:#f39c12;font-weight:bold;font-size:15px;text-decoration:none;">📝 Give Online Test</a></td></tr></table></div></td></tr></thead><tfoot style="display:table-footer-group;"><tr><td style="padding:0;border:none;"><div class="pdf-footer-strip"><div style="text-align:center;width:100%;font-size:12px;font-weight:bold;color:#fff;"><a href="tel:+918273684939" style="color:#fff;text-decoration:none;">${iconPhone} +91-8273684939</a> <span style="margin:0 4px;color:#ccc;">|</span> <a href="${BASE_URL}" style="color:#fff;text-decoration:none;">${iconGlobe} Website</a> <span style="margin:0 4px;color:#ccc;">|</span> <a href="https://t.me/ankushonlinetest" style="color:#fff;text-decoration:none;">${iconTelegram} Telegram</a> <span style="margin:0 4px;color:#ccc;">|</span> <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k" style="color:#fff;text-decoration:none;">${iconWhatsApp} WhatsApp</a> <span style="margin:0 4px;color:#ccc;">|</span> <a href="https://www.youtube.com/@ankushonlinetest" style="color:#fff;text-decoration:none;">${iconYouTube} YouTube</a></div></div></td></tr></tfoot><tbody><tr><td style="padding:10px 20px;position:relative;z-index:10;"><div class="print-header"><h2>${window.examData.exam.toUpperCase()} ${mode==='q_only'?"(Questions Only)":(mode==='q_ans'?"(Questions + Answer Key)":"(Full Solution)")}</h2><h3>${window.examData.subject||window.examData.sub||"Subject"} (${dT})</h3><p><b>Test Code:</b> ${window.examData.code} | <b>Watermark:</b> ${wT}</p></div>`;
         window.examData.questions.forEach((q,i)=>{
             let uA=window.userAnswers[i]?window.userAnswers[i]:"N/A"; let cA=window.getCleanAns(q.ans); let gA=window.getCleanAns(uA); let isW=(window.userAnswers.length>0&&uA!=="N/A"&&gA!==cA&&window.studentInfo.name!=="Ankush Kumar S/O Manoj Kumar"); let wM=(isW&&mode==='full')?`<span style="color:red;font-size:20px;margin-right:5px;">❌</span>`:"";
             if(q.passage) h+=`<div class="print-passage">${q.passage}</div>`; h+=`<div class="print-q"><b>${wM}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
