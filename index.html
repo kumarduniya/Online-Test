@@ -141,7 +141,7 @@
             .app-layout { flex-direction: column; gap: 10px; }
             .sidebar-menu { width: 100%; display: flex; overflow-x: auto; white-space: nowrap; padding: 10px; position: static; box-sizing: border-box; border-radius: 6px; }
             .sb-item { margin-bottom: 0; margin-right: 10px; flex-shrink: 0; border-left: none; border-bottom: 3px solid transparent; font-size: 13px; padding: 10px; flex-direction: column; gap: 5px; }
-            .sb-item.active { border-left-color: transparent; border-bottom-color: #1f4e79; }
+            .sb-item.active { border-left-color: transparent; border-bottom-color: #1f4e79; background:#e3f2fd;}
         }
     </style>
 </head>
@@ -152,6 +152,7 @@
         <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
         <h3 id="modal-title" style="margin: 0 0 10px 0; color: #1f4e79; font-size: 20px;">Alert</h3>
         <p id="modal-desc" style="color: #555; font-size: 15px; margin-bottom: 20px; line-height: 1.4; font-weight:bold;"></p>
+        <input type="text" id="modal-input" style="display:none; width:100%; padding:12px; margin-bottom:20px; border:2px solid #1f4e79; border-radius:6px; box-sizing:border-box; font-size: 16px; outline: none; font-weight:bold; text-align:center;">
         <div style="display: flex; gap: 10px; justify-content: center;">
             <button id="modal-btn-cancel" class="btn btn-outline" style="display:none; margin:0; flex:1; border-radius:6px; padding:10px;" onclick="window.closeModal()">Cancel</button>
             <button id="modal-btn-ok" class="btn btn-blue" style="margin:0; flex:1; border-radius:6px; padding:10px;">OK</button>
@@ -297,8 +298,8 @@
                 <div class="form-group">
                     <label>Test Folder (Category):</label>
                     <select id="a-category" onchange="if(this.value==='CUSTOM'){document.getElementById('a-custom-cat').style.display='block';}else{document.getElementById('a-custom-cat').style.display='none';}">
-                        <option value="Mock Tests">📝 Mock Tests</option>
                         <option value="Previous Year Papers">📜 Previous Year Papers</option>
+                        <option value="Mock Tests">📝 Mock Tests</option>
                         <option value="Sectional Tests">🧩 Sectional Tests</option>
                         <option value="Chapter Tests">📖 Chapter Tests</option>
                         <option value="CUSTOM">➕ Add Custom Category...</option>
@@ -497,7 +498,7 @@
             <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 900; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
                 <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="window.showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
                 <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="window.showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
-                <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
+                <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="window.showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
             </div>
             
             <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
@@ -583,7 +584,6 @@
         }
     };
 
-    // Professional SVG Icons for PDF
     const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
     const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
     const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
@@ -701,7 +701,8 @@
     };
 
     window.showModal = function(icon, title, desc, showInput, onOk, onCancel) {
-        let m=document.getElementById('custom-modal'); m.style.display='flex'; document.getElementById('modal-icon').innerText=icon; document.getElementById('modal-title').innerText=title; document.getElementById('modal-desc').innerHTML=desc;
+        let m=document.getElementById('custom-modal'); m.style.display='flex'; 
+        document.getElementById('modal-icon').innerText=icon; document.getElementById('modal-title').innerText=title; document.getElementById('modal-desc').innerHTML=desc;
         let inp=document.getElementById('modal-input'); if(showInput){inp.style.display='block';inp.value='';inp.focus();}else{inp.style.display='none';}
         let bc=document.getElementById('modal-btn-cancel'); if(onCancel){bc.style.display='block';bc.onclick=()=>{window.closeModal();onCancel();};}else{bc.style.display='none';}
         let bo=document.getElementById('modal-btn-ok'); bo.onclick=()=>{let v=inp.value;window.closeModal();if(onOk)onOk(v);};
@@ -747,10 +748,14 @@
         if(testCode) {
             document.getElementById('loading-view').classList.add('active-view');
             window.toggleAdminLock(false);
-            let script = document.createElement('script'); script.src = SCRIPT_URL+"?action=getTest&testCode="+testCode+"&callback=handleTestLoad&t="+new Date().getTime();
-            script.onerror = ()=>window.showErrorView("❌ Network Error!"); document.body.appendChild(script);
+            
+            let script = document.createElement('script'); 
+            script.src = SCRIPT_URL+"?action=getTest&testCode="+testCode+"&callback=handleTestLoad&t="+new Date().getTime();
+            script.onerror = ()=> { document.getElementById('loading-view').classList.remove('active-view'); window.showErrorView("❌ Network Error! Please check your connection."); };
+            document.body.appendChild(script);
         } else {
-            document.getElementById('student-dashboard-view').classList.add('active-view'); window.switchStudentTab('active');
+            document.getElementById('student-dashboard-view').classList.add('active-view'); 
+            window.switchStudentTab('active');
         }
     };
 
@@ -788,7 +793,11 @@
     window.fetchActiveTests = function() {
         document.getElementById('st-active-loader').style.display='block'; document.getElementById('st-folder-view').innerHTML='';
         if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
-        let script=document.createElement('script'); script.src=SCRIPT_URL+"?action=getActiveTests&callback=handleActiveTests&t="+new Date().getTime(); document.body.appendChild(script);
+        
+        let script=document.createElement('script'); 
+        script.src=SCRIPT_URL+"?action=getActiveTests&callback=handleActiveTests&t="+new Date().getTime(); 
+        script.onerror = () => { document.getElementById('st-active-loader').style.display='none'; window.showCustomAlert("Error", "Could not connect to database."); };
+        document.body.appendChild(script);
     };
     
     window.handleActiveTests = function(data) {
@@ -831,8 +840,8 @@
         
         let examTests=window.globalActiveTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName;});
         
-        // Always show these core categories in the sidebar, even if 0 tests.
-        let coreCats=["Mock Tests","Previous Year Papers","Sectional Tests","Chapter Tests"]; 
+        // Always show these core categories in the sidebar!
+        let coreCats=["Previous Year Papers", "Mock Tests", "Sectional Tests", "Chapter Tests"]; 
         let allCatsInDB=[...new Set(examTests.map(t=>window.parseHack(t.topic).cat))];
         allCatsInDB.forEach(c=>{if(!coreCats.includes(c))coreCats.push(c);});
         
@@ -871,23 +880,43 @@
         let html=`<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px;"><h3 style="margin:0;color:#1f4e79;">${titleText}</h3>`;
         if(subjectName!=='ALL') html+=`<button class="btn btn-outline" style="margin:0;padding:4px 10px;font-size:12px;width:auto;" onclick="window.showAppLayout('${boardName}','${subExamName}','${activeCat}')">🔙 Back</button>`;
         html+=`</div><div style="display:flex;flex-wrap:wrap;gap:15px;">`;
-        if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found in this category.</p>`;
+        if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found.</p>`;
         testsToRender.forEach(t=>{
             let p=window.parseHack(t.topic); let currentSub=p.subcat||t.subject||t.sub||"General"; let isFreeStatus=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); let priceText=isFreeStatus?"Free":"₹"+t.price;
             let displayTopic=p.topic||p.title||t.subject||"Test"; let qsCount=p.qs||t.qs||0; if(!qsCount||qsCount===0||qsCount==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qsCount=t.questions.length;else if(t.rawText){let match=t.rawText.match(/!!\s*\d+\s*!/g);if(match)qsCount=match.length;}} if(!qsCount)qsCount=0;
-            html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">Marks: ${t.marks||2}</span></div><button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.loadTestForStudent('${t.code}')">📝 Give Test</button></div>`;
+            html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">Marks: ${t.marks||2}</span></div><button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button></div>`;
         }); html+=`</div>`; contentArea.innerHTML=html;
     };
 
-    window.loadTestForStudent = function(code) {
-        let t = window.globalActiveTests.find(x => x.code === code);
-        if(!t) { window.showCustomAlert("Error", "Test not found!"); return; }
-        window.examData = t;
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-        document.getElementById('login-view').classList.add('active-view');
-        window.toggleAdminLock(false);
+    window.fetchStudentHistory = function() {
+        let phone=document.getElementById('hist-phone').value; if(phone.length!==10) return window.showCustomAlert("Error","Enter valid 10-digit mobile number!","❌");
+        document.getElementById('st-hist-loader').style.display='block'; document.getElementById('st-hist-content').style.display='none';
+        let script=document.createElement('script'); script.src=SCRIPT_URL+"?action=getStudentHistory&phone="+phone+"&callback=handleStudentHistory&t="+new Date().getTime(); document.body.appendChild(script);
     };
 
+    window.handleStudentHistory = function(data) {
+        document.getElementById('st-hist-loader').style.display='none';
+        if(data.error||!data.history||data.history.length===0) return window.showCustomAlert("Not Found","No test records found.","🔍");
+        let h=data.history; let totRight=0,totWrong=0,totBlank=0; let html="";
+        h.forEach(r=>{
+            totRight+=r.right; totWrong+=r.wrong; totBlank+=r.blank; let d=new Date(r.date).toLocaleDateString();
+            html+=`<div style="background:#fff;border:1px solid #ddd;padding:15px;border-radius:6px;margin-bottom:15px;text-align:left;"><div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding-bottom:5px;margin-bottom:10px;"><b style="color:#1f4e79;">Test: ${r.code}</b> <span style="font-size:12px;color:#777;">🗓️ ${d}</span></div><div style="font-size:13px;margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap;"><span style="background:#e6f9ec;color:#155724;padding:3px 8px;border-radius:4px;"><b>Score:</b> ${r.score}</span><span style="background:#f8d7da;color:#721c24;padding:3px 8px;border-radius:4px;"><b>Rank:</b> #${r.rank}</span><span style="background:#e2e3e5;color:#383d41;padding:3px 8px;border-radius:4px;"><b>Attempt:</b> ${r.attempt}</span></div><div style="font-size:12px;font-weight:bold;display:flex;gap:10px;margin-bottom:15px;"><span style="color:#28a745;">✅ R: ${r.right}</span> <span style="color:#dc3545;">❌ W: ${r.wrong}</span> <span style="color:#6c757d;">⬜ B: ${r.blank}</span></div><div style="display:flex;gap:5px;"><button class="btn btn-pdf" style="margin:0;padding:6px;font-size:12px;flex:1;" onclick="window.downloadHistoryPDF('${r.code}','${r.phone}')">📄 Revision PDF</button></div></div>`;
+        });
+        let totQs=totRight+totWrong+totBlank; if(totQs===0) totQs=1; let rp=(totRight/totQs)*100; let wp=(totWrong/totQs)*100; let bp=(totBlank/totQs)*100;
+        document.getElementById('gr-tot').innerText=h.length; document.getElementById('gr-qs').innerText=totQs; document.getElementById('gr-acc').innerText=Math.round(rp)+"%"; document.getElementById('gr-r').innerText=totRight; document.getElementById('gr-w').innerText=totWrong; document.getElementById('gr-b').innerText=totBlank; document.getElementById('gr-bar').innerHTML=`<div class="progress-segment" style="width:${rp}%;background:#28a745;" title="Right"></div><div class="progress-segment" style="width:${wp}%;background:#dc3545;" title="Wrong"></div><div class="progress-segment" style="width:${bp}%;background:#6c757d;" title="Blank"></div>`;
+        document.getElementById('st-hist-list').innerHTML=html; document.getElementById('st-hist-content').style.display='block';
+    };
+
+    window.downloadHistoryPDF = function(code, phone) {
+        window.showCustomAlert("Processing","Preparing Revision PDF...","⏳"); let uCb="handleHistTestLoad_"+code.replace(/-/g,'');
+        let script=document.createElement('script'); script.src=SCRIPT_URL+"?action=getTest&testCode="+code+"&callback="+uCb+"&t="+new Date().getTime();
+        window[uCb] = function(data){ window.closeModal(); if(data.error) return window.showCustomAlert("Error","Test unavailable.","❌");
+            let isFree=(data.isFree===true||String(data.isFree).toLowerCase()==="true");
+            if(!isFree){ window.showCustomPrompt("Password Required","🔒 Paid PDF. Enter password:",(pass)=>{if(pass!==window.generateStrongPass(phone,data.key.toUpperCase())) return window.showCustomAlert("Error","❌ Incorrect password!","❌"); window.examData=data;window.userAnswers=[];window.executePDFPrint(phone,'q_ans');}); } 
+            else {window.examData=data;window.userAnswers=[];window.executePDFPrint(phone,'q_ans');}
+        }; document.body.appendChild(script);
+    };
+    
     window.switchAdminTab = function(tab) {
         if(tab==='create'){
             document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
@@ -900,7 +929,6 @@
             document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='block'; window.loadAdminIcons();
         }
     };
-
     window.togglePriceBox = function() { document.getElementById('price-box').style.display=(document.getElementById('a-pdf-type').value==='free')?'none':'block'; };
     window.generateStrongPass = function(phone, key) { if(!key) key="ANK"; let mixed=key+phone+"PRO"; let num=0; for(let i=0;i<mixed.length;i++) num+=mixed.charCodeAt(i)*(i+1); let sym=['@','#','$','&','*']; let s1=sym[num%sym.length]; let s2=sym[(num*2)%sym.length]; let l1=String.fromCharCode(65+(num%26)); let l2=String.fromCharCode(97+((num*3)%26)); let p1=phone.length>=4?phone.substring(0,2):"99"; let p2=phone.length>=4?phone.slice(-2):"88"; return l1+s1+p1+l2+s2+p2+key.charAt(0).toUpperCase(); };
     window.generatePass = function() { let phone=document.getElementById('gen-phone').value; let key=document.getElementById('gen-key').value.toUpperCase(); if(!key) return window.showCustomAlert("Error","Enter Secret Key!","⚠️"); if(phone.length<10) return document.getElementById('show-gen-pass').innerText="Enter 10-digit number!"; window.currentGeneratedPass=window.generateStrongPass(phone,key); document.getElementById('show-gen-pass').innerText="Password: "+window.currentGeneratedPass; document.getElementById('copy-pass-btn').style.display='inline-block'; };
@@ -923,30 +951,32 @@
     };
 
     window.generateAndSaveLink = function() {
-        let eBoard=document.getElementById('a-board').value||"General Exam"; let eName=document.getElementById('a-exam').value||"Mock Test"; let eLogo=document.getElementById('a-logo').value||""; let eSub=document.getElementById('a-sub').value||"Subject"; let eTopicRaw=document.getElementById('a-topic').value||""; let eCode=document.getElementById('a-code').value; 
-        if(!eCode) { eCode = "T-" + Math.floor(Math.random()*99999); document.getElementById('a-code').value = eCode; }
-        
-        let eMarks=parseFloat(document.getElementById('a-marks').value)||2; let eNeg=parseFloat(document.getElementById('a-neg').value)||0; let tTime=parseInt(document.getElementById('a-tot-time').value)||0; let qTime=parseInt(document.getElementById('a-q-time').value)||0; let isFree=document.getElementById('a-pdf-type').value==="free"; let ePrice=isFree?"Free":(document.getElementById('a-price').value||"49"); let eKey=document.getElementById('a-key').value||"ANK"; 
+        let eBoard=document.getElementById('a-board').value||"General Exam"; let eName=document.getElementById('a-exam').value||"Mock Test"; let eLogo=document.getElementById('a-logo').value||""; let eSub=document.getElementById('a-sub').value||"Subject"; let eTopicRaw=document.getElementById('a-topic').value||""; let eCode=document.getElementById('a-code').value||"T-"+Math.floor(Math.random()*1000); let eMarks=parseFloat(document.getElementById('a-marks').value)||2; let eNeg=parseFloat(document.getElementById('a-neg').value)||0; let tTime=parseInt(document.getElementById('a-tot-time').value)||0; let qTime=parseInt(document.getElementById('a-q-time').value)||0; let isFree=document.getElementById('a-pdf-type').value==="free"; let ePrice=isFree?"Free":(document.getElementById('a-price').value||"49"); let eKey=document.getElementById('a-key').value||"ANK"; 
         let eCategory=document.getElementById('a-category').value; if(eCategory==="CUSTOM") eCategory=document.getElementById('a-custom-cat').value||"Custom Category";
-        
         let rawText=document.getElementById('a-rawdata').value; if(!rawText.trim()) return window.showCustomAlert("Empty Box","Paste questions!","⚠️");
         let parsedQs=window.parseRawQuestions(rawText); if(parsedQs.length===0) return window.showCustomAlert("Format Error","❌ Incorrect format.","⚠️");
-        
         let fQs=window.updateQsCount(); if(fQs===0) fQs=parsedQs.length;
-        let eTopic=eTopicRaw+"|||QS:"+fQs+"|||CAT:"+eCategory+"|||LOGO:"+eLogo+"|||BOARD:"+eBoard+"|||EXAM:"+eName+"|||SUBCAT:"+eSub;
+        let finalTopicRaw = eTopicRaw || eSub || "Test";
+        let eTopic=finalTopicRaw+"|||QS:"+fQs+"|||CAT:"+eCategory+"|||LOGO:"+eLogo+"|||BOARD:"+eBoard+"|||EXAM:"+eName+"|||SUBCAT:"+eSub;
         let fObj={exam:eName,category:eCategory,logo:eLogo,subject:eSub,sub:eSub,topic:eTopic,code:eCode,marks:eMarks,neg:eNeg,totTime:tTime,qTime:qTime,isFree:isFree,price:ePrice,key:eKey,questions:parsedQs,qs:fQs,isActive:true};
-        
         let btn=document.getElementById('btn-generate'); btn.innerText="⏳ Saving..."; btn.disabled=true;
-        fetch(SCRIPT_URL, {method:'POST',body:new URLSearchParams({'action':'saveTest','testCode':eCode,'testData':JSON.stringify(fObj)}),headers:{'Content-Type':'application/x-www-form-urlencoded'}})
+        
+        let fetchUrlStr = SCRIPT_URL + "?action=saveTest";
+        let postData = new URLSearchParams({'action':'saveTest','testCode':eCode,'testData':JSON.stringify(fObj)});
+
+        fetch(SCRIPT_URL, {method:'POST', body: postData, headers:{'Content-Type':'application/x-www-form-urlencoded'}})
         .then(r=>r.json()).then(d=>{
-            btn.innerText="🚀 Generate / Update Test"; btn.disabled=false;
+            btn.innerText="🚀 Generate / Update Test"; btn.disabled=false; btn.style.background = "#1f4e79";
             document.getElementById('a-sub').value="";document.getElementById('a-topic').value="";document.getElementById('a-code').value="";document.getElementById('a-rawdata').value="";document.getElementById('a-qs-count').value="";
             let tLink=BASE_URL+"?test="+eCode; let sTests=JSON.parse(localStorage.getItem('myMockTests'))||[]; let eIdx=sTests.findIndex(t=>t.code===eCode);
             let tObj={code:eCode,exam:eName,category:eCategory,logo:eLogo,subject:eSub,sub:eSub,topic:eTopic,marks:eMarks,neg:eNeg,totTime:tTime,qTime:qTime,price:ePrice,isFree:isFree,key:eKey,qs:fQs,link:tLink,date:new Date().toLocaleDateString(),rawText:rawText,isActive:true};
             if(eIdx>=0) sTests[eIdx]=tObj; else sTests.push(tObj); localStorage.setItem('myMockTests',JSON.stringify(sTests));
             document.getElementById('generatedLink').value=tLink; document.getElementById('linkContainer').style.display='block'; window.showCustomAlert("Success",`✅ Saved! (${fQs} Qs)`,"🎉");
             window.initQuickFill(); if(document.getElementById('admin-manage-section').style.display==='block') window.renderDashboard();
-        }).catch(()=>{window.showCustomAlert("Error","Check connection.","❌");btn.innerText="🚀 Generate / Update Test";btn.disabled=false;});
+        }).catch(()=>{
+            window.showCustomAlert("Error","Check connection.","❌");
+            btn.innerText="🚀 Generate / Update Test"; btn.disabled=false; btn.style.background = "#1f4e79";
+        });
     };
 
     window.renderDashboard = function() {
@@ -964,7 +994,8 @@
     };
 
     window.toggleTestStatus = function(code, nS, idx) {
-        let script=document.createElement('script'); script.src=SCRIPT_URL+"?action=toggleTestStatus&testCode="+code+"&status="+nS+"&callback=handleToggle&t="+new Date().getTime();
+        let cb = new Date().getTime(); let script = document.createElement('script');
+        script.src = SCRIPT_URL + "?action=toggleTestStatus&testCode=" + code + "&status=" + nS + "&callback=handleToggle&t=" + cb;
         window.handleToggle=function(d){if(d.status==="success"){let sT=JSON.parse(localStorage.getItem('myMockTests'))||[];if(sT[idx]){sT[idx].isActive=nS;localStorage.setItem('myMockTests',JSON.stringify(sT));}window.renderDashboard();}else window.showCustomAlert("Error","Failed to update.","❌");}; document.body.appendChild(script);
     };
 
@@ -977,7 +1008,14 @@
         let isF=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); if(isF||t.price==="Free"){document.getElementById('a-pdf-type').value="free";}else{document.getElementById('a-pdf-type').value="paid";document.getElementById('a-price').value=t.price||"";}
         let raw=t.rawText; if(!raw&&t.questions&&t.questions.length>0){raw=t.questions.map((q,i)=>{let pa=q.passage?`!P ${q.passage.replace(/<br>/g,'\n')}\n`:"";let qs=`!!${i+1}! ${q.q.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;let op=q.opts.map(o=>`!${o.id} ${o.text}`).join('\n')+'\n';let an=`!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;let ex=q.exp?`!!!! ${q.exp.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`:"";return pa+qs+op+an+ex;}).join('\n');}
         document.getElementById('a-key').value=t.key||""; document.getElementById('a-rawdata').value=raw||""; document.getElementById('a-qs-count').value=window.parseRawQuestions(raw||"").length;
-        window.togglePriceBox(); window.switchAdminTab('create'); window.showCustomAlert("Update Mode","Test loaded for editing. Click Update to save.","✏️");
+        
+        window.togglePriceBox(); 
+        window.switchAdminTab('create'); 
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        
+        let btn = document.getElementById('btn-generate');
+        btn.innerText = "🚀 Update Test";
+        btn.style.background = "#f39c12"; 
     };
 
     window.deleteTest = function(idx) { window.showCustomConfirm("Delete Test","Delete this test permanently?",()=>{let sT=JSON.parse(localStorage.getItem('myMockTests'))||[];sT.splice(idx,1);localStorage.setItem('myMockTests',JSON.stringify(sT));window.renderDashboard();},"🗑️"); };
@@ -995,8 +1033,10 @@
                 if(!window.studentInfo.name||window.studentInfo.phone.length!==10) { window.showCustomAlert("Required","Enter correct name and 10-digit number!","⚠️"); return; }
             }
             if(!window.examData.questions||window.examData.questions.length===0){
-                window.showCustomAlert("Empty Test","❌ No questions found.","⚠️");
-                document.getElementById('loading-view').classList.remove('active-view');document.getElementById('student-dashboard-view').classList.add('active-view');return;
+                window.showCustomAlert("Empty Test","❌ No questions found. Please check test data.","⚠️");
+                document.getElementById('loading-view').classList.remove('active-view');
+                document.getElementById('student-dashboard-view').classList.add('active-view');
+                return;
             }
             window.isReattemptMode=isRe; window.studentInfo.score=0; window.studentInfo.right=0; window.studentInfo.wrong=0; window.studentInfo.blank=0; window.totalTimeSpent=0;
             if(window.examData.totTime>0) window.globalTimeLeft=window.examData.totTime*60; else window.globalTimeLeft=0;
