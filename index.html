@@ -1,534 +1,196 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ankush Online Test Portal</title>
-    <style>
-        /* 🔥 BASIC STYLES 🔥 */
-        body, html { margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, sans-serif; user-select: none; -webkit-user-select: none; scroll-behavior: smooth; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; min-height: 100vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
-        #top-sticky-wrapper { position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 100%; background: white; }
-        .tcs-header { background: #1f4e79; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .tcs-header h2 { margin: 0; font-size: 20px; text-transform: uppercase; cursor: pointer; }
-        .timer { font-size: 16px; font-weight: bold; background: #e74c3c; padding: 5px 10px; border-radius: 4px; display:flex; gap:10px;}
-        .tcs-sub-header { background: #e9ecef; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #f39c12; }
-        .tcs-sub-header .s-name { font-weight: bold; color: #1f4e79; font-size: 15px; } 
-        .tcs-sub-header .s-exam { font-size: 13px; color: #dc3545; font-weight: bold; }
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ankush online test</title>
+<style>
+body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-serif;user-select:none;-webkit-user-select:none;scroll-behavior:smooth;}
+.container{max-width:1200px;margin:0 auto;background:white;min-height:100vh;display:flex;flex-direction:column;position:relative;box-shadow:0 0 10px rgba(0,0,0,0.1);}
+#top-sticky-wrapper{position:sticky;top:0;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.1);width:100%;background:white;}
+.tcs-header{background:#1f4e79;color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;}
+.tcs-header h2{margin:0;font-size:20px;text-transform:uppercase;cursor:pointer;}
+.timer{font-size:16px;font-weight:bold;background:#e74c3c;padding:5px 10px;border-radius:4px;display:flex;gap:10px;}
+.tcs-sub-header{background:#e9ecef;padding:8px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #f39c12;}
+.tcs-sub-header .s-name{font-weight:bold;color:#1f4e79;font-size:15px;} .tcs-sub-header .s-exam{font-size:13px;color:#dc3545;font-weight:bold;}
 
-        .view-section { padding: 20px; flex: 1; display: none; } 
-        .active-view { display: block; }
-        
-        /* 🔥 FORMS & BUTTONS 🔥 */
-        .form-group { margin-bottom: 15px; } 
-        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; font-size: 14px;}
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .form-group textarea { height: 180px; font-family: monospace; background: #fdfdfd; }
-        .flex-row { display: flex; gap: 10px; flex-wrap: wrap; } .flex-row .form-group { flex: 1; min-width: 180px; }
-        .btn { background: #28a745; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; margin-top: 10px; transition: 0.3s; }
-        .btn-blue { background: #1f4e79; } .btn-pdf { background: #dc3545; } .btn-outline { background: transparent; border: 2px solid #1f4e79; color: #1f4e79; }
-        
-        .admin-tabs { display: flex; border-bottom: 2px solid #1f4e79; margin-bottom: 20px; flex-wrap: wrap;}
-        .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 15px; cursor: pointer; background: #e9ecef; border: none; outline: none; white-space: nowrap; min-width:130px;}
-        .tab-btn.active { background: #1f4e79; color: white; }
+.view-section{padding:20px;flex:1;display:none;} .active-view{display:block;}
+#exam-view{padding:0;display:none;flex-direction:column;position:relative;background:white;} #exam-view.active-view{display:flex;}
+.form-group{margin-bottom:15px;} .form-group label{display:block;font-weight:bold;margin-bottom:5px;color:#333;font-size:14px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box;}
+.form-group textarea{height:180px;font-family:monospace;background:#fdfdfd;}
+.flex-row{display:flex;gap:10px;flex-wrap:wrap;} .flex-row .form-group{flex:1;min-width:180px;}
+.btn{background:#28a745;color:white;border:none;padding:12px 20px;font-size:16px;font-weight:bold;cursor:pointer;border-radius:4px;width:100%;margin-top:10px;transition:0.3s;}
+.btn-blue{background:#1f4e79;} .btn-pdf{background:#dc3545;} .btn-outline{background:transparent;border:2px solid #1f4e79;color:#1f4e79;} .btn-warning{background:#f39c12;color:#fff;}
+.btn:disabled{background:#6c757d;cursor:not-allowed;opacity:0.6;}
 
-        /* 🔥 CENTERED EXAM ICONS & FOLDERS 🔥 */
-        .exam-grid { display: flex; flex-wrap: wrap; gap: 25px; justify-content: center; padding: 10px 0; width: 100%; }
-        .exam-icon-card { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; cursor: pointer; width: 130px; transition: 0.3s; text-align: center; }
-        .exam-icon-card:hover { transform: translateY(-5px); }
-        .exam-icon-img { width: 90px; height: 90px; object-fit: contain; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #e9ecef; padding: 5px;}
-        .exam-icon-title { font-size: 14px; font-weight: 900; color: #1f4e79; margin: 0; line-height: 1.3; text-transform: uppercase; }
+.admin-tabs{display:flex;border-bottom:2px solid #1f4e79;margin-bottom:20px;flex-wrap:wrap;}
+.tab-btn{flex:1;padding:15px;font-weight:bold;font-size:15px;cursor:pointer;background:#e9ecef;border:none;outline:none;white-space:nowrap;min-width:130px;}
+.tab-btn.active{background:#1f4e79;color:white;}
 
-        .folder-card { background: #fff; border: 2px solid #1f4e79; border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 45%; min-width: 140px; max-width: 250px; box-sizing: border-box; display:flex; flex-direction:column; align-items:center; justify-content:center;}
-        .folder-card:hover { transform: translateY(-5px); background: #f8f9fa; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color:#f39c12;}
-        .folder-icon { font-size: 45px; margin-bottom: 10px; } .folder-title { font-size: 16px; font-weight: 900; color: #1f4e79; margin: 0; line-height:1.3;}
-        
-        .breadcrumb-nav { background: #e9ecef; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-weight: bold; font-size: 13px; color: #555; display: flex; align-items: center; gap: 8px; flex-wrap:wrap; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
-        .bc-link { color: #1f4e79; cursor: pointer; text-decoration: none; padding:2px 6px; border-radius:4px; transition:0.2s;} .bc-link:hover { background: #1f4e79; color: white; }
-        
-        .test-card { background: #fff; border: 1px solid #ddd; border-left: 5px solid #1f4e79; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .badge { background: #e9ecef; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 5px; color: #333; display: inline-block; margin-bottom:5px;}
+/* 🔥 PREMIUM LOGO UI FIX 🔥 */
+.exam-grid{display:flex;flex-wrap:wrap;gap:25px;justify-content:center;padding:10px 0;width:100%;}
+.exam-icon-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;cursor:pointer;width:130px;transition:0.3s;text-align:center;}
+.exam-icon-wrapper { width: 90px; height: 90px; border-radius: 22px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: #fff; display: flex; align-items: center; justify-content: center; border: 1px solid #e0e0e0; transition: 0.3s; padding: 12px; box-sizing: border-box; }
+.exam-icon-img { width: 100%; height: 100%; object-fit: contain; }
+.exam-icon-card:hover .exam-icon-wrapper { transform: translateY(-8px); box-shadow: 0 8px 20px rgba(31,78,121,0.15); border-color: #1f4e79; }
+.exam-icon-title{font-size:14px;font-weight:900;color:#1f4e79;margin:0;line-height:1.3;text-transform:uppercase;}
 
-        /* 🔥 SMART SIDEBAR SPLIT-SCREEN LAYOUT 🔥 */
-        .app-layout { display: flex; gap: 20px; align-items: flex-start; margin-top: 10px; width: 100%; }
-        .sidebar-menu { width: 240px; background: #fff; border-radius: 8px; border: 1px solid #ddd; padding: 15px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: sticky; top: 70px; }
-        .content-area { flex-grow: 1; min-height: 400px; width: 100%; }
-        .sb-item { padding: 12px 15px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; color: #555; transition: 0.2s; border-left: 4px solid transparent; background: #f8f9fa; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px; }
-        .sb-item:hover { background: #e9ecef; }
-        .sb-item.active { background: #e3f2fd; color: #1f4e79; border-left-color: #1f4e79; }
+.folder-card{background:#fff;border:2px solid #1f4e79;border-radius:12px;padding:25px 15px;text-align:center;cursor:pointer;transition:0.3s;box-shadow:0 4px 6px rgba(0,0,0,0.05);width:45%;min-width:140px;max-width:250px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.folder-card:hover{transform:translateY(-5px);background:#f8f9fa;box-shadow:0 8px 15px rgba(0,0,0,0.1);border-color:#f39c12;}
+.folder-icon{font-size:45px;margin-bottom:10px;} .folder-title{font-size:16px;font-weight:900;color:#1f4e79;margin:0;line-height:1.3;}
+.breadcrumb-nav{background:#e9ecef;padding:12px 15px;border-radius:8px;margin-bottom:20px;font-weight:bold;font-size:13px;color:#555;display:flex;align-items:center;gap:8px;flex-wrap:wrap;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
+.bc-link{color:#1f4e79;cursor:pointer;text-decoration:none;padding:2px 6px;border-radius:4px;transition:0.2s;} .bc-link:hover{background:#1f4e79;color:white;}
+.test-card{background:#fff;border:1px solid #ddd;border-left:5px solid #1f4e79;padding:15px;margin-bottom:15px;border-radius:6px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
+.badge{background:#e9ecef;padding:3px 8px;border-radius:12px;font-size:12px;font-weight:bold;margin-right:5px;color:#333;display:inline-block;margin-bottom:5px;}
 
-        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
-        #exam-view { padding: 0; display: none; flex-direction: column; position: relative; background: white; }
-        #exam-view.active-view { display: flex; }
-        .exam-container { display: flex; flex-direction: column; background: #fff;} .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
-        .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
-        .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
-        #q-scroll-area { padding-bottom: 10px; } .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; }
-        .opt-label { display: block; width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; box-sizing: border-box;}
-        .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); } .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
-        
-        #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
-        .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px;}
-        .pulse-btn { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: #1f4e79; color: white; border: none; border-radius: 20px; padding: 5px 20px; font-size: 13px; font-weight: bold; cursor: pointer; box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); animation: pulse 1.5s infinite; z-index: 10; white-space: nowrap;}
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(31, 78, 121, 0); } 100% { box-shadow: 0 0 0 0 rgba(31, 78, 121, 0); } }
-        .mini-strip { display: flex; gap: 8px; overflow: hidden; justify-content: center; background: #f8f9fa; padding: 15px 10px 10px 10px; border-radius: 8px; border: 1px solid #e9ecef; }
-        .mini-box { width: 35px; height: 35px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; border: 1px solid #aaa; cursor: pointer; color: #333; background: #fff;}
-        .mini-box.active-q { border: 3px solid #000; transform: scale(1.1); font-weight: 900;}
-        .action-buttons { display: flex; justify-content: space-between; gap: 12px; flex-wrap: nowrap;}
-        .action-btn { padding: 15px 4px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; flex: 1; font-size: 13px; text-transform: uppercase; text-align: center;}
-        .btn-prev { background: #6c757d; } .btn-clear { background: #ffc107; color: #333; } .btn-next { background: #28a745; } .btn-submit { background: #dc3545; }
-        
-        .fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f6f8; z-index: 99999; overflow-y: auto; padding: 20px; box-sizing: border-box; }
-        .fs-container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-height: 95vh; }
-        .fs-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 15px; margin-bottom: 20px; position: sticky; top: 0; background: white; z-index: 10; }
-        .palette-legend { display: flex; flex-wrap: wrap; justify-content: space-around; padding: 10px; border-bottom: 1px solid #ccc; font-size: 13px; background: #fff; margin-bottom: 15px;}
-        .legend-item { display: flex; align-items: center; justify-content: center; font-weight:bold; color:#555; margin:5px;}
-        .box { width: 20px; height: 20px; border-radius: 4px; display: inline-block; margin-right: 5px; text-align: center; color: #333; line-height: 20px; font-weight: bold; border: 1px solid #aaa; font-size:11px;}
-        .status-not-visited { background: #fff; color: #333; } .status-not-answered { background: #ffc107; color: #000; border-color: #e0a800; } .status-answered { background: #003366; color: white; border-color: #002244; } 
-        .question-palette { padding: 10px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; justify-content:center;}
-        .palette-btn { width: 45px; height: 45px; border-radius: 6px; border: 1px solid #999; font-weight: bold; font-size: 15px; cursor: pointer; }
+/* 🔥 SMART SIDEBAR SPLIT-SCREEN LAYOUT 🔥 */
+.app-layout{display:flex;gap:20px;align-items:flex-start;margin-top:10px;width:100%;}
+.sidebar-menu{width:240px;background:#fff;border-radius:8px;border:1px solid #ddd;padding:15px;flex-shrink:0;box-shadow:0 2px 5px rgba(0,0,0,0.05);position:sticky;top:70px;}
+.content-area{flex-grow:1;min-height:400px;width:100%;}
+.sb-item{padding:12px 15px;margin-bottom:8px;border-radius:6px;cursor:pointer;font-weight:bold;color:#555;transition:0.2s;border-left:4px solid transparent;background:#f8f9fa;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;}
+.sb-item:hover{background:#e9ecef;} .sb-item.active{background:#e3f2fd;color:#1f4e79;border-left-color:#1f4e79;}
 
-        /* 🔥 MISC & RESULTS 🔥 */
-        #analysis-box { margin-top: 20px; scroll-margin-top: 85px; } #analysis-btn-container { position: sticky; top: 60px; z-index: 900; background: #fdfdfd; padding: 10px; border-radius: 8px; border: 1px solid #eee; }
-        #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden;}
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #1f4e79; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .confetti { position: absolute; font-size: 24px; z-index: 9999; pointer-events: none; animation: fall 3s linear forwards; }
-        @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
-        .res-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: center; } .res-table th, .res-table td { border: 1px solid #ddd; padding: 8px; } .res-table th { background-color: #1f4e79; color: white; } .res-table tr:nth-child(even){background-color: #f2f2f2;}
+/* 🔥 EXAM CONTAINER LAYOUT 🔥 */
+.exam-container{display:flex;flex-direction:column;background:#fff;} .left-panel{display:flex;flex-direction:column;padding:15px 20px 180px 20px;box-sizing:border-box;} 
+.q-header{font-size:18px;font-weight:bold;border-bottom:1px solid #ccc;padding-bottom:10px;margin-bottom:15px;color:#1f4e79;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.q-timer-badge{background:#ffc107;color:#000;padding:4px 10px;border-radius:4px;font-size:14px;font-weight:bold;} #q-scroll-area{padding-bottom:10px;}
+.q-text{font-size:17px;line-height:1.5;color:#222;margin-bottom:15px;font-weight:bold;} .options-div{display:block;}
+.opt-label{display:block;width:100%;padding:12px 15px;border:2px solid #e0e0e0;margin-bottom:10px;border-radius:8px;cursor:pointer;background:#fff;transition:0.2s ease-in-out;font-size:16px;font-weight:normal;box-sizing:border-box;}
+.opt-label.selected{background:#e3f2fd;border-color:#1f4e79;color:#1f4e79;font-weight:bold;box-shadow:0 2px 8px rgba(31,78,121,0.2);} .opt-label input[type="radio"]{margin-right:12px;transform:scale(1.3);accent-color:#1f4e79;}
+#exam-bottom-controls{position:fixed;bottom:0;left:0;right:0;background:#fff;z-index:1000;padding:15px;border-top:1px solid #e0e0e0;box-shadow:0 -4px 15px rgba(0,0,0,0.1);display:none;}
+.mini-palette-wrapper{position:relative;margin-bottom:12px;margin-top:5px;}
+.pulse-btn{position:absolute;top:-35px;left:50%;transform:translateX(-50%);background:#1f4e79;color:white;border:none;border-radius:20px;padding:5px 20px;font-size:13px;font-weight:bold;cursor:pointer;box-shadow:0 0 0 0 rgba(31,78,121,0.7);animation:pulse 1.5s infinite;z-index:10;white-space:nowrap;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,78,121,0.7);}70%{box-shadow:0 0 0 8px rgba(31,78,121,0);}100%{box-shadow:0 0 0 0 rgba(31,78,121,0);}}
+.mini-strip{display:flex;gap:8px;overflow:hidden;justify-content:center;background:#f8f9fa;padding:15px 10px 10px 10px;border-radius:8px;border:1px solid #e9ecef;}
+.mini-box{width:35px;height:35px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;border:1px solid #aaa;cursor:pointer;color:#333;background:#fff;}
+.mini-box.active-q{border:3px solid #000;transform:scale(1.1);font-weight:900;}
+.action-buttons{display:flex;justify-content:space-between;gap:12px;flex-wrap:nowrap;}
+.action-btn{padding:15px 4px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;color:white;flex:1;font-size:13px;text-transform:uppercase;text-align:center;}
+.btn-prev{background:#6c757d;} .btn-clear{background:#ffc107;color:#333;} .btn-next{background:#28a745;} .btn-submit{background:#dc3545;}
+.fullscreen-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#f4f6f8;z-index:99999;overflow-y:auto;padding:20px;box-sizing:border-box;}
+.fs-container{max-width:800px;margin:0 auto;background:white;padding:20px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);min-height:95vh;}
+.fs-header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ccc;padding-bottom:15px;margin-bottom:20px;position:sticky;top:0;background:white;z-index:10;}
+.palette-legend{display:flex;flex-wrap:wrap;justify-content:space-around;padding:10px;border-bottom:1px solid #ccc;font-size:13px;background:#fff;margin-bottom:15px;}
+.legend-item{display:flex;align-items:center;justify-content:center;font-weight:bold;color:#555;margin:5px;}
+.box{width:20px;height:20px;border-radius:4px;display:inline-block;margin-right:5px;text-align:center;color:#333;line-height:20px;font-weight:bold;border:1px solid #aaa;font-size:11px;}
+.status-not-visited{background:#fff;color:#333;} .status-not-answered{background:#ffc107;color:#000;border-color:#e0a800;} .status-answered{background:#003366;color:white;border-color:#002244;} 
+.question-palette{padding:10px;display:flex;flex-wrap:wrap;gap:10px;overflow-y:auto;align-content:flex-start;justify-content:center;}
+.palette-btn{width:45px;height:45px;border-radius:6px;border:1px solid #999;font-weight:bold;font-size:15px;cursor:pointer;}
 
-        /* 🔥 ALWAYS VISIBLE ADMIN LOCK 🔥 */
-        .admin-lock { position: fixed; bottom: 30px; right: 20px; font-size: 26px; cursor: pointer; opacity: 0.9; transition: 0.3s; z-index: 999999; background: #fff; border: 3px solid #1f4e79; border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .admin-lock:hover { transform: scale(1.1); background: #1f4e79; color: white; border-color: white;}
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
-        .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s ease; }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+#analysis-box{margin-top:20px;scroll-margin-top:85px;} #analysis-btn-container{position:sticky;top:60px;z-index:900;background:#fdfdfd;padding:10px;border-radius:8px;border:1px solid #eee;}
+#result-view{text-align:center;padding:30px;position:relative;overflow:hidden;}
+.loader{border:4px solid #f3f3f3;border-top:4px solid #1f4e79;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:10px;}
+@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}} .confetti{position:absolute;font-size:24px;z-index:9999;pointer-events:none;animation:fall 3s linear forwards;} @keyframes fall{to{transform:translateY(100vh) rotate(720deg);}}
+.res-table{width:100%;border-collapse:collapse;margin-top:15px;font-size:13px;text-align:center;} .res-table th,.res-table td{border:1px solid #ddd;padding:8px;} .res-table th{background-color:#1f4e79;color:white;} .res-table tr:nth-child(even){background-color:#f2f2f2;}
 
-        /* 🔥 PRINT PDF SETTINGS 🔥 */
-        body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
-        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
-        #print-area { display: none; background: white; color: black; text-align: left; position: relative; z-index: 1;}
+/* 🔥 ALWAYS VISIBLE ADMIN LOCK 🔥 */
+.admin-lock{position:fixed;bottom:30px;right:20px;font-size:26px;cursor:pointer;opacity:0.9;transition:0.3s;z-index:999999;background:#fff;border:3px solid #1f4e79;border-radius:50%;width:55px;height:55px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
+.admin-lock:hover{transform:scale(1.1);background:#1f4e79;color:white;border-color:white;}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:999999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.modal-box{background:white;padding:25px;border-radius:12px;width:90%;max-width:350px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);animation:popIn 0.3s ease;}
+@keyframes popIn{from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1;}}
 
-        @media print {
-            @page { size: A4; margin: 8mm; } 
-            html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
-            .container { box-shadow: none !important; }
-            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay, .admin-lock { display: none !important; }
-            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; background: transparent !important; }
-            #print-area * { visibility: visible !important; position: relative; }
-            .watermark { position: fixed !important; top: 50vh !important; left: 50vw !important; transform: translate(-50%, -50%) rotate(-45deg) !important; font-size: 110px !important; font-weight: 900 !important; color: rgba(0, 0, 0, 0.06) !important; z-index: 999999 !important; white-space: nowrap; pointer-events: none; width: 100%; text-align: center; text-transform: uppercase; display: block !important; }
-            .pdf-header-strip { background-color: #1f4e79 !important; padding: 10px 15px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-bottom: 2px solid #1f4e79; border-radius: 2px 2px 0 0; margin-bottom: 8px; display: block; }
-            .pdf-footer-strip { background-color: #1f4e79 !important; padding: 10px 10px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-top: 2px solid #1f4e79; border-radius: 0 0 2px 2px; margin-top: 8px; display: block; }
-            table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; z-index: 10; position: relative;}
-            table.pdf-main-table th, table.pdf-main-table td { padding: 0 !important; border: none !important; background: transparent !important; }
-            .print-q { margin-bottom: 12px !important; page-break-inside: auto !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 12px !important; font-size: 18px !important; line-height: 1.35 !important; color: #000000 !important; background: transparent !important;}
-            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px !important; margin-top: 6px !important; margin-bottom: 6px !important; background: transparent !important; page-break-inside: auto !important;}
-            .opt-item { font-size: 18px !important; box-sizing: border-box; color: #000000 !important; background: transparent !important; page-break-inside: avoid !important;}
-            .print-ans { font-weight: bold; font-size: 16px !important; color: #000000 !important; display: block; margin-top: 6px !important; margin-bottom: 3px !important; page-break-inside: avoid !important;}
-            .print-exp { color: #222222 !important; font-size: 16px !important; margin-top: 3px !important; line-height: 1.35 !important; page-break-inside: auto !important;}
-            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 12px !important; padding-bottom: 5px !important;}
-            .print-passage { padding:5px !important; margin-bottom:5px !important; font-style:italic; border-left:4px solid #333; font-size:18px !important; background: transparent !important; page-break-inside: auto !important;}
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-        }
+/* 🔥 PRINT PDF SETTINGS 🔥 */
+body.print-pdf,body.print-pdf html{height:auto !important;min-height:auto !important;max-height:none !important;overflow:visible !important;background:white !important;margin:0 !important;padding:0 !important;}
+body.print-pdf #main-ui-container,body.print-pdf #top-sticky-wrapper,body.print-pdf .fullscreen-overlay,body.print-pdf #exam-bottom-controls,body.print-pdf #admin-auth-view,body.print-pdf .modal-overlay,body.print-pdf .admin-lock{display:none !important;}
+#print-area{display:none;background:white;color:black;text-align:left;position:relative;z-index:1;}
+@media print{
+@page{size:A4;margin:8mm;} html,body{height:auto !important;min-height:auto !important;overflow:visible !important;background:white !important;margin:0 !important;padding:0 !important;} .container{box-shadow:none !important;} #main-ui-container,#top-sticky-wrapper,.fullscreen-overlay,#exam-bottom-controls,#admin-auth-view,.modal-overlay,.admin-lock{display:none !important;} #print-area{display:block !important;position:static !important;width:100% !important;font-family:Arial,sans-serif !important;overflow:visible !important;height:auto !important;background:transparent !important;} #print-area *{visibility:visible !important;position:relative;}
+.watermark{position:fixed !important;top:50vh !important;left:50vw !important;transform:translate(-50%,-50%) rotate(-45deg) !important;font-size:110px !important;font-weight:900 !important;color:rgba(0,0,0,0.06) !important;z-index:999999 !important;white-space:nowrap;pointer-events:none;width:100%;text-align:center;text-transform:uppercase;display:block !important;}
+.pdf-header-strip{background-color:#1f4e79 !important;padding:10px 15px !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;border-bottom:2px solid #1f4e79;border-radius:2px 2px 0 0;margin-bottom:8px;display:block;}
+.pdf-footer-strip{background-color:#1f4e79 !important;padding:10px 10px !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;border-top:2px solid #1f4e79;border-radius:0 0 2px 2px;margin-top:8px;display:block;}
+table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent !important;border:none !important;z-index:10;position:relative;} table.pdf-main-table th,table.pdf-main-table td{padding:0 !important;border:none !important;background:transparent !important;}
+.print-q{margin-bottom:12px !important;page-break-inside:auto !important;border-bottom:1px dashed #ccc !important;padding-bottom:12px !important;font-size:18px !important;line-height:1.35 !important;color:#000000 !important;background:transparent !important;}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px !important;margin-top:6px !important;margin-bottom:6px !important;background:transparent !important;page-break-inside:auto !important;}
+.opt-item{font-size:18px !important;box-sizing:border-box;color:#000000 !important;background:transparent !important;page-break-inside:avoid !important;}
+.print-ans{font-weight:bold;font-size:16px !important;color:#000000 !important;display:block;margin-top:6px !important;margin-bottom:3px !important;page-break-inside:avoid !important;}
+.print-exp{color:#222222 !important;font-size:16px !important;margin-top:3px !important;line-height:1.35 !important;page-break-inside:auto !important;}
+.print-header{text-align:center;border-bottom:2px solid #333;margin-bottom:12px !important;padding-bottom:5px !important;}
+.print-passage{padding:5px !important;margin-bottom:5px !important;font-style:italic;border-left:4px solid #333;font-size:18px !important;background:transparent !important;page-break-inside:auto !important;} *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+}
 
-        /* 🔥 MOBILE RESPONSIVE FIX FOR SPLIT SCREEN 🔥 */
-        @media (max-width: 768px) {
-            .left-panel{padding:10px 10px 170px 10px;} 
-            .admin-lock{bottom:20px;right:20px;width:45px;height:45px;font-size:22px;}
-            .fullscreen-overlay{padding:0;} .fs-container{border-radius:0;min-height:100vh;padding:15px;}
-            
-            /* Mobile App-Layout Menu (Horizontal Scroll) */
-            .app-layout { flex-direction: column; gap: 10px; }
-            .sidebar-menu { width: 100%; display: flex; overflow-x: auto; white-space: nowrap; padding: 10px; position: static; box-sizing: border-box; border-radius: 6px; }
-            .sb-item { margin-bottom: 0; margin-right: 10px; flex-shrink: 0; border-left: none; border-bottom: 3px solid transparent; font-size: 13px; padding: 10px; flex-direction: column; gap: 5px; }
-            .sb-item.active { border-left-color: transparent; border-bottom-color: #1f4e79; background:#e3f2fd;}
-        }
-    </style>
+/* 🔥 MOBILE RESPONSIVE FIX FOR SPLIT SCREEN 🔥 */
+@media (max-width: 768px) {
+    .left-panel{padding:10px 10px 170px 10px;} 
+    .admin-lock{bottom:20px;right:20px;width:45px;height:45px;font-size:22px;}
+    .fullscreen-overlay{padding:0;} .fs-container{border-radius:0;min-height:100vh;padding:15px;}
+    .app-layout { flex-direction: column; gap: 10px; }
+    .sidebar-menu { width: 100%; display: flex; overflow-x: auto; white-space: nowrap; padding: 10px; position: static; box-sizing: border-box; border-radius: 6px; }
+    .sb-item { margin-bottom: 0; margin-right: 10px; flex-shrink: 0; border-left: none; border-bottom: 3px solid transparent; font-size: 13px; padding: 10px; flex-direction: column; gap: 5px; }
+    .sb-item.active { border-left-color: transparent; border-bottom-color: #1f4e79; background:#e3f2fd;}
+}
+</style>
 </head>
 <body>
 
 <div id="custom-modal" class="modal-overlay">
-    <div class="modal-box">
-        <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
-        <h3 id="modal-title" style="margin: 0 0 10px 0; color: #1f4e79; font-size: 20px;">Alert</h3>
-        <p id="modal-desc" style="color: #555; font-size: 15px; margin-bottom: 20px; line-height: 1.4; font-weight:bold;"></p>
-        <input type="text" id="modal-input" style="display:none; width:100%; padding:12px; margin-bottom:20px; border:2px solid #1f4e79; border-radius:6px; box-sizing:border-box; font-size: 16px; outline: none; font-weight:bold; text-align:center;">
-        <div style="display: flex; gap: 10px; justify-content: center;">
-            <button id="modal-btn-cancel" class="btn btn-outline" style="display:none; margin:0; flex:1; border-radius:6px; padding:10px;" onclick="window.closeModal()">Cancel</button>
-            <button id="modal-btn-ok" class="btn btn-blue" style="margin:0; flex:1; border-radius:6px; padding:10px;">OK</button>
-        </div>
-    </div>
+    <div class="modal-box"><div id="modal-icon" style="font-size:45px;margin-bottom:10px;">⚠️</div><h3 id="modal-title" style="margin:0 0 10px 0;color:#1f4e79;font-size:20px;">Alert</h3><p id="modal-desc" style="color:#555;font-size:15px;margin-bottom:20px;line-height:1.4;font-weight:bold;"></p><input type="text" id="modal-input" style="display:none;width:100%;padding:12px;margin-bottom:20px;border:2px solid #1f4e79;border-radius:6px;box-sizing:border-box;font-size:16px;outline:none;font-weight:bold;text-align:center;"><div style="display:flex;gap:10px;justify-content:center;"><button id="modal-btn-cancel" class="btn btn-outline" style="display:none;margin:0;flex:1;border-radius:6px;padding:10px;" onclick="window.closeModal()">Cancel</button><button id="modal-btn-ok" class="btn btn-blue" style="margin:0;flex:1;border-radius:6px;padding:10px;">OK</button></div></div>
 </div>
 
 <div class="container" id="main-ui-container">
     <div id="top-sticky-wrapper">
-        <div class="tcs-header">
-            <h2 id="head-exam-name" onclick="window.location.reload();">Exam Portal</h2>
-            <div id="timer-box" class="timer" style="display:none;"><div id="main-time">Time: 00:00</div></div>
-        </div>
-        <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
-            <div class="s-name" id="top-sname">Student Name</div>
-            <div class="s-exam" id="top-sexam">Exam Name</div>
-        </div>
+        <div class="tcs-header"><h2 id="head-exam-name" onclick="window.location.reload();">Exam Portal</h2><div id="timer-box" class="timer" style="display:none;"><div id="main-time">Time: 00:00</div></div></div>
+        <div id="student-top-bar" class="tcs-sub-header" style="display:none;"><div class="s-name" id="top-sname">Student Name</div><div class="s-exam" id="top-sexam">Exam Name</div></div>
     </div>
 
     <div id="student-dashboard-view" class="view-section active-view">
-        <div class="admin-tabs" style="justify-content: center; gap: 10px; border:none; margin-bottom:10px;">
-            <button class="tab-btn active" id="tab-st-active" style="border-radius:6px; flex:none; width:45%;" onclick="window.switchStudentTab('active')">📝 Active Tests</button>
-            <button class="tab-btn" id="tab-st-history" style="border-radius:6px; flex:none; width:45%;" onclick="window.switchStudentTab('history')">📈 My Performance</button>
-        </div>
+        <div class="admin-tabs" style="justify-content:center;gap:10px;border:none;margin-bottom:10px;"><button class="tab-btn active" id="tab-st-active" style="border-radius:6px;flex:none;width:45%;" onclick="window.switchStudentTab('active')">📝 Active Tests</button><button class="tab-btn" id="tab-st-history" style="border-radius:6px;flex:none;width:45%;" onclick="window.switchStudentTab('history')">📈 My Performance</button></div>
 
         <div id="st-active-section">
             <div id="breadcrumb-container" class="breadcrumb-nav" style="display:none;"></div>
-            <div id="st-active-loader" style="text-align: center; display:none;"><div class="loader"></div> Loading data...</div>
+            <div id="st-active-loader" style="text-align:center;display:none;"><div class="loader"></div> Loading data...</div>
             <div id="st-folder-view"></div>
-            
             <div id="st-app-layout" class="app-layout" style="display:none;">
                 <div class="sidebar-menu" id="st-sidebar-menu"></div>
                 <div class="content-area" id="st-content-area"></div>
             </div>
         </div>
 
-        <div id="st-history-section" style="display: none;">
-            <div style="background: #f4f6f8; padding: 20px; border-radius: 8px; border: 1px solid #ccc; text-align:center;">
-                <h3 style="color:#1f4e79; margin-top:0;">🔍 Check Your Performance</h3>
-                <input type="tel" id="hist-phone" placeholder="Enter your 10-digit mobile number" style="width:100%; max-width:300px; padding:12px; margin-bottom:15px; border: 1px solid #ccc; border-radius:4px; font-size:16px;" maxlength="10">
-                <button class="btn btn-blue" style="max-width:300px; margin:0 auto;" onclick="window.fetchStudentHistory()">Search History</button>
-            </div>
-            <div id="st-hist-loader" style="text-align: center; display:none; margin-top:20px;"><div class="loader"></div> Analysing Performance...</div>
-            <div id="st-hist-content" style="margin-top: 30px; display:none;">
-                <div id="st-graphical-report" style="background: #e6f9ec; border: 2px solid #28a745; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-                    <h3 style="margin:0 0 15px 0; color:#155724; text-align:center;">📊 Overall Final Report Card</h3>
-                    <div style="display:flex; justify-content:space-around; flex-wrap:wrap; margin-bottom:15px; text-align:center;">
-                        <div><h4 style="margin:0; color:#555;">Total Tests</h4><b style="font-size:24px; color:#1f4e79;" id="gr-tot">0</b></div>
-                        <div><h4 style="margin:0; color:#555;">Total Qs</h4><b style="font-size:24px; color:#1f4e79;" id="gr-qs">0</b></div>
-                        <div><h4 style="margin:0; color:#555;">Accuracy</h4><b style="font-size:24px; color:#dc3545;" id="gr-acc">0%</b></div>
-                    </div>
-                    <div class="progress-bar-container" id="gr-bar"></div>
-                    <div style="display:flex; justify-content:center; gap:15px; margin-top:10px; font-size:12px; font-weight:bold;">
-                        <span style="color:#28a745;">🟩 Correct (<span id="gr-r">0</span>)</span>
-                        <span style="color:#dc3545;">🟥 Wrong (<span id="gr-w">0</span>)</span>
-                        <span style="color:#6c757d;">⬜ Blank (<span id="gr-b">0</span>)</span>
-                    </div>
-                </div>
-                <h3 style="color: #1f4e79; border-bottom:2px solid #ccc; padding-bottom:5px;">📜 Individual Test Records</h3>
-                <div id="st-hist-list"></div>
-            </div>
+        <div id="st-history-section" style="display:none;">
+            <div style="background:#f4f6f8;padding:20px;border-radius:8px;border:1px solid #ccc;text-align:center;"><h3 style="color:#1f4e79;margin-top:0;">🔍 Check Your Performance</h3><input type="tel" id="hist-phone" placeholder="Enter your 10-digit mobile number" style="width:100%;max-width:300px;padding:12px;margin-bottom:15px;border:1px solid #ccc;border-radius:4px;font-size:16px;" maxlength="10"><button class="btn btn-blue" style="max-width:300px;margin:0 auto;" onclick="window.fetchStudentHistory()">Search History</button></div>
+            <div id="st-hist-loader" style="text-align:center;display:none;margin-top:20px;"><div class="loader"></div> Analysing Performance...</div>
+            <div id="st-hist-content" style="margin-top:30px;display:none;"><div id="st-graphical-report" style="background:#e6f9ec;border:2px solid #28a745;border-radius:8px;padding:20px;margin-bottom:20px;"><h3 style="margin:0 0 15px 0;color:#155724;text-align:center;">📊 Overall Final Report Card</h3><div style="display:flex;justify-content:space-around;flex-wrap:wrap;margin-bottom:15px;text-align:center;"><div><h4 style="margin:0;color:#555;">Total Tests</h4><b style="font-size:24px;color:#1f4e79;" id="gr-tot">0</b></div><div><h4 style="margin:0;color:#555;">Total Qs</h4><b style="font-size:24px;color:#1f4e79;" id="gr-qs">0</b></div><div><h4 style="margin:0;color:#555;">Accuracy</h4><b style="font-size:24px;color:#dc3545;" id="gr-acc">0%</b></div></div><div class="progress-bar-container" id="gr-bar"></div><div style="display:flex;justify-content:center;gap:15px;margin-top:10px;font-size:12px;font-weight:bold;"><span style="color:#28a745;">🟩 Correct (<span id="gr-r">0</span>)</span><span style="color:#dc3545;">🟥 Wrong (<span id="gr-w">0</span>)</span><span style="color:#6c757d;">⬜ Blank (<span id="gr-b">0</span>)</span></div></div><h3 style="color:#1f4e79;border-bottom:2px solid #ccc;padding-bottom:5px;">📜 Individual Test Records</h3><div id="st-hist-list"></div></div>
         </div>
     </div>
 
     <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin()" title="Admin Login" style="display:flex;">🔒</div>
 
-    <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
-        <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
-            <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
-            <div class="form-group" style="text-align: left;">
-                <label>Admin ID:</label>
-                <input type="text" id="admin-id" placeholder="Enter ID">
-            </div>
-            <div class="form-group" style="text-align: left;">
-                <label>Password:</label>
-                <input type="password" id="admin-pass" placeholder="Enter Password">
-            </div>
-            <button class="btn btn-blue" onclick="window.loginAdmin()">Login to Dashboard</button>
-            <button class="btn btn-outline" style="margin-top:10px;" onclick="location.reload()">⬅️ Back to Home</button>
-        </div>
-    </div>
-
-    <div id="loading-view" class="view-section" style="text-align: center; margin-top: 50px;">
-        <div class="loader"></div>
-        <h3 style="color:#1f4e79; margin-top: 20px;">Loading data, please wait...</h3>
-    </div>
-
-    <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
-        <h2 style="color:#dc3545;">❌ Failed to load test</h2>
-        <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">Please check your internet connection.</p>
-        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 Refresh Page</button>
-    </div>
+    <div id="admin-auth-view" class="view-section" style="text-align:center;margin-top:50px;"><div style="max-width:400px;margin:0 auto;background:#fff;padding:30px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);border-top:4px solid #1f4e79;"><h3 style="color:#1f4e79;margin-top:0;">🔒 Admin Login</h3><div class="form-group" style="text-align:left;"><label>Admin ID:</label><input type="text" id="admin-id" placeholder="Enter ID (e.g. 8273...)"></div><div class="form-group" style="text-align:left;"><label>Password:</label><input type="password" id="admin-pass" placeholder="Enter Password"></div><button class="btn btn-blue" onclick="window.loginAdmin()">Login to Dashboard</button><button class="btn btn-outline" style="margin-top:10px;" onclick="location.reload()">⬅️ Back to Home</button></div></div>
+    
+    <div id="loading-view" class="view-section" style="text-align:center;margin-top:50px;"><div class="loader"></div><h3 style="color:#1f4e79;margin-top:20px;">Loading data, please wait...</h3></div>
+    <div id="error-view" class="view-section" style="text-align:center;margin-top:50px;"><h2 style="color:#dc3545;">❌ Failed to load test</h2><p id="error-msg" style="color:#555;font-size:16px;margin-bottom:20px;">Please check your internet connection.</p><button class="btn btn-blue" style="max-width:250px;margin:0 auto;" onclick="location.reload()">🔄 Refresh Page</button></div>
 
     <div id="admin-view" class="view-section">
-        <div class="admin-tabs">
-            <button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button>
-            <button class="tab-btn" id="tab-manage" onclick="window.switchAdminTab('manage')">📂 Saved Tests</button>
-            <button class="tab-btn" id="tab-icons" onclick="window.switchAdminTab('icons')">🏛️ Manage Icons</button>
-        </div>
+        <div class="admin-tabs"><button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button><button class="tab-btn" id="tab-manage" onclick="window.switchAdminTab('manage')">📂 Saved Tests</button><button class="tab-btn" id="tab-icons" onclick="window.switchAdminTab('icons')">🏛️ Manage Icons</button></div>
         
         <div id="admin-create-section">
-            <div style="background:#e3f2fd; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #1f4e79;">
-                <h4 style="margin:0 0 10px 0; color:#1f4e79; display:flex; align-items:center; gap:8px;">
-                    ⚡ Quick Auto-Fill <span style="font-size:12px; font-weight:normal; color:#555;">(Pehle se bane test ka path select karein)</span>
-                </h4>
-                <div class="flex-row">
-                    <div class="form-group" style="margin-bottom:0;">
-                        <select id="quick-board" onchange="window.fillQuick('board')" style="border-color:#1f4e79; font-weight:bold;">
-                            <option value="">1. Select Board</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <select id="quick-exam" onchange="window.fillQuick('exam')" style="border-color:#1f4e79; font-weight:bold;">
-                            <option value="">2. Select Exam</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <select id="quick-cat" onchange="window.fillQuick('cat')" style="border-color:#1f4e79; font-weight:bold;">
-                            <option value="">3. Select Category</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin-bottom:0;">
-                        <select id="quick-sub" onchange="window.fillQuick('sub')" style="border-color:#1f4e79; font-weight:bold;">
-                            <option value="">4. Select Subject</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex-row" style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 15px;">
-                <div class="form-group" style="margin-bottom:0;">
-                    <label style="color:#1f4e79;">🏛️ Main Icon / Board Name:</label>
-                    <input type="text" id="a-board" onkeyup="window.autoFillLogo()" onchange="window.autoFillLogo()" placeholder="e.g. UPPSC, SSC, UP Police">
-                </div>
-                <div class="form-group" style="margin-bottom:0;">
-                    <label style="color:#1f4e79;">🖼️ Exam Logo URL (Link):</label>
-                    <input type="text" id="a-logo" placeholder="https://postimg.cc/... (Auto-fills if exists)">
-                </div>
-            </div>
-
-            <div class="flex-row">
-                <div class="form-group"><label>Exam Name (Sub-Exam):</label><input type="text" id="a-exam" placeholder="e.g. RO/ARO, Constable"></div>
-                <div class="form-group">
-                    <label>Test Folder (Category):</label>
-                    <select id="a-category" onchange="if(this.value==='CUSTOM'){document.getElementById('a-custom-cat').style.display='block';}else{document.getElementById('a-custom-cat').style.display='none';}">
-                        <option value="Previous Year Papers">📜 Previous Year Papers</option>
-                        <option value="Mock Tests">📝 Mock Tests</option>
-                        <option value="Sectional Tests">🧩 Sectional Tests</option>
-                        <option value="Chapter Tests">📖 Chapter Tests</option>
-                        <option value="CUSTOM">➕ Add Custom Category...</option>
-                    </select>
-                    <input type="text" id="a-custom-cat" style="display:none; margin-top:10px; border-color:#f39c12;" placeholder="Type custom category name...">
-                </div>
-            </div>
-            
-            <div class="flex-row">
-                <div class="form-group"><label>Subject / Sub Category:</label><input type="text" id="a-sub" placeholder="e.g. Hindi, GS"></div>
-                <div class="form-group"><label>Chapter/Topic Name:</label><input type="text" id="a-topic" placeholder="e.g. Vyakaran"></div>
-                <div class="form-group"><label>Test Code (Unique):</label><input type="text" id="a-code" placeholder="UP-01"></div>
-            </div>
-
-            <div class="flex-row">
-                <div class="form-group"><label>Marks Per Q:</label><input type="number" step="0.5" id="a-marks" value="2"></div>
-                <div class="form-group"><label>Negative Marking:</label><input type="number" step="0.25" id="a-neg" value="0.5"></div>
-                <div class="form-group"><label>Total Time (Mins):</label><input type="number" id="a-tot-time" value="0"></div>
-                <div class="form-group"><label>Time Per Question (Secs):</label><input type="number" id="a-q-time" value="0"></div>
-            </div>
-
-            <div class="flex-row">
-                <div class="form-group">
-                    <label>PDF Status:</label>
-                    <select id="a-pdf-type" onchange="window.togglePriceBox()">
-                        <option value="paid">🔒 Paid (Locked)</option>
-                        <option value="free">🔓 Free (Open)</option>
-                    </select>
-                </div>
-                <div class="form-group" id="price-box"><label>PDF Price (₹):</label><input type="number" id="a-price" placeholder="49"></div>
-                <div class="form-group"><label>Secret Key:</label><input type="text" id="a-key" placeholder="ANK"></div>
-                <div class="form-group"><label>Total Qs (Auto):</label><input type="number" id="a-qs-count" readonly style="background:#e9ecef; color:#1f4e79; font-weight:bold;" placeholder="0"></div>
-            </div>
-
-            <div class="form-group">
-                <label style="color: #dc3545;"><b>Paste Questions Here:</b></label>
-                <textarea id="a-rawdata" onkeyup="window.updateQsCount()" onchange="window.updateQsCount()" placeholder="!P Passage...&#10;!!1! Question...&#10;!A Option...&#10;!!! Ans&#10;!!!! Exp..."></textarea>
-            </div>
-            <button id="btn-generate" class="btn btn-blue" onclick="window.generateAndSaveLink()">🚀 Generate / Update Test</button>
-            
-            <div id="linkContainer" style="display: none; margin-top: 20px; background: #e9ecef; padding: 15px; border-radius: 5px;">
-                <label style="color: #d35400;"><b>👇 Copy this link and share with students:</b></label>
-                <input type="text" id="generatedLink" readonly onclick="this.select(); document.execCommand('copy'); window.showCustomAlert('Copied', 'Link copied successfully!', '✅');" style="font-weight: bold; cursor: copy; padding:15px; width:100%;">
-            </div>
+            <div style="background:#e3f2fd;padding:15px;border-radius:8px;margin-bottom:20px;border:1px solid #1f4e79;"><h4 style="margin:0 0 10px 0;color:#1f4e79;display:flex;align-items:center;gap:8px;">⚡ Quick Auto-Fill <span style="font-size:12px;font-weight:normal;color:#555;">(Pehle se bane test ka path select karein)</span></h4><div class="flex-row"><div class="form-group" style="margin-bottom:0;"><select id="quick-board" onchange="window.fillQuick('board')" style="border-color:#1f4e79;font-weight:bold;"><option value="">1. Select Board</option></select></div><div class="form-group" style="margin-bottom:0;"><select id="quick-exam" onchange="window.fillQuick('exam')" style="border-color:#1f4e79;font-weight:bold;"><option value="">2. Select Exam</option></select></div><div class="form-group" style="margin-bottom:0;"><select id="quick-cat" onchange="window.fillQuick('cat')" style="border-color:#1f4e79;font-weight:bold;"><option value="">3. Select Category</option></select></div><div class="form-group" style="margin-bottom:0;"><select id="quick-sub" onchange="window.fillQuick('sub')" style="border-color:#1f4e79;font-weight:bold;"><option value="">4. Select Subject</option></select></div></div></div>
+            <div class="flex-row" style="background:#f8f9fa;padding:15px;border-radius:8px;border:1px solid #ddd;margin-bottom:15px;"><div class="form-group" style="margin-bottom:0;"><label style="color:#1f4e79;">🏛️ Main Icon / Board Name:</label><input type="text" id="a-board" onkeyup="window.autoFillLogo()" onchange="window.autoFillLogo()" placeholder="e.g. UPPSC, SSC, UP Police"></div><div class="form-group" style="margin-bottom:0;"><label style="color:#1f4e79;">🖼️ Exam Logo URL (Link):</label><input type="text" id="a-logo" placeholder="https://postimg.cc/... (Auto-fills if exists)"></div></div>
+            <div class="flex-row"><div class="form-group"><label>Exam Name (Sub-Exam):</label><input type="text" id="a-exam" placeholder="e.g. RO/ARO, Constable"></div><div class="form-group"><label>Test Folder (Category):</label><select id="a-category" onchange="if(this.value==='CUSTOM'){document.getElementById('a-custom-cat').style.display='block';}else{document.getElementById('a-custom-cat').style.display='none';}"><option value="Mock Tests">📝 Mock Tests</option><option value="Previous Year Papers">📜 Previous Year Papers</option><option value="Sectional Tests">🧩 Sectional Tests</option><option value="Chapter Tests">📖 Chapter Tests</option><option value="CUSTOM">➕ Add Custom Category...</option></select><input type="text" id="a-custom-cat" style="display:none;margin-top:10px;border-color:#f39c12;" placeholder="Type custom category name..."></div></div>
+            <div class="flex-row"><div class="form-group"><label>Subject / Sub Category:</label><input type="text" id="a-sub" placeholder="e.g. Hindi, GS"></div><div class="form-group"><label>Chapter/Topic Name:</label><input type="text" id="a-topic" placeholder="e.g. Vyakaran"></div><div class="form-group"><label>Test Code (Unique):</label><input type="text" id="a-code" placeholder="UP-01"></div></div>
+            <div class="flex-row"><div class="form-group"><label>Marks Per Q:</label><input type="number" step="0.5" id="a-marks" value="2"></div><div class="form-group"><label>Negative Marking:</label><input type="number" step="0.25" id="a-neg" value="0.5" placeholder="e.g. 0.5"></div><div class="form-group"><label>Total Time (Mins):</label><input type="number" id="a-tot-time" placeholder="e.g. 60" value="0"></div><div class="form-group"><label>Time Per Question (Secs):</label><input type="number" id="a-q-time" placeholder="e.g. 30" value="0"></div></div>
+            <div class="flex-row"><div class="form-group"><label>PDF Status:</label><select id="a-pdf-type" onchange="window.togglePriceBox()"><option value="paid">🔒 Paid (Locked)</option><option value="free">🔓 Free (Open)</option></select></div><div class="form-group" id="price-box"><label>PDF Price (₹):</label><input type="number" id="a-price" placeholder="49"></div><div class="form-group"><label>Secret Key:</label><input type="text" id="a-key" placeholder="ANK"></div><div class="form-group"><label>Total Qs (Auto):</label><input type="number" id="a-qs-count" readonly style="background:#e9ecef;color:#1f4e79;font-weight:bold;" placeholder="0"></div></div>
+            <div class="form-group"><label style="color:#dc3545;"><b>Paste Questions Here:</b></label><textarea id="a-rawdata" onkeyup="window.updateQsCount()" onchange="window.updateQsCount()" placeholder="!P Passage...&#10;!!1! Question...&#10;!A Option...&#10;!!! Ans&#10;!!!! Exp..."></textarea></div><button id="btn-generate" class="btn btn-blue" onclick="window.generateAndSaveLink()">🚀 Generate / Update Test</button>
+            <div id="linkContainer" style="display:none;margin-top:20px;background:#e9ecef;padding:15px;border-radius:5px;"><label style="color:#d35400;"><b>👇 Copy this link and share with students:</b></label><input type="text" id="generatedLink" readonly onclick="this.select();document.execCommand('copy');window.showCustomAlert('Copied','Link copied successfully!','✅');" style="font-weight:bold;cursor:copy;padding:15px;width:100%;"></div>
         </div>
 
-        <div id="admin-manage-section" style="display: none;">
-            <div style="background: #e6f9ec; border: 1px solid #28a745; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-                <h4 style="margin: 0 0 10px 0; color: #155724;">🔑 Auto Password Generator</h4>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="gen-key" placeholder="Secret Key (e.g. ANK)" style="flex: 1; padding: 10px;">
-                    <input type="number" id="gen-phone" placeholder="Student Mobile" style="flex: 2; padding: 10px;">
-                    <button class="btn btn-blue" style="margin: 0; flex: 1;" onclick="window.generatePass()">Generate</button>
-                </div>
-                <div style="margin: 10px 0 0 0; font-weight: bold; color: #dc3545; display: flex; align-items: center; gap: 10px;">
-                    <span id="show-gen-pass">Password will appear here...</span>
-                    <button id="copy-pass-btn" class="btn btn-outline" style="display: none; padding: 2px 8px; margin: 0; font-size: 12px; width: auto; background:white;" onclick="window.copyGeneratedPass()">📋 Copy Pass</button>
-                </div>
-            </div>
-            
-            <div id="leaderboard-view" style="display: none; background: #fff; padding: 15px; border: 2px solid #1f4e79; border-radius: 8px; margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;">
-                    <h3 style="margin: 0; color: #1f4e79;">📊 Result: <span id="lb-title"></span></h3>
-                    <div>
-                        <button class="btn btn-pdf" style="margin:0; width:auto; padding: 5px 15px;" onclick="window.downloadLeaderboardImage()">🖼️ Download Image</button>
-                        <button class="btn btn-outline" style="margin:0; width:auto; padding: 5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌</button>
-                    </div>
-                </div>
-                <div style="overflow-x:auto;" id="leaderboard-content"></div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="color: #1f4e79;">📁 Active Tests List</h3>
-                <button class="btn btn-outline" style="background:#dc3545; color:white; border:none; width:auto; padding: 5px 10px; font-size:12px;" onclick="window.clearAdminMemory()">🗑️ Clear Old Admin Memory</button>
-            </div>
+        <div id="admin-manage-section" style="display:none;">
+            <div style="background:#e6f9ec;border:1px solid #28a745;padding:15px;border-radius:6px;margin-bottom:20px;"><h4 style="margin:0 0 10px 0;color:#155724;">🔑 Auto Password Generator</h4><div style="display:flex;gap:10px;"><input type="text" id="gen-key" placeholder="Secret Key (e.g. ANK)" style="flex:1;padding:10px;"><input type="number" id="gen-phone" placeholder="Student Mobile" style="flex:2;padding:10px;"><button class="btn btn-blue" style="margin:0;flex:1;" onclick="window.generatePass()">Generate</button></div><div style="margin:10px 0 0 0;font-weight:bold;color:#dc3545;display:flex;align-items:center;gap:10px;"><span id="show-gen-pass">Password will appear here...</span><button id="copy-pass-btn" class="btn btn-outline" style="display:none;padding:2px 8px;margin:0;font-size:12px;width:auto;background:white;" onclick="window.copyGeneratedPass()">📋 Copy Pass</button></div></div>
+            <div id="leaderboard-view" style="display:none;background:#fff;padding:15px;border:2px solid #1f4e79;border-radius:8px;margin-bottom:20px;"><div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #ccc;padding-bottom:10px;margin-bottom:10px;"><h3 style="margin:0;color:#1f4e79;">📊 Result: <span id="lb-title"></span></h3><div><button class="btn btn-pdf" style="margin:0;width:auto;padding:5px 15px;" onclick="window.downloadLeaderboardImage()">🖼️ Download Image</button><button class="btn btn-outline" style="margin:0;width:auto;padding:5px 15px;" onclick="document.getElementById('leaderboard-view').style.display='none';">❌</button></div></div><div style="overflow-x:auto;" id="leaderboard-content"></div></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="color:#1f4e79;">📁 Active Tests List</h3><button class="btn btn-outline" style="background:#dc3545;color:white;border:none;width:auto;padding:5px 10px;font-size:12px;" onclick="window.clearAdminMemory()">🗑️ Clear Old Admin Memory</button></div>
             <div id="dashboard-list"></div>
         </div>
         
-        <div id="admin-icons-section" style="display: none;">
-            <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-                <h4 style="margin: 0 0 10px 0; color: #856404;">🏛️ Manage Main Icons / Boards</h4>
-                <p style="font-size:13px; color:#555; margin-bottom:15px;">Yahan se aap home page par dikhne wale aayog (icons) ka naam aur logo ek sath update kar sakte hain.</p>
-                <div class="form-group">
-                    <label>Select Icon to Edit/Delete:</label>
-                    <select id="icon-select" onchange="window.onIconSelect()" style="border-color:#1f4e79; font-weight:bold;"></select>
-                </div>
-                <div class="flex-row">
-                    <div class="form-group"><label>Update Icon Name:</label><input type="text" id="icon-new-name"></div>
-                    <div class="form-group"><label>Update Logo URL:</label><input type="text" id="icon-new-logo"></div>
-                </div>
-                <div style="display:flex; gap:10px; margin-top:10px;">
-                    <button class="btn btn-blue" onclick="window.updateAdminIcon()">🔄 Update Icon Info</button>
-                    <button class="btn btn-pdf" onclick="window.deleteAdminIcon()">🗑️ Delete Entire Icon & Tests</button>
-                </div>
-            </div>
-        </div>
+        <div id="admin-icons-section" style="display:none;"><div style="background:#fff3cd;border:1px solid #ffeeba;padding:15px;border-radius:6px;margin-bottom:20px;"><h4 style="margin:0 0 10px 0;color:#856404;">🏛️ Manage Main Icons / Boards</h4><p style="font-size:13px;color:#555;margin-bottom:15px;">Update icons and names globally.</p><div class="form-group"><label>Select Icon to Edit/Delete:</label><select id="icon-select" onchange="window.onIconSelect()" style="border-color:#1f4e79;font-weight:bold;"></select></div><div class="flex-row"><div class="form-group"><label>Update Icon Name:</label><input type="text" id="icon-new-name"></div><div class="form-group"><label>Update Logo URL:</label><input type="text" id="icon-new-logo"></div></div><div style="display:flex;gap:10px;margin-top:10px;"><button class="btn btn-blue" onclick="window.updateAdminIcon()">🔄 Update Icon Info</button><button class="btn btn-pdf" onclick="window.deleteAdminIcon()">🗑️ Delete Entire Icon & Tests</button></div></div></div>
     </div>
 
-    <div id="login-view" class="view-section">
-        <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
-            <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Login</h3>
-            <p style="text-align:center; color:#e74c3c; font-weight:bold; margin-top:0;">Test Code: <span id="disp-code">...</span></p>
-            <p style="text-align:center; color:#555; font-size:13px; margin-top:-5px;">(+<span id="disp-marks"></span> Marks / -<span id="disp-neg"></span> Negative)</p>
-            <p id="disp-time-info" style="text-align:center; color:#1f4e79; font-size:12px; margin-top:-5px; font-weight:bold;"></p>
-            
-            <div style="background: #f4f6f8; padding: 15px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 20px;">
-                <h4 style="margin: 0 0 10px 0; color: #333;">📝 Start New Test</h4>
-                <p style="text-align: center; color: #28a745; font-size: 13px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px dashed #ccc; padding-bottom: 10px;">
-                    ✅ No registration required! Enter your name and mobile number to begin the test.
-                </p>
-                <input type="text" id="s-name" placeholder="Enter your name" required style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
-                <input type="tel" id="s-phone" placeholder="Enter your 10-digit mobile number" required style="width:100%; padding:10px; box-sizing:border-box;" maxlength="10">
-                <button class="btn" onclick="window.startExam(false)">Start Test 🚀</button>
-            </div>
+    <div id="login-view" class="view-section"><div id="specific-test-login" style="max-width:450px;margin:30px auto;background:#fdfdfd;padding:30px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.1);border-top:4px solid #f39c12;"><h3 style="color:#1f4e79;text-align:center;margin-bottom:5px;" id="login-test-name">Test Login</h3><p style="text-align:center;color:#e74c3c;font-weight:bold;margin-top:0;">Test Code: <span id="disp-code">...</span></p><p style="text-align:center;color:#555;font-size:13px;margin-top:-5px;">(+<span id="disp-marks"></span> Marks / -<span id="disp-neg"></span> Negative)</p><p id="disp-time-info" style="text-align:center;color:#1f4e79;font-size:12px;margin-top:-5px;font-weight:bold;"></p><div style="background:#f4f6f8;padding:15px;border-radius:6px;border:1px solid #ccc;margin-bottom:20px;"><h4 style="margin:0 0 10px 0;color:#333;">📝 Start New Test</h4><p style="text-align:center;color:#28a745;font-size:13px;font-weight:bold;margin-bottom:15px;border-bottom:1px dashed #ccc;padding-bottom:10px;">✅ No registration required! Enter your name and mobile number to begin the test.</p><input type="text" id="s-name" placeholder="Enter your name" required style="width:100%;padding:10px;margin-bottom:10px;box-sizing:border-box;"><input type="tel" id="s-phone" placeholder="Enter your 10-digit mobile number" required style="width:100%;padding:10px;box-sizing:border-box;" maxlength="10"><button class="btn" onclick="window.startExam(false)">Start Test 🚀</button></div><div id="direct-pdf-box" style="background:#fff3cd;padding:15px;border-radius:6px;border:1px solid #ffeeba;"><h4 style="margin:0 0 10px 0;color:#856404;">📥 Direct PDF Download (Without Test)</h4><div id="paid-instructions" style="font-size:13px;color:#856404;margin-bottom:10px;">PDF Price: <b>₹<span id="disp-price">0</span></b><br>Pay at <b>8273684939</b> and WhatsApp screenshot for password.</div><div id="free-instructions" style="font-size:13px;color:#28a745;margin-bottom:10px;display:none;font-weight:bold;">🎉 This PDF is Free for everyone!</div><input type="tel" id="pdf-phone" placeholder="Enter mobile number..." style="width:100%;padding:10px;margin-bottom:10px;box-sizing:border-box;"><input type="text" id="pdf-pass" placeholder="Enter password..." style="width:100%;padding:10px;box-sizing:border-box;"><button class="btn btn-pdf" onclick="window.directDownloadPDF()">🔒 Unlock & Download PDF</button></div><div style="text-align:center;margin:15px;"><button class="btn btn-outline" style="width:auto;padding:8px 20px;" onclick="window.closeAndRedirect()">🏠 Back to Home</button></div></div></div>
 
-            <div id="direct-pdf-box" style="background: #fff3cd; padding: 15px; border-radius: 6px; border: 1px solid #ffeeba;">
-                <h4 style="margin: 0 0 10px 0; color: #856404;">📥 Direct PDF Download (Without Test)</h4>
-                <div id="paid-instructions" style="font-size: 13px; color: #856404; margin-bottom: 10px;">
-                    PDF Price: <b>₹<span id="disp-price">0</span></b><br>Pay at <b>8273684939</b> and WhatsApp the screenshot for the password.
-                </div>
-                <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
-                    🎉 This PDF is Free for everyone!
-                </div>
-                <input type="tel" id="pdf-phone" placeholder="Enter mobile number..." style="width:100%; padding:10px; margin-bottom:10px; box-sizing:border-box;">
-                <input type="text" id="pdf-pass" placeholder="Enter password..." style="width:100%; padding:10px; box-sizing:border-box;">
-                <button class="btn btn-pdf" onclick="window.directDownloadPDF()">🔒 Unlock & Download PDF</button>
-            </div>
-            
-            <div style="text-align: center; margin: 15px;">
-                <button class="btn btn-outline" style="width:auto; padding:8px 20px;" onclick="window.closeAndRedirect()">🏠 Back to Home</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="exam-view" oncontextmenu="return false;">
-        <div class="exam-container">
-            <div class="left-panel">
-                <div class="q-header">
-                    <span id="q-no-header">Question No. 1</span>
-                    <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
-                </div>
-                <div id="q-scroll-area">
-                    <div id="q-passage" style="background:#e9ecef; padding:12px; margin-bottom:15px; border-left:4px solid #f39c12; font-size:15px; display:none; color:#333; line-height:1.5;"></div>
-                    <div class="q-text" id="q-text">Loading question...</div>
-                    <div class="options-div" id="options-box"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="exam-bottom-controls">
-        <div class="mini-palette-wrapper">
-            <button onclick="window.togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
-            <div id="mini-palette-strip" class="mini-strip"></div>
-        </div>
-        <div class="action-buttons">
-            <button class="action-btn btn-prev" onclick="window.prevQ()">Prev</button>
-            <button class="action-btn btn-clear" onclick="window.clearResponse()">Clear</button>
-            <button class="action-btn btn-next" onclick="window.nextQ(false)">Save & Next</button>
-            <button class="action-btn btn-submit" onclick="window.submitExamConfirmation()">Submit</button>
-        </div>
-    </div>
-
-    <div id="palette-overlay" class="fullscreen-overlay">
-        <div class="fs-container" style="min-height: auto;">
-            <div class="fs-header">
-                <h3 style="margin:0; color:#1f4e79;">All Questions</h3>
-                <button class="btn btn-outline" style="margin:0; width:auto; padding:5px 15px; background:#dc3545; color:white; border:none;" onclick="window.togglePaletteOverlay(false)">🔙 Back</button>
-            </div>
-            <div class="palette-legend">
-                <div class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Att</div>
-                <div class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Att</div>
-                <div class="legend-item"><span class="box status-not-visited" id="cnt-notvis">0</span> Blank</div>
-            </div>
-            <div class="question-palette" id="palette-grid"></div>
-        </div>
-    </div>
-
-    <div id="result-view" class="view-section" oncontextmenu="return false;">
-        <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
-        
-        <div id="rank-loader" style="margin-bottom: 15px; color: #1f4e79; font-weight: bold; display: none;">
-            <div class="loader" style="width:20px; height:20px; border-width:3px;"></div> <span>Calculating rank, please wait...</span>
-        </div>
-
-        <div id="report-section">
-            <canvas id="reportCard" width="800" height="650" style="display:none;"></canvas>
-            <img id="reportCardImg" style="max-width: 100%; border: 1px solid #ccc; border-radius: 8px; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display:none;" />
-            
-            <div style="display: flex; gap: 10px; max-width: 600px; margin: 15px auto; flex-wrap: wrap;">
-                <button id="btn-img-down" class="btn btn-blue" style="display: block; flex: 1; min-width: 150px;" onclick="window.downloadImage()">🖼️ Score Card</button>
-                <button id="btn-pdf-down" class="btn btn-pdf" style="display: block; flex: 1; min-width: 150px;" onclick="window.handleResultPDFClick()">📄 Q&A PDF</button>
-                <button id="btn-reattempt" class="btn btn-warning" style="display: block; flex: 1; min-width: 150px;" onclick="window.startReattempt()">🔄 Reattempt</button>
-            </div>
-
-            <div id="analysis-btn-container" style="display: flex; gap: 5px; max-width: 600px; margin: 15px auto; justify-content: center; flex-wrap: wrap; position: sticky; top: 60px; z-index: 900; background: #fdfdfd; padding: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #eee;">
-                <button class="btn" style="background: #28a745; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="window.showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button>
-                <button class="btn" style="background: #dc3545; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="window.showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button>
-                <button class="btn" style="background: #6c757d; margin:0; flex: 1; font-size: 13px; padding: 10px 5px;" onclick="window.showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button>
-            </div>
-            
-            <div id="analysis-box" style="display: none; background: white; border: 1px solid #ccc; border-radius: 8px; max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
-
-            <div style="max-width: 600px; margin: 20px auto; background: #fff3cd; border: 1px solid #ffeeba; padding: 15px; border-radius: 8px; text-align: left;">
-                <h4 style="margin: 0 0 10px 0; color: #856404;">📥 How to get PDF + Solution?</h4>
-                <p style="margin: 0 0 10px 0; font-size: 14px; color: #dc3545; font-weight:bold;">
-                    📌 Note: Save this Test Code to download the PDF in the future: <span id="res-code"></span>
-                </p>
-                <div id="res-paid-instructions" style="font-size: 13px; color: #333;">
-                    PDF Price: <b>₹<span id="res-price">0</span></b> | Pay at <b>8273684939</b> and WhatsApp the screenshot for the password.
-                </div>
-                <div id="res-free-instructions" style="font-size: 13px; color: #28a745; display: none; font-weight:bold;">
-                    🎉 This PDF is Free for everyone!
-                </div>
-
-                <div id="res-pass-box" style="display: flex; gap: 10px; margin-top: 15px;">
-                    <input type="text" id="s-pass-result" placeholder="Enter your password" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-                    <button class="btn-pdf action-btn" style="border-radius: 4px; padding: 10px 20px;" onclick="window.resultDownloadPDF()">🔒 Unlock PDF</button>
-                </div>
-            </div>
-
-            <div style="text-align: center; margin: 25px 0;">
-                <button class="btn" style="background: #17a2b8; max-width: 300px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.2);" onclick="window.closeAndRedirect()">🏠 Close & Go to Home</button>
-            </div>
-        </div>
-    </div>
-
+    <div id="exam-view" oncontextmenu="return false;"><div class="exam-container"><div class="left-panel"><div class="q-header"><span id="q-no-header">Question No. 1</span><span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span></div><div id="q-scroll-area"><div id="q-passage" style="background:#e9ecef;padding:12px;margin-bottom:15px;border-left:4px solid #f39c12;font-size:15px;display:none;color:#333;line-height:1.5;"></div><div class="q-text" id="q-text">Loading...</div><div class="options-div" id="options-box"></div></div></div></div></div>
+    <div id="exam-bottom-controls"><div class="mini-palette-wrapper"><button onclick="window.togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button><div id="mini-palette-strip" class="mini-strip"></div></div><div class="action-buttons"><button class="action-btn btn-prev" onclick="window.prevQ()">Prev</button><button class="action-btn btn-clear" onclick="window.clearResponse()">Clear</button><button class="action-btn btn-next" onclick="window.nextQ(false)">Save & Next</button><button class="action-btn btn-submit" onclick="window.submitExamConfirmation()">Submit</button></div></div>
+    <div id="palette-overlay" class="fullscreen-overlay"><div class="fs-container" style="min-height:auto;"><div class="fs-header"><h3 style="margin:0;color:#1f4e79;">All Questions</h3><button class="btn btn-outline" style="margin:0;width:auto;padding:5px 15px;background:#dc3545;color:white;border:none;" onclick="window.togglePaletteOverlay(false)">🔙 Back</button></div><div class="palette-legend"><div class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Att</div><div class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Att</div><div class="legend-item"><span class="box status-not-visited" id="cnt-notvis">0</span> Blank</div></div><div class="question-palette" id="palette-grid"></div></div></div>
+    
+    <div id="result-view" class="view-section" oncontextmenu="return false;"><h2 style="color:#28a745;margin-bottom:5px;" id="result-heading">Test Submitted Successfully!</h2><div id="rank-loader" style="margin-bottom:15px;color:#1f4e79;font-weight:bold;display:none;"><div class="loader" style="width:20px;height:20px;border-width:3px;"></div> <span>Calculating rank, please wait...</span></div><div id="report-section"><canvas id="reportCard" width="800" height="650" style="display:none;"></canvas><img id="reportCardImg" style="max-width:100%;border:1px solid #ccc;border-radius:8px;margin-top:20px;box-shadow:0 5px 15px rgba(0,0,0,0.2);display:none;" /><div style="display:flex;gap:10px;max-width:600px;margin:15px auto;flex-wrap:wrap;"><button id="btn-img-down" class="btn btn-blue" style="display:block;flex:1;min-width:150px;" onclick="window.downloadImage()">🖼️ Score Card</button><button id="btn-pdf-down" class="btn btn-pdf" style="display:block;flex:1;min-width:150px;" onclick="window.handleResultPDFClick()">📄 Q&A PDF</button><button id="btn-reattempt" class="btn btn-warning" style="display:block;flex:1;min-width:150px;" onclick="window.startReattempt()">🔄 Reattempt</button></div><div id="analysis-btn-container" style="display:flex;gap:5px;max-width:600px;margin:15px auto;justify-content:center;flex-wrap:wrap;position:sticky;top:60px;z-index:900;background:#fdfdfd;padding:10px;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.05);border:1px solid #eee;"><button class="btn" style="background:#28a745;margin:0;flex:1;font-size:13px;padding:10px 5px;" onclick="window.showAnalysis('right')">✅ Correct Qs (<span id="btn-cnt-right">0</span>)</button><button class="btn" style="background:#dc3545;margin:0;flex:1;font-size:13px;padding:10px 5px;" onclick="window.showAnalysis('wrong')">❌ Wrong Qs (<span id="btn-cnt-wrong">0</span>)</button><button class="btn" style="background:#6c757d;margin:0;flex:1;font-size:13px;padding:10px 5px;" onclick="window.showAnalysis('blank')">⬜ Blank Qs (<span id="btn-cnt-blank">0</span>)</button></div><div id="analysis-box" style="display:none;background:white;border:1px solid #ccc;border-radius:8px;max-width:800px;margin:20px auto;padding:20px;text-align:left;box-shadow:0 4px 15px rgba(0,0,0,0.1);"></div><div style="max-width:600px;margin:20px auto;background:#fff3cd;border:1px solid #ffeeba;padding:15px;border-radius:8px;text-align:left;"><h4 style="margin:0 0 10px 0;color:#856404;">📥 How to get PDF + Solution?</h4><p style="margin:0 0 10px 0;font-size:14px;color:#dc3545;font-weight:bold;">📌 Note: Save Test Code to download PDF later: <span id="res-code"></span></p><div id="res-paid-instructions" style="font-size:13px;color:#333;">PDF Price: <b>₹<span id="res-price">0</span></b> | Pay at <b>8273684939</b> and WhatsApp screenshot for password.</div><div id="res-free-instructions" style="font-size:13px;color:#28a745;display:none;font-weight:bold;">🎉 This PDF is Free for everyone!</div><div id="res-pass-box" style="display:flex;gap:10px;margin-top:15px;"><input type="text" id="s-pass-result" placeholder="Enter your password" style="flex:1;padding:10px;border:1px solid #ccc;border-radius:4px;"><button class="btn-pdf action-btn" style="border-radius:4px;padding:10px 20px;" onclick="window.resultDownloadPDF()">🔒 Unlock PDF</button></div></div><div style="text-align:center;margin:25px 0;"><button class="btn" style="background:#17a2b8;max-width:300px;margin:0 auto;box-shadow:0 4px 6px rgba(0,0,0,0.2);" onclick="window.closeAndRedirect()">🏠 Close & Go to Home</button></div></div></div>
 </div> 
-
 <div id="print-area"></div>
 
 <script>
@@ -536,59 +198,48 @@
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
     const HIDDEN_TESTS = []; 
 
-    window.examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [], category: "Mock Tests", logo: "" };
-    window.userAnswers = []; window.qStatus = []; window.currentQ = 0;
-    window.studentInfo = { name: "", phone: "", score: 0, right: 0, wrong: 0, blank: 0, time: 0, attempt: 1 };
-    
-    window.globalTimer = null; window.qTimer = null; window.globalTimeLeft = 0; window.qTimeLeft = 0; window.totalTimeSpent = 0;
-    window.isReattemptMode = false; window.currentGeneratedPass = ""; window.currentAdminLbDataRaw = []; 
-    window.globalActiveTests = []; window.currentAnalysisArray = []; window.currentAnalysisIndex = 0; window.currentAnalysisType = "";
+    window.examData={exam:"",subject:"",topic:"",code:"",isFree:false,price:"",key:"",marks:2,neg:0.5,totTime:0,qTime:0,questions:[],category:"Mock Tests",logo:""};
+    window.userAnswers=[]; window.qStatus=[]; window.currentQ=0;
+    window.studentInfo={name:"",phone:"",score:0,right:0,wrong:0,blank:0,time:0,attempt:1};
+    window.globalTimer=null; window.qTimer=null; window.globalTimeLeft=0; window.qTimeLeft=0; window.totalTimeSpent=0;
+    window.isReattemptMode=false; window.currentGeneratedPass=""; window.currentAdminLbDataRaw=[]; 
+    window.globalActiveTests=[]; window.currentAnalysisArray=[]; window.currentAnalysisIndex=0; window.currentAnalysisType="";
 
-    // 🔥 GLOBAL LOCK TOGGLE 🔥
     window.toggleAdminLock = function(show) {
         let lock = document.getElementById('admin-lock-btn');
         if(lock) lock.style.display = show ? 'flex' : 'none';
     };
 
-    // 🔥 PARSE HACK 🔥
     window.parseHack = function(raw) {
-        let res = { topic: raw || "", qs: 0, cat: "Mock Tests", logo: "", board: "", subcat: "" };
-        if(!raw) return res;
-        
-        if(raw.includes("|||QS:")) {
-            let p1 = raw.split("|||QS:");
-            res.topic = p1[0]; res.subcat = p1[0]; 
-            
-            let r1 = p1[1] || "";
-            let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/);
-            if (matchQs) res.qs = matchQs[1];
-            
-            let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/);
-            if (matchCat) res.cat = matchCat[1];
-            
-            let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/);
-            if (matchLogo) res.logo = matchLogo[1];
-            
-            let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/);
-            if (matchBoard) res.board = matchBoard[1];
-            
-            let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/);
-            if (matchExam) res.exam = matchExam[1];
-            
-            let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/);
-            if (matchSubcat) res.subcat = matchSubcat[1];
-            
-            return res;
-        } else {
-            res.topic = raw; res.subcat = raw; return res;
-        }
+        let res={topic:raw||"",qs:0,cat:"Mock Tests",logo:"",board:"",subcat:""};
+        if(!raw)return res;
+        if(raw.includes("|||QS:")){
+            let p1=raw.split("|||QS:"); res.topic=p1[0]; res.subcat=p1[0]; let r1=p1[1]||"";
+            if(r1.includes("|||CAT:")){
+                let p2=r1.split("|||CAT:"); res.qs=p2[0]; let r2=p2[1]||"";
+                if(r2.includes("|||LOGO:")){
+                    let p3=r2.split("|||LOGO:"); res.cat=p3[0]; let r3=p3[1]||"";
+                    if(r3.includes("|||BOARD:")){ 
+                        let p4=r3.split("|||BOARD:"); res.logo=p4[0]; 
+                        let r4=p4[1]||"";
+                        if(r4.includes("|||EXAM:")){
+                            let p5=r4.split("|||EXAM:"); res.board=p5[0];
+                            let r5=p5[1]||"";
+                            if(r5.includes("|||SUBCAT:")){
+                                let p6=r5.split("|||SUBCAT:"); res.exam=p6[0]; res.subcat=p6[1];
+                            } else { res.exam=r5; }
+                        } else { res.board=r4; }
+                    } else {res.logo=r3;}
+                } else {res.cat=r2;}
+            } else {res.qs=r1;}
+        } return res;
     };
 
-    const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
-    const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-    const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
-    const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
-    const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
+    const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+    const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
+    const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
+    const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
+    const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
 
     window.openAdminLogin = function() { 
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
@@ -597,27 +248,16 @@
     };
 
     window.initQuickFill = function() {
-        let savedTests = window.globalActiveTests || [];
-        if(savedTests.length === 0) savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
-        
+        let savedTests = window.globalActiveTests.length > 0 ? window.globalActiveTests : JSON.parse(localStorage.getItem('myMockTests')) || []; 
         window.qTree = {};
         savedTests.forEach(t => {
-            let p = window.parseHack(t.topic); 
-            let b = p.board||t.exam||"General Exam"; 
-            let e = t.exam||"Mock Test";
-            let c = p.cat||"Mock Tests"; 
-            let s = p.subcat||t.subject||t.sub||"Subject";
-            
-            if(!window.qTree[b]) window.qTree[b]={}; 
-            if(!window.qTree[b][e]) window.qTree[b][e]={}; 
-            if(!window.qTree[b][e][c]) window.qTree[b][e][c]=new Set();
+            let p = window.parseHack(t.topic); let b = p.board||t.exam||"General Exam"; let e = t.exam||"Mock Test";
+            let c = p.cat||"Mock Tests"; let s = p.subcat||t.subject||t.sub||"Subject";
+            if(!window.qTree[b]) window.qTree[b]={}; if(!window.qTree[b][e]) window.qTree[b][e]={}; if(!window.qTree[b][e][c]) window.qTree[b][e][c]=new Set();
             window.qTree[b][e][c].add(s);
         });
-        
-        let qb = document.getElementById('quick-board'); 
-        qb.innerHTML = '<option value="">1. Select Board</option>';
+        let qb = document.getElementById('quick-board'); qb.innerHTML = '<option value="">1. Select Board</option>';
         for(let b in window.qTree) { qb.innerHTML += `<option value="${b}">${b}</option>`; }
-        
         document.getElementById('quick-exam').innerHTML='<option value="">2. Select Exam</option>';
         document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>';
         document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
@@ -626,13 +266,11 @@
     window.fillQuick = function(level) {
         let bVal=document.getElementById('quick-board').value; let eVal=document.getElementById('quick-exam').value;
         let cVal=document.getElementById('quick-cat').value; let sVal=document.getElementById('quick-sub').value;
-        
         if(level === 'board') {
             document.getElementById('a-board').value = bVal; window.autoFillLogo();
             let qe=document.getElementById('quick-exam'); qe.innerHTML='<option value="">2. Select Exam</option>';
             if(bVal && window.qTree[bVal]) { for(let e in window.qTree[bVal]) { qe.innerHTML+=`<option value="${e}">${e}</option>`; } }
-            document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>'; 
-            document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
+            document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>'; document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
         } else if(level === 'exam') {
             document.getElementById('a-exam').value = eVal;
             let qc=document.getElementById('quick-cat'); qc.innerHTML='<option value="">3. Select Category</option>';
@@ -649,8 +287,7 @@
 
     window.autoFillLogo = function() {
         let eName = document.getElementById('a-board').value.trim().toLowerCase(); if(!eName) return;
-        let savedTests = window.globalActiveTests || [];
-        if(savedTests.length === 0) savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+        let savedTests = window.globalActiveTests.length > 0 ? window.globalActiveTests : JSON.parse(localStorage.getItem('myMockTests')) || []; 
         for(let i=0; i<savedTests.length; i++) {
             let p = window.parseHack(savedTests[i].topic); let bName = (p.board||savedTests[i].exam||"").toLowerCase();
             if(bName===eName && p.logo) { document.getElementById('a-logo').value=p.logo; return; }
@@ -701,8 +338,7 @@
     };
 
     window.showModal = function(icon, title, desc, showInput, onOk, onCancel) {
-        let m=document.getElementById('custom-modal'); m.style.display='flex'; 
-        document.getElementById('modal-icon').innerText=icon; document.getElementById('modal-title').innerText=title; document.getElementById('modal-desc').innerHTML=desc;
+        let m=document.getElementById('custom-modal'); m.style.display='flex'; document.getElementById('modal-icon').innerText=icon; document.getElementById('modal-title').innerText=title; document.getElementById('modal-desc').innerHTML=desc;
         let inp=document.getElementById('modal-input'); if(showInput){inp.style.display='block';inp.value='';inp.focus();}else{inp.style.display='none';}
         let bc=document.getElementById('modal-btn-cancel'); if(onCancel){bc.style.display='block';bc.onclick=()=>{window.closeModal();onCancel();};}else{bc.style.display='none';}
         let bo=document.getElementById('modal-btn-ok'); bo.onclick=()=>{let v=inp.value;window.closeModal();if(onOk)onOk(v);};
@@ -840,7 +476,7 @@
         
         let examTests=window.globalActiveTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName;});
         
-        // Always show these core categories in the sidebar!
+        // Always show these core categories in the sidebar, even if 0 tests.
         let coreCats=["Previous Year Papers", "Mock Tests", "Sectional Tests", "Chapter Tests"]; 
         let allCatsInDB=[...new Set(examTests.map(t=>window.parseHack(t.topic).cat))];
         allCatsInDB.forEach(c=>{if(!coreCats.includes(c))coreCats.push(c);});
@@ -880,47 +516,30 @@
         let html=`<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px;"><h3 style="margin:0;color:#1f4e79;">${titleText}</h3>`;
         if(subjectName!=='ALL') html+=`<button class="btn btn-outline" style="margin:0;padding:4px 10px;font-size:12px;width:auto;" onclick="window.showAppLayout('${boardName}','${subExamName}','${activeCat}')">🔙 Back</button>`;
         html+=`</div><div style="display:flex;flex-wrap:wrap;gap:15px;">`;
-        if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found.</p>`;
+        if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found in this category.</p>`;
         testsToRender.forEach(t=>{
             let p=window.parseHack(t.topic); let currentSub=p.subcat||t.subject||t.sub||"General"; let isFreeStatus=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); let priceText=isFreeStatus?"Free":"₹"+t.price;
             let displayTopic=p.topic||p.title||t.subject||"Test"; let qsCount=p.qs||t.qs||0; if(!qsCount||qsCount===0||qsCount==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qsCount=t.questions.length;else if(t.rawText){let match=t.rawText.match(/!!\s*\d+\s*!/g);if(match)qsCount=match.length;}} if(!qsCount)qsCount=0;
-            html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">Marks: ${t.marks||2}</span></div><button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button></div>`;
+            html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">Marks: ${t.marks||2}</span></div><button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.loadTestForStudent('${t.code}')">📝 Give Test</button></div>`;
         }); html+=`</div>`; contentArea.innerHTML=html;
     };
 
-    window.fetchStudentHistory = function() {
-        let phone=document.getElementById('hist-phone').value; if(phone.length!==10) return window.showCustomAlert("Error","Enter valid 10-digit mobile number!","❌");
-        document.getElementById('st-hist-loader').style.display='block'; document.getElementById('st-hist-content').style.display='none';
-        let script=document.createElement('script'); script.src=SCRIPT_URL+"?action=getStudentHistory&phone="+phone+"&callback=handleStudentHistory&t="+new Date().getTime(); document.body.appendChild(script);
+    window.loadTestForStudent = function(code) {
+        let t = window.globalActiveTests.find(x => x.code === code);
+        if(!t) { window.showCustomAlert("Error", "Test not found!"); return; }
+        window.examData = t;
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+        document.getElementById('login-view').classList.add('active-view');
+        window.toggleAdminLock(false);
     };
 
-    window.handleStudentHistory = function(data) {
-        document.getElementById('st-hist-loader').style.display='none';
-        if(data.error||!data.history||data.history.length===0) return window.showCustomAlert("Not Found","No test records found.","🔍");
-        let h=data.history; let totRight=0,totWrong=0,totBlank=0; let html="";
-        h.forEach(r=>{
-            totRight+=r.right; totWrong+=r.wrong; totBlank+=r.blank; let d=new Date(r.date).toLocaleDateString();
-            html+=`<div style="background:#fff;border:1px solid #ddd;padding:15px;border-radius:6px;margin-bottom:15px;text-align:left;"><div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding-bottom:5px;margin-bottom:10px;"><b style="color:#1f4e79;">Test: ${r.code}</b> <span style="font-size:12px;color:#777;">🗓️ ${d}</span></div><div style="font-size:13px;margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap;"><span style="background:#e6f9ec;color:#155724;padding:3px 8px;border-radius:4px;"><b>Score:</b> ${r.score}</span><span style="background:#f8d7da;color:#721c24;padding:3px 8px;border-radius:4px;"><b>Rank:</b> #${r.rank}</span><span style="background:#e2e3e5;color:#383d41;padding:3px 8px;border-radius:4px;"><b>Attempt:</b> ${r.attempt}</span></div><div style="font-size:12px;font-weight:bold;display:flex;gap:10px;margin-bottom:15px;"><span style="color:#28a745;">✅ R: ${r.right}</span> <span style="color:#dc3545;">❌ W: ${r.wrong}</span> <span style="color:#6c757d;">⬜ B: ${r.blank}</span></div><div style="display:flex;gap:5px;"><button class="btn btn-pdf" style="margin:0;padding:6px;font-size:12px;flex:1;" onclick="window.downloadHistoryPDF('${r.code}','${r.phone}')">📄 Revision PDF</button></div></div>`;
-        });
-        let totQs=totRight+totWrong+totBlank; if(totQs===0) totQs=1; let rp=(totRight/totQs)*100; let wp=(totWrong/totQs)*100; let bp=(totBlank/totQs)*100;
-        document.getElementById('gr-tot').innerText=h.length; document.getElementById('gr-qs').innerText=totQs; document.getElementById('gr-acc').innerText=Math.round(rp)+"%"; document.getElementById('gr-r').innerText=totRight; document.getElementById('gr-w').innerText=totWrong; document.getElementById('gr-b').innerText=totBlank; document.getElementById('gr-bar').innerHTML=`<div class="progress-segment" style="width:${rp}%;background:#28a745;" title="Right"></div><div class="progress-segment" style="width:${wp}%;background:#dc3545;" title="Wrong"></div><div class="progress-segment" style="width:${bp}%;background:#6c757d;" title="Blank"></div>`;
-        document.getElementById('st-hist-list').innerHTML=html; document.getElementById('st-hist-content').style.display='block';
-    };
-
-    window.downloadHistoryPDF = function(code, phone) {
-        window.showCustomAlert("Processing","Preparing Revision PDF...","⏳"); let uCb="handleHistTestLoad_"+code.replace(/-/g,'');
-        let script=document.createElement('script'); script.src=SCRIPT_URL+"?action=getTest&testCode="+code+"&callback="+uCb+"&t="+new Date().getTime();
-        window[uCb] = function(data){ window.closeModal(); if(data.error) return window.showCustomAlert("Error","Test unavailable.","❌");
-            let isFree=(data.isFree===true||String(data.isFree).toLowerCase()==="true");
-            if(!isFree){ window.showCustomPrompt("Password Required","🔒 Paid PDF. Enter password:",(pass)=>{if(pass!==window.generateStrongPass(phone,data.key.toUpperCase())) return window.showCustomAlert("Error","❌ Incorrect password!","❌"); window.examData=data;window.userAnswers=[];window.executePDFPrint(phone,'q_ans');}); } 
-            else {window.examData=data;window.userAnswers=[];window.executePDFPrint(phone,'q_ans');}
-        }; document.body.appendChild(script);
-    };
-    
     window.switchAdminTab = function(tab) {
         if(tab==='create'){
             document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
             document.getElementById('admin-create-section').style.display='block'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='none'; window.initQuickFill();
+            let btn = document.getElementById('btn-generate');
+            btn.innerText = "🚀 Generate / Update Test";
+            btn.style.background = "#1f4e79"; 
         } else if (tab==='manage') {
             document.getElementById('tab-manage').classList.add('active'); document.getElementById('tab-create').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
             document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='block'; document.getElementById('admin-icons-section').style.display='none'; window.renderDashboard();
@@ -951,17 +570,22 @@
     };
 
     window.generateAndSaveLink = function() {
-        let eBoard=document.getElementById('a-board').value||"General Exam"; let eName=document.getElementById('a-exam').value||"Mock Test"; let eLogo=document.getElementById('a-logo').value||""; let eSub=document.getElementById('a-sub').value||"Subject"; let eTopicRaw=document.getElementById('a-topic').value||""; let eCode=document.getElementById('a-code').value||"T-"+Math.floor(Math.random()*1000); let eMarks=parseFloat(document.getElementById('a-marks').value)||2; let eNeg=parseFloat(document.getElementById('a-neg').value)||0; let tTime=parseInt(document.getElementById('a-tot-time').value)||0; let qTime=parseInt(document.getElementById('a-q-time').value)||0; let isFree=document.getElementById('a-pdf-type').value==="free"; let ePrice=isFree?"Free":(document.getElementById('a-price').value||"49"); let eKey=document.getElementById('a-key').value||"ANK"; 
+        let eBoard=document.getElementById('a-board').value||"General Exam"; let eName=document.getElementById('a-exam').value||"Mock Test"; let eLogo=document.getElementById('a-logo').value||""; let eSub=document.getElementById('a-sub').value||"Subject"; let eTopicRaw=document.getElementById('a-topic').value||""; let eCode=document.getElementById('a-code').value; 
+        if(!eCode) { eCode = "T-" + Math.floor(Math.random()*99999); document.getElementById('a-code').value = eCode; }
+        
+        let eMarks=parseFloat(document.getElementById('a-marks').value)||2; let eNeg=parseFloat(document.getElementById('a-neg').value)||0; let tTime=parseInt(document.getElementById('a-tot-time').value)||0; let qTime=parseInt(document.getElementById('a-q-time').value)||0; let isFree=document.getElementById('a-pdf-type').value==="free"; let ePrice=isFree?"Free":(document.getElementById('a-price').value||"49"); let eKey=document.getElementById('a-key').value||"ANK"; 
         let eCategory=document.getElementById('a-category').value; if(eCategory==="CUSTOM") eCategory=document.getElementById('a-custom-cat').value||"Custom Category";
+        
         let rawText=document.getElementById('a-rawdata').value; if(!rawText.trim()) return window.showCustomAlert("Empty Box","Paste questions!","⚠️");
         let parsedQs=window.parseRawQuestions(rawText); if(parsedQs.length===0) return window.showCustomAlert("Format Error","❌ Incorrect format.","⚠️");
+        
         let fQs=window.updateQsCount(); if(fQs===0) fQs=parsedQs.length;
         let finalTopicRaw = eTopicRaw || eSub || "Test";
         let eTopic=finalTopicRaw+"|||QS:"+fQs+"|||CAT:"+eCategory+"|||LOGO:"+eLogo+"|||BOARD:"+eBoard+"|||EXAM:"+eName+"|||SUBCAT:"+eSub;
         let fObj={exam:eName,category:eCategory,logo:eLogo,subject:eSub,sub:eSub,topic:eTopic,code:eCode,marks:eMarks,neg:eNeg,totTime:tTime,qTime:qTime,isFree:isFree,price:ePrice,key:eKey,questions:parsedQs,qs:fQs,isActive:true};
+        
         let btn=document.getElementById('btn-generate'); btn.innerText="⏳ Saving..."; btn.disabled=true;
         
-        let fetchUrlStr = SCRIPT_URL + "?action=saveTest";
         let postData = new URLSearchParams({'action':'saveTest','testCode':eCode,'testData':JSON.stringify(fObj)});
 
         fetch(SCRIPT_URL, {method:'POST', body: postData, headers:{'Content-Type':'application/x-www-form-urlencoded'}})
@@ -1032,22 +656,44 @@
                 window.studentInfo.name=document.getElementById('s-name').value; window.studentInfo.phone=document.getElementById('s-phone').value;
                 if(!window.studentInfo.name||window.studentInfo.phone.length!==10) { window.showCustomAlert("Required","Enter correct name and 10-digit number!","⚠️"); return; }
             }
+            
+            let raw = window.examData.rawText;
+            if(raw) {
+                let lines = raw.split('\n'); let qs = []; let tq = null;
+                lines.forEach(l => {
+                    let txt = l.trim();
+                    if(txt.startsWith("!!")) { if(tq) qs.push(tq); tq = { q: txt.replace(/^!!\s*\d+\s*!\s*/, ''), opts:[], ans:"", exp:"", passage:"" }; }
+                    else if(txt.match(/^![A-D]/i) && tq) { tq.opts.push({id: txt.charAt(1).toUpperCase(), text: txt.substring(2).trim()}); }
+                    else if(txt.match(/^!!!\s*[A-D]/i) && tq) { tq.ans = window.getCleanAns(txt.replace(/^!!!\s*/i, '')); }
+                    else if(txt.startsWith("!!!!") && tq) { tq.exp = txt.replace(/^!!!!\s*/, ''); }
+                    else if(txt.match(/^!P/i) && tq) { tq.passage = txt.replace(/^!P\s*/i, ''); }
+                });
+                if(tq) qs.push(tq);
+                window.examData.questions = qs;
+            }
+
             if(!window.examData.questions||window.examData.questions.length===0){
                 window.showCustomAlert("Empty Test","❌ No questions found. Please check test data.","⚠️");
-                document.getElementById('loading-view').classList.remove('active-view');
-                document.getElementById('student-dashboard-view').classList.add('active-view');
-                return;
+                document.getElementById('loading-view').classList.remove('active-view');document.getElementById('student-dashboard-view').classList.add('active-view');return;
             }
+
             window.isReattemptMode=isRe; window.studentInfo.score=0; window.studentInfo.right=0; window.studentInfo.wrong=0; window.studentInfo.blank=0; window.totalTimeSpent=0;
             if(window.examData.totTime>0) window.globalTimeLeft=window.examData.totTime*60; else window.globalTimeLeft=0;
             for(let i=0;i<window.examData.questions.length;i++){window.userAnswers[i]=null;window.qStatus[i]=0;}
+            
             document.getElementById('top-sname').innerText="👤 "+window.studentInfo.name; document.getElementById('top-sexam').innerText=window.examData.exam+(isRe?" (Reattempt)":""); document.getElementById('student-top-bar').style.display='flex';
             document.querySelectorAll('.view-section').forEach(v=>v.classList.remove('active-view')); document.getElementById('exam-view').style.display=''; document.getElementById('exam-view').classList.add('active-view'); document.getElementById('exam-bottom-controls').style.display='block';
             window.toggleAdminLock(false);
             try{history.pushState({inTest:true},"Test Started","#test");}catch(e){} document.getElementById('timer-box').style.display='flex';
-            let g=document.getElementById('palette-grid'); g.innerHTML=""; for(let i=0;i<window.examData.questions.length;i++){let b=document.createElement('button');b.className=`palette-btn status-not-visited`;b.id=`pal-${i}`;b.innerText=i+1;b.onclick=()=>{window.renderQuestion(i);window.togglePaletteOverlay(false);};g.appendChild(b);} window.updateCounts(); window.renderQuestion(0);
+            
+            let g=document.getElementById('palette-grid'); g.innerHTML=""; for(let i=0;i<window.examData.questions.length;i++){let b=document.createElement('button');b.className=`palette-btn status-not-visited`;b.id=`pal-${i}`;b.innerText=i+1;b.onclick=()=>{window.renderQuestion(i);window.togglePaletteOverlay(false);};g.appendChild(b);} 
+            window.updateCounts(); window.renderQuestion(0);
+            
             clearInterval(window.globalTimer); window.globalTimer=setInterval(()=>{window.totalTimeSpent++;if(window.examData.totTime>0){window.globalTimeLeft--;let m=Math.floor(window.globalTimeLeft/60);let s=window.globalTimeLeft%60;document.getElementById('main-time').innerText=`Time Left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;if(window.globalTimeLeft<=0){clearInterval(window.globalTimer);window.showCustomAlert("Time Up","⏳ Time's up!","⏳");window.calculateScoreAndSubmit();}}else{let m=Math.floor(window.totalTimeSpent/60);let s=window.totalTimeSpent%60;document.getElementById('main-time').innerText=`Time: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;}},1000);
-        } catch(err) { console.error(err); window.showCustomAlert("Error", "Could not start test.", "❌"); }
+        } catch(err) {
+            console.error(err);
+            window.showCustomAlert("Error", "Could not start test. Check code formatting.", "❌");
+        }
     };
 
     window.startReattempt = function(){ window.showCustomConfirm("Reattempt","Do you want to reattempt this test?",()=>{window.startExam(true);},"🔄"); };
