@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ankush online test</title>
 <style>
+/* 🔥 BASIC STYLES 🔥 */
 body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-serif;user-select:none;-webkit-user-select:none;scroll-behavior:smooth;}
 .container{max-width:1200px;margin:0 auto;background:white;min-height:100vh;display:flex;flex-direction:column;position:relative;box-shadow:0 0 10px rgba(0,0,0,0.1);}
 #top-sticky-wrapper{position:sticky;top:0;z-index:1000;box-shadow:0 2px 5px rgba(0,0,0,0.1);width:100%;background:white;}
@@ -26,21 +27,29 @@ body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-ser
 .tab-btn{flex:1;padding:15px;font-weight:bold;font-size:15px;cursor:pointer;background:#e9ecef;border:none;outline:none;white-space:nowrap;min-width:130px;}
 .tab-btn.active{background:#1f4e79;color:white;}
 
-/* 🔥 PREMIUM LOGO UI FIX 🔥 */
+/* 🔥 PREMIUM MAIN COMMISSION ICONS (LEVEL 1) 🔥 */
 .exam-grid{display:flex;flex-wrap:wrap;gap:25px;justify-content:center;padding:10px 0;width:100%;}
 .exam-icon-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;cursor:pointer;width:130px;transition:0.3s;text-align:center;}
-.exam-icon-wrapper { width: 90px; height: 90px; border-radius: 22px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: #fff; display: flex; align-items: center; justify-content: center; border: 1px solid #e0e0e0; transition: 0.3s; padding: 12px; box-sizing: border-box; }
-.exam-icon-img { width: 100%; height: 100%; object-fit: contain; }
-.exam-icon-card:hover .exam-icon-wrapper { transform: translateY(-8px); box-shadow: 0 8px 20px rgba(31,78,121,0.15); border-color: #1f4e79; }
+.exam-icon-card:hover{transform:translateY(-5px);}
+.exam-icon-wrapper { width: 90px; height: 90px; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #e9ecef; transition: 0.3s; padding: 5px; box-sizing: border-box; }
+.exam-icon-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+.exam-icon-card:hover .exam-icon-wrapper { box-shadow: 0 8px 15px rgba(31,78,121,0.15); border-color: #1f4e79; }
 .exam-icon-title{font-size:14px;font-weight:900;color:#1f4e79;margin:0;line-height:1.3;text-transform:uppercase;}
+
+/* 🔥 NEW SMALLER EXAM CARDS (LEVEL 2) 🔥 */
+.exam-card-l2 { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.04); width: 45%; min-width: 120px; max-width: 200px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.exam-card-l2:hover { transform: translateY(-5px); border-color: #1f4e79; box-shadow: 0 8px 15px rgba(31,78,121,0.1); }
+.exam-card-l2-icon { font-size: 35px; margin-bottom: 8px; }
+.exam-card-l2-title { font-size: 14px; font-weight: 800; color: #1f4e79; margin: 0; line-height: 1.2; text-transform: uppercase; }
 
 .folder-card{background:#fff;border:2px solid #1f4e79;border-radius:12px;padding:25px 15px;text-align:center;cursor:pointer;transition:0.3s;box-shadow:0 4px 6px rgba(0,0,0,0.05);width:45%;min-width:140px;max-width:250px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .folder-card:hover{transform:translateY(-5px);background:#f8f9fa;box-shadow:0 8px 15px rgba(0,0,0,0.1);border-color:#f39c12;}
 .folder-icon{font-size:45px;margin-bottom:10px;} .folder-title{font-size:16px;font-weight:900;color:#1f4e79;margin:0;line-height:1.3;}
+
 .breadcrumb-nav{background:#e9ecef;padding:12px 15px;border-radius:8px;margin-bottom:20px;font-weight:bold;font-size:13px;color:#555;display:flex;align-items:center;gap:8px;flex-wrap:wrap;box-shadow:0 2px 4px rgba(0,0,0,0.05);}
 .bc-link{color:#1f4e79;cursor:pointer;text-decoration:none;padding:2px 6px;border-radius:4px;transition:0.2s;} .bc-link:hover{background:#1f4e79;color:white;}
 .test-card{background:#fff;border:1px solid #ddd;border-left:5px solid #1f4e79;padding:15px;margin-bottom:15px;border-radius:6px;box-shadow:0 2px 5px rgba(0,0,0,0.05);}
-.badge{background:#e9ecef;padding:3px 8px;border-radius:12px;font-size:12px;font-weight:bold;margin-right:5px;color:#333;display:inline-block;margin-bottom:5px;}
+.test-card h4{margin:0 0 10px 0;color:#1f4e79;} .badge{background:#e9ecef;padding:3px 8px;border-radius:12px;font-size:12px;font-weight:bold;margin-right:5px;color:#333;display:inline-block;margin-bottom:5px;}
 
 /* 🔥 SMART SIDEBAR SPLIT-SCREEN LAYOUT 🔥 */
 .app-layout{display:flex;gap:20px;align-items:flex-start;margin-top:10px;width:100%;}
@@ -85,6 +94,8 @@ body,html{margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,sans-ser
 /* 🔥 ALWAYS VISIBLE ADMIN LOCK 🔥 */
 .admin-lock{position:fixed;bottom:30px;right:20px;font-size:26px;cursor:pointer;opacity:0.9;transition:0.3s;z-index:999999;background:#fff;border:3px solid #1f4e79;border-radius:50%;width:55px;height:55px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
 .admin-lock:hover{transform:scale(1.1);background:#1f4e79;color:white;border-color:white;}
+.progress-bar-container{display:flex;height:25px;border-radius:8px;overflow:hidden;margin-top:15px;box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);width:100%;}
+.progress-segment{display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:12px;overflow:hidden;}
 .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:999999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
 .modal-box{background:white;padding:25px;border-radius:12px;width:90%;max-width:350px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);animation:popIn 0.3s ease;}
 @keyframes popIn{from{transform:scale(0.8);opacity:0;}to{transform:scale(1);opacity:1;}}
@@ -198,48 +209,60 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
     const HIDDEN_TESTS = []; 
 
-    window.examData={exam:"",subject:"",topic:"",code:"",isFree:false,price:"",key:"",marks:2,neg:0.5,totTime:0,qTime:0,questions:[],category:"Mock Tests",logo:""};
-    window.userAnswers=[]; window.qStatus=[]; window.currentQ=0;
-    window.studentInfo={name:"",phone:"",score:0,right:0,wrong:0,blank:0,time:0,attempt:1};
-    window.globalTimer=null; window.qTimer=null; window.globalTimeLeft=0; window.qTimeLeft=0; window.totalTimeSpent=0;
-    window.isReattemptMode=false; window.currentGeneratedPass=""; window.currentAdminLbDataRaw=[]; 
-    window.globalActiveTests=[]; window.currentAnalysisArray=[]; window.currentAnalysisIndex=0; window.currentAnalysisType="";
+    window.examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [], category: "Mock Tests", logo: "" };
+    window.userAnswers = []; window.qStatus = []; window.currentQ = 0;
+    window.studentInfo = { name: "", phone: "", score: 0, right: 0, wrong: 0, blank: 0, time: 0, attempt: 1 };
+    
+    window.globalTimer = null; window.qTimer = null; window.globalTimeLeft = 0; window.qTimeLeft = 0; window.totalTimeSpent = 0;
+    window.isReattemptMode = false; window.currentGeneratedPass = ""; window.currentAdminLbDataRaw = []; 
+    window.globalActiveTests = []; window.currentAnalysisArray = []; window.currentAnalysisIndex = 0; window.currentAnalysisType = "";
 
+    // 🔥 GLOBAL LOCK TOGGLE 🔥
     window.toggleAdminLock = function(show) {
         let lock = document.getElementById('admin-lock-btn');
         if(lock) lock.style.display = show ? 'flex' : 'none';
     };
 
+    // 🔥 PARSE HACK 🔥
     window.parseHack = function(raw) {
-        let res={topic:raw||"",qs:0,cat:"Mock Tests",logo:"",board:"",subcat:""};
-        if(!raw)return res;
-        if(raw.includes("|||QS:")){
-            let p1=raw.split("|||QS:"); res.topic=p1[0]; res.subcat=p1[0]; let r1=p1[1]||"";
-            if(r1.includes("|||CAT:")){
-                let p2=r1.split("|||CAT:"); res.qs=p2[0]; let r2=p2[1]||"";
-                if(r2.includes("|||LOGO:")){
-                    let p3=r2.split("|||LOGO:"); res.cat=p3[0]; let r3=p3[1]||"";
-                    if(r3.includes("|||BOARD:")){ 
-                        let p4=r3.split("|||BOARD:"); res.logo=p4[0]; 
-                        let r4=p4[1]||"";
-                        if(r4.includes("|||EXAM:")){
-                            let p5=r4.split("|||EXAM:"); res.board=p5[0];
-                            let r5=p5[1]||"";
-                            if(r5.includes("|||SUBCAT:")){
-                                let p6=r5.split("|||SUBCAT:"); res.exam=p6[0]; res.subcat=p6[1];
-                            } else { res.exam=r5; }
-                        } else { res.board=r4; }
-                    } else {res.logo=r3;}
-                } else {res.cat=r2;}
-            } else {res.qs=r1;}
-        } return res;
+        let res = { topic: raw || "", qs: 0, cat: "Mock Tests", logo: "", board: "", subcat: "" };
+        if(!raw) return res;
+        
+        if(raw.includes("|||QS:")) {
+            let p1 = raw.split("|||QS:");
+            res.topic = p1[0]; res.subcat = p1[0]; 
+            
+            let r1 = p1[1] || "";
+            let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/);
+            if (matchQs) res.qs = matchQs[1];
+            
+            let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/);
+            if (matchCat) res.cat = matchCat[1];
+            
+            let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/);
+            if (matchLogo) res.logo = matchLogo[1];
+            
+            let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/);
+            if (matchBoard) res.board = matchBoard[1];
+            
+            let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/);
+            if (matchExam) res.exam = matchExam[1];
+            
+            let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/);
+            if (matchSubcat) res.subcat = matchSubcat[1];
+            
+            return res;
+        } else {
+            res.topic = raw; res.subcat = raw; return res;
+        }
     };
 
-    const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
-    const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-    const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
-    const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
-    const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align:middle;margin-bottom:2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
+    // Professional SVG Icons for PDF
+    const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+    const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
+    const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
+    const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
+    const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
 
     window.openAdminLogin = function() { 
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
@@ -248,16 +271,27 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     };
 
     window.initQuickFill = function() {
-        let savedTests = window.globalActiveTests.length > 0 ? window.globalActiveTests : JSON.parse(localStorage.getItem('myMockTests')) || []; 
+        let savedTests = window.globalActiveTests || [];
+        if(savedTests.length === 0) savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+        
         window.qTree = {};
         savedTests.forEach(t => {
-            let p = window.parseHack(t.topic); let b = p.board||t.exam||"General Exam"; let e = t.exam||"Mock Test";
-            let c = p.cat||"Mock Tests"; let s = p.subcat||t.subject||t.sub||"Subject";
-            if(!window.qTree[b]) window.qTree[b]={}; if(!window.qTree[b][e]) window.qTree[b][e]={}; if(!window.qTree[b][e][c]) window.qTree[b][e][c]=new Set();
+            let p = window.parseHack(t.topic); 
+            let b = p.board||t.exam||"General Exam"; 
+            let e = t.exam||"Mock Test";
+            let c = p.cat||"Mock Tests"; 
+            let s = p.subcat||t.subject||t.sub||"Subject";
+            
+            if(!window.qTree[b]) window.qTree[b]={}; 
+            if(!window.qTree[b][e]) window.qTree[b][e]={}; 
+            if(!window.qTree[b][e][c]) window.qTree[b][e][c]=new Set();
             window.qTree[b][e][c].add(s);
         });
-        let qb = document.getElementById('quick-board'); qb.innerHTML = '<option value="">1. Select Board</option>';
+        
+        let qb = document.getElementById('quick-board'); 
+        qb.innerHTML = '<option value="">1. Select Board</option>';
         for(let b in window.qTree) { qb.innerHTML += `<option value="${b}">${b}</option>`; }
+        
         document.getElementById('quick-exam').innerHTML='<option value="">2. Select Exam</option>';
         document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>';
         document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
@@ -266,11 +300,13 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     window.fillQuick = function(level) {
         let bVal=document.getElementById('quick-board').value; let eVal=document.getElementById('quick-exam').value;
         let cVal=document.getElementById('quick-cat').value; let sVal=document.getElementById('quick-sub').value;
+        
         if(level === 'board') {
             document.getElementById('a-board').value = bVal; window.autoFillLogo();
             let qe=document.getElementById('quick-exam'); qe.innerHTML='<option value="">2. Select Exam</option>';
             if(bVal && window.qTree[bVal]) { for(let e in window.qTree[bVal]) { qe.innerHTML+=`<option value="${e}">${e}</option>`; } }
-            document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>'; document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
+            document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>'; 
+            document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
         } else if(level === 'exam') {
             document.getElementById('a-exam').value = eVal;
             let qc=document.getElementById('quick-cat'); qc.innerHTML='<option value="">3. Select Category</option>';
@@ -287,7 +323,8 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
 
     window.autoFillLogo = function() {
         let eName = document.getElementById('a-board').value.trim().toLowerCase(); if(!eName) return;
-        let savedTests = window.globalActiveTests.length > 0 ? window.globalActiveTests : JSON.parse(localStorage.getItem('myMockTests')) || []; 
+        let savedTests = window.globalActiveTests || [];
+        if(savedTests.length === 0) savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
         for(let i=0; i<savedTests.length; i++) {
             let p = window.parseHack(savedTests[i].topic); let bName = (p.board||savedTests[i].exam||"").toLowerCase();
             if(bName===eName && p.logo) { document.getElementById('a-logo').value=p.logo; return; }
@@ -327,7 +364,9 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         window.showCustomConfirm("Warning",`Delete icon '${oldName}' and ALL tests?`,()=>{
             let savedTests=JSON.parse(localStorage.getItem('myMockTests'))||[];
             let newTests=savedTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")!==oldName;});
-            localStorage.setItem('myMockTests',JSON.stringify(newTests)); window.showCustomAlert("Deleted",`Deleted successfully.`,"🗑️"); window.loadAdminIcons(); window.fetchActiveTests();
+            localStorage.setItem('myMockTests',JSON.stringify(newTests)); 
+            window.showCustomAlert("Deleted",`Deleted locally. Google Sheet se in tests ko manually delete karna padega!`, "🗑️"); 
+            window.loadAdminIcons(); window.fetchActiveTests();
         });
     };
 
@@ -338,7 +377,8 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     };
 
     window.showModal = function(icon, title, desc, showInput, onOk, onCancel) {
-        let m=document.getElementById('custom-modal'); m.style.display='flex'; document.getElementById('modal-icon').innerText=icon; document.getElementById('modal-title').innerText=title; document.getElementById('modal-desc').innerHTML=desc;
+        let m=document.getElementById('custom-modal'); m.style.display='flex'; 
+        document.getElementById('modal-icon').innerText=icon; document.getElementById('modal-title').innerText=title; document.getElementById('modal-desc').innerHTML=desc;
         let inp=document.getElementById('modal-input'); if(showInput){inp.style.display='block';inp.value='';inp.focus();}else{inp.style.display='none';}
         let bc=document.getElementById('modal-btn-cancel'); if(onCancel){bc.style.display='block';bc.onclick=()=>{window.closeModal();onCancel();};}else{bc.style.display='none';}
         let bo=document.getElementById('modal-btn-ok'); bo.onclick=()=>{let v=inp.value;window.closeModal();if(onOk)onOk(v);};
@@ -464,7 +504,9 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         let list=document.getElementById('st-folder-view'); list.style.display='flex'; list.style.justifyContent='center'; list.style.flexWrap='wrap'; list.style.gap='15px';
         let boardTests=window.globalActiveTests.filter(t=> (window.parseHack(t.topic).board||t.exam||"General Exam")===boardName);
         let subExams=[...new Set(boardTests.map(t=>t.exam||boardName))]; let html="";
-        subExams.forEach(subEx=>{html+=`<div class="folder-card" onclick="window.showAppLayout('${boardName}', '${subEx}')"><div class="folder-icon">🎓</div><h4 class="folder-title">${subEx}</h4></div>`;});
+        subExams.forEach(subEx=>{
+            html+=`<div class="exam-card-l2" onclick="window.showAppLayout('${boardName}', '${subEx}')"><div class="exam-card-l2-icon">🎓</div><h4 class="exam-card-l2-title">${subEx}</h4></div>`;
+        });
         list.innerHTML=html;
     };
 
@@ -516,7 +558,7 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         let html=`<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px;"><h3 style="margin:0;color:#1f4e79;">${titleText}</h3>`;
         if(subjectName!=='ALL') html+=`<button class="btn btn-outline" style="margin:0;padding:4px 10px;font-size:12px;width:auto;" onclick="window.showAppLayout('${boardName}','${subExamName}','${activeCat}')">🔙 Back</button>`;
         html+=`</div><div style="display:flex;flex-wrap:wrap;gap:15px;">`;
-        if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found in this category.</p>`;
+        if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found.</p>`;
         testsToRender.forEach(t=>{
             let p=window.parseHack(t.topic); let currentSub=p.subcat||t.subject||t.sub||"General"; let isFreeStatus=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); let priceText=isFreeStatus?"Free":"₹"+t.price;
             let displayTopic=p.topic||p.title||t.subject||"Test"; let qsCount=p.qs||t.qs||0; if(!qsCount||qsCount===0||qsCount==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qsCount=t.questions.length;else if(t.rawText){let match=t.rawText.match(/!!\s*\d+\s*!/g);if(match)qsCount=match.length;}} if(!qsCount)qsCount=0;
@@ -536,10 +578,14 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
     window.switchAdminTab = function(tab) {
         if(tab==='create'){
             document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
-            document.getElementById('admin-create-section').style.display='block'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='none'; window.initQuickFill();
+            document.getElementById('admin-create-section').style.display='block'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='none'; 
+            
+            // Reset Edit Mode
             let btn = document.getElementById('btn-generate');
             btn.innerText = "🚀 Generate / Update Test";
             btn.style.background = "#1f4e79"; 
+            
+            window.initQuickFill();
         } else if (tab==='manage') {
             document.getElementById('tab-manage').classList.add('active'); document.getElementById('tab-create').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
             document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='block'; document.getElementById('admin-icons-section').style.display='none'; window.renderDashboard();
@@ -642,7 +688,17 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         btn.style.background = "#f39c12"; 
     };
 
-    window.deleteTest = function(idx) { window.showCustomConfirm("Delete Test","Delete this test permanently?",()=>{let sT=JSON.parse(localStorage.getItem('myMockTests'))||[];sT.splice(idx,1);localStorage.setItem('myMockTests',JSON.stringify(sT));window.renderDashboard();},"🗑️"); };
+    window.deleteTest = function(idx) { 
+        window.showCustomConfirm("Delete Test", "Test local memory se delete ho jayega. Permanently delete karne ke liye Google Sheet se is Test Code ki row hata dein.", () => {
+            let sT=JSON.parse(localStorage.getItem('myMockTests'))||[];
+            let code = sT[idx].code;
+            sT.splice(idx,1);
+            localStorage.setItem('myMockTests',JSON.stringify(sT));
+            window.renderDashboard();
+            window.showCustomAlert("Deleted", `Test Code: ${code} locally deleted. Please delete it from Google Sheet too!`, "🗑️");
+        }, "🗑️"); 
+    };
+
     window.clearAdminMemory = function(){ window.showCustomConfirm("Clear Memory","Clear ALL saved tests from local memory?",()=>{localStorage.removeItem('myMockTests');window.showExamsView();},"🗑️"); };
 
     window.adminDownloadPDF = function(idx, mode) {
@@ -657,19 +713,9 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
                 if(!window.studentInfo.name||window.studentInfo.phone.length!==10) { window.showCustomAlert("Required","Enter correct name and 10-digit number!","⚠️"); return; }
             }
             
-            let raw = window.examData.rawText;
-            if(raw) {
-                let lines = raw.split('\n'); let qs = []; let tq = null;
-                lines.forEach(l => {
-                    let txt = l.trim();
-                    if(txt.startsWith("!!")) { if(tq) qs.push(tq); tq = { q: txt.replace(/^!!\s*\d+\s*!\s*/, ''), opts:[], ans:"", exp:"", passage:"" }; }
-                    else if(txt.match(/^![A-D]/i) && tq) { tq.opts.push({id: txt.charAt(1).toUpperCase(), text: txt.substring(2).trim()}); }
-                    else if(txt.match(/^!!!\s*[A-D]/i) && tq) { tq.ans = window.getCleanAns(txt.replace(/^!!!\s*/i, '')); }
-                    else if(txt.startsWith("!!!!") && tq) { tq.exp = txt.replace(/^!!!!\s*/, ''); }
-                    else if(txt.match(/^!P/i) && tq) { tq.passage = txt.replace(/^!P\s*/i, ''); }
-                });
-                if(tq) qs.push(tq);
-                window.examData.questions = qs;
+            // 🔥 THE FIX: USE THE ROBUST PARSER 🔥
+            if(window.examData.rawText && (!window.examData.questions || window.examData.questions.length === 0)) {
+                window.examData.questions = window.parseRawQuestions(window.examData.rawText);
             }
 
             if(!window.examData.questions||window.examData.questions.length===0){
@@ -810,6 +856,16 @@ table.pdf-main-table{width:100%;border-collapse:collapse;background:transparent 
         pA.innerHTML=h+`</td></tr></tbody></table>`; let oT=document.title; document.title=`${window.examData.subject||window.examData.sub||"Subject"} ${dT?" "+dT:""}Ankush online test`; document.body.classList.add('print-pdf');
         setTimeout(()=>{window.print();setTimeout(()=>{document.body.classList.remove('print-pdf');document.title=oT;},1000);},800);
     };
+    
+    function newSearchParams(obj) {
+        let str = [];
+        for (let p in obj) {
+            if (obj.hasOwnProperty(p)) {
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            }
+        }
+        return str.join("&");
+    }
 </script>
 </body>
 </html>
