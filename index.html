@@ -32,22 +32,21 @@
         .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 15px; cursor: pointer; background: #e9ecef; border: none; outline: none; white-space: nowrap; min-width:130px; }
         .tab-btn.active { background: #1f4e79; color: white; }
 
-        /* 🔥 PREMIUM ICONS (LEVEL 1) 🔥 */
+        /* 🔥 OLD PERFECT ROUND ICONS 🔥 */
         .exam-grid { display: flex; flex-wrap: wrap; gap: 25px; justify-content: center; padding: 10px 0; width: 100%; }
         .exam-icon-card { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; cursor: pointer; width: 130px; transition: 0.3s; text-align: center; }
-        .exam-icon-wrapper { width: 90px; height: 90px; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #e0e0e0; transition: 0.3s; padding: 5px; box-sizing: border-box; }
-        .exam-icon-img { width: 100%; height: 100%; object-fit: contain; border-radius:50%;}
-        .exam-icon-card:hover .exam-icon-wrapper { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(31,78,121,0.15); border-color: #1f4e79; }
+        .exam-icon-card:hover { transform: translateY(-5px); }
+        .exam-icon-wrapper { width: 90px; height: 90px; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #e9ecef; padding: 5px; }
+        .exam-icon-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
         .exam-icon-title { font-size: 14px; font-weight: 900; color: #1f4e79; margin: 0; line-height: 1.3; text-transform: uppercase; }
 
-        /* 🔥 SUB-EXAM CARDS (LEVEL 2) 🔥 */
         .sub-exam-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; }
         .exam-card-l2 { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.04); width: 45%; min-width: 120px; max-width: 200px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
         .exam-card-l2:hover { transform: translateY(-5px); border-color: #1f4e79; box-shadow: 0 8px 15px rgba(31,78,121,0.1); }
         .exam-card-l2-icon { font-size: 35px; margin-bottom: 8px; }
         .exam-card-l2-title { font-size: 14px; font-weight: 800; color: #1f4e79; margin: 0; line-height: 1.2; text-transform: uppercase; }
 
-        .folder-card { background: #fff; border: 2px solid #1f4e79; border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); box-sizing: border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; width: 100%; }
+        .folder-card { background: #fff; border: 2px solid #1f4e79; border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 100%; box-sizing: border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; }
         .folder-card:hover { transform: translateY(-5px); background: #f8f9fa; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color:#f39c12; }
         .folder-icon { font-size: 45px; margin-bottom: 10px; } .folder-title { font-size: 16px; font-weight: 900; color: #1f4e79; margin: 0; line-height:1.3; }
         
@@ -72,15 +71,14 @@
         .dash-welcome-box { background:#fff; border:1px solid #ddd; padding:15px; border-radius:8px; margin-bottom:25px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
 
-        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
+        /* 🔥 EXAM CONTAINER LAYOUT & OLD FULL-WIDTH OPTIONS 🔥 */
         .exam-container { display: flex; flex-direction: column; background: #fff; } 
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         #q-scroll-area { padding-bottom: 10px; width: 100%; display: block; } 
         
-        /* 🔥 FIX: RESTORED OLD FULL-WIDTH OPTIONS UI 🔥 */
-        .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; width: 100%; }
+        .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; width: 100%; display:block;}
         .options-div { display: flex; flex-direction: column; width: 100%; }
         .opt-label { display: block; width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; box-sizing: border-box; }
         .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); } 
@@ -116,8 +114,10 @@
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
         .res-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: center; } .res-table th, .res-table td { border: 1px solid #ddd; padding: 8px; } .res-table th { background-color: #1f4e79; color: white; } .res-table tr:nth-child(even){background-color: #f2f2f2;}
 
+        /* ADMIN LOCK FIXED TO TOP INDEX */
         .admin-lock { position: fixed; bottom: 30px; right: 20px; font-size: 26px; cursor: pointer; opacity: 0.9; transition: 0.3s; z-index: 9999999 !important; background: #fff; border: 3px solid #1f4e79; border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); pointer-events: auto; }
         .admin-lock:hover { transform: scale(1.1); background: #1f4e79; color: white; border-color: white;}
+        
         .progress-bar-container{display:flex;height:25px;border-radius:8px;overflow:hidden;margin-top:15px;box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);width:100%;}
         .progress-segment{display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:12px;overflow:hidden;}
         
@@ -128,10 +128,7 @@
         /* 🔥 MOBILE RESPONSIVE FIXES (Force Grid for Icons) 🔥 */
         @media (max-width: 768px) {
             .left-panel { padding: 10px 10px 170px 10px; } 
-            
-            /* Admin Lock Fix for Mobile */
             .admin-lock { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 24px; z-index: 9999999 !important; pointer-events: auto; }
-            
             .fullscreen-overlay { padding: 0; } .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
             .app-layout { flex-direction: column; gap: 10px; }
             .sidebar-menu { width: 100%; display: flex; overflow-x: auto; white-space: nowrap; padding: 10px; position: static; box-sizing: border-box; border-radius: 6px; }
@@ -320,7 +317,7 @@
                 <input type="password" id="admin-pass" placeholder="Enter Password">
             </div>
             <button class="btn btn-blue" onclick="window.loginAdmin()">Login to Dashboard</button>
-            <button class="btn btn-outline" style="margin-top:10px;" onclick="location.reload()">⬅️ Back to Home</button>
+            <button class="btn btn-outline" style="margin-top:10px;" onclick="window.closeAndRedirect()">⬅️ Back to Home</button>
         </div>
     </div>
 
@@ -332,7 +329,7 @@
     <div id="error-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <h2 style="color:#dc3545;">❌ Failed to load test</h2>
         <p id="error-msg" style="color:#555; font-size:16px; margin-bottom: 20px;">Please check your internet connection.</p>
-        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="location.reload()">🔄 Refresh Page</button>
+        <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
     </div>
 
     <div id="admin-view" class="view-section">
@@ -601,6 +598,7 @@
 <div id="print-area"></div>
 
 <script>
+    // VARS
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkLyWDK1d8ZXq9pYSiW32UFCeOFxRVPjegW2S1u42AyfI5OqL6nuedNAQbOrqyW8OB9g/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
     const HIDDEN_TESTS = []; 
@@ -608,13 +606,13 @@
     window.examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [], category: "Mock Tests", logo: "" };
     window.userAnswers = []; window.qStatus = []; window.currentQ = 0;
     
-    // STUDENT INFO LOCAL STORAGE OBJECT
     window.studentInfo = { name: "", email: "", phone: "", isPremium: "FALSE", score: 0, right: 0, wrong: 0, blank: 0, time: 0, attempt: 1 };
     
     window.globalTimer = null; window.qTimer = null; window.globalTimeLeft = 0; window.qTimeLeft = 0; window.totalTimeSpent = 0;
     window.isReattemptMode = false; window.currentGeneratedPass = ""; 
     window.globalActiveTests = []; window.adminUnifiedTests = []; window.currentAnalysisArray = []; window.currentAnalysisIndex = 0; window.currentAnalysisType = "";
 
+    // UTILS
     window.toggleAdminLock = function(show) {
         let lock = document.getElementById('admin-lock-btn');
         if(lock) lock.style.display = show ? 'flex' : 'none';
@@ -633,7 +631,23 @@
     window.showCustomPrompt = function(t, m, onYes, i="🔒") { window.showModal(i, t, m, true, onYes, ()=>{}); };
     window.closeAndRedirect = function() { window.location.href = BASE_URL; };
 
-    // 🔥 PREMIUM UNLOCK MODAL 🔥
+    window.parseHack = function(raw) {
+        let res = { topic: raw || "", qs: 0, cat: "Mock Tests", logo: "", board: "", subcat: "" };
+        if(!raw) return res;
+        if(raw.includes("|||QS:")) {
+            let p1 = raw.split("|||QS:"); res.topic = p1[0]; res.subcat = p1[0]; 
+            let r1 = p1[1] || "";
+            let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/); if (matchQs) res.qs = matchQs[1];
+            let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/); if (matchCat) res.cat = matchCat[1];
+            let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/); if (matchLogo) res.logo = matchLogo[1];
+            let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/); if (matchBoard) res.board = matchBoard[1];
+            let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/); if (matchExam) res.exam = matchExam[1];
+            let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/); if (matchSubcat) res.subcat = matchSubcat[1];
+            return res;
+        } else { res.topic = raw; res.subcat = raw; return res; }
+    };
+
+    // AUTH
     window.showPremiumModal = function() {
         let msg = `To unlock ALL Premium Tests & PDFs on MockSarthi, upgrade to PRO.<br><br>
         <b>Scan QR or Pay via UPI:</b><br>
@@ -751,27 +765,265 @@
         }
     };
 
-    window.parseHack = function(raw) {
-        let res = { topic: raw || "", qs: 0, cat: "Mock Tests", logo: "", board: "", subcat: "" };
-        if(!raw) return res;
-        if(raw.includes("|||QS:")) {
-            let p1 = raw.split("|||QS:"); res.topic = p1[0]; res.subcat = p1[0]; 
-            let r1 = p1[1] || "";
-            let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/); if (matchQs) res.qs = matchQs[1];
-            let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/); if (matchCat) res.cat = matchCat[1];
-            let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/); if (matchLogo) res.logo = matchLogo[1];
-            let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/); if (matchBoard) res.board = matchBoard[1];
-            let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/); if (matchExam) res.exam = matchExam[1];
-            let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/); if (matchSubcat) res.subcat = matchSubcat[1];
-            return res;
-        } else { res.topic = raw; res.subcat = raw; return res; }
+    // ONLOAD
+    window.onload = function() {
+        clearInterval(window.globalTimer); clearInterval(window.qTimer);
+        document.querySelectorAll('.view-section').forEach(v=>v.classList.remove('active-view'));
+        document.getElementById('student-top-bar').style.display='none';
+        
+        if(document.getElementById('a-rawdata')) document.getElementById('a-rawdata').addEventListener('input', window.updateQsCount);
+        
+        let savedUser = localStorage.getItem('mockSarthiUser');
+        let isLoggedIn = false;
+        if(savedUser) {
+            try {
+                window.studentInfo = JSON.parse(savedUser);
+                isLoggedIn = true;
+                document.getElementById('dash-user-name').innerText = window.studentInfo.name;
+                if(window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true) {
+                    let badge = document.getElementById('premium-badge');
+                    badge.innerText = "⭐ PRO ACCOUNT";
+                    badge.style.background = "#f39c12";
+                }
+            } catch(e){}
+        }
+        
+        const urlParams = new URLSearchParams(window.location.search); const testCode = urlParams.get('test');
+        
+        if(testCode) {
+            if(!isLoggedIn) {
+                localStorage.setItem('pendingTestCode', testCode);
+                document.getElementById('student-auth-view').classList.add('active-view');
+                window.toggleAdminLock(false);
+            } else {
+                document.getElementById('loading-view').classList.add('active-view');
+                window.toggleAdminLock(false);
+                let script = document.createElement('script'); 
+                script.src = SCRIPT_URL+"?action=getTest&testCode="+testCode+"&callback=handleTestLoad&t="+new Date().getTime();
+                script.onerror = ()=> { document.getElementById('loading-view').classList.remove('active-view'); window.showErrorView("❌ Network Error! Please check your connection."); };
+                document.body.appendChild(script);
+            }
+        } else {
+            if(isLoggedIn) {
+                document.getElementById('student-dashboard-view').classList.add('active-view'); 
+                window.switchStudentTab('active');
+            } else {
+                document.getElementById('student-auth-view').classList.add('active-view');
+            }
+        }
     };
 
-    const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
-    const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-    const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
-    const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
-    const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
+    // TEST ENTRY
+    window.handleTestLoad = function(data) {
+        if(data.error) return window.showErrorView("❌ Test not found!"); if(data.isActive===false) return window.showErrorView("❌ Test inactive.");
+        window.examData=data; window.examData.marks=data.marks||2; window.examData.neg=data.neg||0; window.examData.totTime=data.totTime||0; window.examData.qTime=data.qTime||0;
+        window.examData.isFree=(data.isFree===true||String(data.isFree).toLowerCase()==="true");
+        
+        let p=window.parseHack(window.examData.topic); document.title=`${window.examData.subject||window.examData.sub||"Subject"} ${p.topic?p.topic+" ":""}MockSarthi test`;
+        window.setupLoginScreen();
+    };
+
+    window.setupLoginScreen = function() {
+        document.getElementById('loading-view').classList.remove('active-view'); 
+        document.getElementById('login-view').classList.add('active-view');
+        document.getElementById('specific-test-login').style.display='block'; window.toggleAdminLock(false);
+        
+        document.getElementById('head-exam-name').innerText=window.examData.exam; 
+        document.getElementById('test-entry-name').innerText=window.studentInfo.name || "Student";
+        document.getElementById('disp-code').innerText=window.examData.code; 
+        document.getElementById('disp-marks').innerText=window.examData.marks; 
+        document.getElementById('disp-neg').innerText=window.examData.neg;
+        
+        let tInfo=""; if(window.examData.totTime>0) tInfo+=`Total Time: ${window.examData.totTime} Mins | `; if(window.examData.qTime>0) tInfo+=`Per Q: ${window.examData.qTime} Secs`; 
+        document.getElementById('disp-time-info').innerText=tInfo;
+        
+        let isFreeStatus = window.examData.isFree;
+        let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
+        
+        let actionArea = document.getElementById('test-action-area');
+        let pdfActionArea = document.getElementById('pdf-action-area');
+
+        if(isFreeStatus || isPremiumUser) {
+            actionArea.innerHTML = `<button class="btn" onclick="window.startExam(false)">Start Test Now 🚀</button>`;
+            document.getElementById('free-instructions').style.display = 'block';
+            document.getElementById('paid-instructions').style.display = 'none';
+            pdfActionArea.innerHTML = `<button class="btn btn-pdf" style="margin-top:10px;" onclick="window.executePDFPrint(window.studentInfo.name || 'Student', 'full')">📥 Download Full PDF</button>`;
+        } else {
+            actionArea.innerHTML = `<button class="btn" style="background:#f39c12; color:#000;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
+            document.getElementById('free-instructions').style.display = 'none';
+            document.getElementById('paid-instructions').style.display = 'block';
+            document.getElementById('disp-price').innerText = window.examData.price;
+            pdfActionArea.innerHTML = `<button class="btn btn-outline" style="margin-top:10px; border-color:#f39c12; color:#f39c12;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
+        }
+        
+        for(let i=0;i<window.examData.questions.length;i++){window.userAnswers[i]=null;window.qStatus[i]=0;}
+    };
+
+    // STUDENT DASHBOARD
+    window.switchStudentTab = function(tab) {
+        window.toggleAdminLock(true);
+        if(tab==='active'){
+            document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
+            document.getElementById('st-active-section').style.display='block'; document.getElementById('st-history-section').style.display='none'; window.fetchActiveTests();
+        } else {
+            document.getElementById('tab-st-history').classList.add('active'); document.getElementById('tab-st-active').classList.remove('active');
+            document.getElementById('st-active-section').style.display='none'; document.getElementById('st-history-section').style.display='block';
+            if(window.studentInfo && window.studentInfo.phone) {
+                document.getElementById('hist-phone').value = window.studentInfo.phone;
+                document.getElementById('hist-phone').style.display = 'none';
+                document.querySelector('#st-history-section .btn-blue').style.display = 'none';
+                window.fetchStudentHistory();
+            }
+        }
+    };
+
+    window.fetchActiveTests = function() {
+        document.getElementById('st-active-loader').style.display='block'; document.getElementById('st-folder-view').innerHTML='';
+        if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
+        
+        let script=document.createElement('script'); 
+        script.src=SCRIPT_URL+"?action=getActiveTests&callback=handleActiveTests&t="+new Date().getTime(); 
+        script.onerror = () => { document.getElementById('st-active-loader').style.display='none'; window.showCustomAlert("Error", "Could not connect to database."); };
+        document.body.appendChild(script);
+    };
+    
+    window.handleActiveTests = function(data) {
+        document.getElementById('st-active-loader').style.display='none';
+        let serverTests=data.tests||[]; 
+        window.globalActiveTests = serverTests; 
+        
+        if(document.getElementById('admin-manage-section').style.display==='block') window.renderDashboard(); 
+        else window.showExamsView();
+    };
+
+    window.showExamsView = function() {
+        document.getElementById('breadcrumb-container').style.display='none'; 
+        if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
+        
+        let allTests = window.globalActiveTests;
+        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
+        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
+        
+        let list=document.getElementById('st-folder-view'); list.style.display='flex';
+        let boards=[...new Set(allTests.map(t=>window.parseHack(t.topic).board||t.exam||"General Exam"))];
+        let examLogos={}; allTests.forEach(t=>{let p=window.parseHack(t.topic); let bName=p.board||t.exam||"General Exam"; if(p.logo) examLogos[bName]=p.logo;});
+        
+        if(boards.length===0){list.innerHTML="<p style='width:100%;text-align:center;'>No tests available.</p>";return;}
+        let html=""; boards.forEach(bName=>{
+            let iconHtml=examLogos[bName]?`<img src="${examLogos[bName]}" class="exam-icon-img">`:`<div class="exam-icon-img" style="font-size:40px;background:#e9ecef;">🏛️</div>`;
+            html+=`<div class="exam-icon-card" onclick="window.showSubExamsView('${bName}')"><div class="exam-icon-wrapper">${iconHtml}</div><h4 class="exam-icon-title">${bName}</h4></div>`;
+        });
+        list.innerHTML=`<div class="exam-grid">${html}</div>`;
+    };
+
+    window.showSubExamsView = function(boardName) {
+        let bc=document.getElementById('breadcrumb-container'); bc.style.display='flex'; bc.innerHTML=`<span class="bc-link" onclick="window.showExamsView()">🏠 Home</span> <span>👉</span> <span>${boardName}</span>`;
+        if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
+        let list=document.getElementById('st-folder-view'); list.style.display='flex'; list.style.justifyContent='center'; list.style.flexWrap='wrap'; list.style.gap='15px';
+        
+        let allTests = window.globalActiveTests;
+        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
+        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
+
+        let boardTests=allTests.filter(t=> (window.parseHack(t.topic).board||t.exam||"General Exam")===boardName);
+        let subExams=[...new Set(boardTests.map(t=>t.exam||boardName))]; let html=`<div class="sub-exam-grid">`;
+        subExams.forEach(subEx=>{
+            html+=`<div class="exam-card-l2" onclick="window.showAppLayout('${boardName}', '${subEx}')"><div class="exam-card-l2-icon">🎓</div><h4 class="exam-card-l2-title">${subEx}</h4></div>`;
+        });
+        html+=`</div>`;
+        list.innerHTML=html;
+    };
+
+    window.showAppLayout = function(boardName, subExamName, activeCat=null) {
+        let bc=document.getElementById('breadcrumb-container'); bc.innerHTML=`<span class="bc-link" onclick="window.showExamsView()">🏠 Home</span> <span>👉</span> <span class="bc-link" onclick="window.showSubExamsView('${boardName}')">${boardName}</span> <span>👉</span> <span>${subExamName}</span>`;
+        document.getElementById('st-folder-view').style.display='none'; 
+        let layout=document.getElementById('st-app-layout'); layout.style.display='flex';
+        
+        let allTests = window.globalActiveTests;
+        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
+        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
+
+        let examTests=allTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName;});
+        
+        let coreCats=["Previous Year Papers", "Mock Tests", "Sectional Tests", "Chapter Tests"]; 
+        let allCatsInDB=[...new Set(examTests.map(t=>window.parseHack(t.topic).cat))];
+        allCatsInDB.forEach(c=>{if(!coreCats.includes(c))coreCats.push(c);});
+        
+        if(!activeCat) activeCat=coreCats[0];
+        
+        let icons={"Mock Tests":"📝","Previous Year Papers":"📜","Sectional Tests":"🧩","Chapter Tests":"📖"}; let sbHtml="";
+        coreCats.forEach(cat=>{
+            let icon=icons[cat]||"📁"; let isActive=(cat===activeCat)?"active":"";
+            let testCount=examTests.filter(t=>window.parseHack(t.topic).cat===cat).length;
+            sbHtml+=`<div class="sb-item ${isActive}" onclick="window.showAppLayout('${boardName}', '${subExamName}', '${cat}')"><span>${icon} ${cat}</span> <span style="background:rgba(0,0,0,0.08); padding:2px 8px; border-radius:12px; font-size:11px;">${testCount}</span></div>`;
+        });
+        document.getElementById('st-sidebar-menu').innerHTML=sbHtml;
+        window.renderContentArea(boardName, subExamName, activeCat, examTests);
+    };
+
+    window.renderContentArea = function(boardName, subExamName, activeCat, examTests) {
+        let contentArea=document.getElementById('st-content-area'); let catTests=examTests.filter(t=>window.parseHack(t.topic).cat===activeCat); let html="";
+        if(activeCat==="Chapter Tests") {
+            let subjects=[...new Set(catTests.map(t=>window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies"))];
+            html=`<h3 style="margin:0 0 15px 0;color:#1f4e79;border-bottom:2px solid #eee;padding-bottom:10px;">Select Subject</h3><div class="subject-grid">`;
+            if(subjects.length===0) html+=`<p style="color:#777;width:100%;">No subjects added yet.</p>`;
+            subjects.forEach(sub=>{
+                let count=catTests.filter(t=>(window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies")===sub).length;
+                html+=`<div class="folder-card" onclick="window.renderDirectTests('${boardName}','${subExamName}','${activeCat}','${sub}')"><div class="folder-icon" style="font-size:30px;">📚</div><h4 class="folder-title" style="font-size:14px;">${sub}</h4><p style="margin:5px 0 0 0;font-size:11px;color:#777;">${count} Tests</p></div>`;
+            }); html+=`</div>`; contentArea.innerHTML=html;
+        } else { window.renderDirectTests(boardName, subExamName, activeCat, 'ALL', catTests); }
+    };
+
+    window.renderDirectTests = function(boardName, subExamName, activeCat, subjectName, preFilteredTests=null) {
+        let contentArea=document.getElementById('st-content-area'); let testsToRender=preFilteredTests;
+        if(!testsToRender) {
+            let allTests = window.globalActiveTests;
+            let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
+            localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
+
+            let examTests=allTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName && p.cat===activeCat;});
+            testsToRender=examTests.filter(t=>(window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies")===subjectName);
+        }
+        let titleText=(subjectName==='ALL')?`${activeCat}`:`${subjectName} - ${activeCat}`;
+        let html=`<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px;"><h3 style="margin:0;color:#1f4e79;">${titleText}</h3>`;
+        if(subjectName!=='ALL') html+=`<button class="btn btn-outline" style="margin:0;padding:4px 10px;font-size:12px;width:auto;" onclick="window.showAppLayout('${boardName}','${subExamName}','${activeCat}')">🔙 Back</button>`;
+        html+=`</div><div style="display:flex;flex-wrap:wrap;gap:15px;">`;
+        if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found in this category.</p>`;
+        
+        let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
+
+        testsToRender.forEach(t=>{
+            let p=window.parseHack(t.topic); let currentSub=p.subcat||t.subject||t.sub||"General"; 
+            let isFreeStatus=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); 
+            let priceText=isFreeStatus?"Free":"₹"+t.price;
+            let displayTopic=p.topic||p.title||t.subject||"Test"; let qsCount=p.qs||t.qs||0; if(!qsCount||qsCount===0||qsCount==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qsCount=t.questions.length;else if(t.rawText){let match=t.rawText.match(/!!\s*\d+\s*!/g);if(match)qsCount=match.length;}} if(!qsCount)qsCount=0;
+            
+            let actionBtn = "";
+            if(isFreeStatus || isPremiumUser) {
+                actionBtn = `<button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>`;
+            } else {
+                actionBtn = `<button class="btn" style="background:#f39c12; color:#000; margin:0;padding:6px;font-size:13px;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
+            }
+
+            html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">${priceText}</span></div>${actionBtn}</div>`;
+        }); html+=`</div>`; contentArea.innerHTML=html;
+    };
+
+    // ADMIN
+    window.switchAdminTab = function(tab) {
+        if(tab==='create'){
+            document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
+            document.getElementById('admin-create-section').style.display='block'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='none'; 
+            let btn = document.getElementById('btn-generate'); btn.innerText = "🚀 Generate / Update Test"; btn.style.background = "#1f4e79"; window.initQuickFill();
+        } else if (tab==='manage') {
+            document.getElementById('tab-manage').classList.add('active'); document.getElementById('tab-create').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
+            document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='block'; document.getElementById('admin-icons-section').style.display='none'; 
+            window.fetchActiveTests(); // Fetches live tests then calls renderDashboard
+        } else {
+            document.getElementById('tab-icons').classList.add('active'); document.getElementById('tab-create').classList.remove('active'); document.getElementById('tab-manage').classList.remove('active');
+            document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='block'; window.loadAdminIcons();
+        }
+    };
 
     window.initQuickFill = function() {
         let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.globalActiveTests;
@@ -899,140 +1151,6 @@
         } else { window.showCustomAlert("Error", "❌ Invalid Admin ID or Password!", "❌"); }
     };
 
-    window.showErrorView = function(msg) {
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-        document.getElementById('error-msg').innerText = msg; 
-        document.getElementById('error-view').classList.add('active-view');
-    };
-
-    window.onload = function() {
-        clearInterval(window.globalTimer); clearInterval(window.qTimer);
-        document.querySelectorAll('.view-section').forEach(v=>v.classList.remove('active-view'));
-        document.getElementById('student-top-bar').style.display='none';
-        
-        if(document.getElementById('a-rawdata')) document.getElementById('a-rawdata').addEventListener('input', window.updateQsCount);
-        
-        let savedUser = localStorage.getItem('mockSarthiUser');
-        let isLoggedIn = false;
-        if(savedUser) {
-            try {
-                window.studentInfo = JSON.parse(savedUser);
-                isLoggedIn = true;
-                document.getElementById('dash-user-name').innerText = window.studentInfo.name;
-                if(window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true) {
-                    let badge = document.getElementById('premium-badge');
-                    badge.innerText = "⭐ PRO ACCOUNT";
-                    badge.style.background = "#f39c12";
-                }
-            } catch(e){}
-        }
-        
-        const urlParams = new URLSearchParams(window.location.search); const testCode = urlParams.get('test');
-        
-        if(testCode) {
-            if(!isLoggedIn) {
-                localStorage.setItem('pendingTestCode', testCode);
-                document.getElementById('student-auth-view').classList.add('active-view');
-                window.toggleAdminLock(false);
-            } else {
-                document.getElementById('loading-view').classList.add('active-view');
-                window.toggleAdminLock(false);
-                let script = document.createElement('script'); 
-                script.src = SCRIPT_URL+"?action=getTest&testCode="+testCode+"&callback=handleTestLoad&t="+new Date().getTime();
-                script.onerror = ()=> { document.getElementById('loading-view').classList.remove('active-view'); window.showErrorView("❌ Network Error! Please check your connection."); };
-                document.body.appendChild(script);
-            }
-        } else {
-            if(isLoggedIn) {
-                document.getElementById('student-dashboard-view').classList.add('active-view'); 
-                window.switchStudentTab('active');
-            } else {
-                document.getElementById('student-auth-view').classList.add('active-view');
-            }
-        }
-    };
-
-    window.handleTestLoad = function(data) {
-        if(data.error) return window.showErrorView("❌ Test not found!"); if(data.isActive===false) return window.showErrorView("❌ Test inactive.");
-        window.examData=data; window.examData.marks=data.marks||2; window.examData.neg=data.neg||0; window.examData.totTime=data.totTime||0; window.examData.qTime=data.qTime||0;
-        window.examData.isFree=(data.isFree===true||String(data.isFree).toLowerCase()==="true");
-        
-        let p=window.parseHack(window.examData.topic); document.title=`${window.examData.subject||window.examData.sub||"Subject"} ${p.topic?p.topic+" ":""}Ankush online test`;
-        window.setupLoginScreen();
-    };
-
-    window.setupLoginScreen = function() {
-        document.getElementById('loading-view').classList.remove('active-view'); 
-        document.getElementById('login-view').classList.add('active-view');
-        document.getElementById('specific-test-login').style.display='block'; window.toggleAdminLock(false);
-        
-        document.getElementById('head-exam-name').innerText=window.examData.exam; 
-        document.getElementById('test-entry-name').innerText=window.studentInfo.name || "Student";
-        document.getElementById('disp-code').innerText=window.examData.code; 
-        document.getElementById('disp-marks').innerText=window.examData.marks; 
-        document.getElementById('disp-neg').innerText=window.examData.neg;
-        
-        let tInfo=""; if(window.examData.totTime>0) tInfo+=`Total Time: ${window.examData.totTime} Mins | `; if(window.examData.qTime>0) tInfo+=`Per Q: ${window.examData.qTime} Secs`; 
-        document.getElementById('disp-time-info').innerText=tInfo;
-        
-        let isFreeStatus = window.examData.isFree;
-        let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
-        
-        let actionArea = document.getElementById('test-action-area');
-        let pdfActionArea = document.getElementById('pdf-action-area');
-
-        if(isFreeStatus || isPremiumUser) {
-            actionArea.innerHTML = `<button class="btn" onclick="window.startExam(false)">Start Test Now 🚀</button>`;
-            document.getElementById('free-instructions').style.display = 'block';
-            document.getElementById('paid-instructions').style.display = 'none';
-            pdfActionArea.innerHTML = `<button class="btn btn-pdf" style="margin-top:10px;" onclick="window.executePDFPrint(window.studentInfo.name || 'Student', 'full')">📥 Download Full PDF</button>`;
-        } else {
-            actionArea.innerHTML = `<button class="btn" style="background:#f39c12; color:#000;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
-            document.getElementById('free-instructions').style.display = 'none';
-            document.getElementById('paid-instructions').style.display = 'block';
-            document.getElementById('disp-price').innerText = window.examData.price;
-            pdfActionArea.innerHTML = `<button class="btn btn-outline" style="margin-top:10px; border-color:#f39c12; color:#f39c12;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
-        }
-        
-        for(let i=0;i<window.examData.questions.length;i++){window.userAnswers[i]=null;window.qStatus[i]=0;}
-    };
-
-    window.switchStudentTab = function(tab) {
-        window.toggleAdminLock(true);
-        if(tab==='active'){
-            document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
-            document.getElementById('st-active-section').style.display='block'; document.getElementById('st-history-section').style.display='none'; window.fetchActiveTests();
-        } else {
-            document.getElementById('tab-st-history').classList.add('active'); document.getElementById('tab-st-active').classList.remove('active');
-            document.getElementById('st-active-section').style.display='none'; document.getElementById('st-history-section').style.display='block';
-            if(window.studentInfo && window.studentInfo.phone) {
-                document.getElementById('hist-phone').value = window.studentInfo.phone;
-                document.getElementById('hist-phone').style.display = 'none';
-                document.querySelector('#st-history-section .btn-blue').style.display = 'none';
-                window.fetchStudentHistory();
-            }
-        }
-    };
-
-    window.fetchActiveTests = function() {
-        document.getElementById('st-active-loader').style.display='block'; document.getElementById('st-folder-view').innerHTML='';
-        if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
-        
-        let script=document.createElement('script'); 
-        script.src=SCRIPT_URL+"?action=getActiveTests&callback=handleActiveTests&t="+new Date().getTime(); 
-        script.onerror = () => { document.getElementById('st-active-loader').style.display='none'; window.showCustomAlert("Error", "Could not connect to database."); };
-        document.body.appendChild(script);
-    };
-    
-    window.handleActiveTests = function(data) {
-        document.getElementById('st-active-loader').style.display='none';
-        let serverTests=data.tests||[]; 
-        window.globalActiveTests = serverTests; 
-        
-        if(document.getElementById('admin-manage-section').style.display==='block') window.renderDashboard(); 
-        else window.showExamsView();
-    };
-
     window.renderDashboard = function() {
         let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         let dbTests = window.globalActiveTests || [];
@@ -1146,119 +1264,7 @@
         window.executePDFPrint(window.studentInfo.name,mode);
     };
 
-    window.showExamsView = function() {
-        document.getElementById('breadcrumb-container').style.display='none'; 
-        if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
-        
-        let allTests = window.globalActiveTests;
-        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
-        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
-        
-        let list=document.getElementById('st-folder-view'); list.style.display='flex';
-        let boards=[...new Set(allTests.map(t=>window.parseHack(t.topic).board||t.exam||"General Exam"))];
-        let examLogos={}; allTests.forEach(t=>{let p=window.parseHack(t.topic); let bName=p.board||t.exam||"General Exam"; if(p.logo) examLogos[bName]=p.logo;});
-        
-        if(boards.length===0){list.innerHTML="<p style='width:100%;text-align:center;'>No tests available.</p>";return;}
-        let html=""; boards.forEach(bName=>{
-            let iconHtml=examLogos[bName]?`<img src="${examLogos[bName]}" class="exam-icon-img">`:`<div class="exam-icon-img" style="font-size:40px;background:#e9ecef;">🏛️</div>`;
-            html+=`<div class="exam-icon-card" onclick="window.showSubExamsView('${bName}')"><div class="exam-icon-wrapper">${iconHtml}</div><h4 class="exam-icon-title">${bName}</h4></div>`;
-        });
-        list.innerHTML=`<div class="exam-grid">${html}</div>`;
-    };
-
-    window.showSubExamsView = function(boardName) {
-        let bc=document.getElementById('breadcrumb-container'); bc.style.display='flex'; bc.innerHTML=`<span class="bc-link" onclick="window.showExamsView()">🏠 Home</span> <span>👉</span> <span>${boardName}</span>`;
-        if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
-        let list=document.getElementById('st-folder-view'); list.style.display='flex'; list.style.justifyContent='center'; list.style.flexWrap='wrap'; list.style.gap='15px';
-        
-        let allTests = window.globalActiveTests;
-        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
-        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
-
-        let boardTests=allTests.filter(t=> (window.parseHack(t.topic).board||t.exam||"General Exam")===boardName);
-        let subExams=[...new Set(boardTests.map(t=>t.exam||boardName))]; let html=`<div class="sub-exam-grid">`;
-        subExams.forEach(subEx=>{
-            html+=`<div class="exam-card-l2" onclick="window.showAppLayout('${boardName}', '${subEx}')"><div class="exam-card-l2-icon">🎓</div><h4 class="exam-card-l2-title">${subEx}</h4></div>`;
-        });
-        html+=`</div>`;
-        list.innerHTML=html;
-    };
-
-    window.showAppLayout = function(boardName, subExamName, activeCat=null) {
-        let bc=document.getElementById('breadcrumb-container'); bc.innerHTML=`<span class="bc-link" onclick="window.showExamsView()">🏠 Home</span> <span>👉</span> <span class="bc-link" onclick="window.showSubExamsView('${boardName}')">${boardName}</span> <span>👉</span> <span>${subExamName}</span>`;
-        document.getElementById('st-folder-view').style.display='none'; 
-        let layout=document.getElementById('st-app-layout'); layout.style.display='flex';
-        
-        let allTests = window.globalActiveTests;
-        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
-        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
-
-        let examTests=allTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName;});
-        
-        let coreCats=["Previous Year Papers", "Mock Tests", "Sectional Tests", "Chapter Tests"]; 
-        let allCatsInDB=[...new Set(examTests.map(t=>window.parseHack(t.topic).cat))];
-        allCatsInDB.forEach(c=>{if(!coreCats.includes(c))coreCats.push(c);});
-        
-        if(!activeCat) activeCat=coreCats[0];
-        
-        let icons={"Mock Tests":"📝","Previous Year Papers":"📜","Sectional Tests":"🧩","Chapter Tests":"📖"}; let sbHtml="";
-        coreCats.forEach(cat=>{
-            let icon=icons[cat]||"📁"; let isActive=(cat===activeCat)?"active":"";
-            let testCount=examTests.filter(t=>window.parseHack(t.topic).cat===cat).length;
-            sbHtml+=`<div class="sb-item ${isActive}" onclick="window.showAppLayout('${boardName}', '${subExamName}', '${cat}')"><span>${icon} ${cat}</span> <span style="background:rgba(0,0,0,0.08); padding:2px 8px; border-radius:12px; font-size:11px;">${testCount}</span></div>`;
-        });
-        document.getElementById('st-sidebar-menu').innerHTML=sbHtml;
-        window.renderContentArea(boardName, subExamName, activeCat, examTests);
-    };
-
-    window.renderContentArea = function(boardName, subExamName, activeCat, examTests) {
-        let contentArea=document.getElementById('st-content-area'); let catTests=examTests.filter(t=>window.parseHack(t.topic).cat===activeCat); let html="";
-        if(activeCat==="Chapter Tests") {
-            let subjects=[...new Set(catTests.map(t=>window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies"))];
-            html=`<h3 style="margin:0 0 15px 0;color:#1f4e79;border-bottom:2px solid #eee;padding-bottom:10px;">Select Subject</h3><div class="subject-grid">`;
-            if(subjects.length===0) html+=`<p style="color:#777;width:100%;">No subjects added yet.</p>`;
-            subjects.forEach(sub=>{
-                let count=catTests.filter(t=>(window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies")===sub).length;
-                html+=`<div class="folder-card" onclick="window.renderDirectTests('${boardName}','${subExamName}','${activeCat}','${sub}')"><div class="folder-icon" style="font-size:30px;">📚</div><h4 class="folder-title" style="font-size:14px;">${sub}</h4><p style="margin:5px 0 0 0;font-size:11px;color:#777;">${count} Tests</p></div>`;
-            }); html+=`</div>`; contentArea.innerHTML=html;
-        } else { window.renderDirectTests(boardName, subExamName, activeCat, 'ALL', catTests); }
-    };
-
-    window.renderDirectTests = function(boardName, subExamName, activeCat, subjectName, preFilteredTests=null) {
-        let contentArea=document.getElementById('st-content-area'); let testsToRender=preFilteredTests;
-        if(!testsToRender) {
-            let allTests = window.globalActiveTests;
-            let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
-            localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
-
-            let examTests=allTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName && p.cat===activeCat;});
-            testsToRender=examTests.filter(t=>(window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies")===subjectName);
-        }
-        let titleText=(subjectName==='ALL')?`${activeCat}`:`${subjectName} - ${activeCat}`;
-        let html=`<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #eee;padding-bottom:10px;margin-bottom:15px;"><h3 style="margin:0;color:#1f4e79;">${titleText}</h3>`;
-        if(subjectName!=='ALL') html+=`<button class="btn btn-outline" style="margin:0;padding:4px 10px;font-size:12px;width:auto;" onclick="window.showAppLayout('${boardName}','${subExamName}','${activeCat}')">🔙 Back</button>`;
-        html+=`</div><div style="display:flex;flex-wrap:wrap;gap:15px;">`;
-        if(testsToRender.length===0) html+=`<p style="color:#777;width:100%;text-align:center;">No tests found in this category.</p>`;
-        
-        let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
-
-        testsToRender.forEach(t=>{
-            let p=window.parseHack(t.topic); let currentSub=p.subcat||t.subject||t.sub||"General"; 
-            let isFreeStatus=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); 
-            let priceText=isFreeStatus?"Free":"₹"+t.price;
-            let displayTopic=p.topic||p.title||t.subject||"Test"; let qsCount=p.qs||t.qs||0; if(!qsCount||qsCount===0||qsCount==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qsCount=t.questions.length;else if(t.rawText){let match=t.rawText.match(/!!\s*\d+\s*!/g);if(match)qsCount=match.length;}} if(!qsCount)qsCount=0;
-            
-            let actionBtn = "";
-            if(isFreeStatus || isPremiumUser) {
-                actionBtn = `<button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>`;
-            } else {
-                actionBtn = `<button class="btn" style="background:#f39c12; color:#000; margin:0;padding:6px;font-size:13px;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
-            }
-
-            html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">${priceText}</span></div>${actionBtn}</div>`;
-        }); html+=`</div>`; contentArea.innerHTML=html;
-    };
-
+    // EXAM ENGINE
     window.startExam = function(isRe) {
         try {
             if(window.examData.rawText && (!window.examData.questions || window.examData.questions.length === 0)) {
@@ -1351,6 +1357,7 @@
         .then(r=>r.json()).then(d=>{window.studentInfo.attempt=d.attempt||(window.isReattemptMode?"Reattempt":1);document.getElementById('rank-loader').style.display='none';let fR=(window.isReattemptMode&&d.totalStudents<=1)?"N/A":d.rank;window.drawReportCard(fR,d.totalStudents,mS);}).catch(()=>{document.getElementById('rank-loader').style.display='none';window.drawReportCard("N/A","N/A",mS);});
     };
 
+    // ANALYSIS
     window.showAnalysis = function(t) {
         window.currentAnalysisArray=[]; window.currentAnalysisType=t;
         window.examData.questions.forEach((q,i)=>{let u=window.userAnswers[i];let c=window.getCleanAns(q.ans);let g=window.getCleanAns(u);let iR=(g===c)&&(u!==null);let iB=u===null;let iW=!iB&&!iR;if((t==='right'&&iR)||(t==='wrong'&&iW)||(t==='blank'&&iB))window.currentAnalysisArray.push({q:q,originalIndex:i,uAns:u,isRight:iR,isBlank:iB});});
@@ -1372,6 +1379,7 @@
     window.prevAnalysis = function() { if(window.currentAnalysisIndex>0) { window.currentAnalysisIndex--; window.renderAnalysisSlide(); } }; 
     window.nextAnalysis = function() { if(window.currentAnalysisIndex<window.currentAnalysisArray.length-1) { window.currentAnalysisIndex++; window.renderAnalysisSlide(); } };
 
+    // RESULTS & PDF
     window.drawReportCard = function(rank, totalStudents, maxScore) {
         let cvs=document.getElementById('reportCard'); let ctx=cvs.getContext('2d'); ctx.fillStyle='#fdfdfd'; ctx.fillRect(0,0,800,650); ctx.fillStyle='#1f4e79'; ctx.fillRect(0,0,800,140); ctx.fillStyle='#ffffff'; ctx.textAlign='center'; ctx.font='bold 36px Arial'; ctx.fillText(window.examData.exam.toUpperCase(),400,50);
         let p=window.parseHack(window.examData.topic); let dT=p.topic||""; ctx.font='22px Arial'; ctx.fillText((window.examData.subject||window.examData.sub||"Subject")+(dT?" - "+dT:""),400,85); ctx.font='16px Arial'; ctx.fillStyle='#f39c12'; ctx.fillText("TEST CODE: "+window.examData.code,400,115);
@@ -1391,22 +1399,16 @@
     window.handleResultPDFClick = function() {
         let isFreeStatus = (window.examData.isFree === true || String(window.examData.isFree).toLowerCase() === "true");
         let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
-        
-        if(isFreeStatus || isPremiumUser) { 
-            window.executePDFPrint(window.studentInfo.name||"Student", 'full');
-        } else {
-            window.showPremiumModal();
-        }
+        if(isFreeStatus || isPremiumUser) { window.executePDFPrint(window.studentInfo.name||"Student", 'full'); } 
+        else { window.showPremiumModal(); }
     };
 
     window.directDownloadPDF = function() {
         let phone = window.studentInfo.phone || document.getElementById('pdf-phone').value;
         let isFreeStatus = (window.examData.isFree === true || String(window.examData.isFree).toLowerCase() === "true");
         let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
-        
-        if(isFreeStatus || isPremiumUser) {
-            window.executePDFPrint(window.studentInfo.name || "Student", 'full'); 
-        } else {
+        if(isFreeStatus || isPremiumUser) { window.executePDFPrint(window.studentInfo.name || "Student", 'full'); } 
+        else {
             let pass = document.getElementById('pdf-pass').value;
             if(!phone) { window.showCustomAlert("Required", "Please login or enter mobile!", "⚠️"); return; } 
             if(!window.checkPass(phone, pass)) { window.showCustomAlert("Error", "Incorrect password! Upgrade to PRO to bypass password.", "❌"); return; }
@@ -1419,10 +1421,8 @@
         let phone = window.studentInfo.phone || document.getElementById('pdf-phone').value;
         let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
         let isFreeStatus = (window.examData.isFree === true || String(window.examData.isFree).toLowerCase() === "true");
-        
-        if(isFreeStatus || isPremiumUser) {
-            window.executePDFPrint(window.studentInfo.name || "Student", 'full'); 
-        } else {
+        if(isFreeStatus || isPremiumUser) { window.executePDFPrint(window.studentInfo.name || "Student", 'full'); } 
+        else {
             if(!window.checkPass(phone, pass)) { window.showCustomAlert("Error", "Incorrect password! Upgrade to PRO to bypass password.", "❌"); return; }
             window.executePDFPrint(window.studentInfo.name || "Student", 'full'); 
         }
@@ -1438,9 +1438,25 @@
             q.opts.forEach(o=>{let inS="padding:2px 0;color:#000;";let oC=window.getCleanAns(o.id);if(mode!=='q_only'&&oC===cA){inS="background-color:#0f5132 !important;color:#fff !important;font-weight:bold;padding:2px 8px;border-radius:4px;display:inline-block;-webkit-print-color-adjust:exact;print-color-adjust:exact;";}h+=`<div class="opt-item"><span style="${inS}">${o.id}. ${o.text}</span></div>`;}); h+=`</div>`;
             if(mode!=='q_only'){if(window.userAnswers.length>0&&(document.getElementById('result-view').classList.contains('active-view')||window.studentInfo.name==="Ankush Kumar S/O Manoj Kumar")&&mode==='full'){let aC=(gA===cA)?"color:green;":"color:red;";let uD=(gA&&uA!=="N/A")?gA:"Skipped";h+=`<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span> <span style="margin-left:15px;font-weight:bold;font-size:16px;${aC}">Your Ans: ${uD}</span></div>`;}else{h+=`<div style="margin-top:5px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span></div>`;} if(mode==='full'&&q.exp){h+=`<div class="print-exp"><b>Explanation:</b><br>${q.exp}</div>`;}} h+=`</div>`;
         });
-        pA.innerHTML=h+`</td></tr></tbody></table>`; let oT=document.title; document.title=`${window.examData.subject||window.examData.sub||"Subject"} ${dT?" "+dT:""}Ankush online test`; document.body.classList.add('print-pdf');
+        pA.innerHTML=h+`</td></tr></tbody></table>`; let oT=document.title; document.title=`${window.examData.subject||window.examData.sub||"Subject"} ${dT?" "+dT:""}MockSarthi test`; document.body.classList.add('print-pdf');
         setTimeout(()=>{window.print();setTimeout(()=>{document.body.classList.remove('print-pdf');document.title=oT;},1000);},800);
     };
+
+    // HELPERS
+    window.togglePriceBox = function() { document.getElementById('price-box').style.display=(document.getElementById('a-pdf-type').value==='free')?'none':'block'; };
+    window.generateStrongPass = function(phone, key) { if(!key) key="ANK"; let mixed=key+phone+"PRO"; let num=0; for(let i=0;i<mixed.length;i++) num+=mixed.charCodeAt(i)*(i+1); let sym=['@','#','$','&','*']; let s1=sym[num%sym.length]; let s2=sym[(num*2)%sym.length]; let l1=String.fromCharCode(65+(num%26)); let l2=String.fromCharCode(97+((num*3)%26)); let p1=phone.length>=4?phone.substring(0,2):"99"; let p2=phone.length>=4?phone.slice(-2):"88"; return l1+s1+p1+l2+s2+p2+key.charAt(0).toUpperCase(); };
+    window.generatePass = function() { let phone=document.getElementById('gen-phone').value; let key=document.getElementById('gen-key').value.toUpperCase(); if(!key) return window.showCustomAlert("Error","Enter Secret Key!","⚠️"); if(phone.length<10) return document.getElementById('show-gen-pass').innerText="Enter 10-digit number!"; window.currentGeneratedPass=window.generateStrongPass(phone,key); document.getElementById('show-gen-pass').innerText="Password: "+window.currentGeneratedPass; document.getElementById('copy-pass-btn').style.display='inline-block'; };
+    window.copyGeneratedPass = function() { if(!window.currentGeneratedPass) return; navigator.clipboard.writeText(window.currentGeneratedPass).then(()=>{window.showCustomAlert("Success","✅ Password copied!","✅");}).catch(()=>{window.showCustomAlert("Error","Copy failed","❌");}); };
+    window.checkPass = function(ph, pa) { let isFree=(window.examData.isFree===true||String(window.examData.isFree).toLowerCase()==="true"); if(isFree) return true; return pa===window.generateStrongPass(ph,window.examData.key.toUpperCase()); };
+    window.getCleanAns = function(val) { if(!val) return ""; let match=val.toString().replace(/<[^>]*>/g,'').match(/[A-D]/i); return match?match[0].toUpperCase():""; };
+    
+    // SVG ICONS
+    const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+    const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
+    const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
+    const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
+    const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
+
 </script>
 </body>
 </html>
