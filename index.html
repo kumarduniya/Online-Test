@@ -40,7 +40,8 @@
         .exam-icon-card:hover .exam-icon-wrapper { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(31,78,121,0.15); border-color: #1f4e79; }
         .exam-icon-title { font-size: 14px; font-weight: 900; color: #1f4e79; margin: 0; line-height: 1.3; text-transform: uppercase; }
 
-        /* 🔥 NEW SMALLER EXAM CARDS (LEVEL 2) 🔥 */
+        /* 🔥 SUB-EXAM CARDS (LEVEL 2) 🔥 */
+        .sub-exam-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; }
         .exam-card-l2 { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.04); width: 45%; min-width: 120px; max-width: 200px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
         .exam-card-l2:hover { transform: translateY(-5px); border-color: #1f4e79; box-shadow: 0 8px 15px rgba(31,78,121,0.1); }
         .exam-card-l2-icon { font-size: 35px; margin-bottom: 8px; }
@@ -109,19 +110,22 @@
         @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
         .res-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; text-align: center; } .res-table th, .res-table td { border: 1px solid #ddd; padding: 8px; } .res-table th { background-color: #1f4e79; color: white; } .res-table tr:nth-child(even){background-color: #f2f2f2;}
 
-        .admin-lock { position: fixed; bottom: 30px; right: 20px; font-size: 26px; cursor: pointer; opacity: 0.9; transition: 0.3s; z-index: 999999; background: #fff; border: 3px solid #1f4e79; border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .admin-lock { position: fixed; bottom: 30px; right: 20px; font-size: 26px; cursor: pointer; opacity: 0.9; transition: 0.3s; z-index: 9999999 !important; background: #fff; border: 3px solid #1f4e79; border-radius: 50%; width: 55px; height: 55px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); pointer-events: auto; }
         .admin-lock:hover { transform: scale(1.1); background: #1f4e79; color: white; border-color: white;}
         .progress-bar-container{display:flex;height:25px;border-radius:8px;overflow:hidden;margin-top:15px;box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);width:100%;}
         .progress-segment{display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:12px;overflow:hidden;}
         
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-box { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popIn 0.3s ease; }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* 🔥 MOBILE RESPONSIVE FIXES 🔥 */
         @media (max-width: 768px) {
             .left-panel { padding: 10px 10px 170px 10px; } 
-            .admin-lock { bottom: 20px; right: 20px; width: 45px; height: 45px; font-size: 22px; }
+            
+            /* Admin Lock Fix for Mobile */
+            .admin-lock { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 24px; z-index: 9999999 !important; pointer-events: auto; }
+            
             .fullscreen-overlay { padding: 0; } .fs-container { border-radius: 0; min-height: 100vh; padding: 15px; }
             .app-layout { flex-direction: column; gap: 10px; }
             .sidebar-menu { width: 100%; display: flex; overflow-x: auto; white-space: nowrap; padding: 10px; position: static; box-sizing: border-box; border-radius: 6px; }
@@ -131,8 +135,18 @@
             .dash-welcome-box { flex-direction: column; align-items: flex-start; }
             .dash-welcome-box > div { display: flex; flex-direction: column; gap: 5px; margin-bottom:10px; }
             .subject-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .exam-icon-wrapper { width: 75px; height: 75px; }
-            .exam-icon-img { width: 60px; height: 60px; }
+            
+            /* 🔥 HOME PAGE 3 ICONS IN A ROW FIX 🔥 */
+            .exam-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; justify-items: center; }
+            .exam-icon-card { width: 100%; max-width: 90px; margin-bottom: 10px;}
+            .exam-icon-wrapper { width: 65px; height: 65px; padding: 8px; margin-bottom: 8px; }
+            .exam-icon-title { font-size: 11px; }
+
+            /* 🔥 SUB EXAM 2 ICONS IN A ROW FIX 🔥 */
+            .sub-exam-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; width: 100%; padding: 5px; box-sizing: border-box; }
+            .exam-card-l2 { width: 100%; max-width: none; min-width: 0; padding: 15px 5px; margin: 0; }
+            .exam-card-l2-icon { font-size: 28px; margin-bottom: 5px; }
+            .exam-card-l2-title { font-size: 12px; }
         }
 
         /* 🔥 PRINT PDF SETTINGS 🔥 */
@@ -285,7 +299,7 @@
         </div>
     </div>
 
-    <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin()" title="Admin Login" style="display:flex;">🔒</div>
+    <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin();" title="Admin Login" style="display:flex;">🔒</div>
 
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
@@ -853,6 +867,21 @@
         }, "🗑️");
     };
 
+    window.openAdminLogin = function() {
+        try {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+            let authView = document.getElementById('admin-auth-view');
+            if(authView) {
+                authView.classList.add('active-view');
+                window.toggleAdminLock(false);
+                window.scrollTo(0,0);
+            }
+        } catch(e) {
+            console.error(e);
+            alert("Error opening admin panel: " + e.message);
+        }
+    };
+
     window.loginAdmin = function() {
         let id = document.getElementById('admin-id').value.trim(); 
         let pass = document.getElementById('admin-pass').value.trim();
@@ -1015,10 +1044,11 @@
         if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
         let list=document.getElementById('st-folder-view'); list.style.display='flex'; list.style.justifyContent='center'; list.style.flexWrap='wrap'; list.style.gap='15px';
         let boardTests=window.globalActiveTests.filter(t=> (window.parseHack(t.topic).board||t.exam||"General Exam")===boardName);
-        let subExams=[...new Set(boardTests.map(t=>t.exam||boardName))]; let html="";
+        let subExams=[...new Set(boardTests.map(t=>t.exam||boardName))]; let html=`<div class="sub-exam-grid">`;
         subExams.forEach(subEx=>{
             html+=`<div class="exam-card-l2" onclick="window.showAppLayout('${boardName}', '${subEx}')"><div class="exam-card-l2-icon">🎓</div><h4 class="exam-card-l2-title">${subEx}</h4></div>`;
         });
+        html+=`</div>`;
         list.innerHTML=html;
     };
 
@@ -1140,6 +1170,7 @@
         let fObj={exam:eName,category:eCategory,logo:eLogo,subject:eSub,sub:eSub,topic:eTopic,code:eCode,marks:eMarks,neg:eNeg,totTime:tTime,qTime:qTime,isFree:isFree,price:ePrice,key:eKey,questions:parsedQs,qs:fQs,isActive:true};
         
         let btn=document.getElementById('btn-generate'); btn.innerText="⏳ Saving..."; btn.disabled=true;
+        
         let postData = new URLSearchParams();
         postData.append('action', 'saveTest');
         postData.append('testCode', eCode);
