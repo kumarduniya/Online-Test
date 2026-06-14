@@ -128,7 +128,6 @@
             .sb-item { margin-bottom: 0; margin-right: 10px; flex-shrink: 0; border-left: none; border-bottom: 3px solid transparent; font-size: 13px; padding: 10px; flex-direction: column; gap: 5px; }
             .sb-item.active { border-left-color: transparent; border-bottom-color: #1f4e79; background: #e3f2fd; }
             
-            /* Responsive fixes requested by user */
             .dash-welcome-box { flex-direction: column; align-items: flex-start; }
             .dash-welcome-box > div { display: flex; flex-direction: column; gap: 5px; margin-bottom:10px; }
             .subject-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -490,6 +489,8 @@
                 <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
                     🎉 This PDF is Free for everyone!
                 </div>
+                <input type="tel" id="pdf-phone" style="display:none;">
+                <input type="text" id="pdf-pass" placeholder="Enter password..." style="width:100%; padding:10px; box-sizing:border-box;">
                 <div id="pdf-action-area"></div>
             </div>
             
@@ -868,7 +869,6 @@
         document.getElementById('error-view').classList.add('active-view');
     };
 
-    // 🔥 MAIN ONLOAD (AUTO-LOGIN CHECK) 🔥
     window.onload = function() {
         clearInterval(window.globalTimer); clearInterval(window.qTimer);
         document.querySelectorAll('.view-section').forEach(v=>v.classList.remove('active-view'));
@@ -939,7 +939,6 @@
         let tInfo=""; if(window.examData.totTime>0) tInfo+=`Total Time: ${window.examData.totTime} Mins | `; if(window.examData.qTime>0) tInfo+=`Per Q: ${window.examData.qTime} Secs`; 
         document.getElementById('disp-time-info').innerText=tInfo;
         
-        // 🔥 PREMIUM LOGIC IN DIRECT LINK ENTRY 🔥
         let isFreeStatus = window.examData.isFree;
         let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
         
@@ -1059,7 +1058,6 @@
         } else { window.renderDirectTests(boardName, subExamName, activeCat, 'ALL', catTests); }
     };
 
-    // 🔥 PREMIUM LOGIC IMPLEMENTED HERE 🔥
     window.renderDirectTests = function(boardName, subExamName, activeCat, subjectName, preFilteredTests=null) {
         let contentArea=document.getElementById('st-content-area'); let testsToRender=preFilteredTests;
         if(!testsToRender) {
@@ -1142,7 +1140,6 @@
         let fObj={exam:eName,category:eCategory,logo:eLogo,subject:eSub,sub:eSub,topic:eTopic,code:eCode,marks:eMarks,neg:eNeg,totTime:tTime,qTime:qTime,isFree:isFree,price:ePrice,key:eKey,questions:parsedQs,qs:fQs,isActive:true};
         
         let btn=document.getElementById('btn-generate'); btn.innerText="⏳ Saving..."; btn.disabled=true;
-        
         let postData = new URLSearchParams();
         postData.append('action', 'saveTest');
         postData.append('testCode', eCode);
@@ -1188,7 +1185,14 @@
     };
 
     window.startReattempt = function(){ window.showCustomConfirm("Reattempt","Do you want to reattempt this test?",()=>{window.startExam(true);},"🔄"); };
-    window.togglePaletteOverlay = function(fs){let o=document.getElementById('palette-overlay');let isO=o.style.display==='block';if(fs===false){if(isO)history.back();return;}if(isO)history.back();else{o.style.display='block';try{history.pushState({palette:true},"");}catch(e){}}};
+    
+    window.togglePaletteOverlay = function(fs){
+        let o=document.getElementById('palette-overlay');
+        let isO=o.style.display==='block';
+        if(fs===false){if(isO)history.back();return;}
+        if(isO)history.back();
+        else{o.style.display='block';try{history.pushState({palette:true},"");}catch(e){}}
+    };
     
     window.addEventListener('popstate', function(e) {
         let o=document.getElementById('palette-overlay'); if(o&&o.style.display==='block'){o.style.display='none';try{history.pushState({inTest:true},"Test Started","#test");}catch(err){}}
@@ -1199,7 +1203,20 @@
         }
     });
 
-    window.updateMiniPalette = function(){let s=document.getElementById('mini-palette-strip');s.innerHTML="";let st=Math.max(0,window.currentQ-2);let en=Math.min(window.examData.questions.length-1,window.currentQ+2);for(let i=st;i<=en;i++){let c="status-not-visited";if(window.qStatus[i]===2)c="status-answered";else if(window.qStatus[i]===1)c="status-not-answered";let ac=(i===window.currentQ)?"active-q":"s.innerHTML+=`<div class=\"mini-box ${c} ${ac}\" onclick=\"window.renderQuestion(${i})\">${i+1}</div>`;}};
+    window.updateMiniPalette = function(){
+        let s=document.getElementById('mini-palette-strip');
+        s.innerHTML="";
+        let st=Math.max(0,window.currentQ-2);
+        let en=Math.min(window.examData.questions.length-1,window.currentQ+2);
+        for(let i=st;i<=en;i++){
+            let c="status-not-visited";
+            if(window.qStatus[i]===2) c="status-answered";
+            else if(window.qStatus[i]===1) c="status-not-answered";
+            let ac=(i===window.currentQ)?"active-q":"";
+            s.innerHTML+=`<div class="mini-box ${c} ${ac}" onclick="window.renderQuestion(${i})">${i+1}</div>`;
+        }
+    };
+
     window.updateCounts = function(){let a=0,na=0,nv=0;window.qStatus.forEach(s=>{if(s===2)a++;else if(s===1)na++;else nv++;});document.getElementById('cnt-ans').innerText=a;document.getElementById('cnt-notans').innerText=na;document.getElementById('cnt-notvis').innerText=nv;};
     
     window.renderQuestion = function(idx) {
