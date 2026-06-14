@@ -32,19 +32,12 @@
         .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 15px; cursor: pointer; background: #e9ecef; border: none; outline: none; white-space: nowrap; min-width:130px; }
         .tab-btn.active { background: #1f4e79; color: white; }
 
-        /* 🔥 PREMIUM ICONS (LEVEL 1) 🔥 */
+        /* 🔥 PERFECT ROUND ICONS (AS REQUESTED) 🔥 */
         .exam-grid { display: flex; flex-wrap: wrap; gap: 25px; justify-content: center; padding: 10px 0; width: 100%; }
         .exam-icon-card { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; cursor: pointer; width: 130px; transition: 0.3s; text-align: center; }
-        .exam-icon-wrapper { width: 90px; height: 90px; border-radius: 22px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: #fff; display: flex; align-items: center; justify-content: center; border: 1px solid #e0e0e0; transition: 0.3s; padding: 12px; box-sizing: border-box; }
-        .exam-icon-img { width: 100%; height: 100%; object-fit: contain; }
-        .exam-icon-card:hover .exam-icon-wrapper { transform: translateY(-8px); box-shadow: 0 8px 20px rgba(31,78,121,0.15); border-color: #1f4e79; }
+        .exam-icon-card:hover { transform: translateY(-5px); }
+        .exam-icon-img { width: 90px; height: 90px; object-fit: contain; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #e9ecef; padding: 5px; }
         .exam-icon-title { font-size: 14px; font-weight: 900; color: #1f4e79; margin: 0; line-height: 1.3; text-transform: uppercase; }
-
-        /* 🔥 NEW SMALLER EXAM CARDS (LEVEL 2) 🔥 */
-        .exam-card-l2 { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.04); width: 45%; min-width: 120px; max-width: 200px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-        .exam-card-l2:hover { transform: translateY(-5px); border-color: #1f4e79; box-shadow: 0 8px 15px rgba(31,78,121,0.1); }
-        .exam-card-l2-icon { font-size: 35px; margin-bottom: 8px; }
-        .exam-card-l2-title { font-size: 14px; font-weight: 800; color: #1f4e79; margin: 0; line-height: 1.2; text-transform: uppercase; }
 
         .folder-card { background: #fff; border: 2px solid #1f4e79; border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 45%; min-width: 140px; max-width: 250px; box-sizing: border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; }
         .folder-card:hover { transform: translateY(-5px); background: #f8f9fa; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color:#f39c12; }
@@ -446,7 +439,7 @@
         </div>
     </div>
 
-    <div id="exam-view" oncontextmenu="return false;">
+    <div id="exam-view" class="view-section" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
                 <div class="q-header">
@@ -544,6 +537,7 @@
 <div id="print-area"></div>
 
 <script>
+    // 🔥 NEW URL ADDED HERE 🔥
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwkLyWDK1d8ZXq9pYSiW32UFCeOFxRVPjegW2S1u42AyfI5OqL6nuedNAQbOrqyW8OB9g/exec";
     const BASE_URL = "https://ankushonlinetest.netlify.app/"; 
     const HIDDEN_TESTS = []; 
@@ -607,7 +601,7 @@
             if(d.status === "success") {
                 document.getElementById('reg-otp-field').style.display = 'block';
                 btn.innerText = "OTP Sent ✅";
-                window.showCustomAlert("Success", "OTP has been sent to your Gmail ID.", "📩");
+                window.showCustomAlert("Success", "OTP has been sent to your Gmail ID. Please check your Spam/Junk folder if not found.", "📩");
             } else {
                 btn.innerText = "Send Verification OTP 📩"; btn.disabled = false;
                 window.showCustomAlert("Error", d.message || "Failed to send OTP", "❌");
@@ -712,34 +706,18 @@
     const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
     const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
 
-    window.openAdminLogin = function() { 
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-        document.getElementById('admin-auth-view').classList.add('active-view'); 
-        window.toggleAdminLock(false);
-    };
-
     window.initQuickFill = function() {
         let savedTests = window.globalActiveTests || [];
         if(savedTests.length === 0) savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
-        
         window.qTree = {};
         savedTests.forEach(t => {
             let p = window.parseHack(t.topic); 
-            let b = p.board||t.exam||"General Exam"; 
-            let e = t.exam||"Mock Test";
-            let c = p.cat||"Mock Tests"; 
-            let s = p.subcat||t.subject||t.sub||"Subject";
-            
-            if(!window.qTree[b]) window.qTree[b]={}; 
-            if(!window.qTree[b][e]) window.qTree[b][e]={}; 
-            if(!window.qTree[b][e][c]) window.qTree[b][e][c]=new Set();
+            let b = p.board||t.exam||"General Exam"; let e = t.exam||"Mock Test"; let c = p.cat||"Mock Tests"; let s = p.subcat||t.subject||t.sub||"Subject";
+            if(!window.qTree[b]) window.qTree[b]={}; if(!window.qTree[b][e]) window.qTree[b][e]={}; if(!window.qTree[b][e][c]) window.qTree[b][e][c]=new Set();
             window.qTree[b][e][c].add(s);
         });
-        
-        let qb = document.getElementById('quick-board'); 
-        qb.innerHTML = '<option value="">1. Select Board</option>';
+        let qb = document.getElementById('quick-board'); qb.innerHTML = '<option value="">1. Select Board</option>';
         for(let b in window.qTree) { qb.innerHTML += `<option value="${b}">${b}</option>`; }
-        
         document.getElementById('quick-exam').innerHTML='<option value="">2. Select Exam</option>';
         document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>';
         document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
@@ -748,13 +726,11 @@
     window.fillQuick = function(level) {
         let bVal=document.getElementById('quick-board').value; let eVal=document.getElementById('quick-exam').value;
         let cVal=document.getElementById('quick-cat').value; let sVal=document.getElementById('quick-sub').value;
-        
         if(level === 'board') {
             document.getElementById('a-board').value = bVal; window.autoFillLogo();
             let qe=document.getElementById('quick-exam'); qe.innerHTML='<option value="">2. Select Exam</option>';
             if(bVal && window.qTree[bVal]) { for(let e in window.qTree[bVal]) { qe.innerHTML+=`<option value="${e}">${e}</option>`; } }
-            document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>'; 
-            document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
+            document.getElementById('quick-cat').innerHTML='<option value="">3. Select Category</option>'; document.getElementById('quick-sub').innerHTML='<option value="">4. Select Subject</option>';
         } else if(level === 'exam') {
             document.getElementById('a-exam').value = eVal;
             let qc=document.getElementById('quick-cat'); qc.innerHTML='<option value="">3. Select Category</option>';
@@ -855,7 +831,6 @@
         
         if(document.getElementById('a-rawdata')) document.getElementById('a-rawdata').addEventListener('input', window.updateQsCount);
         
-        // Check if student is already logged in
         let savedUser = localStorage.getItem('mockSarthiUser');
         let isLoggedIn = false;
         if(savedUser) {
@@ -896,17 +871,11 @@
         }
     };
 
-    // 🔥 TEST LOADING FIX 🔥
     window.handleTestLoad = function(data) {
         if(data.error) return window.showErrorView("❌ Test not found!"); if(data.isActive===false) return window.showErrorView("❌ Test inactive.");
         window.examData=data; window.examData.marks=data.marks||2; window.examData.neg=data.neg||0; window.examData.totTime=data.totTime||0; window.examData.qTime=data.qTime||0;
         window.examData.isFree=(data.isFree===true||String(data.isFree).toLowerCase()==="true");
         
-        // 100% Fix for Empty Questions
-        if(window.examData.rawText && (!window.examData.questions || window.examData.questions.length === 0)) {
-            window.examData.questions = window.parseRawQuestions(window.examData.rawText);
-        }
-
         let p=window.parseHack(window.examData.topic); document.title=`${window.examData.subject||window.examData.sub||"Subject"} ${p.topic?p.topic+" ":""}Ankush online test`;
         window.setupLoginScreen();
     };
@@ -920,15 +889,11 @@
         document.getElementById('disp-code').innerText=window.examData.code; document.getElementById('disp-marks').innerText=window.examData.marks; document.getElementById('disp-neg').innerText=window.examData.neg;
         let tInfo=""; if(window.examData.totTime>0) tInfo+=`Total Time: ${window.examData.totTime} Mins | `; if(window.examData.qTime>0) tInfo+=`Per Q: ${window.examData.qTime} Secs`; document.getElementById('disp-time-info').innerText=tInfo;
         
-        // Hide PDF instructions if FREE
         if(window.examData.isFree){document.getElementById('direct-pdf-box').style.display='none';document.getElementById('res-paid-instructions').style.display='none';document.getElementById('res-pass-box').style.display='none';document.getElementById('res-free-instructions').style.display='block';}
         else {document.getElementById('direct-pdf-box').style.display='block';document.getElementById('disp-price').innerText=window.examData.price;document.getElementById('res-price').innerText=window.examData.price;}
-        
         for(let i=0;i<window.examData.questions.length;i++){window.userAnswers[i]=null;window.qStatus[i]=0;}
 
-        if(window.studentInfo && window.studentInfo.phone) {
-            document.getElementById('pdf-phone').value = window.studentInfo.phone;
-        }
+        if(window.studentInfo && window.studentInfo.phone) { document.getElementById('pdf-phone').value = window.studentInfo.phone; }
     };
 
     window.switchStudentTab = function(tab) {
@@ -939,8 +904,6 @@
         } else {
             document.getElementById('tab-st-history').classList.add('active'); document.getElementById('tab-st-active').classList.remove('active');
             document.getElementById('st-active-section').style.display='none'; document.getElementById('st-history-section').style.display='block';
-            
-            // Auto fetch history for logged in user
             if(window.studentInfo && window.studentInfo.phone) {
                 document.getElementById('hist-phone').value = window.studentInfo.phone;
                 document.getElementById('hist-phone').style.display = 'none';
@@ -977,7 +940,7 @@
         if(boards.length===0){list.innerHTML="<p style='width:100%;text-align:center;'>No tests available.</p>";return;}
         let html=""; boards.forEach(bName=>{
             let iconHtml=examLogos[bName]?`<img src="${examLogos[bName]}" class="exam-icon-img">`:`<div class="exam-icon-img" style="font-size:40px;background:#e9ecef;">🏛️</div>`;
-            html+=`<div class="exam-icon-card" onclick="window.showSubExamsView('${bName}')"><div class="exam-icon-wrapper">${iconHtml}</div><h4 class="exam-icon-title">${bName}</h4></div>`;
+            html+=`<div class="exam-icon-card" onclick="window.showSubExamsView('${bName}')">${iconHtml}<h4 class="exam-icon-title">${bName}</h4></div>`;
         });
         list.innerHTML=`<div class="exam-grid">${html}</div>`;
     };
@@ -989,7 +952,7 @@
         let boardTests=window.globalActiveTests.filter(t=> (window.parseHack(t.topic).board||t.exam||"General Exam")===boardName);
         let subExams=[...new Set(boardTests.map(t=>t.exam||boardName))]; let html="";
         subExams.forEach(subEx=>{
-            html+=`<div class="exam-card-l2" onclick="window.showAppLayout('${boardName}', '${subEx}')"><div class="exam-card-l2-icon">🎓</div><h4 class="exam-card-l2-title">${subEx}</h4></div>`;
+            html+=`<div class="folder-card" onclick="window.showAppLayout('${boardName}', '${subEx}')"><div class="folder-icon">🎓</div><h4 class="folder-title">${subEx}</h4></div>`;
         });
         list.innerHTML=html;
     };
@@ -1030,6 +993,7 @@
         } else { window.renderDirectTests(boardName, subExamName, activeCat, 'ALL', catTests); }
     };
 
+    // 🔥 GIVE TEST LINK FIX 🔥
     window.renderDirectTests = function(boardName, subExamName, activeCat, subjectName, preFilteredTests=null) {
         let contentArea=document.getElementById('st-content-area'); let testsToRender=preFilteredTests;
         if(!testsToRender) {
@@ -1044,7 +1008,7 @@
         testsToRender.forEach(t=>{
             let p=window.parseHack(t.topic); let currentSub=p.subcat||t.subject||t.sub||"General"; let isFreeStatus=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); let priceText=isFreeStatus?"Free":"₹"+t.price;
             let displayTopic=p.topic||p.title||t.subject||"Test"; let qsCount=p.qs||t.qs||0; if(!qsCount||qsCount===0||qsCount==="N/A"){if(t.questions&&Array.isArray(t.questions)&&t.questions.length>0)qsCount=t.questions.length;else if(t.rawText){let match=t.rawText.match(/!!\s*\d+\s*!/g);if(match)qsCount=match.length;}} if(!qsCount)qsCount=0;
-            html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">Marks: ${t.marks||2}</span></div><button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.loadTestForStudent('${t.code}')">📝 Give Test</button></div>`;
+            html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">Marks: ${t.marks||2}</span></div><button class="btn btn-blue" style="margin:0;padding:6px;font-size:13px;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button></div>`;
         }); html+=`</div>`; contentArea.innerHTML=html;
     };
 
@@ -1100,10 +1064,7 @@
         
         let btn=document.getElementById('btn-generate'); btn.innerText="⏳ Saving..."; btn.disabled=true;
         
-        let postData = new URLSearchParams();
-        postData.append('action', 'saveTest');
-        postData.append('testCode', eCode);
-        postData.append('testData', JSON.stringify(fObj));
+        let postData = new URLSearchParams({'action':'saveTest','testCode':eCode,'testData':JSON.stringify(fObj)});
 
         fetch(SCRIPT_URL, {method:'POST', body: postData, headers:{'Content-Type':'application/x-www-form-urlencoded'}})
         .then(r=>r.json()).then(d=>{
@@ -1120,15 +1081,21 @@
         });
     };
 
+    // 🔥 TEST ENGINE FIX 🔥
     window.startExam = function(isRe) {
         try {
+            if(!isRe){
+                if(!window.studentInfo || !window.studentInfo.name) {
+                    window.studentInfo.name=document.getElementById('s-name').value; window.studentInfo.phone=document.getElementById('s-phone').value;
+                    if(!window.studentInfo.name||window.studentInfo.phone.length!==10) { window.showCustomAlert("Required","Enter correct name and 10-digit number!","⚠️"); return; }
+                }
+            }
             if(window.examData.rawText && (!window.examData.questions || window.examData.questions.length === 0)) {
                 window.examData.questions = window.parseRawQuestions(window.examData.rawText);
             }
-
-            if(!window.examData.questions || window.examData.questions.length===0){
+            if(!window.examData.questions||window.examData.questions.length===0){
                 window.showCustomAlert("Empty Test","❌ No questions found. Please check test data.","⚠️");
-                return;
+                document.getElementById('loading-view').classList.remove('active-view');document.getElementById('student-dashboard-view').classList.add('active-view');return;
             }
 
             window.isReattemptMode=isRe; window.studentInfo.score=0; window.studentInfo.right=0; window.studentInfo.wrong=0; window.studentInfo.blank=0; window.totalTimeSpent=0;
@@ -1144,10 +1111,7 @@
             window.updateCounts(); window.renderQuestion(0);
             
             clearInterval(window.globalTimer); window.globalTimer=setInterval(()=>{window.totalTimeSpent++;if(window.examData.totTime>0){window.globalTimeLeft--;let m=Math.floor(window.globalTimeLeft/60);let s=window.globalTimeLeft%60;document.getElementById('main-time').innerText=`Time Left: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;if(window.globalTimeLeft<=0){clearInterval(window.globalTimer);window.showCustomAlert("Time Up","⏳ Time's up!","⏳");window.calculateScoreAndSubmit();}}else{let m=Math.floor(window.totalTimeSpent/60);let s=window.totalTimeSpent%60;document.getElementById('main-time').innerText=`Time: ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;}},1000);
-        } catch(err) {
-            console.error(err);
-            window.showCustomAlert("Error", "Could not start test. Check code formatting.", "❌");
-        }
+        } catch(err) { console.error(err); window.showCustomAlert("Error", "Could not start test.", "❌"); }
     };
 
     window.startReattempt = function(){ window.showCustomConfirm("Reattempt","Do you want to reattempt this test?",()=>{window.startExam(true);},"🔄"); };
