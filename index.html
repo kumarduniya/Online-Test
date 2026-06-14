@@ -77,15 +77,14 @@
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
-        #q-scroll-area { padding-bottom: 10px; } 
+        #q-scroll-area { padding-bottom: 10px; width: 100%; display: block; } 
         
-        /* 🔥 FIX: RESTORED PREMIUM QUESTIONS & OPTIONS UI 🔥 */
-        .q-text { font-size: 18px; line-height: 1.6; color: #222; margin-bottom: 20px; font-weight: bold; }
-        .options-div { display: block; }
-        .opt-label { display: block; width: 100%; padding: 14px 18px; border: 2px solid #e0e0e0; margin-bottom: 12px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: 600; box-sizing: border-box; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .opt-label:hover { background: #f8f9fa; border-color: #b0c4de; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.05);}
-        .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 4px 10px rgba(31,78,121,0.15); transform: translateY(-2px); } 
-        .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.4); accent-color: #1f4e79; cursor: pointer; }
+        /* 🔥 FIX: RESTORED OLD FULL-WIDTH OPTIONS UI 🔥 */
+        .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; width: 100%; }
+        .options-div { display: flex; flex-direction: column; width: 100%; }
+        .opt-label { display: block; width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; box-sizing: border-box; }
+        .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); } 
+        .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
         
         #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px; }
@@ -1034,7 +1033,6 @@
         else window.showExamsView();
     };
 
-    // 🔥 THE FIX: ADMIN DASHBOARD NOW MERGES GOOGLE SHEET TESTS & LOCAL TESTS 🔥
     window.renderDashboard = function() {
         let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         let dbTests = window.globalActiveTests || [];
@@ -1259,74 +1257,6 @@
 
             html+=`<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;"><h4 style="margin:0 0 5px 0;color:#1f4e79;font-size:15px;">${currentSub}</h4><p style="margin:0 0 10px 0;font-size:12px;color:#555;"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p><div style="font-size:11px;margin-bottom:10px;"><span class="badge">Code: ${t.code}</span> <span class="badge">⏱️ ${t.time||t.totTime||0} Min</span> <span class="badge" style="background:#1f4e79;color:white;">Qs: ${qsCount}</span><span class="badge">${priceText}</span></div>${actionBtn}</div>`;
         }); html+=`</div>`; contentArea.innerHTML=html;
-    };
-
-    window.switchAdminTab = function(tab) {
-        if(tab==='create'){
-            document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
-            document.getElementById('admin-create-section').style.display='block'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='none'; 
-            let btn = document.getElementById('btn-generate'); btn.innerText = "🚀 Generate / Update Test"; btn.style.background = "#1f4e79"; window.initQuickFill();
-        } else if (tab==='manage') {
-            document.getElementById('tab-manage').classList.add('active'); document.getElementById('tab-create').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
-            document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='block'; document.getElementById('admin-icons-section').style.display='none'; window.renderDashboard();
-        } else {
-            document.getElementById('tab-icons').classList.add('active'); document.getElementById('tab-create').classList.remove('active'); document.getElementById('tab-manage').classList.remove('active');
-            document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='block'; window.loadAdminIcons();
-        }
-    };
-    
-    window.togglePriceBox = function() { document.getElementById('price-box').style.display=(document.getElementById('a-pdf-type').value==='free')?'none':'block'; };
-    window.generateStrongPass = function(phone, key) { if(!key) key="ANK"; let mixed=key+phone+"PRO"; let num=0; for(let i=0;i<mixed.length;i++) num+=mixed.charCodeAt(i)*(i+1); let sym=['@','#','$','&','*']; let s1=sym[num%sym.length]; let s2=sym[(num*2)%sym.length]; let l1=String.fromCharCode(65+(num%26)); let l2=String.fromCharCode(97+((num*3)%26)); let p1=phone.length>=4?phone.substring(0,2):"99"; let p2=phone.length>=4?phone.slice(-2):"88"; return l1+s1+p1+l2+s2+p2+key.charAt(0).toUpperCase(); };
-    window.generatePass = function() { let phone=document.getElementById('gen-phone').value; let key=document.getElementById('gen-key').value.toUpperCase(); if(!key) return window.showCustomAlert("Error","Enter Secret Key!","⚠️"); if(phone.length<10) return document.getElementById('show-gen-pass').innerText="Enter 10-digit number!"; window.currentGeneratedPass=window.generateStrongPass(phone,key); document.getElementById('show-gen-pass').innerText="Password: "+window.currentGeneratedPass; document.getElementById('copy-pass-btn').style.display='inline-block'; };
-    window.copyGeneratedPass = function() { if(!window.currentGeneratedPass) return; navigator.clipboard.writeText(window.currentGeneratedPass).then(()=>{window.showCustomAlert("Success","✅ Password copied!","✅");}).catch(()=>{window.showCustomAlert("Error","Copy failed","❌");}); };
-    window.checkPass = function(ph, pa) { let isFree=(window.examData.isFree===true||String(window.examData.isFree).toLowerCase()==="true"); if(isFree) return true; return pa===window.generateStrongPass(ph,window.examData.key.toUpperCase()); };
-    window.getCleanAns = function(val) { if(!val) return ""; let match=val.toString().replace(/<[^>]*>/g,'').match(/[A-D]/i); return match?match[0].toUpperCase():""; };
-    
-    window.parseRawQuestions = function(rawText) {
-        rawText=rawText.replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/\r\n?/g,'\n').replace(/(\n|^)\s*(!!\s*\d+\s*!)/g,'\n$2').replace(/(\n|^)\s*(![A-D]\s)/gi,'\n$2').replace(/(\n|^)\s*(!!!\s*[A-D])/gi,'\n$2').replace(/(\n|^)\s*(!!!!)/g,'\n$2').replace(/(\n|^)\s*(!P\s)/gi,'\n$2');
-        let parsedQs=[]; let tempQ=null; let cPass=""; let cMode=""; let lines=rawText.split('\n');
-        for(let i=0;i<lines.length;i++){
-            let line=lines[i].trim(); if(!line) continue; line=line.replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
-            if(line.match(/^!P/i)){cPass=line.replace(/^!P\s*/i,'').trim();if(cPass.toLowerCase()==="none")cPass="";cMode="P";}
-            else if(line.match(/^!!\s*\d+\s*!/)){if(tempQ&&tempQ.q)parsedQs.push(tempQ);tempQ={q:line.replace(/^!!\s*\d+\s*!\s*/,'').trim(),opts:[],ans:"",exp:"",passage:cPass};cMode="q";}
-            else if(line.match(/^![A-D]/i)){if(tempQ)tempQ.opts.push({id:line.charAt(1).toUpperCase(),text:line.substring(2).trim()});cMode=line.charAt(1).toUpperCase();}
-            else if(line.match(/^!!!!/)){if(tempQ)tempQ.exp=line.replace(/^!!!!\s*/,'').trim();cMode="exp";}
-            else if(line.match(/^!!!/)){if(tempQ)tempQ.ans=window.getCleanAns(line.replace(/^!!!\s*/i,'').trim());cMode="ans";}
-            else {if(tempQ){if(cMode==="exp")tempQ.exp+=(tempQ.exp?"<br>":"")+line; else if(cMode==="q")tempQ.q+=(tempQ.q?"<br>":"")+line; else if(cMode==="P")cPass+=(cPass?"<br>":"")+line;}}
-        } if(tempQ&&tempQ.q) parsedQs.push(tempQ); return parsedQs;
-    };
-
-    window.generateAndSaveLink = function() {
-        let eBoard=document.getElementById('a-board').value||"General Exam"; let eName=document.getElementById('a-exam').value||"Mock Test"; let eLogo=document.getElementById('a-logo').value||""; let eSub=document.getElementById('a-sub').value||"Subject"; let eTopicRaw=document.getElementById('a-topic').value||""; let eCode=document.getElementById('a-code').value; 
-        if(!eCode) { eCode = "T-" + Math.floor(Math.random()*99999); document.getElementById('a-code').value = eCode; }
-        
-        let eMarks=parseFloat(document.getElementById('a-marks').value)||2; let eNeg=parseFloat(document.getElementById('a-neg').value)||0; let tTime=parseInt(document.getElementById('a-tot-time').value)||0; let qTime=parseInt(document.getElementById('a-q-time').value)||0; let isFree=document.getElementById('a-pdf-type').value==="free"; let ePrice=isFree?"Free":(document.getElementById('a-price').value||"49"); let eKey=document.getElementById('a-key').value||"ANK"; 
-        let eCategory=document.getElementById('a-category').value; if(eCategory==="CUSTOM") eCategory=document.getElementById('a-custom-cat').value||"Custom Category";
-        
-        let rawText=document.getElementById('a-rawdata').value; if(!rawText.trim()) return window.showCustomAlert("Empty Box","Paste questions!","⚠️");
-        let parsedQs=window.parseRawQuestions(rawText); if(parsedQs.length===0) return window.showCustomAlert("Format Error","❌ Incorrect format.","⚠️");
-        
-        let fQs=window.updateQsCount(); if(fQs===0) fQs=parsedQs.length;
-        let finalTopicRaw = eTopicRaw || eSub || "Test";
-        let eTopic=finalTopicRaw+"|||QS:"+fQs+"|||CAT:"+eCategory+"|||LOGO:"+eLogo+"|||BOARD:"+eBoard+"|||EXAM:"+eName+"|||SUBCAT:"+eSub;
-        let fObj={exam:eName,category:eCategory,logo:eLogo,subject:eSub,sub:eSub,topic:eTopic,code:eCode,marks:eMarks,neg:eNeg,totTime:tTime,qTime:qTime,isFree:isFree,price:ePrice,key:eKey,questions:parsedQs,qs:fQs,isActive:true};
-        
-        let btn=document.getElementById('btn-generate'); btn.innerText="⏳ Saving..."; btn.disabled=true;
-        let postData = new URLSearchParams();
-        postData.append('action', 'saveTest');
-        postData.append('testCode', eCode);
-        postData.append('testData', JSON.stringify(fObj));
-
-        fetch(SCRIPT_URL, {method:'POST', body: postData, headers:{'Content-Type':'application/x-www-form-urlencoded'}})
-        .then(r=>r.json()).then(d=>{
-            btn.innerText="🚀 Generate / Update Test"; btn.disabled=false; btn.style.background = "#1f4e79";
-            document.getElementById('a-sub').value="";document.getElementById('a-topic').value="";document.getElementById('a-code').value="";document.getElementById('a-rawdata').value="";document.getElementById('a-qs-count').value="";
-            let tLink=BASE_URL+"?test="+eCode; let sTests=JSON.parse(localStorage.getItem('myMockTests'))||[]; let eIdx=sTests.findIndex(t=>t.code===eCode);
-            let tObj={code:eCode,exam:eName,category:eCategory,logo:eLogo,subject:eSub,sub:eSub,topic:eTopic,marks:eMarks,neg:eNeg,totTime:tTime,qTime:qTime,price:ePrice,isFree:isFree,key:eKey,qs:fQs,link:tLink,date:new Date().toLocaleDateString(),rawText:rawText,isActive:true};
-            if(eIdx>=0) sTests[eIdx]=tObj; else sTests.push(tObj); localStorage.setItem('myMockTests',JSON.stringify(sTests));
-            document.getElementById('generatedLink').value=tLink; document.getElementById('linkContainer').style.display='block'; window.showCustomAlert("Success",`✅ Saved! (${fQs} Qs)`,"🎉");
-            window.initQuickFill(); if(document.getElementById('admin-manage-section').style.display==='block') window.renderDashboard();
-        }).catch(()=>{ window.showCustomAlert("Error","Check connection.","❌"); btn.innerText="🚀 Generate / Update Test"; btn.disabled=false; btn.style.background = "#1f4e79"; });
     };
 
     window.startExam = function(isRe) {
