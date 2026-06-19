@@ -72,14 +72,14 @@
         .dash-welcome-box { background:#fff; border:1px solid #ddd; padding:15px; border-radius:8px; margin-bottom:25px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
 
-        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
+        /* 🔥 EXAM CONTAINER LAYOUT & OLD FULL-WIDTH OPTIONS 🔥 */
         .exam-container { display: flex; flex-direction: column; background: #fff; } 
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         #q-scroll-area { padding-bottom: 10px; width: 100%; display: block; } 
         
-        /* 🔥 FIX: RESTORED FULL-WIDTH OPTIONS UI WITH PERFECT ALIGNMENT 🔥 */
+        /* 🔥 FULL-WIDTH OPTIONS UI 🔥 */
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; width: 100%; display:block;}
         .options-div { display: flex; flex-direction: column; width: 100%; } 
         .opt-label { display: flex; align-items: flex-start; width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; box-sizing: border-box; }
@@ -141,14 +141,12 @@
             .dash-welcome-box > div { display: flex; flex-direction: column; gap: 5px; margin-bottom:10px; }
             .subject-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             
-            /* 🔥 HOME PAGE 3 ICONS IN A ROW FIX 🔥 */
             .exam-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; padding: 5px !important; justify-items: center; }
             .exam-icon-card { width: auto !important; margin-bottom: 5px !important;}
             .exam-icon-wrapper { width: 60px !important; height: 60px !important; padding: 5px !important; margin-bottom: 5px !important; }
             .exam-icon-img { width: 50px !important; height: 50px !important; }
             .exam-icon-title { font-size: 11px !important; }
 
-            /* 🔥 SUB EXAM 2 ICONS IN A ROW FIX 🔥 */
             .sub-exam-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; width: 100%; padding: 5px; box-sizing: border-box; }
             .exam-card-l2 { width: 100% !important; max-width: none !important; min-width: 0 !important; padding: 15px 5px !important; margin: 0 !important; }
             .exam-card-l2-icon { font-size: 28px !important; margin-bottom: 5px !important; }
@@ -185,6 +183,7 @@
 </head>
 <body>
 
+<!-- ALERT MODAL -->
 <div id="custom-modal" class="modal-overlay">
     <div class="modal-box">
         <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
@@ -193,7 +192,7 @@
         <input type="text" id="modal-input" style="display:none; width:100%; padding:12px; margin-bottom:20px; border:2px solid #1f4e79; border-radius:6px; box-sizing:border-box; font-size: 16px; outline: none; font-weight:bold; text-align:center;">
         <div style="display: flex; gap: 10px; justify-content: center;">
             <button id="modal-btn-cancel" class="btn btn-outline" style="display:none; margin:0; flex:1; border-radius:6px; padding:10px;" onclick="window.closeModal()">Cancel</button>
-            <button id="modal-btn-ok" class="btn btn-blue" style="margin:0; flex:1; border-radius:6px; padding:10px;">OK</button>
+            <button id="modal-btn-ok" class="btn btn-blue" style="margin:0; flex:1; border-radius:6px; padding:10px;" id="global-ok-btn">OK</button>
         </div>
     </div>
 </div>
@@ -210,6 +209,7 @@
         </div>
     </div>
 
+    <!-- 🔥 BRAND NEW STUDENT REGISTRATION / LOGIN SECTION 🔥 -->
     <div id="student-auth-view" class="view-section">
         <div id="auth-login-box" class="auth-box">
             <h3 style="color:#1f4e79; margin-top:0;">🌐 Student Login</h3>
@@ -258,6 +258,7 @@
         </div>
     </div>
 
+    <!-- MAIN STUDENT DASHBOARD -->
     <div id="student-dashboard-view" class="view-section">
         <div class="dash-welcome-box">
             <div>
@@ -274,8 +275,9 @@
         
         <div id="st-active-section">
             <div id="breadcrumb-container" class="breadcrumb-nav" style="display:none;"></div>
-            <div id="st-active-loader" style="text-align:center;display:none;"><div class="loader"></div> Loading active tests...</div>
+            <div id="st-active-loader" style="text-align:center;display:none;padding:30px;"><div class="loader"></div> Loading active tests...</div>
             <div id="st-folder-view"></div>
+            <!-- SPLIT SCREEN LAYOUT -->
             <div id="st-app-layout" class="app-layout" style="display:none;">
                 <div class="sidebar-menu" id="st-sidebar-menu"></div>
                 <div class="content-area" id="st-content-area"></div>
@@ -305,8 +307,10 @@
         </div>
     </div>
 
+    <!-- 🔥 ALWAYS VISIBLE ADMIN LOCK 🔥 -->
     <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin();" title="Admin Login" style="display:flex;">🔒</div>
 
+    <!-- ADMIN LOGIN -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -334,6 +338,7 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
     </div>
 
+    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -486,6 +491,7 @@
         </div>
     </div>
 
+    <!-- STUDENT LOGIN FOR DIRECT TEST LINK -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Entry</h3>
@@ -520,6 +526,7 @@
         </div>
     </div>
 
+    <!-- EXAM VIEW -->
     <div id="exam-view" class="view-section" style="padding:0; display:none;" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -564,6 +571,7 @@
         </div>
     </div>
 
+    <!-- RESULT VIEW -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -615,15 +623,19 @@
     window.isReattemptMode = false; window.currentGeneratedPass = ""; 
     window.globalActiveTests = []; window.adminUnifiedTests = []; window.currentAnalysisArray = []; window.currentAnalysisIndex = 0; window.currentAnalysisType = "";
 
-    // 🔥 FIX: SMART MERGE FUNCTION TO PREVENT ARRAY DUPLICATION LAG 🔥
+    // 🔥 FIX 1: HIDE TESTS PERMANENTLY 🔥
+    window.getHiddenTests = function() { return JSON.parse(localStorage.getItem('mockSarthiHidden')) || []; };
+
+    // 🔥 SMART MERGE FUNCTION 🔥
     window.getAllMergedTests = function() {
         let allTests = [];
+        let hidden = window.getHiddenTests();
         if(window.globalActiveTests && window.globalActiveTests.length > 0) {
-            allTests = [...window.globalActiveTests];
+            allTests = [...window.globalActiveTests].filter(t => !hidden.includes(t.code) && !HIDDEN_TESTS.includes(t.code));
         }
         let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         localTests.forEach(lt => {
-            if(lt.isActive && !allTests.find(st => st.code === lt.code)) {
+            if(lt.isActive && !hidden.includes(lt.code) && !HIDDEN_TESTS.includes(lt.code) && !allTests.find(st => st.code === lt.code)) {
                 allTests.push(lt);
             }
         });
@@ -641,13 +653,26 @@
         document.getElementById('modal-icon').innerText=icon; document.getElementById('modal-title').innerText=title; document.getElementById('modal-desc').innerHTML=desc;
         let inp=document.getElementById('modal-input'); if(showInput){inp.style.display='block';inp.value='';inp.focus();}else{inp.style.display='none';}
         let bc=document.getElementById('modal-btn-cancel'); if(onCancel){bc.style.display='block';bc.onclick=()=>{window.closeModal();onCancel();};}else{bc.style.display='none';}
-        let bo=document.getElementById('modal-btn-ok'); bo.onclick=()=>{let v=inp.value;window.closeModal();if(onOk)onOk(v);};
+        let bo=document.getElementById('modal-btn-ok'); 
+        bo.style.display = 'block'; // MAKE SURE OK BUTTON IS VISIBLE
+        bo.onclick=()=>{let v=inp.value;window.closeModal();if(onOk)onOk(v);};
     };
     window.closeModal = function() { document.getElementById('custom-modal').style.display='none'; };
     window.showCustomAlert = function(t, m, i="⚠️") { window.showModal(i, t, m, false, null, null); }; 
     window.showCustomConfirm = function(t, m, onYes, i="❓") { window.showModal(i, t, m, false, onYes, ()=>{}); }; 
     window.showCustomPrompt = function(t, m, onYes, i="🔒") { window.showModal(i, t, m, true, onYes, ()=>{}); };
     window.closeAndRedirect = function() { window.location.href = BASE_URL; };
+
+    // 🔥 FIX 2: TRUE LOADING MODAL WITHOUT OK BUTTON 🔥
+    window.showLoadingModal = function(msg) {
+        let m=document.getElementById('custom-modal'); m.style.display='flex';
+        document.getElementById('modal-icon').innerText="⏳";
+        document.getElementById('modal-title').innerText="Please Wait";
+        document.getElementById('modal-desc').innerHTML=msg;
+        document.getElementById('modal-input').style.display='none';
+        document.getElementById('modal-btn-cancel').style.display='none';
+        document.getElementById('modal-btn-ok').style.display='none'; // NO OK BUTTON!
+    };
 
     window.parseHack = function(raw) {
         let res = { topic: raw || "", qs: 0, cat: "Mock Tests", logo: "", board: "", subcat: "" };
@@ -665,23 +690,22 @@
         } else { res.topic = raw; res.subcat = raw; return res; }
     };
 
-    // 🔥 FIX: AUTO DOWNLOADER FOR MISSING QUESTIONS IN ADMIN PANEL 🔥
+    // 🔥 FIX 3: SMART DATA DOWNLOADER FOR ADMIN PANEL 🔥
     window.adminActionCode = ''; window.adminActionMode = ''; window.adminPdfMode = '';
     
     window.fetchTestForAdmin = function(code, action, mode) {
         window.adminActionCode = code; window.adminActionMode = action; window.adminPdfMode = mode;
-        window.showCustomAlert("Please wait", "Downloading test data securely from server...", "⏳");
+        window.showLoadingModal("Downloading full test data securely from server...<br><br><i>Wait just a second...</i>");
+        
         let script = document.createElement('script'); 
         script.src = SCRIPT_URL+"?action=getTest&testCode="+code+"&callback=handleAdminTestLoad&t="+new Date().getTime();
+        script.onerror = () => { window.closeModal(); window.showCustomAlert("Network Error", "Failed to connect to server.", "❌"); };
         document.body.appendChild(script);
     };
 
     window.handleAdminTestLoad = function(data) {
         window.closeModal();
         if(data.error) return window.showCustomAlert("Error", "Test not found on server!", "❌");
-        
-        let sTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
-        let eIdx = sTests.findIndex(t => t.code === data.code);
         
         let raw = data.rawText;
         if(!raw && data.questions && data.questions.length>0){
@@ -696,10 +720,15 @@
             data.rawText = raw;
         }
 
+        if(!data.rawText) { return window.showCustomAlert("Empty Test", "No questions found in this test.", "⚠️"); }
+
+        let sTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+        let eIdx = sTests.findIndex(t => t.code === data.code);
         if(eIdx >= 0) { sTests[eIdx] = {...sTests[eIdx], ...data}; } else { sTests.push(data); }
         localStorage.setItem('myMockTests', JSON.stringify(sTests));
+        
+        // Re-execute action
         window.renderDashboard();
-
         if(window.adminActionMode === 'edit') { window.editTest(window.adminActionCode); } 
         else if (window.adminActionMode === 'pdf') { window.adminDownloadPDF(window.adminActionCode, window.adminPdfMode); }
     };
@@ -1054,7 +1083,7 @@
         }); html+=`</div>`; contentArea.innerHTML=html;
     };
 
-    // 🔥 FIX: ADMIN PANEL FAST CACHE 🔥
+    // ADMIN 
     window.switchAdminTab = function(tab) {
         if(tab==='create'){
             document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
@@ -1077,7 +1106,7 @@
     };
 
     window.initQuickFill = function() {
-        let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.globalActiveTests;
+        let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests();
         window.qTree = {};
         savedTests.forEach(t => {
             let p = window.parseHack(t.topic); 
@@ -1116,7 +1145,7 @@
 
     window.autoFillLogo = function() {
         let eName = document.getElementById('a-board').value.trim().toLowerCase(); if(!eName) return;
-        let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.globalActiveTests;
+        let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests();
         for(let i=0; i<savedTests.length; i++) {
             let p = window.parseHack(savedTests[i].topic); let bName = (p.board||savedTests[i].exam||"").toLowerCase();
             if(bName===eName && p.logo) { document.getElementById('a-logo').value=p.logo; return; }
@@ -1124,7 +1153,7 @@
     };
 
     window.loadAdminIcons = function() {
-        let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.globalActiveTests;
+        let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests();
         let boards = {};
         savedTests.forEach(t=>{let p=window.parseHack(t.topic); let bName=p.board||t.exam||"General Exam"; if(!boards[bName]) boards[bName]=p.logo||"";});
         let sel=document.getElementById('icon-select'); sel.innerHTML='<option value="">-- Select Icon --</option>';
@@ -1133,7 +1162,7 @@
 
     window.onIconSelect = function() {
         let val=document.getElementById('icon-select').value; if(!val) return;
-        let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.globalActiveTests; 
+        let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
         let logo="";
         for(let i=0;i<savedTests.length;i++){let t=savedTests[i]; let p=window.parseHack(t.topic); let bName=p.board||t.exam||"General Exam"; if(bName===val){logo=p.logo; break;}}
         document.getElementById('icon-new-name').value=val; document.getElementById('icon-new-logo').value=logo||"";
@@ -1203,12 +1232,16 @@
     };
 
     window.renderDashboard = function() {
-        let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
         let dbTests = window.globalActiveTests || [];
+        let hidden = window.getHiddenTests();
         
         let unifiedMap = new Map();
-        dbTests.forEach(t => unifiedMap.set(t.code, t));
-        localTests.forEach(t => unifiedMap.set(t.code, t)); 
+        // Load server tests first
+        dbTests.forEach(t => { if(!hidden.includes(t.code)) unifiedMap.set(t.code, t); });
+        
+        // Let local tests override server tests if modified locally
+        let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+        localTests.forEach(t => { if(!hidden.includes(t.code)) unifiedMap.set(t.code, t); }); 
         
         let sTests = Array.from(unifiedMap.values());
         window.adminUnifiedTests = sTests; 
@@ -1271,7 +1304,7 @@
             t.rawText = raw;
         }
 
-        // 🔥 FIX: IF RAW TEXT STILL EMPTY (Server Data Only), FETCH IT FIRST 🔥
+        // 🔥 FIX: FETCH IF RAW TEXT IS MISSING LOCALLY 🔥
         if(!raw && (!t.questions || t.questions.length === 0)) {
             window.fetchTestForAdmin(code, 'edit', null);
             return;
@@ -1296,12 +1329,24 @@
     };
 
     window.deleteTest = function(code) { 
-        window.showCustomConfirm("Delete Test", `Delete Test <b>${code}</b> locally. Please manually delete its row from Google Sheet too!`, () => {
+        window.showCustomConfirm("Delete Test", `Delete Test <b>${code}</b> locally? It will be permanently hidden from this device.`, () => {
+            
+            // Remove from myMockTests
             let sT=JSON.parse(localStorage.getItem('myMockTests'))||[];
             sT = sT.filter(x => x.code !== code);
             localStorage.setItem('myMockTests',JSON.stringify(sT));
-            window.showCustomAlert("Deleted", `Test Code: ${code} locally deleted. Please delete it from Google Sheet too!`, "🗑️");
-            setTimeout(() => { window.fetchActiveTests(); }, 1500);
+
+            // Add to hidden list permanently
+            let hidden = window.getHiddenTests();
+            if(!hidden.includes(code)) hidden.push(code);
+            localStorage.setItem('mockSarthiHidden', JSON.stringify(hidden));
+
+            // Remove from active UI instantly
+            window.globalActiveTests = window.globalActiveTests.filter(x => x.code !== code);
+            window.adminUnifiedTests = window.adminUnifiedTests.filter(x => x.code !== code);
+            window.renderDashboard();
+
+            window.showCustomAlert("Deleted", `Test Code: ${code} hidden permanently.`, "🗑️");
         }, "🗑️"); 
     };
 
@@ -1312,15 +1357,18 @@
         let raw = t.rawText;
         if(!raw && t.questions && t.questions.length > 0) {
             raw = t.questions.map((q,i)=>{let pa=q.passage?`!P ${q.passage.replace(/<br>/g,'\n')}\n`:"";let qs=`!!${i+1}! ${q.q.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;let op=q.opts.map(o=>`!${o.id} ${o.text}`).join('\n')+'\n';let an=`!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;let ex=q.exp?`!!!! ${q.exp.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`:"";return pa+qs+op+an+ex;}).join('\n');
+            t.rawText = raw;
         }
 
-        // 🔥 FIX: IF RAW TEXT STILL EMPTY (Server Data Only), FETCH IT FIRST 🔥
+        // 🔥 FIX: FETCH IF RAW TEXT IS MISSING LOCALLY 🔥
         if(!raw && (!t.questions || t.questions.length === 0)) {
             window.fetchTestForAdmin(code, 'pdf', mode);
             return;
         }
         
         let pQs=window.parseRawQuestions(raw); 
+        if(!pQs || pQs.length === 0) return window.showCustomAlert("Parse Error", "No valid questions found to generate PDF.", "❌");
+
         window.examData={exam:t.exam, subject:t.subject||t.sub||"Subject", topic:t.topic, code:t.code, questions:pQs}; 
         window.studentInfo.name="Ankush Kumar S/O Manoj Kumar"; 
         window.userAnswers=[]; 
