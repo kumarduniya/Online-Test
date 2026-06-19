@@ -72,20 +72,19 @@
         .dash-welcome-box { background:#fff; border:1px solid #ddd; padding:15px; border-radius:8px; margin-bottom:25px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
 
-        /* 🔥 EXAM CONTAINER LAYOUT & OLD FULL-WIDTH OPTIONS 🔥 */
+        /* 🔥 EXAM CONTAINER LAYOUT 🔥 */
         .exam-container { display: flex; flex-direction: column; background: #fff; } 
         .left-panel { display: flex; flex-direction: column; padding: 15px 20px 180px 20px; box-sizing: border-box; } 
         .q-header { font-size: 18px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; color: #1f4e79; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         #q-scroll-area { padding-bottom: 10px; width: 100%; display: block; } 
         
-        /* 🔥 FIX: RESTORED OLD FULL-WIDTH OPTIONS UI 🔥 */
+        /* 🔥 FIX: RESTORED FULL-WIDTH OPTIONS UI WITH PERFECT ALIGNMENT 🔥 */
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; width: 100%; display:block;}
-        .options-div { display: block; width: 100%; } /* Changed from flex to block to guarantee full width */
-        .opt-label { display: block; width: 100%; padding: 14px 18px; border: 2px solid #e0e0e0; margin-bottom: 12px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: 600; box-sizing: border-box; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .opt-label:hover { background: #f8f9fa; border-color: #b0c4de; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.05);}
-        .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 4px 10px rgba(31,78,121,0.15); transform: translateY(-2px); } 
-        .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.4); accent-color: #1f4e79; cursor: pointer; }
+        .options-div { display: flex; flex-direction: column; width: 100%; } 
+        .opt-label { display: flex; align-items: flex-start; width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; box-sizing: border-box; }
+        .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); } 
+        .opt-label input[type="radio"] { margin-right: 12px; margin-top: 3px; transform: scale(1.3); accent-color: #1f4e79; flex-shrink: 0; cursor: pointer; }
         
         #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px; }
@@ -186,7 +185,6 @@
 </head>
 <body>
 
-<!-- ALERT MODAL -->
 <div id="custom-modal" class="modal-overlay">
     <div class="modal-box">
         <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
@@ -212,7 +210,6 @@
         </div>
     </div>
 
-    <!-- 🔥 BRAND NEW STUDENT REGISTRATION / LOGIN SECTION 🔥 -->
     <div id="student-auth-view" class="view-section">
         <div id="auth-login-box" class="auth-box">
             <h3 style="color:#1f4e79; margin-top:0;">🌐 Student Login</h3>
@@ -261,7 +258,6 @@
         </div>
     </div>
 
-    <!-- MAIN STUDENT DASHBOARD -->
     <div id="student-dashboard-view" class="view-section">
         <div class="dash-welcome-box">
             <div>
@@ -280,7 +276,6 @@
             <div id="breadcrumb-container" class="breadcrumb-nav" style="display:none;"></div>
             <div id="st-active-loader" style="text-align:center;display:none;"><div class="loader"></div> Loading active tests...</div>
             <div id="st-folder-view"></div>
-            <!-- SPLIT SCREEN LAYOUT -->
             <div id="st-app-layout" class="app-layout" style="display:none;">
                 <div class="sidebar-menu" id="st-sidebar-menu"></div>
                 <div class="content-area" id="st-content-area"></div>
@@ -310,10 +305,8 @@
         </div>
     </div>
 
-    <!-- 🔥 ALWAYS VISIBLE ADMIN LOCK 🔥 -->
     <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin();" title="Admin Login" style="display:flex;">🔒</div>
 
-    <!-- ADMIN LOGIN -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -341,7 +334,6 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -494,7 +486,6 @@
         </div>
     </div>
 
-    <!-- STUDENT LOGIN FOR DIRECT TEST LINK -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Entry</h3>
@@ -518,7 +509,6 @@
                 <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
                     🎉 This PDF is Free for everyone!
                 </div>
-                <!-- Auth user details hidden -->
                 <input type="tel" id="pdf-phone" style="display:none;">
                 <input type="text" id="pdf-pass" placeholder="Enter password..." style="width:100%; padding:10px; box-sizing:border-box;">
                 <div id="pdf-action-area"></div>
@@ -530,7 +520,6 @@
         </div>
     </div>
 
-    <!-- EXAM VIEW -->
     <div id="exam-view" class="view-section" style="padding:0; display:none;" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -575,7 +564,6 @@
         </div>
     </div>
 
-    <!-- RESULT VIEW -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -627,7 +615,7 @@
     window.isReattemptMode = false; window.currentGeneratedPass = ""; 
     window.globalActiveTests = []; window.adminUnifiedTests = []; window.currentAnalysisArray = []; window.currentAnalysisIndex = 0; window.currentAnalysisType = "";
 
-    // 🔥 SMART MERGE FUNCTION TO PREVENT ARRAY DUPLICATION LAG 🔥
+    // 🔥 FIX: SMART MERGE FUNCTION TO PREVENT ARRAY DUPLICATION LAG 🔥
     window.getAllMergedTests = function() {
         let allTests = [];
         if(window.globalActiveTests && window.globalActiveTests.length > 0) {
@@ -675,6 +663,45 @@
             let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/); if (matchSubcat) res.subcat = matchSubcat[1];
             return res;
         } else { res.topic = raw; res.subcat = raw; return res; }
+    };
+
+    // 🔥 FIX: AUTO DOWNLOADER FOR MISSING QUESTIONS IN ADMIN PANEL 🔥
+    window.adminActionCode = ''; window.adminActionMode = ''; window.adminPdfMode = '';
+    
+    window.fetchTestForAdmin = function(code, action, mode) {
+        window.adminActionCode = code; window.adminActionMode = action; window.adminPdfMode = mode;
+        window.showCustomAlert("Please wait", "Downloading test data securely from server...", "⏳");
+        let script = document.createElement('script'); 
+        script.src = SCRIPT_URL+"?action=getTest&testCode="+code+"&callback=handleAdminTestLoad&t="+new Date().getTime();
+        document.body.appendChild(script);
+    };
+
+    window.handleAdminTestLoad = function(data) {
+        window.closeModal();
+        if(data.error) return window.showCustomAlert("Error", "Test not found on server!", "❌");
+        
+        let sTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+        let eIdx = sTests.findIndex(t => t.code === data.code);
+        
+        let raw = data.rawText;
+        if(!raw && data.questions && data.questions.length>0){
+            raw = data.questions.map((q,i)=>{
+                let pa=q.passage?`!P ${q.passage.replace(/<br>/g,'\n')}\n`:"";
+                let qs=`!!${i+1}! ${q.q.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;
+                let op=q.opts.map(o=>`!${o.id} ${o.text}`).join('\n')+'\n';
+                let an=`!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;
+                let ex=q.exp?`!!!! ${q.exp.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`:"";
+                return pa+qs+op+an+ex;
+            }).join('\n');
+            data.rawText = raw;
+        }
+
+        if(eIdx >= 0) { sTests[eIdx] = {...sTests[eIdx], ...data}; } else { sTests.push(data); }
+        localStorage.setItem('myMockTests', JSON.stringify(sTests));
+        window.renderDashboard();
+
+        if(window.adminActionMode === 'edit') { window.editTest(window.adminActionCode); } 
+        else if (window.adminActionMode === 'pdf') { window.adminDownloadPDF(window.adminActionCode, window.adminPdfMode); }
     };
 
     // AUTH
@@ -894,7 +921,8 @@
         window.toggleAdminLock(true);
         if(tab==='active'){
             document.getElementById('tab-st-active').classList.add('active'); document.getElementById('tab-st-history').classList.remove('active');
-            document.getElementById('st-active-section').style.display='block'; document.getElementById('st-history-section').style.display='none'; window.fetchActiveTests();
+            document.getElementById('st-active-section').style.display='block'; document.getElementById('st-history-section').style.display='none'; 
+            window.fetchActiveTests();
         } else {
             document.getElementById('tab-st-history').classList.add('active'); document.getElementById('tab-st-active').classList.remove('active');
             document.getElementById('st-active-section').style.display='none'; document.getElementById('st-history-section').style.display='block';
@@ -908,7 +936,8 @@
     };
 
     window.fetchActiveTests = function() {
-        document.getElementById('st-active-loader').style.display='block'; document.getElementById('st-folder-view').innerHTML='';
+        document.getElementById('st-active-loader').style.display='block'; 
+        document.getElementById('st-folder-view').innerHTML='';
         if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
         
         let script=document.createElement('script'); 
@@ -1025,7 +1054,7 @@
         }); html+=`</div>`; contentArea.innerHTML=html;
     };
 
-    // ADMIN 
+    // 🔥 FIX: ADMIN PANEL FAST CACHE 🔥
     window.switchAdminTab = function(tab) {
         if(tab==='create'){
             document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
@@ -1034,7 +1063,13 @@
         } else if (tab==='manage') {
             document.getElementById('tab-manage').classList.add('active'); document.getElementById('tab-create').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
             document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='block'; document.getElementById('admin-icons-section').style.display='none'; 
-            window.fetchActiveTests(); // Fetches live tests then calls renderDashboard
+            
+            // 🔥 FAST CACHE: Don't fetch if already fetched!
+            if (window.globalActiveTests && window.globalActiveTests.length > 0) {
+                window.renderDashboard();
+            } else {
+                window.fetchActiveTests(); 
+            }
         } else {
             document.getElementById('tab-icons').classList.add('active'); document.getElementById('tab-create').classList.remove('active'); document.getElementById('tab-manage').classList.remove('active');
             document.getElementById('admin-create-section').style.display='none'; document.getElementById('admin-manage-section').style.display='none'; document.getElementById('admin-icons-section').style.display='block'; window.loadAdminIcons();
@@ -1181,9 +1216,8 @@
         let list = document.getElementById('dashboard-list');
         if(sTests.length === 0){ list.innerHTML="<p style='text-align:center;'>No tests saved.</p>"; return; }
         
-        let wId = sTests.map((t,i) => ({...t, orig: i}));
         let grp = {};
-        wId.forEach(t => {
+        sTests.forEach(t => {
             let p = window.parseHack(t.topic);
             let b = p.board || t.exam || "General Exam";
             if(!grp[b]) grp[b] = [];
@@ -1200,7 +1234,7 @@
                 let qC = p.qs || t.qs || 0;
                 if(!qC || qC === 0 || qC === "N/A"){ if(t.questions && Array.isArray(t.questions) && t.questions.length>0) qC=t.questions.length; else if(t.rawText){ let m=t.rawText.match(/!!\s*\d+\s*!/g); if(m) qC=m.length; } }
                 
-                h += `<div class="test-card"><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><h4 style="margin:0;">🎓 ${cEx} | ${cSu} (${t.code})</h4> ${sBtn}</div><div style="margin-bottom:10px;"><span class="badge" style="background:#17a2b8;color:white;">📂 ${cCa}</span><span class="badge" style="background:#1f4e79;color:white;">Qs: ${qC}</span><span class="badge">${pT}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span><span class="badge" style="background:#ffc107;">Key: ${t.key||'N/A'}</span></div><input type="text" value="${t.link || (BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:5px;border:1px solid #ccc;font-size:12px;margin-bottom:5px;"><div style="margin-top:5px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid #eee;padding-top:10px;"><button class="btn btn-blue" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.editTest(${t.orig})">✏️ Edit</button><button class="btn" style="background:#dc3545;margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.deleteTest(${t.orig})">🗑️ Delete</button><button class="btn btn-outline" style="margin:0;padding:5px 10px;width:auto;font-size:12px;" onclick="navigator.clipboard.writeText('${t.link || (BASE_URL+'?test='+t.code)}');window.showCustomAlert('Copied','Link copied successfully!','✅');">📋 Copy Link</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.adminDownloadPDF(${t.orig},'q_only')">📝 Qs Only</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#17a2b8;" onclick="window.adminDownloadPDF(${t.orig},'q_ans')">✅ Qs+Ans</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#28a745;" onclick="window.adminDownloadPDF(${t.orig},'full')">📚 Full PDF</button></div></div>`;
+                h += `<div class="test-card"><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><h4 style="margin:0;">🎓 ${cEx} | ${cSu} (${t.code})</h4> ${sBtn}</div><div style="margin-bottom:10px;"><span class="badge" style="background:#17a2b8;color:white;">📂 ${cCa}</span><span class="badge" style="background:#1f4e79;color:white;">Qs: ${qC}</span><span class="badge">${pT}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span><span class="badge" style="background:#ffc107;">Key: ${t.key||'N/A'}</span></div><input type="text" value="${t.link || (BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:5px;border:1px solid #ccc;font-size:12px;margin-bottom:5px;"><div style="margin-top:5px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid #eee;padding-top:10px;"><button class="btn btn-blue" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.editTest('${t.code}')">✏️ Edit</button><button class="btn" style="background:#dc3545;margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button><button class="btn btn-outline" style="margin:0;padding:5px 10px;width:auto;font-size:12px;" onclick="navigator.clipboard.writeText('${t.link || (BASE_URL+'?test='+t.code)}');window.showCustomAlert('Copied','Link copied successfully!','✅');">📋 Copy Link</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.adminDownloadPDF('${t.code}','q_only')">📝 Qs Only</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#17a2b8;" onclick="window.adminDownloadPDF('${t.code}','q_ans')">✅ Qs+Ans</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#28a745;" onclick="window.adminDownloadPDF('${t.code}','full')">📚 Full PDF</button></div></div>`;
             });
         }
         list.innerHTML = h;
@@ -1220,14 +1254,9 @@
         document.body.appendChild(script);
     };
 
-    window.editTest = function(idx) {
-        let t = window.adminUnifiedTests[idx]; 
-        if(!t)return; let p = window.parseHack(t.topic);
-        document.getElementById('a-board').value=p.board||t.exam||""; document.getElementById('a-exam').value=t.exam||""; document.getElementById('a-logo').value=p.logo||"";
-        let cS=document.getElementById('a-category'); let opts=Array.from(cS.options).map(o=>o.value);
-        if(opts.includes(p.cat)){cS.value=p.cat;document.getElementById('a-custom-cat').style.display='none';}else{cS.value="CUSTOM";document.getElementById('a-custom-cat').style.display='block';document.getElementById('a-custom-cat').value=p.cat;}
-        document.getElementById('a-sub').value=p.subcat||t.subject||t.sub||""; document.getElementById('a-topic').value=p.topic||""; document.getElementById('a-code').value=t.code||""; document.getElementById('a-marks').value=t.marks||2; document.getElementById('a-neg').value=t.neg||0; document.getElementById('a-tot-time').value=t.totTime||0; document.getElementById('a-q-time').value=t.qTime||0;
-        let isF=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); if(isF||t.price==="Free"){document.getElementById('a-pdf-type').value="free";}else{document.getElementById('a-pdf-type').value="paid";document.getElementById('a-price').value=t.price||"";}
+    window.editTest = function(code) {
+        let t = window.adminUnifiedTests.find(x => x.code === code); 
+        if(!t)return; 
         
         let raw = t.rawText; 
         if(!raw && t.questions && t.questions.length>0){
@@ -1239,7 +1268,21 @@
                 let ex=q.exp?`!!!! ${q.exp.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`:"";
                 return pa+qs+op+an+ex;
             }).join('\n');
+            t.rawText = raw;
         }
+
+        // 🔥 FIX: IF RAW TEXT STILL EMPTY (Server Data Only), FETCH IT FIRST 🔥
+        if(!raw && (!t.questions || t.questions.length === 0)) {
+            window.fetchTestForAdmin(code, 'edit', null);
+            return;
+        }
+
+        let p = window.parseHack(t.topic);
+        document.getElementById('a-board').value=p.board||t.exam||""; document.getElementById('a-exam').value=t.exam||""; document.getElementById('a-logo').value=p.logo||"";
+        let cS=document.getElementById('a-category'); let opts=Array.from(cS.options).map(o=>o.value);
+        if(opts.includes(p.cat)){cS.value=p.cat;document.getElementById('a-custom-cat').style.display='none';}else{cS.value="CUSTOM";document.getElementById('a-custom-cat').style.display='block';document.getElementById('a-custom-cat').value=p.cat;}
+        document.getElementById('a-sub').value=p.subcat||t.subject||t.sub||""; document.getElementById('a-topic').value=p.topic||""; document.getElementById('a-code').value=t.code||""; document.getElementById('a-marks').value=t.marks||2; document.getElementById('a-neg').value=t.neg||0; document.getElementById('a-tot-time').value=t.totTime||0; document.getElementById('a-q-time').value=t.qTime||0;
+        let isF=(t.isFree===true||String(t.isFree).toLowerCase()==="true"); if(isF||t.price==="Free"){document.getElementById('a-pdf-type').value="free";}else{document.getElementById('a-pdf-type').value="paid";document.getElementById('a-price').value=t.price||"";}
         
         document.getElementById('a-key').value=t.key||""; document.getElementById('a-rawdata').value=raw||""; document.getElementById('a-qs-count').value=window.parseRawQuestions(raw||"").length;
         
@@ -1252,26 +1295,30 @@
         btn.style.background = "#f39c12"; 
     };
 
-    window.deleteTest = function(idx) { 
-        let t = window.adminUnifiedTests[idx]; 
-        window.showCustomConfirm("Delete Test", `Delete Test <b>${t.code}</b> locally. Please manually delete its row from Google Sheet too!`, () => {
+    window.deleteTest = function(code) { 
+        window.showCustomConfirm("Delete Test", `Delete Test <b>${code}</b> locally. Please manually delete its row from Google Sheet too!`, () => {
             let sT=JSON.parse(localStorage.getItem('myMockTests'))||[];
-            sT = sT.filter(x => x.code !== t.code);
+            sT = sT.filter(x => x.code !== code);
             localStorage.setItem('myMockTests',JSON.stringify(sT));
-            window.showCustomAlert("Deleted", `Test Code: ${t.code} locally deleted. Please delete it from Google Sheet too!`, "🗑️");
+            window.showCustomAlert("Deleted", `Test Code: ${code} locally deleted. Please delete it from Google Sheet too!`, "🗑️");
             setTimeout(() => { window.fetchActiveTests(); }, 1500);
         }, "🗑️"); 
     };
 
-    window.adminDownloadPDF = function(idx, mode) {
-        let t = window.adminUnifiedTests[idx];
+    window.adminDownloadPDF = function(code, mode) {
+        let t = window.adminUnifiedTests.find(x => x.code === code);
         if(!t) return window.showCustomAlert("Error","Data not found!","❌");
         
         let raw = t.rawText;
         if(!raw && t.questions && t.questions.length > 0) {
             raw = t.questions.map((q,i)=>{let pa=q.passage?`!P ${q.passage.replace(/<br>/g,'\n')}\n`:"";let qs=`!!${i+1}! ${q.q.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;let op=q.opts.map(o=>`!${o.id} ${o.text}`).join('\n')+'\n';let an=`!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;let ex=q.exp?`!!!! ${q.exp.replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`:"";return pa+qs+op+an+ex;}).join('\n');
         }
-        if(!raw) return window.showCustomAlert("Error","Raw text not available! Please edit and update test first.","❌");
+
+        // 🔥 FIX: IF RAW TEXT STILL EMPTY (Server Data Only), FETCH IT FIRST 🔥
+        if(!raw && (!t.questions || t.questions.length === 0)) {
+            window.fetchTestForAdmin(code, 'pdf', mode);
+            return;
+        }
         
         let pQs=window.parseRawQuestions(raw); 
         window.examData={exam:t.exam, subject:t.subject||t.sub||"Subject", topic:t.topic, code:t.code, questions:pQs}; 
@@ -1395,6 +1442,7 @@
     window.prevAnalysis = function() { if(window.currentAnalysisIndex>0) { window.currentAnalysisIndex--; window.renderAnalysisSlide(); } }; 
     window.nextAnalysis = function() { if(window.currentAnalysisIndex<window.currentAnalysisArray.length-1) { window.currentAnalysisIndex++; window.renderAnalysisSlide(); } };
 
+    // RESULTS & PDF
     window.drawReportCard = function(rank, totalStudents, maxScore) {
         let cvs=document.getElementById('reportCard'); let ctx=cvs.getContext('2d'); ctx.fillStyle='#fdfdfd'; ctx.fillRect(0,0,800,650); ctx.fillStyle='#1f4e79'; ctx.fillRect(0,0,800,140); ctx.fillStyle='#ffffff'; ctx.textAlign='center'; ctx.font='bold 36px Arial'; ctx.fillText(window.examData.exam.toUpperCase(),400,50);
         let p=window.parseHack(window.examData.topic); let dT=p.topic||""; ctx.font='22px Arial'; ctx.fillText((window.examData.subject||window.examData.sub||"Subject")+(dT?" - "+dT:""),400,85); ctx.font='16px Arial'; ctx.fillStyle='#f39c12'; ctx.fillText("TEST CODE: "+window.examData.code,400,115);
