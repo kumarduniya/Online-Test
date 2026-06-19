@@ -32,21 +32,22 @@
         .tab-btn { flex: 1; padding: 15px; font-weight: bold; font-size: 15px; cursor: pointer; background: #e9ecef; border: none; outline: none; white-space: nowrap; min-width:130px; }
         .tab-btn.active { background: #1f4e79; color: white; }
 
-        /* 🔥 OLD PERFECT ROUND ICONS 🔥 */
+        /* 🔥 PREMIUM ICONS (LEVEL 1) 🔥 */
         .exam-grid { display: flex; flex-wrap: wrap; gap: 25px; justify-content: center; padding: 10px 0; width: 100%; }
         .exam-icon-card { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; cursor: pointer; width: 130px; transition: 0.3s; text-align: center; }
-        .exam-icon-card:hover { transform: translateY(-5px); }
-        .exam-icon-wrapper { width: 90px; height: 90px; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #e9ecef; padding: 5px; }
-        .exam-icon-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+        .exam-icon-wrapper { width: 90px; height: 90px; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: #fff; display: flex; align-items: center; justify-content: center; border: 2px solid #e0e0e0; transition: 0.3s; padding: 5px; box-sizing: border-box; }
+        .exam-icon-img { width: 100%; height: 100%; object-fit: contain; border-radius:50%;}
+        .exam-icon-card:hover .exam-icon-wrapper { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(31,78,121,0.15); border-color: #1f4e79; }
         .exam-icon-title { font-size: 14px; font-weight: 900; color: #1f4e79; margin: 0; line-height: 1.3; text-transform: uppercase; }
 
+        /* 🔥 SUB-EXAM CARDS (LEVEL 2) 🔥 */
         .sub-exam-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; }
         .exam-card-l2 { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.04); width: 45%; min-width: 120px; max-width: 200px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
         .exam-card-l2:hover { transform: translateY(-5px); border-color: #1f4e79; box-shadow: 0 8px 15px rgba(31,78,121,0.1); }
         .exam-card-l2-icon { font-size: 35px; margin-bottom: 8px; }
         .exam-card-l2-title { font-size: 14px; font-weight: 800; color: #1f4e79; margin: 0; line-height: 1.2; text-transform: uppercase; }
 
-        .folder-card { background: #fff; border: 2px solid #1f4e79; border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); width: 100%; box-sizing: border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .folder-card { background: #fff; border: 2px solid #1f4e79; border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); box-sizing: border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; width: 100%; }
         .folder-card:hover { transform: translateY(-5px); background: #f8f9fa; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color:#f39c12; }
         .folder-icon { font-size: 45px; margin-bottom: 10px; } .folder-title { font-size: 16px; font-weight: 900; color: #1f4e79; margin: 0; line-height:1.3; }
         
@@ -78,11 +79,13 @@
         .q-timer-badge { background:#ffc107; color:#000; padding:4px 10px; border-radius:4px; font-size:14px; font-weight:bold; }
         #q-scroll-area { padding-bottom: 10px; width: 100%; display: block; } 
         
+        /* 🔥 FIX: RESTORED OLD FULL-WIDTH OPTIONS UI 🔥 */
         .q-text { font-size: 17px; line-height: 1.5; color: #222; margin-bottom: 15px; font-weight: bold; width: 100%; display:block;}
-        .options-div { display: flex; flex-direction: column; width: 100%; }
-        .opt-label { display: block; width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; margin-bottom: 10px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: normal; box-sizing: border-box; }
-        .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 2px 8px rgba(31,78,121,0.2); } 
-        .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: #1f4e79; }
+        .options-div { display: block; width: 100%; } /* Changed from flex to block to guarantee full width */
+        .opt-label { display: block; width: 100%; padding: 14px 18px; border: 2px solid #e0e0e0; margin-bottom: 12px; border-radius: 8px; cursor: pointer; background: #fff; transition: 0.2s ease-in-out; font-size: 16px; font-weight: 600; box-sizing: border-box; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .opt-label:hover { background: #f8f9fa; border-color: #b0c4de; transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.05);}
+        .opt-label.selected { background: #e3f2fd; border-color: #1f4e79; color: #1f4e79; font-weight: bold; box-shadow: 0 4px 10px rgba(31,78,121,0.15); transform: translateY(-2px); } 
+        .opt-label input[type="radio"] { margin-right: 12px; transform: scale(1.4); accent-color: #1f4e79; cursor: pointer; }
         
         #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; z-index: 1000; padding: 15px; border-top: 1px solid #e0e0e0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: none; }
         .mini-palette-wrapper { position: relative; margin-bottom: 12px; margin-top: 5px; }
@@ -183,6 +186,7 @@
 </head>
 <body>
 
+<!-- ALERT MODAL -->
 <div id="custom-modal" class="modal-overlay">
     <div class="modal-box">
         <div id="modal-icon" style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
@@ -208,6 +212,7 @@
         </div>
     </div>
 
+    <!-- 🔥 BRAND NEW STUDENT REGISTRATION / LOGIN SECTION 🔥 -->
     <div id="student-auth-view" class="view-section">
         <div id="auth-login-box" class="auth-box">
             <h3 style="color:#1f4e79; margin-top:0;">🌐 Student Login</h3>
@@ -256,6 +261,7 @@
         </div>
     </div>
 
+    <!-- MAIN STUDENT DASHBOARD -->
     <div id="student-dashboard-view" class="view-section">
         <div class="dash-welcome-box">
             <div>
@@ -274,6 +280,7 @@
             <div id="breadcrumb-container" class="breadcrumb-nav" style="display:none;"></div>
             <div id="st-active-loader" style="text-align:center;display:none;"><div class="loader"></div> Loading active tests...</div>
             <div id="st-folder-view"></div>
+            <!-- SPLIT SCREEN LAYOUT -->
             <div id="st-app-layout" class="app-layout" style="display:none;">
                 <div class="sidebar-menu" id="st-sidebar-menu"></div>
                 <div class="content-area" id="st-content-area"></div>
@@ -303,8 +310,10 @@
         </div>
     </div>
 
+    <!-- 🔥 ALWAYS VISIBLE ADMIN LOCK 🔥 -->
     <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin();" title="Admin Login" style="display:flex;">🔒</div>
 
+    <!-- ADMIN LOGIN -->
     <div id="admin-auth-view" class="view-section" style="text-align: center; margin-top: 50px;">
         <div style="max-width: 400px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #1f4e79;">
             <h3 style="color:#1f4e79; margin-top: 0;">🔒 Admin Login</h3>
@@ -332,6 +341,7 @@
         <button class="btn btn-blue" style="max-width: 250px; margin: 0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
     </div>
 
+    <!-- ADMIN PANEL -->
     <div id="admin-view" class="view-section">
         <div class="admin-tabs">
             <button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -484,6 +494,7 @@
         </div>
     </div>
 
+    <!-- STUDENT LOGIN FOR DIRECT TEST LINK -->
     <div id="login-view" class="view-section">
         <div id="specific-test-login" style="max-width: 450px; margin: 30px auto; background: #fdfdfd; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top:4px solid #f39c12;">
             <h3 style="color: #1f4e79; text-align: center; margin-bottom: 5px;" id="login-test-name">Test Entry</h3>
@@ -507,6 +518,7 @@
                 <div id="free-instructions" style="font-size: 13px; color: #28a745; margin-bottom: 10px; display: none; font-weight:bold;">
                     🎉 This PDF is Free for everyone!
                 </div>
+                <!-- Auth user details hidden -->
                 <input type="tel" id="pdf-phone" style="display:none;">
                 <input type="text" id="pdf-pass" placeholder="Enter password..." style="width:100%; padding:10px; box-sizing:border-box;">
                 <div id="pdf-action-area"></div>
@@ -518,6 +530,7 @@
         </div>
     </div>
 
+    <!-- EXAM VIEW -->
     <div id="exam-view" class="view-section" style="padding:0; display:none;" oncontextmenu="return false;">
         <div class="exam-container">
             <div class="left-panel">
@@ -562,6 +575,7 @@
         </div>
     </div>
 
+    <!-- RESULT VIEW -->
     <div id="result-view" class="view-section" oncontextmenu="return false;">
         <h2 style="color: #28a745; margin-bottom: 5px;" id="result-heading">Test Submitted Successfully!</h2>
         
@@ -606,11 +620,27 @@
     window.examData = { exam: "", subject: "", topic: "", code: "", isFree: false, price: "", key: "", marks: 2, neg: 0.5, totTime: 0, qTime: 0, questions: [], category: "Mock Tests", logo: "" };
     window.userAnswers = []; window.qStatus = []; window.currentQ = 0;
     
+    // STUDENT INFO LOCAL STORAGE OBJECT
     window.studentInfo = { name: "", email: "", phone: "", isPremium: "FALSE", score: 0, right: 0, wrong: 0, blank: 0, time: 0, attempt: 1 };
     
     window.globalTimer = null; window.qTimer = null; window.globalTimeLeft = 0; window.qTimeLeft = 0; window.totalTimeSpent = 0;
     window.isReattemptMode = false; window.currentGeneratedPass = ""; 
     window.globalActiveTests = []; window.adminUnifiedTests = []; window.currentAnalysisArray = []; window.currentAnalysisIndex = 0; window.currentAnalysisType = "";
+
+    // 🔥 SMART MERGE FUNCTION TO PREVENT ARRAY DUPLICATION LAG 🔥
+    window.getAllMergedTests = function() {
+        let allTests = [];
+        if(window.globalActiveTests && window.globalActiveTests.length > 0) {
+            allTests = [...window.globalActiveTests];
+        }
+        let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+        localTests.forEach(lt => {
+            if(lt.isActive && !allTests.find(st => st.code === lt.code)) {
+                allTests.push(lt);
+            }
+        });
+        return allTests;
+    };
 
     // UTILS
     window.toggleAdminLock = function(show) {
@@ -889,9 +919,7 @@
     
     window.handleActiveTests = function(data) {
         document.getElementById('st-active-loader').style.display='none';
-        let serverTests=data.tests||[]; 
-        window.globalActiveTests = serverTests; 
-        
+        window.globalActiveTests = data.tests || []; 
         if(document.getElementById('admin-manage-section').style.display==='block') window.renderDashboard(); 
         else window.showExamsView();
     };
@@ -900,10 +928,7 @@
         document.getElementById('breadcrumb-container').style.display='none'; 
         if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
         
-        let allTests = window.globalActiveTests;
-        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
-        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
-        
+        let allTests = window.getAllMergedTests();
         let list=document.getElementById('st-folder-view'); list.style.display='flex';
         let boards=[...new Set(allTests.map(t=>window.parseHack(t.topic).board||t.exam||"General Exam"))];
         let examLogos={}; allTests.forEach(t=>{let p=window.parseHack(t.topic); let bName=p.board||t.exam||"General Exam"; if(p.logo) examLogos[bName]=p.logo;});
@@ -921,10 +946,7 @@
         if(document.getElementById('st-app-layout')) document.getElementById('st-app-layout').style.display='none'; 
         let list=document.getElementById('st-folder-view'); list.style.display='flex'; list.style.justifyContent='center'; list.style.flexWrap='wrap'; list.style.gap='15px';
         
-        let allTests = window.globalActiveTests;
-        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
-        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
-
+        let allTests = window.getAllMergedTests();
         let boardTests=allTests.filter(t=> (window.parseHack(t.topic).board||t.exam||"General Exam")===boardName);
         let subExams=[...new Set(boardTests.map(t=>t.exam||boardName))]; let html=`<div class="sub-exam-grid">`;
         subExams.forEach(subEx=>{
@@ -939,10 +961,7 @@
         document.getElementById('st-folder-view').style.display='none'; 
         let layout=document.getElementById('st-app-layout'); layout.style.display='flex';
         
-        let allTests = window.globalActiveTests;
-        let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
-        localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
-
+        let allTests = window.getAllMergedTests();
         let examTests=allTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName;});
         
         let coreCats=["Previous Year Papers", "Mock Tests", "Sectional Tests", "Chapter Tests"]; 
@@ -977,10 +996,7 @@
     window.renderDirectTests = function(boardName, subExamName, activeCat, subjectName, preFilteredTests=null) {
         let contentArea=document.getElementById('st-content-area'); let testsToRender=preFilteredTests;
         if(!testsToRender) {
-            let allTests = window.globalActiveTests;
-            let localTests = JSON.parse(localStorage.getItem('myMockTests'))||[];
-            localTests.forEach(lt=>{if(lt.isActive && !allTests.find(st=>st.code===lt.code)) allTests.push(lt);});
-
+            let allTests = window.getAllMergedTests();
             let examTests=allTests.filter(t=>{let p=window.parseHack(t.topic); return (p.board||t.exam||"General Exam")===boardName && (t.exam||boardName)===subExamName && p.cat===activeCat;});
             testsToRender=examTests.filter(t=>(window.parseHack(t.topic).subcat||t.subject||t.sub||"General Studies")===subjectName);
         }
@@ -1009,7 +1025,7 @@
         }); html+=`</div>`; contentArea.innerHTML=html;
     };
 
-    // ADMIN
+    // ADMIN 
     window.switchAdminTab = function(tab) {
         if(tab==='create'){
             document.getElementById('tab-create').classList.add('active'); document.getElementById('tab-manage').classList.remove('active'); document.getElementById('tab-icons').classList.remove('active');
@@ -1184,7 +1200,7 @@
                 let qC = p.qs || t.qs || 0;
                 if(!qC || qC === 0 || qC === "N/A"){ if(t.questions && Array.isArray(t.questions) && t.questions.length>0) qC=t.questions.length; else if(t.rawText){ let m=t.rawText.match(/!!\s*\d+\s*!/g); if(m) qC=m.length; } }
                 
-                h += `<div class="test-card"><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><h4 style="margin:0;">🎓 ${cEx} | ${cSu} (${t.code})</h4> ${sBtn}</div><div style="margin-bottom:10px;"><span class="badge" style="background:#17a2b8;color:white;">📂 ${cCa}</span><span class="badge" style="background:#1f4e79;color:white;">Qs: ${qC}</span><span class="badge">${pT}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span><span class="badge" style="background:#ffc107;">Key: ${t.key||'N/A'}</span></div><input type="text" value="${t.link || (BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:5px;border:1px solid #ccc;font-size:12px;margin-bottom:5px;"><div style="margin-top:5px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid #eee;padding-top:10px;"><button class="btn btn-blue" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.editTest('${t.code}')">✏️ Edit</button><button class="btn" style="background:#dc3545;margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button><button class="btn btn-outline" style="margin:0;padding:5px 10px;width:auto;font-size:12px;" onclick="navigator.clipboard.writeText('${t.link || (BASE_URL+'?test='+t.code)}');window.showCustomAlert('Copied','Link copied successfully!','✅');">📋 Copy Link</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.adminDownloadPDF('${t.code}','q_only')">📝 Qs Only</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#17a2b8;" onclick="window.adminDownloadPDF('${t.code}','q_ans')">✅ Qs+Ans</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#28a745;" onclick="window.adminDownloadPDF('${t.code}','full')">📚 Full PDF</button></div></div>`;
+                h += `<div class="test-card"><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><h4 style="margin:0;">🎓 ${cEx} | ${cSu} (${t.code})</h4> ${sBtn}</div><div style="margin-bottom:10px;"><span class="badge" style="background:#17a2b8;color:white;">📂 ${cCa}</span><span class="badge" style="background:#1f4e79;color:white;">Qs: ${qC}</span><span class="badge">${pT}</span><span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span><span class="badge" style="background:#ffc107;">Key: ${t.key||'N/A'}</span></div><input type="text" value="${t.link || (BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:5px;border:1px solid #ccc;font-size:12px;margin-bottom:5px;"><div style="margin-top:5px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid #eee;padding-top:10px;"><button class="btn btn-blue" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.editTest(${t.orig})">✏️ Edit</button><button class="btn" style="background:#dc3545;margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.deleteTest(${t.orig})">🗑️ Delete</button><button class="btn btn-outline" style="margin:0;padding:5px 10px;width:auto;font-size:12px;" onclick="navigator.clipboard.writeText('${t.link || (BASE_URL+'?test='+t.code)}');window.showCustomAlert('Copied','Link copied successfully!','✅');">📋 Copy Link</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;" onclick="window.adminDownloadPDF(${t.orig},'q_only')">📝 Qs Only</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#17a2b8;" onclick="window.adminDownloadPDF(${t.orig},'q_ans')">✅ Qs+Ans</button><button class="btn btn-pdf" style="margin:0;padding:5px 10px;font-size:12px;width:auto;background:#28a745;" onclick="window.adminDownloadPDF(${t.orig},'full')">📚 Full PDF</button></div></div>`;
             });
         }
         list.innerHTML = h;
@@ -1204,8 +1220,8 @@
         document.body.appendChild(script);
     };
 
-    window.editTest = function(code) {
-        let t = window.adminUnifiedTests.find(x => x.code === code); 
+    window.editTest = function(idx) {
+        let t = window.adminUnifiedTests[idx]; 
         if(!t)return; let p = window.parseHack(t.topic);
         document.getElementById('a-board').value=p.board||t.exam||""; document.getElementById('a-exam').value=t.exam||""; document.getElementById('a-logo').value=p.logo||"";
         let cS=document.getElementById('a-category'); let opts=Array.from(cS.options).map(o=>o.value);
@@ -1236,18 +1252,19 @@
         btn.style.background = "#f39c12"; 
     };
 
-    window.deleteTest = function(code) { 
-        window.showCustomConfirm("Delete Test", `Delete Test <b>${code}</b> locally. Please manually delete its row from Google Sheet too!`, () => {
+    window.deleteTest = function(idx) { 
+        let t = window.adminUnifiedTests[idx]; 
+        window.showCustomConfirm("Delete Test", `Delete Test <b>${t.code}</b> locally. Please manually delete its row from Google Sheet too!`, () => {
             let sT=JSON.parse(localStorage.getItem('myMockTests'))||[];
-            sT = sT.filter(x => x.code !== code);
+            sT = sT.filter(x => x.code !== t.code);
             localStorage.setItem('myMockTests',JSON.stringify(sT));
-            window.showCustomAlert("Deleted", `Test Code: ${code} locally deleted. Please delete it from Google Sheet too!`, "🗑️");
+            window.showCustomAlert("Deleted", `Test Code: ${t.code} locally deleted. Please delete it from Google Sheet too!`, "🗑️");
             setTimeout(() => { window.fetchActiveTests(); }, 1500);
         }, "🗑️"); 
     };
 
-    window.adminDownloadPDF = function(code, mode) {
-        let t = window.adminUnifiedTests.find(x => x.code === code);
+    window.adminDownloadPDF = function(idx, mode) {
+        let t = window.adminUnifiedTests[idx];
         if(!t) return window.showCustomAlert("Error","Data not found!","❌");
         
         let raw = t.rawText;
@@ -1357,7 +1374,6 @@
         .then(r=>r.json()).then(d=>{window.studentInfo.attempt=d.attempt||(window.isReattemptMode?"Reattempt":1);document.getElementById('rank-loader').style.display='none';let fR=(window.isReattemptMode&&d.totalStudents<=1)?"N/A":d.rank;window.drawReportCard(fR,d.totalStudents,mS);}).catch(()=>{document.getElementById('rank-loader').style.display='none';window.drawReportCard("N/A","N/A",mS);});
     };
 
-    // ANALYSIS
     window.showAnalysis = function(t) {
         window.currentAnalysisArray=[]; window.currentAnalysisType=t;
         window.examData.questions.forEach((q,i)=>{let u=window.userAnswers[i];let c=window.getCleanAns(q.ans);let g=window.getCleanAns(u);let iR=(g===c)&&(u!==null);let iB=u===null;let iW=!iB&&!iR;if((t==='right'&&iR)||(t==='wrong'&&iW)||(t==='blank'&&iB))window.currentAnalysisArray.push({q:q,originalIndex:i,uAns:u,isRight:iR,isBlank:iB});});
@@ -1379,7 +1395,6 @@
     window.prevAnalysis = function() { if(window.currentAnalysisIndex>0) { window.currentAnalysisIndex--; window.renderAnalysisSlide(); } }; 
     window.nextAnalysis = function() { if(window.currentAnalysisIndex<window.currentAnalysisArray.length-1) { window.currentAnalysisIndex++; window.renderAnalysisSlide(); } };
 
-    // RESULTS & PDF
     window.drawReportCard = function(rank, totalStudents, maxScore) {
         let cvs=document.getElementById('reportCard'); let ctx=cvs.getContext('2d'); ctx.fillStyle='#fdfdfd'; ctx.fillRect(0,0,800,650); ctx.fillStyle='#1f4e79'; ctx.fillRect(0,0,800,140); ctx.fillStyle='#ffffff'; ctx.textAlign='center'; ctx.font='bold 36px Arial'; ctx.fillText(window.examData.exam.toUpperCase(),400,50);
         let p=window.parseHack(window.examData.topic); let dT=p.topic||""; ctx.font='22px Arial'; ctx.fillText((window.examData.subject||window.examData.sub||"Subject")+(dT?" - "+dT:""),400,85); ctx.font='16px Arial'; ctx.fillStyle='#f39c12'; ctx.fillText("TEST CODE: "+window.examData.code,400,115);
@@ -1441,22 +1456,6 @@
         pA.innerHTML=h+`</td></tr></tbody></table>`; let oT=document.title; document.title=`${window.examData.subject||window.examData.sub||"Subject"} ${dT?" "+dT:""}MockSarthi test`; document.body.classList.add('print-pdf');
         setTimeout(()=>{window.print();setTimeout(()=>{document.body.classList.remove('print-pdf');document.title=oT;},1000);},800);
     };
-
-    // HELPERS
-    window.togglePriceBox = function() { document.getElementById('price-box').style.display=(document.getElementById('a-pdf-type').value==='free')?'none':'block'; };
-    window.generateStrongPass = function(phone, key) { if(!key) key="ANK"; let mixed=key+phone+"PRO"; let num=0; for(let i=0;i<mixed.length;i++) num+=mixed.charCodeAt(i)*(i+1); let sym=['@','#','$','&','*']; let s1=sym[num%sym.length]; let s2=sym[(num*2)%sym.length]; let l1=String.fromCharCode(65+(num%26)); let l2=String.fromCharCode(97+((num*3)%26)); let p1=phone.length>=4?phone.substring(0,2):"99"; let p2=phone.length>=4?phone.slice(-2):"88"; return l1+s1+p1+l2+s2+p2+key.charAt(0).toUpperCase(); };
-    window.generatePass = function() { let phone=document.getElementById('gen-phone').value; let key=document.getElementById('gen-key').value.toUpperCase(); if(!key) return window.showCustomAlert("Error","Enter Secret Key!","⚠️"); if(phone.length<10) return document.getElementById('show-gen-pass').innerText="Enter 10-digit number!"; window.currentGeneratedPass=window.generateStrongPass(phone,key); document.getElementById('show-gen-pass').innerText="Password: "+window.currentGeneratedPass; document.getElementById('copy-pass-btn').style.display='inline-block'; };
-    window.copyGeneratedPass = function() { if(!window.currentGeneratedPass) return; navigator.clipboard.writeText(window.currentGeneratedPass).then(()=>{window.showCustomAlert("Success","✅ Password copied!","✅");}).catch(()=>{window.showCustomAlert("Error","Copy failed","❌");}); };
-    window.checkPass = function(ph, pa) { let isFree=(window.examData.isFree===true||String(window.examData.isFree).toLowerCase()==="true"); if(isFree) return true; return pa===window.generateStrongPass(ph,window.examData.key.toUpperCase()); };
-    window.getCleanAns = function(val) { if(!val) return ""; let match=val.toString().replace(/<[^>]*>/g,'').match(/[A-D]/i); return match?match[0].toUpperCase():""; };
-    
-    // SVG ICONS
-    const iconPhone = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
-    const iconGlobe = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>`;
-    const iconTelegram = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.19-.08-.05-.19-.02-.27 0-.11.03-1.88 1.2-5.32 3.53-.5.35-.95.52-1.36.51-.45-.01-1.32-.26-1.96-.47-.79-.26-1.42-.4-1.37-.84.03-.23.35-.47.96-.73 3.75-1.63 6.25-2.71 7.5-3.23 3.56-1.48 4.3-1.74 4.79-1.75.11 0 .36.03.49.15.11.1.15.23.16.35-.02.05-.02.1-.02.14z"/></svg>`;
-    const iconWhatsApp = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.22c-1.49 0-2.95-.4-4.24-1.15l-.3-.18-3.14.83.84-3.06-.2-.31c-.82-1.32-1.26-2.85-1.26-4.44 0-4.57 3.73-8.3 8.3-8.3 4.57 0 8.3 3.73 8.3 8.3s-3.73 8.3-8.3 8.3zm4.56-6.22c-.25-.13-1.49-.74-1.72-.82-.23-.08-.4-.13-.57.13-.17.25-.65.82-.8 1-.15.17-.3.2-.55.07-.25-.12-1.06-.39-2.02-1.1-.74-.55-1.24-1.23-1.39-1.48-.15-.25-.02-.38.11-.51.11-.11.25-.3.37-.45.12-.15.17-.25.25-.41.08-.17.04-.32-.02-.45-.06-.13-.57-1.38-.78-1.89-.2-.5-.41-.43-.57-.44h-.48c-.17 0-.45.06-.69.32-.24.25-.92.9-.92 2.2 0 1.3.94 2.56 1.07 2.73.13.17 1.86 2.85 4.51 3.99.63.27 1.13.43 1.51.55.63.2 1.2.17 1.65.1.51-.08 1.49-.61 1.7-1.2.21-.58.21-1.08.15-1.2-.06-.12-.23-.19-.48-.32z"/></svg>`;
-    const iconYouTube = `<svg width="12" height="12" viewBox="0 0 24 24" fill="white" style="vertical-align: middle; margin-bottom: 2px;"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>`;
-
 </script>
 </body>
 </html>
