@@ -6,16 +6,32 @@
     <title>MockSarthi - Online Test Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* ==========================================================================
+           1. CSS VARIABLES (LIGHT & DARK MODE SUPPORT)
+           ========================================================================== */
         :root {
             --primary: #1a56db;
             --primary-dark: #1e40af;
             --primary-light: #3b82f6;
             --accent: #f59e0b;
+            --accent-dark: #d97706;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
             --dark: #111827;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
             
+            /* Light Theme Colors */
             --bg-body: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 30%, #f5f3ff 60%, #fdf2f8 100%);
             --bg-container: #ffffff;
             --bg-header: linear-gradient(135deg, #0f1d3d 0%, #1a3a6b 40%, #1a56db 100%);
@@ -26,176 +42,466 @@
             --card-bg: #ffffff;
             --input-bg: #f9fafb;
             
+            /* Shadows & Radius */
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
-            --radius-sm: 6px; --radius: 10px; --radius-lg: 16px; --radius-xl: 20px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+            --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.15);
+            --radius-sm: 6px; 
+            --radius: 10px; 
+            --radius-lg: 16px; 
+            --radius-xl: 20px;
+            
             --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             --font-sans: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
         }
 
+        /* 🌙 DARK MODE VARIABLES */
         body.dark-mode {
-            --bg-body: #0f172a; --bg-container: #1e293b;
+            --bg-body: #0f172a;
+            --bg-container: #1e293b;
             --bg-header: linear-gradient(135deg, #020617 0%, #0f172a 100%);
             --bg-sub-header: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            --text-main: #f8fafc; --text-muted: #94a3b8;
-            --border-color: #334155; --card-bg: #1e293b; --input-bg: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --card-bg: #1e293b;
+            --input-bg: #0f172a;
         }
 
+        /* ==========================================================================
+           2. GLOBAL RESET & BASE STYLES
+           ========================================================================== */
         * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; background: var(--bg-body); background-attachment: fixed; font-family: var(--font-sans); color: var(--text-main); user-select: none; scroll-behavior: smooth; min-height: 100vh; }
-        .container { max-width: 1300px; margin: 0 auto; background: var(--bg-container); min-height: 100vh; display: flex; flex-direction: column; position: relative; box-shadow: var(--shadow-xl); }
-        @media (min-width: 769px) { .container { border-radius: 0 0 var(--radius-xl) var(--radius-xl); margin-top: 0; } body { padding: 0 0 40px 0; } }
 
-        /* HEADER */
-        #top-sticky-wrapper { position: sticky; top: 0; z-index: 1000; box-shadow: var(--shadow-lg); width: 100%; background: var(--bg-container); }
-        .tcs-header { background: var(--bg-header); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-        .tcs-header h2 { margin: 0; font-size: 1.25rem; font-weight: 700; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        body, html {
+            margin: 0; 
+            padding: 0;
+            background: var(--bg-body);
+            background-attachment: fixed;
+            font-family: var(--font-sans);
+            color: var(--text-main);
+            user-select: none; 
+            -webkit-user-select: none;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1300px; 
+            margin: 0 auto;
+            background: var(--bg-container);
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            position: relative; 
+            box-shadow: var(--shadow-2xl);
+            border-radius: 0;
+        }
+
+        @media (min-width: 769px) { 
+            .container { border-radius: 0 0 var(--radius-xl) var(--radius-xl); margin-top: 0; } 
+            body { padding: 0 0 40px 0; } 
+        }
+
+        /* ==========================================================================
+           3. HEADER & TOP BAR
+           ========================================================================== */
+        #top-sticky-wrapper {
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            box-shadow: var(--shadow-lg); 
+            width: 100%;
+            background: var(--bg-container);
+            border-radius: 0;
+        }
+
+        .tcs-header {
+            background: var(--bg-header); 
+            color: white;
+            padding: 16px 24px; 
+            display: flex; 
+            justify-content: space-between;
+            align-items: center; 
+            gap: 16px; 
+            flex-wrap: wrap;
+        }
+
+        .tcs-header h2 { 
+            margin: 0; 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            cursor: pointer; 
+            font-family: 'Poppins', var(--font-sans);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
         .tcs-header h2::before { content: '🎯'; font-size: 1.4rem; }
+        
         .header-controls { display: flex; align-items: center; gap: 10px; }
-        .theme-toggle { background: transparent; border: 2px solid rgba(255,255,255,0.3); color: white; border-radius: 50px; padding: 6px 12px; cursor: pointer; font-weight: bold; font-size:12px; }
-        .timer { font-size: 15px; font-weight: 700; background: var(--danger); color: white; padding: 8px 16px; border-radius: 50px; display: flex; gap: 8px; align-items: center; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); animation: timerPulse 2s infinite; }
-        @keyframes timerPulse { 0%, 100% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); } 50% { box-shadow: 0 4px 25px rgba(239, 68, 68, 0.7); } }
-        .tcs-sub-header { background: var(--bg-sub-header); padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--accent); flex-wrap: wrap; }
-        .tcs-sub-header .s-name { font-weight: 700; color: var(--primary); font-size: 15px; }
-        .tcs-sub-header .s-exam { font-size: 13px; color: var(--danger); font-weight: 700; background: #fef2f2; padding: 4px 12px; border-radius: 50px; }
 
-        /* FORMS & VIEWS */
+        .theme-toggle { 
+            background: transparent; 
+            border: 2px solid rgba(255,255,255,0.3); 
+            color: white; 
+            border-radius: 50px; 
+            padding: 6px 12px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            font-size: 12px; 
+        }
+
+        .theme-toggle:hover { background: rgba(255,255,255,0.1); }
+
+        .timer {
+            font-size: 15px; 
+            font-weight: 700; 
+            background: var(--danger); 
+            padding: 8px 16px; 
+            border-radius: 50px; 
+            display: flex; 
+            gap: 8px;
+            align-items: center; 
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            animation: timerPulse 2s infinite; 
+            letter-spacing: 0.5px;
+            color: white;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(239, 68, 68, 0.7); }
+        }
+
+        .tcs-sub-header {
+            background: var(--bg-sub-header); 
+            padding: 10px 24px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 3px solid var(--accent); 
+            gap: 12px; 
+            flex-wrap: wrap;
+        }
+
+        .tcs-sub-header .s-name { font-weight: 700; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 6px; }
+        body.dark-mode .tcs-sub-header .s-name { color: #60a5fa; }
+        .tcs-sub-header .s-exam { font-size: 13px; color: var(--danger); font-weight: 700; background: #fef2f2; padding: 4px 12px; border-radius: 50px; }
+        body.dark-mode .tcs-sub-header .s-exam { background: #450a0a; color: #fca5a5; }
+
+        /* ==========================================================================
+           4. VIEW SECTIONS & FORMS
+           ========================================================================== */
         .view-section { padding: 24px; flex: 1; display: none; animation: fadeSlideIn 0.35s ease; }
         @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
         .active-view { display: block; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-main); font-size: 13px; text-transform: uppercase; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 11px 14px; border: 2px solid var(--border-color); border-radius: var(--radius); font-family: var(--font-sans); font-size: 14px; background: var(--input-bg); color: var(--text-main); }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-light); }
-        .form-group textarea { height: 150px; font-family: monospace; resize: vertical; }
-        .flex-row { display: flex; gap: 12px; flex-wrap: wrap; } .flex-row .form-group { flex: 1; min-width: 160px; }
 
-        /* BUTTONS (FIXED COLORS) */
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 20px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: var(--radius); width: 100%; margin-top: 8px; transition: var(--transition); box-shadow: var(--shadow); }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-main); font-size: 13px; letter-spacing: 0.3px; text-transform: uppercase; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 11px 14px; border: 2px solid var(--border-color);
+            border-radius: var(--radius); box-sizing: border-box; font-family: var(--font-sans);
+            font-size: 14px; transition: var(--transition-fast); background: var(--input-bg); color: var(--text-main);
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); background: var(--card-bg); }
+        .form-group textarea { height: 200px; font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace; font-size: 13px; line-height: 1.6; resize: vertical; }
+        .flex-row { display: flex; gap: 12px; flex-wrap: wrap; } 
+        .flex-row .form-group { flex: 1; min-width: 160px; }
+
+        /* ==========================================================================
+           5. BUTTONS
+           ========================================================================== */
+        .btn {
+            background: var(--primary); color: white; border: none; padding: 12px 20px;
+            font-size: 15px; font-weight: 600; cursor: pointer; border-radius: var(--radius);
+            width: 100%; margin-top: 8px; transition: var(--transition); letter-spacing: 0.3px;
+            font-family: var(--font-sans); box-shadow: var(--shadow);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); filter: brightness(1.08); }
+        .btn:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; filter: none; }
+        
         .btn-blue { background: var(--primary) !important; color: white !important; }
         .btn-pdf { background: var(--danger) !important; color: white !important; }
         .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); box-shadow: none; }
+        body.dark-mode .btn-outline { color: #60a5fa; border-color: #60a5fa; }
+        .btn-outline:hover { background: var(--primary); color: white; }
         .btn-warning { background: var(--accent) !important; color: #000 !important; }
         .btn-success { background: var(--success) !important; color: white !important; }
-        
-        .admin-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 24px; flex-wrap: wrap; }
-        .tab-btn { flex: 1; padding: 14px; font-weight: 700; font-size: 14px; cursor: pointer; background: var(--input-bg); border: none; color: var(--text-muted); border-radius: var(--radius) var(--radius) 0 0; }
-        .tab-btn.active { background: var(--primary); color: white; }
 
-        /* GRIDS & CARDS */
-        .exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; justify-items: center; padding: 10px 0; width: 100%; }
-        .exam-icon-card { display: flex; flex-direction: column; align-items: center; cursor: pointer; width: 100%; max-width: 150px; text-align: center; padding: 8px; }
-        .exam-icon-wrapper { width: 85px; height: 85px; border-radius: 50%; margin-bottom: 10px; box-shadow: var(--shadow-lg); background: #fff; display: flex; align-items: center; justify-content: center; border: 3px solid var(--border-color); padding: 6px; }
-        .exam-icon-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
-        .exam-icon-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 0; text-transform: uppercase; }
+        .admin-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 24px; flex-wrap: wrap; gap: 4px; }
+        .tab-btn { flex: 1; padding: 14px 20px; font-weight: 700; font-size: 14px; cursor: pointer; background: var(--input-bg); border: none; outline: none; white-space: nowrap; min-width: 120px; transition: var(--transition); border-radius: var(--radius) var(--radius) 0 0; color: var(--text-muted); letter-spacing: 0.3px; font-family: var(--font-sans); }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: var(--shadow-md); }
+        .tab-btn:hover:not(.active) { background: var(--border-color); color: var(--text-main); }
 
-        .sub-exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; width: 100%; }
-        .exam-card-l2 { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px 12px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; }
-        .exam-card-l2-icon { font-size: 38px; margin-bottom: 8px; }
-        .exam-card-l2-title { font-size: 13px; font-weight: 700; color: var(--text-main); text-transform: uppercase; margin:0; }
-
-        .folder-card { background: var(--card-bg); border: 2px solid var(--primary); border-radius: var(--radius-lg); padding: 24px 14px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 120px; }
-        .folder-icon { font-size: 40px; margin-bottom: 8px; }
-        .folder-title { font-size: 15px; font-weight: 700; color: var(--primary); margin: 0; }
-        .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
-
-        .test-card { background: var(--card-bg); border: 1px solid var(--border-color); border-left: 5px solid var(--primary); padding: 16px; margin-bottom: 14px; border-radius: var(--radius); }
-        .badge { background: var(--input-bg); padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 600; margin-right: 4px; margin-bottom: 4px; color: var(--text-main); display: inline-block; border: 1px solid var(--border-color); }
-        .badge-attempted { background: var(--success); color: white; border: none; }
-
-        /* LAYOUT & SIDEBAR */
-        .breadcrumb-nav { background: var(--input-bg); padding: 12px 16px; border-radius: var(--radius); margin-bottom: 20px; font-weight: 600; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; border: 1px solid var(--border-color); }
-        .bc-link { color: var(--primary); cursor: pointer; }
-        
-        .app-layout { display: flex; gap: 20px; align-items: flex-start; margin-top: 8px; width: 100%; }
-        .sidebar-menu { width: 100%; display: flex; overflow-x: auto; white-space: nowrap; padding: 10px; background: var(--card-bg); border-radius: var(--radius); gap: 12px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+        /* ==========================================================================
+           6. FOLDERS / CATEGORIES (GREEN TO YELLOW UI)
+           ========================================================================== */
+        .sidebar-menu {
+            width: 100%; display: flex; overflow-x: auto; white-space: nowrap;
+            padding: 15px; background: var(--card-bg); border-radius: var(--radius);
+            box-shadow: var(--shadow-sm); gap: 15px; border: 1px solid var(--border-color);
+            -webkit-overflow-scrolling: touch; margin-bottom: 20px;
+        }
         .sidebar-menu::-webkit-scrollbar { display: none; }
-        .content-area { flex-grow: 1; min-height: 400px; width: 100%; }
         
-        .sb-item { background: #0f5132; color: #ffffff; padding: 12px 20px; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-        .sb-item.active { background: #facc15; color: #1e3a8a; border: 2px solid #ca8a04; }
-        .sb-item-count { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 50px; font-size: 11px; }
+        .sb-item {
+            background: #0f5132; color: #ffffff; padding: 12px 24px; border-radius: 50px; 
+            cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center;
+            gap: 10px; border: 2px solid transparent; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: pulseAttention 2s infinite; 
+        }
+        @keyframes pulseAttention {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(15, 81, 50, 0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(15, 81, 50, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(15, 81, 50, 0); }
+        }
+        .sb-item:hover { filter: brightness(1.2); }
+        
+        .sb-item.active {
+            background: #facc15; color: #1e3a8a; border: 2px solid #ca8a04;
+            animation: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transform: scale(1.05);
+        }
+        .sb-item-count { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 50px; font-size: 12px; }
+        .sb-item.active .sb-item-count { background: rgba(0,0,0,0.1); }
 
+        /* ==========================================================================
+           7. CARDS, GRIDS & ICONS
+           ========================================================================== */
+        .exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; justify-items: center; padding: 10px 0; width: 100%; }
+        .exam-icon-card { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; cursor: pointer; width: 100%; max-width: 150px; transition: var(--transition); text-align: center; padding: 8px; }
+        .exam-icon-wrapper { width: 85px; height: 85px; border-radius: 50%; margin-bottom: 10px; box-shadow: var(--shadow-lg); background: #fff; display: flex; align-items: center; justify-content: center; border: 3px solid var(--border-color); transition: var(--transition); padding: 6px; box-sizing: border-box; overflow: hidden; }
+        .exam-icon-img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; transition: var(--transition); }
+        .exam-icon-card:hover .exam-icon-wrapper { transform: translateY(-6px); box-shadow: var(--shadow-xl); border-color: var(--primary); background: #eef2ff; }
+        .exam-icon-card:hover .exam-icon-img { transform: scale(1.08); }
+        .exam-icon-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 0; line-height: 1.3; text-transform: uppercase; letter-spacing: 0.4px; }
+
+        .sub-exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); justify-content: center; gap: 14px; width: 100%; }
+        .exam-card-l2 { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 18px 12px; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 110px; }
+        .exam-card-l2:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: var(--shadow-xl); }
+        .exam-card-l2-icon { font-size: 38px; margin-bottom: 8px; }
+        .exam-card-l2-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 0; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.4px; }
+
+        /* 🔥 BUG FIX: RESTORED FOLDER CARD CSS FOR CHAPTER TESTS 🔥 */
+        .folder-card {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-lg);
+            padding: 24px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-md);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 120px;
+        }
+        .folder-card:hover { transform: translateY(-5px); background: var(--input-bg); box-shadow: var(--shadow-xl); border-color: var(--accent); }
+        .folder-icon { font-size: 40px; margin-bottom: 8px; }
+        .folder-title { font-size: 15px; font-weight: 700; color: var(--primary); margin: 0; line-height: 1.3; }
+
+        /* 🔥 BUG FIX: RESTORED ORIGINAL GRID CSS FOR DESKTOP HORIZONTAL ALIGNMENT 🔥 */
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .breadcrumb-nav { background: var(--input-bg); padding: 12px 16px; border-radius: var(--radius); margin-bottom: 20px; font-weight: 600; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+        .bc-link { color: var(--primary); cursor: pointer; text-decoration: none; padding: 4px 10px; border-radius: 50px; transition: var(--transition-fast); font-weight: 600; }
+        .bc-link:hover { background: var(--primary); color: white; }
+
+        .test-card { background: var(--card-bg); border: 1px solid var(--border-color); border-left: 5px solid var(--primary); padding: 16px; margin-bottom: 14px; border-radius: var(--radius); box-shadow: var(--shadow-sm); transition: var(--transition); }
+        .test-card:hover { box-shadow: var(--shadow-lg); border-left-color: var(--accent); }
+        .badge { background: var(--input-bg); padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 600; margin-right: 4px; margin-bottom: 4px; color: var(--text-main); display: inline-block; letter-spacing: 0.3px; border: 1px solid var(--border-color); }
+
+        .app-layout { display: flex; gap: 20px; align-items: flex-start; margin-top: 8px; width: 100%; }
+        .content-area { flex-grow: 1; min-height: 400px; width: 100%; }
         .auth-box { max-width: 460px; margin: 30px auto; background: var(--card-bg); padding: 32px; border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); border-top: 5px solid var(--primary); text-align: center; }
+        .auth-toggle-text { margin-top: 16px; font-size: 14px; color: var(--text-muted); }
+        .auth-toggle-text span { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; }
+        .dash-welcome-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 18px 20px; border-radius: var(--radius-lg); margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: var(--shadow-md); }
 
-        /* EXAM ENGINE */
-        .exam-container { display: flex; flex-direction: column; background: var(--bg-container); border-radius: var(--radius-lg); width: 100%; }
+        /* ==========================================================================
+           8. EXAM CONTAINER & CONTROLS
+           ========================================================================== */
+        .exam-container { display: flex; flex-direction: column; background: var(--bg-container); border-radius: var(--radius-lg); overflow: hidden; width: 100%; }
         .left-panel { display: flex; flex-direction: column; padding: 20px 24px 190px 24px; box-sizing: border-box; width: 100%; }
         
-        .q-header { font-size: 18px; font-weight: 700; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 18px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; width: 100%; }
-        .q-timer-badge { background: #fef3c7; color: #92400e; padding: 5px 14px; border-radius: 50px; font-size: 13px; font-weight: 700; }
-        .bookmark-btn { background: transparent; border: 2px solid var(--gray-400); color: var(--text-muted); padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .q-header { font-size: 18px; font-weight: 700; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; margin-bottom: 18px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; width: 100%; box-sizing: border-box; }
+        body.dark-mode .q-header { color: #60a5fa; }
+        .q-timer-badge { background: #fef3c7; color: #92400e; padding: 5px 14px; border-radius: 50px; font-size: 13px; font-weight: 700; box-shadow: var(--shadow-sm); animation: timerPulse 2s infinite; }
+
+        .bookmark-btn { background: transparent; border: 2px solid var(--gray-400); color: var(--text-muted); padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
         .bookmark-btn.bookmarked { background: #fef3c7; border-color: #f59e0b; color: #d97706; }
-        
-        .q-text { font-size: 17px; line-height: 1.6; color: var(--text-main); margin-bottom: 18px; font-weight: 600; width: 100%; display: block; }
-        .options-div { display: flex; flex-direction: column; width: 100%; gap: 8px; }
-        .opt-label { display: flex; align-items: flex-start; width: 100%; padding: 14px 16px; border: 2px solid var(--border-color); border-radius: var(--radius); cursor: pointer; background: var(--card-bg); font-size: 15px; font-weight: 500; gap: 10px; color: var(--text-main); }
-        .opt-label.selected { background: rgba(59, 130, 246, 0.1); border-color: var(--primary); color: var(--primary); font-weight: 700; }
+        .palette-btn.bookmarked { border: 2px solid #f59e0b; position: relative; }
+        .palette-btn.bookmarked::after { content: '⭐'; position: absolute; top: -8px; right: -8px; font-size: 12px; }
+
+        .q-text { font-size: 17px; line-height: 1.6; color: var(--text-main); margin-bottom: 18px; font-weight: 600; width: 100%; display: block; box-sizing: border-box; }
+        .options-div { display: flex; flex-direction: column; width: 100%; gap: 8px; box-sizing: border-box; }
+        .opt-label { display: flex; align-items: flex-start; width: 100%; padding: 14px 16px; border: 2px solid var(--border-color); border-radius: var(--radius); cursor: pointer; background: var(--card-bg); transition: var(--transition-fast); font-size: 15px; font-weight: 500; box-sizing: border-box; gap: 10px; color: var(--text-main); }
+        .opt-label:hover { border-color: var(--primary-light); background: var(--input-bg); }
+        .opt-label.selected { background: rgba(59, 130, 246, 0.1); border-color: var(--primary); color: var(--primary); font-weight: 700; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12); transform: scale(1.01); }
+        body.dark-mode .opt-label.selected { color: #60a5fa; border-color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
         .opt-label input[type="radio"] { margin-right: 8px; margin-top: 2px; transform: scale(1.4); accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
 
-        /* 🔥 BUG FIX: EXAM BOTTOM CONTROLS COLORS RESTORED 🔥 */
-        #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-container); z-index: 1000; padding: 14px 20px; border-top: 2px solid var(--border-color); box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.1); display: none; }
+        #exam-bottom-controls { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-container); z-index: 1000; padding: 14px 20px; border-top: 2px solid var(--border-color); box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.1); display: none; backdrop-filter: blur(10px); }
         .mini-palette-wrapper { position: relative; margin-bottom: 10px; margin-top: 4px; }
-        .pulse-btn { position: absolute; top: -38px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; border: none; border-radius: 50px; padding: 6px 22px; font-size: 13px; font-weight: 700; cursor: pointer; }
-        .mini-strip { display: flex; gap: 6px; overflow-x: auto; justify-content: center; background: var(--input-bg); padding: 14px 8px 8px 8px; border-radius: var(--radius); border: 1px solid var(--border-color); }
-        .mini-box { width: 36px; height: 36px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; border: 2px solid var(--border-color); cursor: pointer; color: var(--text-main); background: var(--card-bg); flex-shrink: 0; }
-        .mini-box.active-q { border: 3px solid var(--primary); transform: scale(1.15); font-weight: 900; }
+        .pulse-btn { position: absolute; top: -38px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; border: none; border-radius: 50px; padding: 6px 22px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 0 0 0 rgba(26, 86, 219, 0.6); animation: pulse 1.8s infinite; z-index: 10; white-space: nowrap; letter-spacing: 0.4px; }
+        .mini-strip { display: flex; gap: 6px; overflow-x: auto; justify-content: center; background: var(--input-bg); padding: 14px 8px 8px 8px; border-radius: var(--radius); border: 1px solid var(--border-color); -webkit-overflow-scrolling: touch; }
+        .mini-box { width: 36px; height: 36px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; border: 2px solid var(--border-color); cursor: pointer; color: var(--text-main); background: var(--card-bg); flex-shrink: 0; transition: var(--transition-fast); }
+        .mini-box.active-q { border: 3px solid var(--primary); transform: scale(1.15); font-weight: 900; box-shadow: var(--shadow-lg); }
+        body.dark-mode .mini-box.active-q { border-color: #60a5fa; }
         
         .action-buttons { display: flex; justify-content: space-between; gap: 10px; flex-wrap: nowrap; }
-        .action-btn { padding: 14px 6px; border: none; border-radius: var(--radius); font-weight: 700; cursor: pointer; flex: 1; font-size: 12px; text-transform: uppercase; text-align: center; }
+        .action-btn { padding: 14px 6px; border: none; border-radius: var(--radius); font-weight: 700; cursor: pointer; flex: 1; font-size: 12px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; transition: var(--transition-fast); box-shadow: var(--shadow); }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        
+        /* 🔥 FIX: EXAM BOTTOM CONTROLS COLORS RESTORED 100% 🔥 */
         #exam-bottom-controls .btn-prev { background: #6b7280 !important; color: white !important; }
         #exam-bottom-controls .btn-clear { background: #fbbf24 !important; color: #000 !important; }
         #exam-bottom-controls .btn-next { background: #10b981 !important; color: white !important; }
         #exam-bottom-controls .btn-submit { background: #ef4444 !important; color: white !important; }
 
-        .fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 99999; overflow-y: auto; padding: 20px; box-sizing: border-box; backdrop-filter: blur(4px); }
-        .fs-container { max-width: 800px; margin: 0 auto; background: var(--bg-container); padding: 24px; border-radius: var(--radius-xl); min-height: 90vh; }
-        .question-palette { padding: 8px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .palette-btn { width: 44px; height: 44px; border-radius: var(--radius-sm); font-weight: 700; font-size: 14px; cursor: pointer; color: var(--text-main); border: 2px solid var(--border-color); }
-        .status-not-visited { background: var(--card-bg); color: var(--text-main); }
+        .fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 99999; overflow-y: auto; padding: 20px; box-sizing: border-box; backdrop-filter: blur(4px); }
+        .fs-container { max-width: 800px; margin: 0 auto; background: var(--bg-container); padding: 24px; border-radius: var(--radius-xl); box-shadow: var(--shadow-2xl); min-height: 90vh; }
+        .fs-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 14px; margin-bottom: 20px; position: sticky; top: 0; background: var(--bg-container); z-index: 10; }
+        
+        .palette-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 13px; background: var(--card-bg); margin-bottom: 16px; font-weight: 600; }
+        .legend-item { display: flex; align-items: center; justify-content: center; color: var(--text-muted); gap: 6px; }
+        .box { width: 22px; height: 22px; border-radius: 5px; display: inline-block; text-align: center; color: #333; line-height: 22px; font-weight: 700; border: 2px solid #aaa; font-size: 10px; }
+        
+        .status-not-visited { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); }
         .status-not-answered { background: #fbbf24; color: #000; border-color: #d97706; }
         .status-answered { background: var(--primary); color: white; border-color: var(--primary-dark); }
+        
+        .question-palette { padding: 8px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; justify-content: center; }
+        .palette-btn { width: 44px; height: 44px; border-radius: var(--radius-sm); border: 2px solid #999; font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--transition-fast); }
+        .palette-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-md); }
 
-        /* RESULTS & MODALS */
-        #analysis-box { margin-top: 20px; border-radius: var(--radius-lg); overflow: hidden; }
-        #analysis-btn-container { position: sticky; top: 65px; z-index: 900; background: var(--bg-container); padding: 12px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); }
+        /* ==========================================================================
+           9. RESULTS, MODALS & MISC
+           ========================================================================== */
+        #analysis-box { margin-top: 20px; scroll-margin-top: 90px; border-radius: var(--radius-lg); overflow: hidden; }
+        #analysis-btn-container { position: sticky; top: 65px; z-index: 900; background: var(--bg-container); padding: 12px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md); }
+        #result-view { text-align: center; padding: 30px; position: relative; overflow: hidden; }
+        
         .loader { border: 4px solid var(--border-color); border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .admin-lock { position: fixed; bottom: 28px; right: 24px; font-size: 26px; cursor: pointer; background: var(--card-bg); border: 3px solid var(--primary); border-radius: 50%; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; z-index: 9999999; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); z-index: 9999999; display: none; align-items: center; justify-content: center; }
-        .modal-box { background: var(--bg-container); padding: 28px; border-radius: var(--radius-xl); width: 92%; max-width: 380px; text-align: center; }
+        
+        .confetti { position: absolute; font-size: 28px; z-index: 9999; pointer-events: none; animation: fall 3s linear forwards; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+        
+        .res-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; text-align: center; border-radius: var(--radius); overflow: hidden; }
+        .res-table th, .res-table td { border: 1px solid var(--border-color); padding: 10px; color: var(--text-main); }
+        .res-table th { background-color: var(--primary); color: white; font-weight: 700; letter-spacing: 0.4px; }
+        .res-table tr:nth-child(even) { background-color: var(--input-bg); }
 
+        .admin-lock { position: fixed; bottom: 28px; right: 24px; font-size: 26px; cursor: pointer; opacity: 0.95; transition: var(--transition); z-index: 9999999 !important; background: var(--card-bg); border: 3px solid var(--primary); border-radius: 50%; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-xl); pointer-events: auto; }
+        .admin-lock:hover { transform: scale(1.12); background: var(--primary); color: white; border-color: white; box-shadow: var(--shadow-2xl); }
+
+        .progress-bar-container { display: flex; height: 28px; border-radius: 50px; overflow: hidden; margin-top: 14px; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1); width: 100%; background: var(--border-color); }
+        .progress-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 11px; overflow: hidden; letter-spacing: 0.3px; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65); z-index: 9999999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+        .modal-box { background: var(--bg-container); padding: 28px; border-radius: var(--radius-xl); width: 92%; max-width: 380px; text-align: center; box-shadow: var(--shadow-2xl); animation: popIn 0.3s ease; }
+        @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* ==========================================================================
+           10. MOBILE RESPONSIVENESS FIXES (GRID FIXED)
+           ========================================================================== */
         @media (max-width: 768px) {
             .left-panel { padding: 10px 10px 170px 10px; }
             .admin-lock { bottom: 16px; right: 12px; width: 48px; height: 48px; font-size: 22px; z-index: 9999999 !important; pointer-events: auto; }
+            .fullscreen-overlay { padding: 0; }
             .fs-container { border-radius: 0; min-height: 100vh; padding: 14px; }
             .app-layout { flex-direction: column; gap: 10px; }
             
-            /* 🔥 BUG FIX: 1fr 1fr Grid Restored for Subjects in Mobile 🔥 */
+            /* 🔥 BUG FIX: RESTORED ORIGINAL GRID CSS FOR MOBILE SO CHAPTERS ARE HORIZONTAL 🔥 */
             .subject-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            
             .exam-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; padding: 4px !important; justify-items: center; }
+            .exam-icon-wrapper { width: 60px !important; height: 60px !important; padding: 4px !important; margin-bottom: 5px !important; }
+            .exam-icon-img { width: 48px !important; height: 48px !important; }
+            .exam-icon-title { font-size: 10px !important; }
             .sub-exam-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; width: 100%; padding: 4px; box-sizing: border-box; }
             .exam-card-l2 { width: 100% !important; max-width: none !important; min-width: 0 !important; padding: 14px 6px !important; margin: 0 !important; min-height: 90px; }
+            .exam-card-l2-icon { font-size: 26px !important; margin-bottom: 4px !important; }
+            .exam-card-l2-title { font-size: 11px !important; }
+            .tcs-header h2 { font-size: 1rem; }
             .action-btn { font-size: 10px; padding: 12px 3px; }
             .container { border-radius: 0 !important; }
         }
 
-        /* PRINT SETTINGS */
-        @media print { 
-            body.print-pdf * { visibility: hidden; } 
-            #print-area, #print-area * { visibility: visible; } 
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; background: white; color: black; } 
+        /* ==========================================================================
+           11. ORIGINAL PRINT CSS EXACT MATCH (PDF FIXES)
+           ========================================================================== */
+        body.print-pdf,
+        body.print-pdf html {
+            height: auto !important; min-height: auto !important; max-height: none !important;
+            overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important;
         }
+        body.print-pdf #main-ui-container,
+        body.print-pdf #top-sticky-wrapper,
+        body.print-pdf .fullscreen-overlay,
+        body.print-pdf #exam-bottom-controls,
+        body.print-pdf #admin-auth-view,
+        body.print-pdf .modal-overlay,
+        body.print-pdf .admin-lock {
+            display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important;
+        }
+        #print-area { display: none; background: white; color: black; text-align: left; position: relative; z-index: 1; }
+        
+        @media print {
+            @page { size: A4; margin: 8mm; }
+            html, body { height: auto !important; min-height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+            .container { box-shadow: none !important; }
+            #main-ui-container, #top-sticky-wrapper, .fullscreen-overlay, #exam-bottom-controls, #admin-auth-view, .modal-overlay, .admin-lock { display: none !important; }
+            #print-area { display: block !important; position: static !important; width: 100% !important; font-family: Arial, sans-serif !important; overflow: visible !important; height: auto !important; background: transparent !important; }
+            #print-area * { visibility: visible !important; position: relative; }
+            .watermark { position: fixed !important; top: 50vh !important; left: 50vw !important; transform: translate(-50%, -50%) rotate(-45deg) !important; font-size: 100px !important; font-weight: 900 !important; color: rgba(0, 0, 0, 0.05) !important; z-index: 99999 !important; white-space: nowrap; pointer-events: none; width: 100%; text-align: center; text-transform: uppercase; display: block !important; }
+            .pdf-header-strip { background-color: #1a56db !important; padding: 10px 15px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-bottom: 2px solid #1a56db; border-radius: 2px 2px 0 0; margin-bottom: 8px; display: block; }
+            .pdf-footer-strip { background-color: #1a56db !important; padding: 10px 10px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-top: 2px solid #1a56db; border-radius: 0 0 2px 2px; margin-top: 8px; display: block; }
+            table.pdf-main-table { width: 100%; border-collapse: collapse; background: transparent !important; border: none !important; z-index: 10; position: relative; }
+            table.pdf-main-table th, table.pdf-main-table td { padding: 0 !important; border: none !important; background: transparent !important; }
+            .print-q { margin-bottom: 10px !important; page-break-inside: auto !important; border-bottom: 1px dashed #ccc !important; padding-bottom: 10px !important; font-size: 17px !important; line-height: 1.35 !important; color: #000000 !important; background: transparent !important; }
+            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px !important; margin-top: 5px !important; margin-bottom: 5px !important; background: transparent !important; page-break-inside: auto !important; }
+            .opt-item { font-size: 17px !important; box-sizing: border-box; color: #000000 !important; background: transparent !important; page-break-inside: avoid !important; }
+            .print-ans { font-weight: bold; font-size: 15px !important; color: #000000 !important; display: block; margin-top: 5px !important; margin-bottom: 3px !important; page-break-inside: avoid !important; }
+            
+            /* 🔥 BUG FIX: EXPLANATION ALIGNMENT FIXED 🔥 */
+            .print-exp { color: #222222 !important; font-size: 15px !important; margin-top: 10px !important; padding: 8px !important; background: #f9fafb !important; border-left: 3px solid #1a56db !important; line-height: 1.35 !important; page-break-inside: auto !important; display: block !important; width: 100% !important; clear: both !important; }
+            
+            .print-header { text-align: center; border-bottom: 2px solid #333; margin-bottom: 10px !important; padding-bottom: 5px !important; }
+            .print-passage { padding: 5px !important; margin-bottom: 5px !important; font-style: italic; border-left: 4px solid #333; font-size: 17px !important; background: transparent !important; page-break-inside: auto !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 20px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
     </style>
 </head>
 <body>
 
-    <!-- ALERT MODAL -->
     <div id="custom-modal" class="modal-overlay">
         <div class="modal-box">
             <div id="modal-icon" style="font-size: 50px; margin-bottom: 8px;">⚠️</div>
@@ -209,7 +515,16 @@
         </div>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
+    <div id="summary-modal" class="fullscreen-overlay" style="align-items: center; justify-content: center; z-index: 999999;">
+        <div class="modal-box" style="text-align:left; max-width: 500px; width: 95%;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--border-color); padding-bottom:10px; margin-bottom:15px;">
+                <h3 style="margin:0; color:var(--primary); display:flex; align-items:center; gap:8px;">📑 Test Summary</h3>
+                <button class="btn btn-outline" style="width:auto; padding:4px 12px; font-size:12px; border-radius:50px; border-color:var(--danger); color:var(--danger); margin:0;" onclick="window.closeTestSummary()">❌ Close</button>
+            </div>
+            <div id="summary-content" style="font-size:14px; color:var(--text-main); line-height:1.6; max-height:60vh; overflow-y:auto; padding: 10px; background: var(--input-bg); border-radius: var(--radius-sm); border-left: 4px solid var(--accent);"></div>
+        </div>
+    </div>
+
     <div class="container" id="main-ui-container">
         
         <div id="top-sticky-wrapper">
@@ -227,7 +542,6 @@
             <div id="auto-save-indicator" style="display:none; background: var(--success); color: white; text-align: center; font-size: 11px; font-weight: bold; padding: 4px;">Progress Auto-Saved ✅</div>
         </div>
 
-        <!-- AUTH VIEW -->
         <div id="student-auth-view" class="view-section active-view">
             <div id="auth-login-box" class="auth-box">
                 <h3 style="color:var(--primary); margin-top:0; font-size:22px;">🌐 Student Login</h3>
@@ -235,7 +549,7 @@
                 <div class="form-group" style="text-align:left;"><label>Registered Gmail ID:</label><input type="email" id="login-email" placeholder="example@gmail.com"></div>
                 <div class="form-group" style="text-align:left;"><label>Mobile Number:</label><input type="tel" id="login-phone" placeholder="Enter 10-digit mobile number" maxlength="10"></div>
                 <button class="btn btn-blue" onclick="window.handleStudentLogin()">Login 🔓</button>
-                <p style="margin-top:16px; font-size:14px; color:var(--text-muted);">New Student? <span style="color:var(--primary); font-weight:700; cursor:pointer; text-decoration:underline;" onclick="window.toggleAuthScreens('register')">Register Here</span></p>
+                <p class="auth-toggle-text">New Student? <span onclick="window.toggleAuthScreens('register')">Register Here</span></p>
             </div>
             
             <div id="auth-register-box" class="auth-box" style="display:none;">
@@ -251,16 +565,14 @@
                     <div class="form-group" style="text-align:left;"><label style="color:var(--primary);">Enter 6-Digit OTP:</label><input type="text" id="reg-otp-input" placeholder="Enter OTP" maxlength="6" style="text-align:center; font-weight:700; font-size:18px; letter-spacing:6px;"></div>
                     <button class="btn btn-success" onclick="window.handleVerifyAndRegister()">Verify & Create Account 🎉</button>
                 </div>
-                <p style="margin-top:16px; font-size:14px; color:var(--text-muted);">Already have an account? <span style="color:var(--primary); font-weight:700; cursor:pointer; text-decoration:underline;" onclick="window.toggleAuthScreens('login')">Login Here</span></p>
+                <p class="auth-toggle-text">Already have an account? <span onclick="window.toggleAuthScreens('login')">Login Here</span></p>
             </div>
         </div>
 
-        <!-- DASHBOARD VIEW -->
         <div id="student-dashboard-view" class="view-section">
-            <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:18px 20px; border-radius:var(--radius-lg); margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; box-shadow:var(--shadow-sm);">
+            <div class="dash-welcome-box">
                 <div>
                     <span style="font-size:17px;font-weight:700;color:var(--primary);">Welcome, <span id="dash-user-name">Student</span>! 👋</span>
-                    <!-- 🔥 NEW: CHANGED "FREE ACCOUNT" TO "FREE" 🔥 -->
                     <span id="premium-badge" style="margin-left:10px;padding:4px 12px;background:var(--text-muted);color:#fff;border-radius:50px;font-size:11px;font-weight:700;">FREE</span>
                 </div>
                 <button class="btn btn-pdf" style="margin:0;width:auto;padding:8px 18px;font-size:13px;border-radius:50px;" onclick="window.handleStudentLogout()">Logout 🔄</button>
@@ -268,7 +580,6 @@
             
             <div class="admin-tabs" style="justify-content:center;gap:10px;border:none;margin-bottom:10px;">
                 <button class="tab-btn active" id="tab-st-active" style="border-radius:var(--radius);flex:none;width:45%;" onclick="window.switchStudentTab('active')">📝 Active Tests</button>
-                <!-- 🔥 NEW: CHANGED "My Performance" TO "My Report" 🔥 -->
                 <button class="tab-btn" id="tab-st-history" style="border-radius:var(--radius);flex:none;width:45%;" onclick="window.switchStudentTab('history')">📈 My Report</button>
             </div>
             
@@ -284,7 +595,6 @@
                 </div>
             </div>
             
-            <!-- PERFORMANCE HISTORY -->
             <div id="st-history-section" style="display:none;">
                 <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:20px; border-radius:var(--radius-lg); margin-bottom:20px; box-shadow:var(--shadow-sm);">
                     <h4 style="margin:0 0 10px 0; color:var(--primary);">🔍 Check Report by Mobile Number</h4>
@@ -317,7 +627,6 @@
             </div>
         </div>
 
-        <!-- EXAM LOGIN VIEW -->
         <div id="login-view" class="view-section">
             <div id="specific-test-login" style="max-width:460px; margin:30px auto; background:var(--card-bg); padding:30px; border-radius:var(--radius-xl); box-shadow:var(--shadow-xl); border-top:5px solid var(--accent);">
                 <h3 style="color:var(--primary); text-align:center; margin-bottom:4px;" id="login-test-name">Test Entry</h3>
@@ -330,12 +639,6 @@
                         <input type="checkbox" id="randomize-qs" style="transform:scale(1.3); accent-color:var(--primary);"> 🔀 Randomize Question Order
                     </label>
                 </div>
-                
-                <!-- 🔥 NEW FEATURE: TEST SUMMARY BOX 🔥 -->
-                <div id="summary-box" style="display:none; background:rgba(59, 130, 246, 0.1); padding:12px; border-radius:var(--radius); border:1px dashed var(--primary); margin-bottom:15px; text-align:left;">
-                    <strong style="color:var(--primary); font-size:13px;">📌 Topics Covered:</strong>
-                    <p id="disp-summary" style="margin:5px 0 0 0; font-size:13px; color:var(--text-main); font-weight:600;"></p>
-                </div>
 
                 <div style="background:var(--input-bg); padding:16px; border-radius:var(--radius-lg); border:1px solid var(--border-color); margin-bottom:20px;">
                     <h4 style="margin:0 0 10px 0; color:var(--text-main);">📝 Ready to start?</h4>
@@ -347,14 +650,12 @@
                     <h4 style="margin:0 0 10px 0; color:var(--warning);">📥 Direct PDF Download</h4>
                     <div id="paid-instructions" style="font-size:13px; color:var(--danger); margin-bottom:10px; font-weight:bold;">🔒 Locked. Unlock PRO to download.</div>
                     <div id="free-instructions" style="font-size:13px; color:var(--success); margin-bottom:10px; display:none; font-weight:700;">🎉 This PDF is Unlocked!</div>
-                    <!-- 🔥 PASSWORD BOX REMOVED HERE 🔥 -->
                     <div id="pdf-action-area"></div>
                 </div>
                 <div style="text-align:center; margin:15px;"><button class="btn btn-outline" style="width:auto; padding:8px 20px; border-radius:50px;" onclick="window.closeAndRedirect()">🏠 Back to Dashboard</button></div>
             </div>
         </div>
 
-        <!-- ACTUAL EXAM VIEW -->
         <div id="exam-view" class="view-section" style="padding:0; display:none;" oncontextmenu="return false;">
             <div class="exam-container">
                 <div class="left-panel">
@@ -387,16 +688,15 @@
         <div id="palette-overlay" class="fullscreen-overlay">
             <div class="fs-container" style="min-height:auto;">
                 <div class="fs-header"><h3 style="margin:0; color:var(--primary);">All Questions</h3><button class="btn btn-outline" style="margin:0; width:auto; padding:6px 16px; background:var(--danger); color:white; border:none; border-radius:50px;" onclick="window.togglePaletteOverlay(false)">🔙 Back</button></div>
-                <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:16px; padding:12px; border-bottom:1px solid var(--border-color); font-size:13px; margin-bottom:16px; font-weight:600;">
-                    <div style="display:flex; align-items:center; gap:6px; color:var(--text-muted);"><span class="box status-answered" id="cnt-ans">0</span> Att</div>
-                    <div style="display:flex; align-items:center; gap:6px; color:var(--text-muted);"><span class="box status-not-answered" id="cnt-notans">0</span> Not Att</div>
-                    <div style="display:flex; align-items:center; gap:6px; color:var(--text-muted);"><span class="box status-not-visited" id="cnt-notvis">0</span> Blank</div>
+                <div class="palette-legend">
+                    <div class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Att</div>
+                    <div class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Att</div>
+                    <div class="legend-item"><span class="box status-not-visited" id="cnt-notvis">0</span> Blank</div>
                 </div>
                 <div class="question-palette" id="palette-grid"></div>
             </div>
         </div>
 
-        <!-- RESULT VIEW -->
         <div id="result-view" class="view-section" oncontextmenu="return false;">
             <h2 style="color:var(--success); margin-bottom:5px; text-align:center;" id="result-heading">Test Submitted Successfully!</h2>
             <div id="rank-loader" style="margin-bottom:15px; color:var(--primary); font-weight:700; text-align:center; display:none;"><div class="loader" style="width:20px; height:20px; border-width:3px;"></div> <span>Calculating rank...</span></div>
@@ -411,7 +711,6 @@
                     <button id="btn-reattempt" class="btn btn-warning" style="display:block; flex:1; min-width:140px;" onclick="window.startReattempt()">🔄 Reattempt</button>
                 </div>
                 
-                <!-- 🔥 BLANK BUTTON COLOR FIXED 🔥 -->
                 <div id="analysis-btn-container" style="display:flex; gap:6px; max-width:600px; margin:15px auto; justify-content:center; flex-wrap:wrap; position:sticky; top:65px; z-index:900; background:var(--bg-container); padding:10px; border-radius:var(--radius-lg); box-shadow:var(--shadow-md); border:1px solid var(--border-color);">
                     <button class="btn btn-success" style="margin:0; flex:1; font-size:12px; padding:10px 4px;" onclick="window.showAnalysis('right')">✅ Correct (<span id="btn-cnt-right">0</span>)</button>
                     <button class="btn btn-pdf" style="margin:0; flex:1; font-size:12px; padding:10px 4px;" onclick="window.showAnalysis('wrong')">❌ Wrong (<span id="btn-cnt-wrong">0</span>)</button>
@@ -423,7 +722,6 @@
             </div>
         </div>
 
-        <!-- ERROR / LOADING VIEWS -->
         <div id="loading-view" class="view-section" style="text-align:center; margin-top:50px;">
             <div class="loader"></div>
             <h3 style="color:var(--primary); margin-top:20px;">Loading data, please wait...</h3>
@@ -435,7 +733,6 @@
             <button class="btn btn-blue" style="max-width:250px; margin:0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
         </div>
 
-        <!-- ADMIN PANEL -->
         <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin();" title="Admin Login" style="display:flex;">🔒</div>
 
         <div id="admin-auth-view" class="view-section" style="text-align:center; margin-top:50px;">
@@ -482,7 +779,6 @@
                     <div class="form-group"><label>Test Code:</label><input type="text" id="a-code" placeholder="UP-01"></div>
                 </div>
                 
-                <!-- 🔥 NEW SUMMARY BOX FOR ADMIN 🔥 -->
                 <div class="form-group" style="width:100%;">
                     <label style="color:var(--primary);">📑 Test Summary (Topics Covered):</label>
                     <textarea id="a-summary" style="height:60px;" placeholder="e.g. Hindi Vyakaran, Sandhi, Samas..."></textarea>
@@ -553,7 +849,7 @@
     </div>
 
     <div id="print-area"></div>
-    <!-- 🟢 YAHAN SE SCRIPT COPY KAREN 🟢 -->
+    <!-- 🟢 YAHAN SE JAVASCRIPT SCRIPT COPY KAREN 🟢 -->
     <script>
         /* ==========================================================================
            1. GLOBAL VARIABLES & INITIALIZATION
@@ -586,6 +882,7 @@
         window.totalTimeSpent = 0;
         
         window.isReattemptMode = false; 
+        window.currentGeneratedPass = "";
         window.globalActiveTests = []; 
         window.adminUnifiedTests = []; 
         
@@ -594,7 +891,7 @@
         window.currentAnalysisType = "";
 
         /* ==========================================================================
-           2. DARK MODE & UTILITIES
+           2. DARK MODE, MODALS & SUMMARY UTILITIES
            ========================================================================== */
         window.toggleDarkMode = function() {
             document.body.classList.toggle('dark-mode');
@@ -676,6 +973,22 @@
             document.getElementById('modal-btn-ok').style.display = 'none';
         };
 
+        // 🔥 TEST SUMMARY MODAL LOGIC 🔥
+        window.showTestSummary = function(summaryText) {
+            let modal = document.getElementById('summary-modal');
+            let content = document.getElementById('summary-content');
+            content.innerHTML = summaryText.replace(/\n/g, '<br>');
+            modal.style.display = 'flex';
+            try { history.pushState({ summaryOpen: true }, ""); } catch(e) {}
+        };
+
+        window.closeTestSummary = function() {
+            let modal = document.getElementById('summary-modal');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        };
+
         /* ==========================================================================
            3. PARSING, FORMATTING & SHUFFLING
            ========================================================================== */
@@ -717,7 +1030,7 @@
                 let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/); 
                 if (matchSubcat) res.subcat = matchSubcat[1];
                 
-                // 🔥 FETCH SUMMARY 🔥
+                // 🔥 PARSE SUMMARY 🔥
                 let matchSummary = raw.match(/\|\|\|SUMMARY:(.*?)(?:\|\|\||$)/);
                 if (matchSummary) res.summary = matchSummary[1];
                 
@@ -968,7 +1281,7 @@
                                 window.showErrorView("❌ Network Slow / Test Failed to Load."); 
                             }
                         }
-                    }, 8000); // 8 sec timeout
+                    }, 10000);
 
                     script.onerror = () => { 
                         clearTimeout(timeoutError);
@@ -1032,21 +1345,22 @@
             if (window.examData.qTime > 0) tInfo += `Per Q: ${window.examData.qTime} Secs`;
             document.getElementById('disp-time-info').innerText = tInfo;
             
-            // 🔥 DISPLAY TEST SUMMARY IF AVAILABLE 🔥
             let p = window.parseHack(window.examData.topic);
-            if(p.summary) {
-                document.getElementById('summary-box').style.display = 'block';
-                document.getElementById('disp-summary').innerText = p.summary;
-            } else {
-                document.getElementById('summary-box').style.display = 'none';
-            }
+            let summaryText = p.summary || window.examData.summary || "";
             
             let isFreeStatus = window.examData.isFree; 
             let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
             let actionArea = document.getElementById('test-action-area'); 
             let pdfActionArea = document.getElementById('pdf-action-area');
             
-            let startBtnHTML = `<button class="btn btn-success" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
+            let startBtnHTML = "";
+
+            // 🔥 DISPLAY TEST SUMMARY BUTTON IF SUMMARY EXISTS 🔥
+            if(summaryText.trim()) {
+                startBtnHTML += `<button class="btn btn-outline" style="margin-bottom:12px; border-color:var(--primary); color:var(--primary);" onclick="window.showTestSummary('${summaryText.replace(/'/g, "\\'")}')">📑 View Test Summary (Topics)</button>`;
+            }
+
+            startBtnHTML += `<button class="btn btn-success" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
             
             let savedProg = localStorage.getItem('progress_' + window.examData.code);
             if (savedProg) { 
@@ -1066,11 +1380,12 @@
                 pdfActionArea.innerHTML = `<button class="btn btn-outline" style="margin-top:8px;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
             }
             
-            for (let i = 0; i < window.examData.questions.length; i++) { 
-                window.userAnswers[i] = null; 
-                window.qStatus[i] = 0; 
-                window.bookmarks[i] = false; 
-            }
+            // Dynamic allocation of arrays for loaded questions to fix bookmark bug
+            let qLen = window.examData.questions.length;
+            window.userAnswers = new Array(qLen).fill(null);
+            window.qStatus = new Array(qLen).fill(0);
+            window.bookmarks = new Array(qLen).fill(false);
+            window.currentQ = 0;
         };
 
         /* ==========================================================================
@@ -2079,7 +2394,14 @@
             else { o.style.display = 'block'; try { history.pushState({ palette: true }, ""); } catch (e) {} }
         };
 
+        // 🔥 POPSTATE HANDLES SUMMARY MODAL AND PALETTE MODAL BACK BUTTON 🔥
         window.addEventListener('popstate', function(e) {
+            let sumModal = document.getElementById('summary-modal');
+            if (sumModal && sumModal.style.display === 'flex') {
+                sumModal.style.display = 'none';
+                return;
+            }
+
             let o = document.getElementById('palette-overlay');
             if (o && o.style.display === 'block') { 
                 o.style.display = 'none'; 
@@ -2413,7 +2735,7 @@
         };
 
         /* ==========================================================================
-           10. PDF PRINTING & LEADERBOARD (ORIGINAL LOGIC RESTORED)
+           10. PDF PRINTING & LEADERBOARD (ORIGINAL LOGIC + SUMMARY PDF ADDED)
            ========================================================================== */
         window.drawReportCard = function(rank, totalStudents, maxScore) {
             let cvs = document.getElementById('reportCard'); 
@@ -2534,9 +2856,9 @@
                     let inS = "padding:2px 0;color:#000;"; 
                     let oC = window.getCleanAns(o.id); 
                     
-                    // 🔥 THE ORIGINAL GREEN BOX FOR CORRECT ANSWERS RESTORED 🔥
+                    // 🔥 THE ORIGINAL GREEN BOX FOR CORRECT ANSWERS RESTORED (FIXED) 🔥
                     if (mode !== 'q_only' && oC === cA) { 
-                        inS = "background-color:#065f46 !important;color:#fff !important;font-weight:bold;padding:2px 8px;border-radius:4px;display:inline-block;-webkit-print-color-adjust:exact;print-color-adjust:exact;"; 
+                        inS = "background-color:#065f46 !important; color:#fff !important; font-weight:bold; padding:4px 8px; border-radius:4px; display:inline-block; -webkit-print-color-adjust:exact; print-color-adjust:exact;"; 
                     } 
                     h += `<div class="opt-item"><span style="${inS}">${o.id}. ${o.text}</span></div>`; 
                 }); 
@@ -2558,6 +2880,15 @@
                 h += '</div>';
             });
             
+            // 🔥 ADD TEST SUMMARY TO BOTTOM OF PDF IF AVAILABLE 🔥
+            if (p.summary || window.examData.summary) {
+                let summ = p.summary || window.examData.summary;
+                h += `<div style="margin-top:20px; padding:15px; border:2px solid #1a56db; border-radius:8px; background:#f0f4ff; page-break-inside:avoid;">
+                        <h3 style="color:#1a56db; margin-top:0; margin-bottom:8px;">📑 Test Summary (Topics Covered)</h3>
+                        <p style="font-size:15px; color:#333; line-height:1.5; margin-bottom:0;">${summ.replace(/\n/g, '<br>')}</p>
+                      </div>`;
+            }
+
             pA.innerHTML = h + '</td></tr></tbody></table>'; 
             let oT = document.title; 
             document.title = `${window.examData.subject||window.examData.sub||"Subject"} ${dT?" "+dT:""} MockSarthi test`; 
@@ -2578,8 +2909,6 @@
         window.togglePriceBox = function() { 
             document.getElementById('price-box').style.display = (document.getElementById('a-pdf-type').value === 'free') ? 'none' : 'block'; 
         };
-        
-        // Removed generatePass functions as we removed password logic for PDFs
         
         window.blastConfetti = function() {
             let colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#01a3a4', '#f368e0', '#ff6348'];
@@ -2632,7 +2961,6 @@
             let records = data.records || []; 
             let list = document.getElementById('st-hist-list');
             
-            // 🔥 UPDATE ATTEMPTED TESTS MEMORY FOR DASHBOARD 🔥
             let attemptedRecords = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
             records.forEach(r => { 
                 if(r.testCode) {
@@ -2723,7 +3051,8 @@
                 topic: data.topic, 
                 code: data.code, 
                 questions: pQs, 
-                isFree: data.isFree 
+                isFree: data.isFree,
+                summary: window.parseHack(data.topic).summary || "" 
             };
             
             let isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true"); 
