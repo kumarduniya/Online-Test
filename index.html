@@ -14,7 +14,6 @@
             --primary-dark: #1e40af;
             --primary-light: #3b82f6;
             --accent: #f59e0b;
-            --accent-dark: #d97706;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
@@ -169,6 +168,7 @@
             font-size: 15px; 
             font-weight: 700; 
             background: var(--danger); 
+            color: white;
             padding: 8px 16px; 
             border-radius: 50px; 
             display: flex; 
@@ -177,7 +177,6 @@
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
             animation: timerPulse 2s infinite; 
             letter-spacing: 0.5px;
-            color: white;
         }
 
         @keyframes timerPulse {
@@ -221,7 +220,7 @@
         .flex-row .form-group { flex: 1; min-width: 160px; }
 
         /* ==========================================================================
-           5. BUTTONS
+           5. BUTTONS (COLORS FOR ALL FIXED PERMANENTLY WITH !IMPORTANT)
            ========================================================================== */
         .btn {
             background: var(--primary); color: white; border: none; padding: 12px 20px;
@@ -294,34 +293,18 @@
         .exam-card-l2-icon { font-size: 38px; margin-bottom: 8px; }
         .exam-card-l2-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 0; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.4px; }
 
-        /* FOLDER CARD FOR CHAPTER TESTS */
+        /* 🔥 FOLDER CARD FIXED CSS 🔥 */
         .folder-card {
-            background: var(--card-bg);
-            border: 2px solid var(--primary);
-            border-radius: var(--radius-lg);
-            padding: 24px 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow-md);
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 120px;
+            background: var(--card-bg); border: 2px solid var(--primary); border-radius: var(--radius-lg); padding: 24px 14px;
+            text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-md); box-sizing: border-box;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 120px;
         }
         .folder-card:hover { transform: translateY(-5px); background: var(--input-bg); box-shadow: var(--shadow-xl); border-color: var(--accent); }
         .folder-icon { font-size: 40px; margin-bottom: 8px; }
         .folder-title { font-size: 15px; font-weight: 700; color: var(--primary); margin: 0; line-height: 1.3; }
 
-        /* SUBJECT GRID (DESKTOP) */
-        .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 14px;
-        }
+        /* 🔥 SUBJECT GRID FIXED HORIZONTALLY 🔥 */
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
 
         .breadcrumb-nav { background: var(--input-bg); padding: 12px 16px; border-radius: var(--radius); margin-bottom: 20px; font-weight: 600; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
         .bc-link { color: var(--primary); cursor: pointer; text-decoration: none; padding: 4px 10px; border-radius: 50px; transition: var(--transition-fast); font-weight: 600; }
@@ -370,9 +353,10 @@
         body.dark-mode .mini-box.active-q { border-color: #60a5fa; }
         
         .action-buttons { display: flex; justify-content: space-between; gap: 10px; flex-wrap: nowrap; }
+        
+        /* 🔥 BUG FIX: EXAM BOTTOM CONTROLS COLORS RESTORED 100% 🔥 */
         .action-btn { padding: 14px 6px; border: none; border-radius: var(--radius); font-weight: 700; cursor: pointer; flex: 1; font-size: 12px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; transition: var(--transition-fast); box-shadow: var(--shadow); }
         .action-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-        
         #exam-bottom-controls .btn-prev { background: #6b7280 !important; color: white !important; }
         #exam-bottom-controls .btn-clear { background: #fbbf24 !important; color: #000 !important; }
         #exam-bottom-controls .btn-next { background: #10b981 !important; color: white !important; }
@@ -391,7 +375,7 @@
         .status-answered { background: var(--primary); color: white; border-color: var(--primary-dark); }
         
         .question-palette { padding: 8px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; align-content: flex-start; justify-content: center; }
-        .palette-btn { width: 44px; height: 44px; border-radius: var(--radius-sm); border: 2px solid #999; font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--transition-fast); color: var(--text-main); }
+        .palette-btn { width: 44px; height: 44px; border-radius: var(--radius-sm); font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--transition-fast); color: var(--text-main); border: 2px solid var(--border-color); }
         .palette-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-md); }
 
         /* ==========================================================================
@@ -423,7 +407,7 @@
         @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* ==========================================================================
-           10. MOBILE RESPONSIVENESS FIXES (GRID FIXED)
+           10. MOBILE RESPONSIVENESS FIXES (GRID FIXED HORIZONTALLY)
            ========================================================================== */
         @media (max-width: 768px) {
             .left-panel { padding: 10px 10px 170px 10px; }
@@ -432,7 +416,7 @@
             .fs-container { border-radius: 0; min-height: 100vh; padding: 14px; }
             .app-layout { flex-direction: column; gap: 10px; }
             
-            /* 🔥 GRID CSS FOR MOBILE SO CHAPTERS ARE HORIZONTAL 🔥 */
+            /* 🔥 BUG FIX: RESTORED ORIGINAL HORIZONTAL GRID FOR MOBILE 🔥 */
             .subject-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
             
             .exam-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; padding: 4px !important; justify-items: center; }
@@ -449,7 +433,7 @@
         }
 
         /* ==========================================================================
-           11. ORIGINAL PRINT CSS EXACT MATCH (PDF FORMAT FIXES)
+           11. ORIGINAL PRINT CSS EXACT MATCH (PDF FORMAT FIXED 100%)
            ========================================================================== */
         body.print-pdf,
         body.print-pdf html {
@@ -491,12 +475,6 @@
             .print-passage { padding: 5px !important; margin-bottom: 5px !important; font-style: italic; border-left: 4px solid #333; font-size: 17px !important; background: transparent !important; page-break-inside: auto !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
-
-        /* Scrollbars */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 20px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a1a1a1; }
     </style>
 </head>
 <body>
@@ -721,8 +699,8 @@
         </div>
 
         <div id="error-view" class="view-section" style="text-align:center; margin-top:50px;">
-            <h2 style="color:var(--danger);">❌ Failed to load</h2>
-            <p id="error-msg" style="color:var(--text-muted); font-size:16px; margin-bottom:20px;">Check your internet connection.</p>
+            <h2 style="color:var(--danger);">❌ Failed to load test</h2>
+            <p id="error-msg" style="color:var(--text-muted); font-size:16px; margin-bottom:20px;">Network slow or test not found.</p>
             <button class="btn btn-blue" style="max-width:250px; margin:0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
         </div>
 
@@ -784,8 +762,9 @@
                     <div class="form-group"><label>Time Per Q (Secs):</label><input type="number" id="a-q-time" value="0"></div>
                 </div>
                 <div class="flex-row">
-                    <div class="form-group"><label>PDF Status:</label><select id="a-pdf-type"><option value="paid">🔒 Paid</option><option value="free">🔓 Free</option></select></div>
-                    <div class="form-group"><label>PDF Price (₹):</label><input type="number" id="a-price" placeholder="49"></div>
+                    <div class="form-group"><label>PDF Status:</label><select id="a-pdf-type" onchange="window.togglePriceBox()"><option value="paid">🔒 Paid</option><option value="free">🔓 Free</option></select></div>
+                    <div class="form-group" id="price-box"><label>PDF Price (₹):</label><input type="number" id="a-price" placeholder="49"></div>
+                    <div class="form-group"><label>Secret Key:</label><input type="text" id="a-key" placeholder="ANK"></div>
                     <div class="form-group"><label>Total Qs (Auto):</label><input type="number" id="a-qs-count" readonly style="background:var(--gray-100); color:var(--primary); font-weight:700;" placeholder="0"></div>
                 </div>
                 <div class="form-group"><label style="color:var(--danger);"><b>Paste Questions Here:</b></label><textarea id="a-rawdata" onkeyup="window.updateQsCount()" onchange="window.updateQsCount()" placeholder="!P Passage...&#10;!!1! Question...&#10;!A Option...&#10;!!! Ans&#10;!!!! Exp..."></textarea></div>
@@ -937,6 +916,7 @@
         window.closeModal = function() { document.getElementById('custom-modal').style.display = 'none'; };
         window.showCustomAlert = function(t, m, i = "⚠️") { window.showModal(i, t, m, false, null, null); };
         window.showCustomConfirm = function(t, m, onYes, i = "❓") { window.showModal(i, t, m, false, onYes, () => {}); };
+        window.showCustomPrompt = function(t, m, onYes, i = "🔒") { window.showModal(i, t, m, true, onYes, () => {}); };
         window.closeAndRedirect = function() { window.location.href = BASE_URL; };
         
         window.showLoadingModal = function(msg) {
@@ -950,7 +930,7 @@
             document.getElementById('modal-btn-ok').style.display = 'none';
         };
 
-        // 🔥 TEST SUMMARY MODAL LOGIC 🔥
+        // 🔥 NEW: TEST SUMMARY MODAL LOGIC 🔥
         window.showTestSummary = function(summaryText) {
             let modal = document.getElementById('summary-modal');
             let content = document.getElementById('summary-content');
@@ -1007,7 +987,7 @@
                 let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/); 
                 if (matchSubcat) res.subcat = matchSubcat[1];
                 
-                // 🔥 PARSE SUMMARY 🔥
+                // 🔥 PARSE SUMMARY STRING SAFELY 🔥
                 let matchSummary = raw.match(/\|\|\|SUMMARY:(.*?)(?:\|\|\||$)/);
                 if (matchSummary) res.summary = matchSummary[1];
                 
@@ -1242,7 +1222,6 @@
                     document.getElementById('loading-view').classList.add('active-view'); 
                     window.toggleAdminLock(false); 
                     
-                    // 🔥 FAILED TO LOAD ERROR FIX - LOCAL FALLBACK 🔥
                     let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
                     let localTestInfo = localTests.find(t => t.code === testCode);
                     
@@ -1258,12 +1237,12 @@
                                 window.showErrorView("❌ Network Slow / Test Failed to Load."); 
                             }
                         }
-                    }, 8000); 
+                    }, 15000); // Increased timeout to 15 seconds to prevent hasty failures
 
                     script.onerror = () => { 
                         clearTimeout(timeoutError);
                         if(localTestInfo) {
-                            window.handleTestLoad(localTestInfo); 
+                            window.handleTestLoad(localTestInfo);
                         } else {
                             document.getElementById('loading-view').classList.remove('active-view'); 
                             window.showErrorView("❌ Network Error!"); 
@@ -1288,7 +1267,7 @@
         };
 
         /* ==========================================================================
-           6. TEST ENTRY SCREEN & SUMMARY DISPLAY
+           6. TEST ENTRY SCREEN (PDF SECTION & OLD SUMMARY REMOVED)
            ========================================================================== */
         window.handleTestLoad = function(data) {
             if (data.error) return window.showErrorView("❌ Test not found!");
@@ -1322,39 +1301,21 @@
             if (window.examData.qTime > 0) tInfo += `Per Q: ${window.examData.qTime} Secs`;
             document.getElementById('disp-time-info').innerText = tInfo;
             
-            let p = window.parseHack(window.examData.topic);
-            let summaryText = p.summary || window.examData.summary || "";
-            
             let isFreeStatus = window.examData.isFree; 
             let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
             let actionArea = document.getElementById('test-action-area'); 
-            let pdfActionArea = document.getElementById('pdf-action-area');
             
             let startBtnHTML = "";
 
-            // 🔥 DISPLAY TEST SUMMARY BUTTON IN LOGIN BOX 🔥
-            if(summaryText.trim()) {
-                startBtnHTML += `<button class="btn btn-outline" style="margin-bottom:12px; border-color:var(--primary); color:var(--primary);" onclick="window.showTestSummary('${summaryText.replace(/'/g, "\\'")}')">📑 View Test Summary (Topics)</button>`;
-            }
-
-            startBtnHTML += `<button class="btn btn-success" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
-            
-            let savedProg = localStorage.getItem('progress_' + window.examData.code);
-            if (savedProg) { 
-                startBtnHTML += `<button class="btn btn-blue" style="margin-top:10px; background:#0891b2;" onclick="window.resumeExam()">⏯️ Resume Saved Exam</button>`; 
-            }
-
-            // 🔥 PDF DIRECT DOWNLOAD (NO PASSWORD) 🔥
             if (isFreeStatus || isPremiumUser) {
+                startBtnHTML += `<button class="btn btn-success" style="margin-top:0;" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
+                let savedProg = localStorage.getItem('progress_' + window.examData.code);
+                if (savedProg) { 
+                    startBtnHTML += `<button class="btn btn-blue" style="margin-top:10px; background:#0891b2 !important; color:white !important;" onclick="window.resumeExam()">⏯️ Resume Saved Exam</button>`; 
+                }
                 actionArea.innerHTML = startBtnHTML;
-                document.getElementById('free-instructions').style.display = 'block'; 
-                document.getElementById('paid-instructions').style.display = 'none';
-                pdfActionArea.innerHTML = `<button class="btn btn-pdf" style="margin-top:8px;" onclick="window.executePDFPrint(window.studentInfo.name||'Student','full')">📥 Download Full PDF</button>`;
             } else {
                 actionArea.innerHTML = `<button class="btn btn-warning" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
-                document.getElementById('free-instructions').style.display = 'none'; 
-                document.getElementById('paid-instructions').style.display = 'block';
-                pdfActionArea.innerHTML = `<button class="btn btn-outline" style="margin-top:8px;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
             }
             
             let qLen = window.examData.questions.length;
@@ -1365,7 +1326,7 @@
         };
 
         /* ==========================================================================
-           7. DASHBOARD & ACTIVE TESTS (ATTEMPTED BADGE LOGIC)
+           7. DASHBOARD & ACTIVE TESTS (NEW SUMMARY BUTTON ADDED HERE)
            ========================================================================== */
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
@@ -1415,7 +1376,7 @@
                         window.showCustomAlert("Error", "Server is taking too long. Please refresh the page.", "⚠️");
                     }
                 }
-            }, 10000);
+            }, 15000);
 
             script.onerror = () => { 
                 clearTimeout(timeoutError);
@@ -1589,17 +1550,16 @@
                 } 
                 if (!qsCount) qsCount = 0;
                 
-                // 🔥 ATTEMPTED BADGE FEATURE 🔥
                 let attemptHtml = "";
                 if(attemptedRecords[t.code] !== undefined) {
                     attemptHtml = `<div style="color:var(--success); font-weight:bold; font-size:12px; margin-bottom:5px;">✅ Attempted (Score: ${attemptedRecords[t.code]})</div>`;
                 }
-                
-                // 🔥 SUMMARY BUTTON BEFORE GIVETEST 🔥
-                let summaryBtn = "";
-                let summText = p.summary || t.summary || "";
-                if (summText.trim()) {
-                    summaryBtn = `<button class="btn btn-outline" style="margin:0 0 8px 0;padding:5px;font-size:12px;border-radius:var(--radius);border:1px dashed var(--primary);" onclick="window.showTestSummary('${summText.replace(/'/g, "\\'")}')">📑 Test Summary</button>`;
+
+                // 🔥 NEW: SUMMARY BUTTON ADDED JUST ABOVE GIVE TEST BUTTON 🔥
+                let summaryHtml = "";
+                if (p.summary && p.summary.trim() !== "") {
+                    let safeSumm = p.summary.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    summaryHtml = `<button class="btn btn-outline" style="margin:0 0 8px 0; padding:6px 12px; font-size:12px; border-radius:50px; width:100%; font-weight:700;" onclick="window.showTestSummary('${safeSumm}')">📑 View Summary (Topics)</button>`;
                 }
 
                 let actionBtn = (isFreeStatus || isPremiumUser) ? 
@@ -1616,7 +1576,7 @@
                                 <span class="badge" style="background:var(--primary);color:white;border:none;">Qs: ${qsCount}</span>
                                 <span class="badge">${priceText}</span>
                             </div>
-                            ${summaryBtn}
+                            ${summaryHtml}
                             ${actionBtn}
                         </div>`;
             }); 
@@ -1782,7 +1742,7 @@
                 let p = window.parseHack(t.topic); 
                 let bName = p.board || t.exam || "General Exam"; 
                 if (bName === oldName) { 
-                    let finalTopic = (p.topic || "") + "|||QS:" + (p.qs || t.qs || 0) + "|||CAT:" + (p.cat || "") + "|||LOGO:" + newLogo + "|||BOARD:" + newName + "|||EXAM:" + (p.exam || t.exam) + "|||SUBCAT:" + (p.subcat || t.subject || t.sub); 
+                    let finalTopic = (p.topic || "") + "|||QS:" + (p.qs || t.qs || 0) + "|||CAT:" + (p.cat || "") + "|||LOGO:" + newLogo + "|||BOARD:" + newName + "|||EXAM:" + (p.exam || t.exam) + "|||SUBCAT:" + (p.subcat || t.subject || t.sub) + "|||SUMMARY:" + (p.summary || ""); 
                     t.topic = finalTopic; 
                     if (!p.board && t.exam === oldName) t.exam = newName; 
                     count++; 
@@ -1907,9 +1867,9 @@
                                 <span class="badge" style="background:var(--primary);color:white;border:none;">Qs: ${qC}</span>
                                 <span class="badge">${pT}</span>
                                 <span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
-                                <span class="badge" style="background:#fef3c7;border:none;color:#92400e;">Key: ${t.key||'N/A'}</span>
                             </div>
                             <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:6px;border:1px solid var(--border-color);font-size:11px;margin-bottom:6px;border-radius:var(--radius-sm);background:var(--input-bg);color:var(--text-main);">
+                            
                             <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px;">
                                 <button class="btn btn-blue" style="margin:0;padding:5px 8px;font-size:11px;width:auto;" onclick="window.editTest('${t.code}')">✏️ Edit</button>
                                 <button class="btn btn-pdf" style="margin:0;padding:5px 8px;font-size:11px;width:auto;" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button>
@@ -1945,11 +1905,72 @@
             document.body.appendChild(script);
         };
 
+        // 🔥 RESTORED FETCH TEST FOR ADMIN FUNCTION (FIX FOR EDIT/PDF BUG) 🔥
+        window.fetchTestForAdmin = function(code, action, mode) {
+            window.adminActionCode = code;
+            window.adminActionMode = action;
+            window.adminPdfMode = mode;
+            window.showLoadingModal("Downloading full test data securely...<br><br><i>Wait just a second...</i>");
+            
+            let script = document.createElement('script');
+            script.src = SCRIPT_URL + "?action=getTest&testCode=" + code + "&callback=handleAdminTestLoad&t=" + new Date().getTime();
+            script.onerror = () => { 
+                window.closeModal();
+                window.showCustomAlert("Network Error", "Failed to connect to server.", "❌"); 
+            };
+            document.body.appendChild(script);
+        };
+
+        window.handleAdminTestLoad = function(data) {
+            window.closeModal();
+            if (data.error) return window.showCustomAlert("Error", "Test not found on server!", "❌");
+            
+            let raw = data.rawText || "";
+            if (!raw && data.questions && data.questions.length > 0) {
+                raw = data.questions.map((q, i) => {
+                    let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
+                    let qs = `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;
+                    let op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
+                    let an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;
+                    let ex = q.exp ? `!!!! ${String(q.exp).replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n` : "";
+                    return pa + qs + op + an + ex;
+                }).join('\n');
+                data.rawText = raw;
+            }
+            
+            data.isFetched = true;
+            
+            let sTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+            let eIdx = sTests.findIndex(t => t.code === data.code);
+            if (eIdx >= 0) { 
+                sTests[eIdx] = { ...sTests[eIdx], ...data }; 
+            } else { 
+                sTests.push(data); 
+            }
+            localStorage.setItem('myMockTests', JSON.stringify(sTests));
+            
+            let uIdx = window.adminUnifiedTests.findIndex(t => t.code === data.code);
+            if (uIdx >= 0) {
+                window.adminUnifiedTests[uIdx] = { ...window.adminUnifiedTests[uIdx], ...data };
+            } else {
+                window.adminUnifiedTests.push(data);
+            }
+            window.renderDashboard();
+
+            if (window.adminActionMode === 'edit') window.editTest(window.adminActionCode);
+            else if (window.adminActionMode === 'pdf') window.adminDownloadPDF(window.adminActionCode, window.adminPdfMode);
+        };
+
         window.editTest = function(code) {
             let t = window.adminUnifiedTests.find(x => x.code === code); 
             if (!t) return;
             
             let raw = t.rawText || "";
+            if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
+                window.fetchTestForAdmin(code, 'edit', null); 
+                return; 
+            }
+            
             if (!raw && t.questions && t.questions.length > 0) { 
                 raw = t.questions.map((q, i) => { 
                     let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
@@ -1962,20 +1983,13 @@
                 t.rawText = raw; 
             }
             
-            if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
-                window.fetchTestForAdmin(code, 'edit', null); 
-                return; 
-            }
-            
             let p = window.parseHack(t.topic);
             document.getElementById('a-board').value = p.board || t.exam || ""; 
             document.getElementById('a-exam').value = t.exam || ""; 
             document.getElementById('a-logo').value = p.logo || "";
             
-            // 🔥 POPULATE SUMMARY IN EDIT BOX 🔥
             if(document.getElementById('a-summary')) {
-                let existingSumm = p.summary || t.summary || "";
-                document.getElementById('a-summary').value = existingSumm;
+                document.getElementById('a-summary').value = p.summary || "";
             }
             
             let cS = document.getElementById('a-category'); 
@@ -2000,9 +2014,7 @@
             let isF = (t.isFree === true || String(t.isFree).toLowerCase() === "true"); 
             document.getElementById('a-pdf-type').value = isF ? "free" : "paid"; 
             if (!isF) document.getElementById('a-price').value = t.price || "";
-            else document.getElementById('a-price').value = "";
             
-            document.getElementById('a-key').value = t.key || ""; 
             document.getElementById('a-rawdata').value = raw || ""; 
             document.getElementById('a-qs-count').value = window.parseRawQuestions(raw || "").length;
             
@@ -2033,7 +2045,6 @@
             }, "🗑️");
         };
 
-        // 🔥 FIX: UPDATE BUG FIXED FOR ARRAY SYNC 🔥
         window.generateAndSaveLink = function() {
             let eBoard = document.getElementById('a-board').value || "General Exam"; 
             let eName = document.getElementById('a-exam').value || "Mock Test"; 
@@ -2042,9 +2053,8 @@
             let eTopicRaw = document.getElementById('a-topic').value || ""; 
             let eCode = document.getElementById('a-code').value;
             
-            // 🔥 GET TEST SUMMARY (CLEAN NEWLINES) 🔥
-            let eSummary = document.getElementById('a-summary') ? document.getElementById('a-summary').value : "";
-            eSummary = eSummary.replace(/\n/g, " "); // Removes newlines to prevent sheet breakage
+            let eSummaryRaw = document.getElementById('a-summary') ? document.getElementById('a-summary').value : "";
+            let eSummary = eSummaryRaw.replace(/\n/g, '<br>');
             
             if (!eCode) { 
                 eCode = "T-" + Math.floor(Math.random() * 99999); 
@@ -2057,7 +2067,7 @@
             let qTime = parseInt(document.getElementById('a-q-time').value) || 0; 
             let isFree = document.getElementById('a-pdf-type').value === "free"; 
             let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49"); 
-            let eKey = document.getElementById('a-key').value || "ANK"; 
+            let eKey = "ANK"; 
             let eCategory = document.getElementById('a-category').value;
             
             if (eCategory === "CUSTOM") eCategory = document.getElementById('a-custom-cat').value || "Custom Category";
@@ -2090,26 +2100,6 @@
             postData.append('testCode', eCode); 
             postData.append('testData', JSON.stringify(fObj));
             
-            // Sync locally immediately to prevent button dead state
-            let tLink = BASE_URL + "?test=" + eCode; 
-            let tObj = { 
-                code: eCode, exam: eName, category: eCategory, logo: eLogo, subject: eSub, 
-                sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, 
-                qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: fQs, 
-                link: tLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true 
-            };
-            
-            let sTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
-            let eIdx = sTests.findIndex(t => t.code === eCode);
-            if (eIdx >= 0) sTests[eIdx] = tObj; else sTests.push(tObj); 
-            localStorage.setItem('myMockTests', JSON.stringify(sTests));
-            
-            let uIdx = window.adminUnifiedTests.findIndex(t => t.code === eCode); 
-            if (uIdx >= 0) window.adminUnifiedTests[uIdx] = tObj; else window.adminUnifiedTests.push(tObj);
-
-            let aIdx = window.globalActiveTests.findIndex(t => t.code === eCode);
-            if (aIdx >= 0) window.globalActiveTests[aIdx] = tObj; else window.globalActiveTests.push(tObj);
-
             fetch(SCRIPT_URL, { 
                 method: 'POST', 
                 body: postData, 
@@ -2126,6 +2116,29 @@
                 document.getElementById('a-qs-count').value = "";
                 if(document.getElementById('a-summary')) document.getElementById('a-summary').value = "";
                 
+                let tLink = BASE_URL + "?test=" + eCode; 
+                
+                // 🔥 LOCAL CACHE FIX: Immediately update locally so Free to Paid reflects instantly 🔥
+                let sTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                let eIdx = sTests.findIndex(t => t.code === eCode);
+                
+                let tObj = { 
+                    code: eCode, exam: eName, category: eCategory, logo: eLogo, subject: eSub, 
+                    sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, 
+                    qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: fQs, 
+                    link: tLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true 
+                };
+                
+                if (eIdx >= 0) sTests[eIdx] = tObj; else sTests.push(tObj); 
+                localStorage.setItem('myMockTests', JSON.stringify(sTests));
+                
+                let uIdx = window.adminUnifiedTests.findIndex(t => t.code === eCode); 
+                if (uIdx >= 0) window.adminUnifiedTests[uIdx] = tObj; else window.adminUnifiedTests.push(tObj);
+                
+                // Update Global Active Tests immediately as well
+                let gIdx = window.globalActiveTests.findIndex(t => t.code === eCode);
+                if (gIdx >= 0) window.globalActiveTests[gIdx] = tObj; else window.globalActiveTests.push(tObj);
+                
                 document.getElementById('generatedLink').value = tLink; 
                 document.getElementById('linkContainer').style.display = 'block'; 
                 window.showCustomAlert("Success", `✅ Saved! (${fQs} Qs)`, "🎉"); 
@@ -2133,11 +2146,10 @@
                 
                 if (document.getElementById('admin-manage-section').style.display === 'block') window.renderDashboard();
             }).catch(() => { 
-                window.showCustomAlert("Error", "Check connection. Test saved locally.", "⚠️"); 
+                window.showCustomAlert("Error", "Check connection.", "❌"); 
                 btn.innerText = "🚀 Generate / Update Test"; 
                 btn.disabled = false; 
                 btn.style.background = "var(--primary)"; 
-                if (document.getElementById('admin-manage-section').style.display === 'block') window.renderDashboard();
             });
         };
 
@@ -2146,6 +2158,12 @@
             if (!t) return window.showCustomAlert("Error", "Data not found!", "❌");
             
             let raw = t.rawText || "";
+            
+            if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
+                window.fetchTestForAdmin(code, 'pdf', mode); 
+                return; 
+            }
+            
             if (!raw && t.questions && t.questions.length > 0) { 
                 raw = t.questions.map((q, i) => { 
                     let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
@@ -2156,11 +2174,6 @@
                     return pa + qs + op + an + ex; 
                 }).join('\n'); 
                 t.rawText = raw; 
-            }
-            
-            if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
-                window.fetchTestForAdmin(code, 'pdf', mode); 
-                return; 
             }
             
             if (!raw) return window.showCustomAlert("Empty Test", "No questions to print!", "❌");
@@ -2724,7 +2737,7 @@
         };
 
         /* ==========================================================================
-           10. PDF PRINTING & LEADERBOARD (ORIGINAL LOGIC + SUMMARY PDF ADDED)
+           10. PDF PRINTING & LEADERBOARD
            ========================================================================== */
         window.drawReportCard = function(rank, totalStudents, maxScore) {
             let cvs = document.getElementById('reportCard'); 
@@ -2845,6 +2858,7 @@
                     let inS = "padding:2px 0;color:#000;"; 
                     let oC = window.getCleanAns(o.id); 
                     
+                    // 🔥 PDF PERFECT ORIGINAL GREEN/WHITE BOX LOGIC 🔥
                     if (mode !== 'q_only' && oC === cA) { 
                         inS = "background-color:#065f46 !important; color:#fff !important; font-weight:bold; padding:4px 8px; border-radius:4px; display:inline-block; -webkit-print-color-adjust:exact; print-color-adjust:exact;"; 
                     } 
@@ -2868,9 +2882,10 @@
                 h += '</div>';
             });
             
-            if (p.summary || window.examData.summary) {
-                let summ = p.summary || window.examData.summary;
-                h += `<div style="margin-top:20px; padding:15px; border:2px solid #1a56db; border-radius:8px; background:#f0f4ff; page-break-inside:avoid;">
+            // 🔥 ADD SUMMARY TO PDF IF AVAILABLE 🔥
+            let summ = p.summary || window.examData.summary || "";
+            if (summ.trim() !== "") {
+                h += `<div style="margin-top:20px; padding:15px; border:2px solid #1a56db; border-radius:8px; background:#f0f4ff; page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
                         <h3 style="color:#1a56db; margin-top:0; margin-bottom:8px;">📑 Test Summary (Topics Covered)</h3>
                         <p style="font-size:15px; color:#333; line-height:1.5; margin-bottom:0;">${summ.replace(/\n/g, '<br>')}</p>
                       </div>`;
@@ -2891,10 +2906,13 @@
         };
 
         /* ==========================================================================
-           11. PASSWORDS & UTILS
+           11. MISC UTILS & CONFETTI
            ========================================================================== */
         window.togglePriceBox = function() { 
-            document.getElementById('price-box').style.display = (document.getElementById('a-pdf-type').value === 'free') ? 'none' : 'block'; 
+            let pt = document.getElementById('a-pdf-type');
+            if(pt) {
+                document.getElementById('price-box').style.display = (pt.value === 'free') ? 'none' : 'block'; 
+            }
         };
         
         window.blastConfetti = function() {
@@ -2918,7 +2936,7 @@
         };
 
         /* ==========================================================================
-           12. 🔥 STUDENT HISTORY & MANUAL SEARCH LOGIC 🔥
+           12. STUDENT HISTORY & MANUAL SEARCH LOGIC
            ========================================================================== */
         window.fetchStudentHistoryManual = function() {
             let phoneInput = document.getElementById('hist-phone').value.trim();
