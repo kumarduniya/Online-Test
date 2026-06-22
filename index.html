@@ -807,7 +807,6 @@
     </div>
 
     <div id="print-area"></div>
-    <!-- 🟢 YAHAN SE JAVASCRIPT SCRIPT COPY KAREN 🟢 -->
     <script>
         /* ==========================================================================
            1. GLOBAL VARIABLES & INITIALIZATION
@@ -840,6 +839,7 @@
         window.totalTimeSpent = 0;
         
         window.isReattemptMode = false; 
+        window.currentGeneratedPass = "";
         window.globalActiveTests = []; 
         window.adminUnifiedTests = []; 
         
@@ -937,7 +937,6 @@
             let modal = document.getElementById('summary-modal');
             let content = document.getElementById('summary-content');
             
-            // Decode the safely passed text so quotes don't break the HTML attribute
             let summaryText = decodeURIComponent(encodedSummaryText);
             
             content.innerHTML = summaryText.replace(/\n/g, '<br>');
@@ -1178,7 +1177,7 @@
         };
 
         /* ==========================================================================
-           5. ONLOAD INITIALIZATION & LOCAL FALLBACK FOR "FAILED TO LOAD"
+           5. ONLOAD INITIALIZATION
            ========================================================================== */
         window.onload = function() {
             if(localStorage.getItem('mockSarthiTheme') === 'dark') {
@@ -1272,19 +1271,18 @@
         };
 
         /* ==========================================================================
-           6. TEST ENTRY SCREEN (ALL LOGICS FIXED HERE)
+           6. TEST ENTRY SCREEN (DIRECT PDF BOX REMOVED)
            ========================================================================== */
         window.handleTestLoad = function(data) {
             if (data.error) return window.showErrorView("❌ Test not found!");
             if (data.isActive === false) return window.showErrorView("❌ This test is currently inactive.");
             
-            // 🔥 CRITICAL FIX: OVERRIDE OLD SERVER CACHE WITH LATEST LOCAL ADMIN EDIT 🔥
             let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
             let localTest = localTests.find(t => t.code === data.code);
             if (localTest) {
                 data.isFree = localTest.isFree;
                 data.price = localTest.price;
-                data.topic = localTest.topic; // This ensures updated Summary is loaded
+                data.topic = localTest.topic; 
                 data.marks = localTest.marks;
                 data.neg = localTest.neg;
                 data.totTime = localTest.totTime;
@@ -1308,7 +1306,7 @@
             document.getElementById('specific-test-login').style.display = 'block';
             window.toggleAdminLock(false);
             
-            // 🔥 KILL THE DIRECT PDF BOX COMPLETELY FROM TEST ENTRY SCREEN 🔥
+            // Remove the direct PDF download box entirely
             let pdfBox = document.getElementById('direct-pdf-box');
             if (pdfBox) { pdfBox.style.display = 'none'; }
 
@@ -1348,7 +1346,7 @@
         };
 
         /* ==========================================================================
-           7. DASHBOARD & ACTIVE TESTS (NEW SUMMARY BUTTON ADDED ON DASHBOARD)
+           7. DASHBOARD & ACTIVE TESTS 
            ========================================================================== */
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
@@ -1546,7 +1544,8 @@
                 html += `<button class="btn btn-outline" style="margin:0;padding:5px 12px;font-size:12px;width:auto;border-radius:50px;" onclick="window.showAppLayout('${boardName.replace(/'/g,"\\'")}','${subExamName.replace(/'/g,"\\'")}','${activeCat.replace(/'/g,"\\'")}')">🔙 Back</button>`;
             }
             
-            html += '</div><div style="display:flex;flex-wrap:wrap;gap:14px;">';
+            // 🔥 CRITICAL FIX: AUTO-FIT GRID TO STRETCH HORIZONTALLY 🔥
+            html += '</div><div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; width: 100%;">';
             
             if (testsToRender.length === 0) {
                 html += `<p style="color:var(--text-muted);width:100%;text-align:center;">No tests found.</p>`;
@@ -1577,11 +1576,11 @@
                     attemptHtml = `<div style="color:var(--success); font-weight:bold; font-size:12px; margin-bottom:5px;">✅ Attempted (Score: ${attemptedRecords[t.code]})</div>`;
                 }
 
-                // 🔥 CRITICAL FIX: SUMMARY BUTTON ON FOLDER CARD SAFE ENCODING 🔥
+                // 🔥 CRITICAL FIX: SUMMARY BUTTON HTML SAFE ENCODING 🔥
                 let summaryHtml = "";
                 if (p.summary && p.summary.trim() !== "") {
-                    // Safe encoding prevents broken HTML from quotes/spaces
-                    let safeSumm = encodeURIComponent(p.summary);
+                    // Replace single quotes with %27 so it doesn't break the onclick attribute
+                    let safeSumm = encodeURIComponent(p.summary).replace(/'/g, "%27");
                     summaryHtml = `<button class="btn btn-outline" style="margin:0 0 8px 0; padding:6px 12px; font-size:12px; border-radius:50px; width:100%; font-weight:700;" onclick="window.showTestSummary('${safeSumm}')">📑 View Summary (Topics)</button>`;
                 }
 
@@ -1589,7 +1588,7 @@
                     `<button class="btn btn-blue" style="margin:0;padding:7px;font-size:13px;border-radius:var(--radius);" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>` : 
                     `<button class="btn btn-warning" style="margin:0;padding:7px;font-size:13px;border-radius:var(--radius);" onclick="window.showPremiumModal()">🔒 Unlock PRO</button>`;
                 
-                html += `<div class="test-card" style="width:100%;max-width:300px;margin-bottom:0;">
+                html += `<div class="test-card" style="width:100%; margin-bottom:0;">
                             <h4 style="margin:0 0 4px 0;color:var(--primary);font-size:14px;">${currentSub}</h4>
                             <p style="margin:0 0 8px 0;font-size:11px;color:var(--text-muted);"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p>
                             ${attemptHtml}
@@ -1609,7 +1608,7 @@
         };
 
         /* ==========================================================================
-           8. ADMIN DASHBOARD & TEST CREATION (WITH SUMMARY FIELD)
+           8. ADMIN DASHBOARD & TEST CREATION
            ========================================================================== */
         window.switchAdminTab = function(tab) {
             document.getElementById('admin-create-section').style.display = 'none'; 
@@ -1892,6 +1891,7 @@
                                 <span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
                             </div>
                             <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:6px;border:1px solid var(--border-color);font-size:11px;margin-bottom:6px;border-radius:var(--radius-sm);background:var(--input-bg);color:var(--text-main);">
+                            
                             <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px;">
                                 <button class="btn btn-blue" style="margin:0;padding:5px 8px;font-size:11px;width:auto;" onclick="window.editTest('${t.code}')">✏️ Edit</button>
                                 <button class="btn btn-pdf" style="margin:0;padding:5px 8px;font-size:11px;width:auto;" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button>
@@ -2074,7 +2074,6 @@
             let eTopicRaw = document.getElementById('a-topic').value || ""; 
             let eCode = document.getElementById('a-code').value;
             
-            // 🔥 REMOVE PIPES FROM SUMMARY SO IT DOESN'T BREAK PARSING 🔥
             let eSummaryRaw = document.getElementById('a-summary') ? document.getElementById('a-summary').value : "";
             eSummaryRaw = eSummaryRaw.replace(/\|\|\|/g, ''); 
             let eSummary = eSummaryRaw.replace(/\n/g, '<br>');
@@ -2758,7 +2757,7 @@
         };
 
         /* ==========================================================================
-           10. PDF PRINTING & LEADERBOARD (ORIGINAL LOGIC RESTORED)
+           10. PDF PRINTING & LEADERBOARD
            ========================================================================== */
         window.drawReportCard = function(rank, totalStudents, maxScore) {
             let cvs = document.getElementById('reportCard'); 
@@ -2879,7 +2878,6 @@
                     let inS = "padding:2px 0;color:#000;"; 
                     let oC = window.getCleanAns(o.id); 
                     
-                    // 🔥 PDF PERFECT ORIGINAL GREEN/WHITE BOX LOGIC 🔥
                     if (mode !== 'q_only' && oC === cA) { 
                         inS = "background-color:#065f46 !important; color:#fff !important; font-weight:bold; padding:4px 8px; border-radius:4px; display:inline-block; -webkit-print-color-adjust:exact; print-color-adjust:exact;"; 
                     } 
@@ -2903,7 +2901,6 @@
                 h += '</div>';
             });
             
-            // 🔥 ADD SUMMARY TO PDF IF AVAILABLE 🔥
             let summ = p.summary || window.examData.summary || "";
             if (summ.trim() !== "") {
                 h += `<div style="margin-top:20px; padding:15px; border:2px solid #1a56db; border-radius:8px; background:#f0f4ff; page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
