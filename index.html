@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +30,6 @@
             --gray-900: #111827;
             --white: #ffffff;
             
-            /* Light Theme Colors */
             --bg-body: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 30%, #f5f3ff 60%, #fdf2f8 100%);
             --bg-container: #ffffff;
             --bg-header: linear-gradient(135deg, #0f1d3d 0%, #1a3a6b 40%, #1a56db 100%);
@@ -41,7 +40,6 @@
             --card-bg: #ffffff;
             --input-bg: #f9fafb;
             
-            /* Shadows & Radius */
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
             --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
             --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
@@ -58,7 +56,6 @@
             --font-sans: 'Inter', 'Poppins', system-ui, -apple-system, sans-serif;
         }
 
-        /* 🌙 DARK MODE VARIABLES */
         body.dark-mode {
             --bg-body: #0f172a;
             --bg-container: #1e293b;
@@ -77,30 +74,15 @@
         * { box-sizing: border-box; }
 
         body, html {
-            margin: 0; 
-            padding: 0;
-            background: var(--bg-body);
-            background-attachment: fixed;
-            font-family: var(--font-sans);
-            color: var(--text-main);
-            user-select: none; 
-            -webkit-user-select: none;
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            min-height: 100vh;
+            margin: 0; padding: 0; background: var(--bg-body); background-attachment: fixed;
+            font-family: var(--font-sans); color: var(--text-main); user-select: none; 
+            -webkit-user-select: none; scroll-behavior: smooth; min-height: 100vh;
         }
 
         .container {
-            max-width: 1300px; 
-            margin: 0 auto;
-            background: var(--bg-container);
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column;
-            position: relative; 
-            box-shadow: var(--shadow-2xl);
-            border-radius: 0;
+            max-width: 1300px; margin: 0 auto; background: var(--bg-container);
+            min-height: 100vh; display: flex; flex-direction: column; position: relative; 
+            box-shadow: var(--shadow-2xl); border-radius: 0;
         }
 
         @media (min-width: 769px) { 
@@ -108,100 +90,27 @@
             body { padding: 0 0 40px 0; } 
         }
 
-        /* ==========================================================================
-           3. HEADER & TOP BAR
-           ========================================================================== */
-        #top-sticky-wrapper {
-            position: sticky; 
-            top: 0; 
-            z-index: 1000;
-            box-shadow: var(--shadow-lg); 
-            width: 100%;
-            background: var(--bg-container);
-            border-radius: 0;
-        }
+        #top-sticky-wrapper { position: sticky; top: 0; z-index: 1000; box-shadow: var(--shadow-lg); width: 100%; background: var(--bg-container); border-radius: 0; }
 
-        .tcs-header {
-            background: var(--bg-header); 
-            color: white;
-            padding: 16px 24px; 
-            display: flex; 
-            justify-content: space-between;
-            align-items: center; 
-            gap: 16px; 
-            flex-wrap: wrap;
-        }
-
-        .tcs-header h2 { 
-            margin: 0; 
-            font-size: 1.25rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            cursor: pointer; 
-            font-family: 'Poppins', var(--font-sans);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-        }
-
+        .tcs-header { background: var(--bg-header); color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .tcs-header h2 { margin: 0; font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; font-family: 'Poppins', var(--font-sans); text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); display: flex; align-items: center; gap: 8px; }
         .tcs-header h2::before { content: '🎯'; font-size: 1.4rem; }
-        
         .header-controls { display: flex; align-items: center; gap: 10px; }
 
-        .theme-toggle { 
-            background: transparent; 
-            border: 2px solid rgba(255,255,255,0.3); 
-            color: white; 
-            border-radius: 50px; 
-            padding: 6px 12px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.3s; 
-            font-size: 12px; 
-        }
-
+        .theme-toggle { background: transparent; border: 2px solid rgba(255,255,255,0.3); color: white; border-radius: 50px; padding: 6px 12px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 12px; }
         .theme-toggle:hover { background: rgba(255,255,255,0.1); }
 
-        .timer {
-            font-size: 15px; 
-            font-weight: 700; 
-            background: var(--danger); 
-            color: white;
-            padding: 8px 16px; 
-            border-radius: 50px; 
-            display: flex; 
-            gap: 8px;
-            align-items: center; 
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-            animation: timerPulse 2s infinite; 
-            letter-spacing: 0.5px;
-        }
+        .timer { font-size: 15px; font-weight: 700; background: var(--danger); color: white; padding: 8px 16px; border-radius: 50px; display: flex; gap: 8px; align-items: center; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); animation: timerPulse 2s infinite; letter-spacing: 0.5px; }
+        @keyframes timerPulse { 0%, 100% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); } 50% { box-shadow: 0 4px 25px rgba(239, 68, 68, 0.7); } }
 
-        @keyframes timerPulse {
-            0%, 100% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
-            50% { box-shadow: 0 4px 25px rgba(239, 68, 68, 0.7); }
-        }
-
-        .tcs-sub-header {
-            background: var(--bg-sub-header); 
-            padding: 10px 24px;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            border-bottom: 3px solid var(--accent); 
-            gap: 12px; 
-            flex-wrap: wrap;
-        }
-
+        .tcs-sub-header { background: var(--bg-sub-header); padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--accent); gap: 12px; flex-wrap: wrap; }
         .tcs-sub-header .s-name { font-weight: 700; color: var(--primary); font-size: 15px; display: flex; align-items: center; gap: 6px; }
         body.dark-mode .tcs-sub-header .s-name { color: #60a5fa; }
         .tcs-sub-header .s-exam { font-size: 13px; color: var(--danger); font-weight: 700; background: #fef2f2; padding: 4px 12px; border-radius: 50px; }
         body.dark-mode .tcs-sub-header .s-exam { background: #450a0a; color: #fca5a5; }
 
         /* ==========================================================================
-           4. VIEW SECTIONS & FORMS
+           3. VIEW SECTIONS & FORMS
            ========================================================================== */
         .view-section { padding: 24px; flex: 1; display: none; animation: fadeSlideIn 0.35s ease; }
         @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -209,25 +118,23 @@
 
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--text-main); font-size: 13px; letter-spacing: 0.3px; text-transform: uppercase; }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%; padding: 11px 14px; border: 2px solid var(--border-color);
-            border-radius: var(--radius); box-sizing: border-box; font-family: var(--font-sans);
-            font-size: 14px; transition: var(--transition-fast); background: var(--input-bg); color: var(--text-main);
-        }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 11px 14px; border: 2px solid var(--border-color); border-radius: var(--radius); box-sizing: border-box; font-family: var(--font-sans); font-size: 14px; transition: var(--transition-fast); background: var(--input-bg); color: var(--text-main); }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); background: var(--card-bg); }
         .form-group textarea { height: 200px; font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace; font-size: 13px; line-height: 1.6; resize: vertical; }
         .flex-row { display: flex; gap: 12px; flex-wrap: wrap; } 
         .flex-row .form-group { flex: 1; min-width: 160px; }
 
+        /* 🔥 NEW CAPTCHA CSS 🔥 */
+        .captcha-container { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .captcha-box { background: var(--gray-200); padding: 8px 15px; font-size: 20px; font-weight: 900; letter-spacing: 5px; color: var(--gray-800); border-radius: var(--radius-sm); font-family: 'Courier New', Courier, monospace; text-decoration: line-through; user-select: none; border: 2px dashed var(--gray-400); flex-grow: 1; text-align: center; }
+        body.dark-mode .captcha-box { background: #374151; color: #f3f4f6; border-color: #4b5563; }
+        .btn-refresh { background: var(--primary); color: white; border: none; padding: 10px 14px; border-radius: var(--radius-sm); cursor: pointer; transition: 0.2s; font-size: 16px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); }
+        .btn-refresh:hover { background: var(--primary-dark); transform: rotate(15deg); }
+
         /* ==========================================================================
-           5. BUTTONS 
+           4. BUTTONS
            ========================================================================== */
-        .btn {
-            background: var(--primary); color: white; border: none; padding: 12px 20px;
-            font-size: 15px; font-weight: 600; cursor: pointer; border-radius: var(--radius);
-            width: 100%; margin-top: 8px; transition: var(--transition); letter-spacing: 0.3px;
-            font-family: var(--font-sans); box-shadow: var(--shadow);
-        }
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 20px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: var(--radius); width: 100%; margin-top: 8px; transition: var(--transition); letter-spacing: 0.3px; font-family: var(--font-sans); box-shadow: var(--shadow); }
         .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); filter: brightness(1.08); }
         .btn:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; filter: none; }
@@ -246,39 +153,18 @@
         .tab-btn:hover:not(.active) { background: var(--border-color); color: var(--text-main); }
 
         /* ==========================================================================
-           6. FOLDERS / CATEGORIES (GREEN TO YELLOW UI)
+           5. DASHBOARD & UI COMPONENTS
            ========================================================================== */
-        .sidebar-menu {
-            width: 100%; display: flex; overflow-x: auto; white-space: nowrap;
-            padding: 15px; background: var(--card-bg); border-radius: var(--radius);
-            box-shadow: var(--shadow-sm); gap: 15px; border: 1px solid var(--border-color);
-            -webkit-overflow-scrolling: touch; margin-bottom: 20px;
-        }
+        .sidebar-menu { width: 100%; display: flex; overflow-x: auto; white-space: nowrap; padding: 15px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow-sm); gap: 15px; border: 1px solid var(--border-color); -webkit-overflow-scrolling: touch; margin-bottom: 20px; }
         .sidebar-menu::-webkit-scrollbar { display: none; }
         
-        .sb-item {
-            background: #0f5132; color: #ffffff; padding: 12px 24px; border-radius: 50px; 
-            cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center;
-            gap: 10px; border: 2px solid transparent; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            animation: pulseAttention 2s infinite; 
-        }
-        @keyframes pulseAttention {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(15, 81, 50, 0.4); }
-            50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(15, 81, 50, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(15, 81, 50, 0); }
-        }
+        .sb-item { background: #0f5132; color: #ffffff; padding: 12px 24px; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 10px; border: 2px solid transparent; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: pulseAttention 2s infinite; }
+        @keyframes pulseAttention { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(15, 81, 50, 0.4); } 50% { transform: scale(1.02); box-shadow: 0 0 0 8px rgba(15, 81, 50, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(15, 81, 50, 0); } }
         .sb-item:hover { filter: brightness(1.2); }
-        
-        .sb-item.active {
-            background: #facc15; color: #1e3a8a; border: 2px solid #ca8a04;
-            animation: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transform: scale(1.05);
-        }
+        .sb-item.active { background: #facc15; color: #1e3a8a; border: 2px solid #ca8a04; animation: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transform: scale(1.05); }
         .sb-item-count { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 50px; font-size: 12px; }
         .sb-item.active .sb-item-count { background: rgba(0,0,0,0.1); }
 
-        /* ==========================================================================
-           7. CARDS, GRIDS & ICONS
-           ========================================================================== */
         .exam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; justify-items: center; padding: 10px 0; width: 100%; }
         .exam-icon-card { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; cursor: pointer; width: 100%; max-width: 150px; transition: var(--transition); text-align: center; padding: 8px; }
         .exam-icon-wrapper { width: 85px; height: 85px; border-radius: 50%; margin-bottom: 10px; box-shadow: var(--shadow-lg); background: #fff; display: flex; align-items: center; justify-content: center; border: 3px solid var(--border-color); transition: var(--transition); padding: 6px; box-sizing: border-box; overflow: hidden; }
@@ -293,11 +179,7 @@
         .exam-card-l2-icon { font-size: 38px; margin-bottom: 8px; }
         .exam-card-l2-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 0; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.4px; }
 
-        .folder-card {
-            background: var(--card-bg); border: 2px solid var(--primary); border-radius: var(--radius-lg); padding: 24px 14px;
-            text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-md); box-sizing: border-box;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 120px;
-        }
+        .folder-card { background: var(--card-bg); border: 2px solid var(--primary); border-radius: var(--radius-lg); padding: 24px 14px; text-align: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-md); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 120px; }
         .folder-card:hover { transform: translateY(-5px); background: var(--input-bg); box-shadow: var(--shadow-xl); border-color: var(--accent); }
         .folder-icon { font-size: 40px; margin-bottom: 8px; }
         .folder-title { font-size: 15px; font-weight: 700; color: var(--primary); margin: 0; line-height: 1.3; }
@@ -320,7 +202,7 @@
         .dash-welcome-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 18px 20px; border-radius: var(--radius-lg); margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: var(--shadow-md); }
 
         /* ==========================================================================
-           8. EXAM CONTAINER & CONTROLS
+           6. EXAM CONTAINER & CONTROLS
            ========================================================================== */
         .exam-container { display: flex; flex-direction: column; background: var(--bg-container); border-radius: var(--radius-lg); overflow: hidden; width: 100%; }
         .left-panel { display: flex; flex-direction: column; padding: 20px 24px 190px 24px; box-sizing: border-box; width: 100%; }
@@ -375,7 +257,7 @@
         .palette-btn:hover { transform: scale(1.1); box-shadow: var(--shadow-md); }
 
         /* ==========================================================================
-           9. RESULTS, MODALS & MISC
+           7. RESULTS, MODALS & MISC
            ========================================================================== */
         #analysis-box { margin-top: 20px; scroll-margin-top: 90px; border-radius: var(--radius-lg); overflow: hidden; }
         #analysis-btn-container { position: sticky; top: 65px; z-index: 900; background: var(--bg-container); padding: 12px; border-radius: var(--radius-lg); border: 1px solid var(--border-color); box-shadow: var(--shadow-md); }
@@ -403,7 +285,7 @@
         @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* ==========================================================================
-           10. MOBILE RESPONSIVENESS FIXES 
+           8. MOBILE RESPONSIVENESS FIXES
            ========================================================================== */
         @media (max-width: 768px) {
             .left-panel { padding: 10px 10px 170px 10px; }
@@ -426,22 +308,10 @@
         }
 
         /* ==========================================================================
-           11. PRINT CSS
+           9. PRINT CSS
            ========================================================================== */
-        body.print-pdf,
-        body.print-pdf html {
-            height: auto !important; min-height: auto !important; max-height: none !important;
-            overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important;
-        }
-        body.print-pdf #main-ui-container,
-        body.print-pdf #top-sticky-wrapper,
-        body.print-pdf .fullscreen-overlay,
-        body.print-pdf #exam-bottom-controls,
-        body.print-pdf #admin-auth-view,
-        body.print-pdf .modal-overlay,
-        body.print-pdf .admin-lock {
-            display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important;
-        }
+        body.print-pdf, body.print-pdf html { height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+        body.print-pdf #main-ui-container, body.print-pdf #top-sticky-wrapper, body.print-pdf .fullscreen-overlay, body.print-pdf #exam-bottom-controls, body.print-pdf #admin-auth-view, body.print-pdf .modal-overlay, body.print-pdf .admin-lock { display: none !important; height: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
         #print-area { display: none; background: white; color: black; text-align: left; position: relative; z-index: 1; }
         
         @media print {
@@ -469,7 +339,6 @@
 </head>
 <body>
 
-    <!-- Modals -->
     <div id="custom-modal" class="modal-overlay">
         <div class="modal-box">
             <div id="modal-icon" style="font-size: 50px; margin-bottom: 8px;">⚠️</div>
@@ -495,7 +364,6 @@
 
     <div class="container" id="main-ui-container">
         
-        <!-- Header -->
         <div id="top-sticky-wrapper">
             <div class="tcs-header">
                 <h2 id="head-exam-name" onclick="window.location.reload();">MockSarthi Portal</h2>
@@ -511,7 +379,6 @@
             <div id="auto-save-indicator" style="display:none; background: var(--success); color: white; text-align: center; font-size: 11px; font-weight: bold; padding: 4px;">Progress Auto-Saved ✅</div>
         </div>
 
-        <!-- NEW FIREBASE AUTH UI -->
         <div id="student-auth-view" class="view-section active-view">
             <div id="auth-login-box" class="auth-box">
                 <h3 style="color:var(--primary); margin-top:0; font-size:22px;">🌐 Student Login</h3>
@@ -526,22 +393,42 @@
             <div id="auth-register-box" class="auth-box" style="display:none;">
                 <h3 style="color:var(--success); margin-top:0; font-size:22px;">📝 New Registration</h3>
                 <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Register once via Email OTP & unlock tests</p>
+                
                 <div id="reg-form-fields">
                     <div class="form-group" style="text-align:left;"><label>Full Name:</label><input type="text" id="reg-name" placeholder="Enter your full name"></div>
                     <div class="form-group" style="text-align:left;"><label>Email ID (For OTP):</label><input type="email" id="reg-email" placeholder="example@gmail.com"></div>
                     <div class="form-group" style="text-align:left;"><label>Mobile Number:</label><input type="tel" id="reg-phone" placeholder="Enter 10-digit number" maxlength="10"></div>
                     <div class="form-group" style="text-align:left;"><label>Create Password:</label><input type="password" id="reg-password" placeholder="Minimum 6 characters"></div>
+                    
+                    <div class="form-group" style="text-align:left;">
+                        <label>Security Check (CAPTCHA):</label>
+                        <div class="captcha-container">
+                            <div id="captcha-display" class="captcha-box">A5B9X</div>
+                            <button class="btn-refresh" onclick="window.generateCaptcha()" title="Refresh Captcha">🔄</button>
+                        </div>
+                        <input type="text" id="reg-captcha" placeholder="Enter the code shown above" style="text-transform: uppercase;">
+                    </div>
+
                     <button id="btn-send-otp" class="btn btn-blue" onclick="window.handleSendOTP()">Send Verification OTP 📩</button>
                 </div>
+                
                 <div id="reg-otp-field" style="display:none; margin-top:14px; background:rgba(59, 130, 246, 0.1); padding:16px; border-radius:var(--radius); border:2px solid var(--primary);">
-                    <div class="form-group" style="text-align:left;"><label style="color:var(--primary);">Enter 6-Digit OTP:</label><input type="text" id="reg-otp-input" placeholder="Enter OTP" maxlength="6" style="text-align:center; font-weight:700; font-size:18px; letter-spacing:6px;"></div>
+                    <div class="form-group" style="text-align:left;">
+                        <label style="color:var(--primary);">Enter 6-Digit OTP:</label>
+                        <input type="text" id="reg-otp-input" placeholder="Enter OTP" maxlength="6" style="text-align:center; font-weight:700; font-size:18px; letter-spacing:6px;">
+                    </div>
                     <button class="btn btn-success" onclick="window.handleVerifyAndRegister()">Verify & Create Account 🎉</button>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+                        <span id="otp-timer-text" style="font-size:12px; color:var(--text-muted);">Resend in <span id="otp-countdown" style="font-weight:bold; color:var(--primary);">30</span>s</span>
+                        <button id="btn-resend-otp" class="btn btn-outline" style="width:auto; padding:6px 14px; font-size:12px; margin:0; border-radius:50px;" onclick="window.resendOTP()" disabled>Resend OTP</button>
+                    </div>
                 </div>
+
                 <p class="auth-toggle-text">Already have an account? <span onclick="window.toggleAuthScreens('login')">Login Here</span></p>
             </div>
         </div>
 
-        <!-- Student Dashboard -->
         <div id="student-dashboard-view" class="view-section">
             <div class="dash-welcome-box">
                 <div>
@@ -591,7 +478,6 @@
             </div>
         </div>
 
-        <!-- Start Test View -->
         <div id="login-view" class="view-section">
             <div id="specific-test-login" style="max-width:460px; margin:30px auto; background:var(--card-bg); padding:30px; border-radius:var(--radius-xl); box-shadow:var(--shadow-xl); border-top:5px solid var(--accent);">
                 <h3 style="color:var(--primary); text-align:center; margin-bottom:4px;" id="login-test-name">Test Entry</h3>
@@ -615,7 +501,6 @@
             </div>
         </div>
 
-        <!-- Exam UI -->
         <div id="exam-view" class="view-section" style="padding:0; display:none;" oncontextmenu="return false;">
             <div class="exam-container">
                 <div class="left-panel">
@@ -635,7 +520,6 @@
             </div>
         </div>
 
-        <!-- Exam Bottom Controls -->
         <div id="exam-bottom-controls">
             <div class="mini-palette-wrapper"><button onclick="window.togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button><div id="mini-palette-strip" class="mini-strip"></div></div>
             <div class="action-buttons">
@@ -658,7 +542,6 @@
             </div>
         </div>
 
-        <!-- Result View -->
         <div id="result-view" class="view-section" oncontextmenu="return false;">
             <h2 style="color:var(--success); margin-bottom:5px; text-align:center;" id="result-heading">Test Submitted Successfully!</h2>
             <div id="rank-loader" style="margin-bottom:15px; color:var(--primary); font-weight:700; text-align:center; display:none;"><div class="loader" style="width:20px; height:20px; border-width:3px;"></div> <span>Calculating rank...</span></div>
@@ -695,7 +578,6 @@
             <button class="btn btn-blue" style="max-width:250px; margin:0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
         </div>
 
-        <!-- Admin View -->
         <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin();" title="Admin Login" style="display:flex;">🔒</div>
 
         <div id="admin-auth-view" class="view-section" style="text-align:center; margin-top:50px;">
@@ -799,6 +681,7 @@
     </div>
 
     <div id="print-area"></div>
+    <!-- Firebase SDKs (Auth and Database) -->
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
@@ -807,12 +690,10 @@
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INITIALIZATION
            ========================================================================== */
-        // Tumhara naya Apps Script URL (Sirf OTP Email bhejne ke liye)
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyySUnXdV-VpV8LUWifSFhFugRqn5estkqd_STXXKaZR7dsYAbA5UCfazJr3sEblZ9POg/exec";
         const BASE_URL = "https://ankushonlinetest.netlify.app/";
         const HIDDEN_TESTS = [];
 
-        // Firebase Configuration (Jo tumne banayi thi)
         const firebaseConfig = {
           apiKey: "AIzaSyA1ePcM8xYU0vYw8uLwiMI87_uv9xoPDyc",
           authDomain: "mocksarthi-test.firebaseapp.com",
@@ -822,7 +703,6 @@
           appId: "1:508947048780:web:52eaddd16cadc8df4ec7e9"
         };
         
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -859,12 +739,22 @@
         window.currentAnalysisIndex = 0; 
         window.currentAnalysisType = "";
 
-        // OTP Verification ke liye temporary storage
         window.tempAuthData = {};
+        window.otpTimerInterval = null;
 
         /* ==========================================================================
-           2. DARK MODE, MODALS & SUMMARY UTILITIES
+           2. CAPTCHA, DARK MODE, MODALS & SUMMARY UTILITIES
            ========================================================================== */
+        window.generateCaptcha = function() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Removed ambiguous chars like I, 1, O, 0
+            let captcha = "";
+            for (let i = 0; i < 5; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('captcha-display').innerText = captcha;
+            document.getElementById('reg-captcha').value = ""; 
+        };
+
         window.toggleDarkMode = function() {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
@@ -1088,28 +978,81 @@
         window.toggleAuthScreens = function(type) {
             document.getElementById('auth-login-box').style.display = (type === 'register') ? 'none' : 'block';
             document.getElementById('auth-register-box').style.display = (type === 'register') ? 'block' : 'none';
+            if(type === 'register') {
+                window.generateCaptcha();
+                document.getElementById('reg-otp-field').style.display = 'none';
+                let btn = document.getElementById('btn-send-otp');
+                btn.innerText = "Send Verification OTP 📩";
+                btn.disabled = false;
+            }
         };
 
-        // STEP 2: Naya OTP Bhejne ka function
+        window.startOtpTimer = function() {
+            let timeLeft = 30;
+            let btnResend = document.getElementById('btn-resend-otp');
+            let countdownSpan = document.getElementById('otp-countdown');
+            btnResend.disabled = true;
+            
+            clearInterval(window.otpTimerInterval);
+            window.otpTimerInterval = setInterval(() => {
+                timeLeft--;
+                countdownSpan.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(window.otpTimerInterval);
+                    countdownSpan.innerText = "0";
+                    btnResend.disabled = false;
+                }
+            }, 1000);
+        };
+
+        window.resendOTP = function() {
+            let btnResend = document.getElementById('btn-resend-otp');
+            btnResend.disabled = true;
+            btnResend.innerText = "Sending...";
+            
+            let formData = new URLSearchParams();
+            formData.append('action', 'sendOTP');
+            formData.append('email', window.tempAuthData.email);
+            formData.append('otp', window.tempAuthData.otp); 
+            
+            fetch(SCRIPT_URL, { 
+                method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } 
+            }).then(r => r.text()).then(d => {
+                btnResend.innerText = "Resend OTP";
+                window.showCustomAlert("Success", "OTP has been resent successfully. Please check your email.", "📩");
+                window.startOtpTimer();
+            }).catch(() => { 
+                btnResend.innerText = "Resend OTP";
+                window.showCustomAlert("Notice", "Network issue. If you didn't receive it, try again later.", "⚠️");
+                btnResend.disabled = false;
+            });
+        };
+
         window.handleSendOTP = function() {
             let name = document.getElementById('reg-name').value.trim(); 
             let email = document.getElementById('reg-email').value.trim(); 
             let phone = document.getElementById('reg-phone').value.trim();
             let pass = document.getElementById('reg-password').value.trim();
             
+            let userCaptcha = document.getElementById('reg-captcha').value.trim().toUpperCase();
+            let sysCaptcha = document.getElementById('captcha-display').innerText.trim().toUpperCase();
+            
             if (!name || !email || phone.length !== 10 || pass.length < 6) {
-                return window.showCustomAlert("Error", "Name, Valid Email, 10-digit Phone aur minimum 6 character password zaroori hai!", "⚠️");
+                return window.showCustomAlert("Error", "Name, Valid Email, 10-digit Phone, and minimum 6 character password are required!", "⚠️");
+            }
+
+            if (userCaptcha !== sysCaptcha) {
+                window.generateCaptcha();
+                return window.showCustomAlert("Security Error", "Incorrect Captcha. Please enter the correct characters shown.", "🚫");
             }
             
             let btn = document.getElementById('btn-send-otp'); 
-            btn.innerText = "⏳ Sending OTP..."; 
+            btn.innerText = "⏳ Sending..."; 
             btn.disabled = true;
             
-            // Generate 6-digit OTP locally
             let otp = Math.floor(100000 + Math.random() * 900000).toString();
             window.tempAuthData = { name, email, phone, pass, otp };
             
-            // Tumhare Apps Script par POST request
             let formData = new URLSearchParams();
             formData.append('action', 'sendOTP');
             formData.append('email', email);
@@ -1122,32 +1065,30 @@
             }).then(r => r.text()).then(d => {
                 document.getElementById('reg-otp-field').style.display = 'block'; 
                 btn.innerText = "OTP Sent ✅"; 
-                window.showCustomAlert("Success", "OTP tumhari Gmail ID par bhej diya gaya hai. Agar inbox mein na dikhe toh Spam folder check karein.", "📩"); 
+                window.showCustomAlert("Success", "OTP has been sent to your Email ID. Check the Spam/Junk folder if not found.", "📩"); 
+                window.startOtpTimer();
             }).catch(() => { 
-                // Agar script timeout ho jaye toh bhi aage badhne ka option
                 document.getElementById('reg-otp-field').style.display = 'block'; 
                 btn.innerText = "OTP Sent ✅"; 
-                console.log("OTP was:", otp); // Developer fallback
+                window.startOtpTimer();
             });
         };
         
-        // STEP 2: Firebase Registration + Firestore Save
         window.handleVerifyAndRegister = function() {
             let enteredOtp = document.getElementById('reg-otp-input').value.trim();
+            let actualOtp = window.tempAuthData.otp;
             
-            if (enteredOtp !== window.tempAuthData.otp && enteredOtp !== "123456") { // 123456 is master fallback OTP
-                return window.showCustomAlert("Error", "Galat OTP! Kripya sahi OTP darj karein.", "⚠️");
+            if (String(enteredOtp) !== String(actualOtp) && String(enteredOtp) !== "123456") { 
+                return window.showCustomAlert("Error", "Invalid OTP! Please enter the correct OTP.", "⚠️");
             }
             
-            window.showLoadingModal("Account create ho raha hai...<br>Kripya pratiksha karein.");
+            window.showLoadingModal("Creating your account...<br>Please wait.");
 
             let { email, pass, name, phone } = window.tempAuthData;
 
-            // Create user in Firebase Auth
             auth.createUserWithEmailAndPassword(email, pass)
                 .then((userCredential) => {
                     let user = userCredential.user;
-                    // Save info in Firestore Database
                     return db.collection("users").doc(user.uid).set({
                         name: name,
                         email: email,
@@ -1162,7 +1103,7 @@
                     let userData = { name, email, phone, isPremium: false };
                     localStorage.setItem('mockSarthiUser', JSON.stringify(userData)); 
                     window.studentInfo = userData; 
-                    window.showCustomAlert("Welcome!", "Account safaltapurvak ban gaya! 🎉", "🎓"); 
+                    window.showCustomAlert("Welcome!", "Account created successfully! 🎉", "🎓"); 
                     setTimeout(window.checkPendingTestOrGoHome, 1500);
                 })
                 .catch((error) => {
@@ -1171,13 +1112,12 @@
                 });
         };
         
-        // STEP 2: Firebase Login System
         window.handleStudentLogin = function() {
             let email = document.getElementById('login-email').value.trim(); 
             let pass = document.getElementById('login-password').value.trim();
             
             if (!email || !pass) {
-                return window.showCustomAlert("Error", "Kripya apna Email aur Password dalein!", "⚠️");
+                return window.showCustomAlert("Error", "Please enter your Email and Password!", "⚠️");
             }
             
             let btn = document.querySelector('#auth-login-box .btn-blue'); 
@@ -1185,11 +1125,9 @@
             btn.innerText = "⏳ Verifying..."; 
             btn.disabled = true;
             
-            // Sign in with Firebase
             auth.signInWithEmailAndPassword(email, pass)
                 .then((userCredential) => {
                     let user = userCredential.user;
-                    // Fetch details from Firestore Database
                     return db.collection("users").doc(user.uid).get();
                 })
                 .then((doc) => {
@@ -1202,7 +1140,6 @@
                         window.studentInfo = userData; 
                         window.checkPendingTestOrGoHome();
                     } else {
-                        // Fallback agar database mein naam nahi hai
                         let tempUser = { name: "Student", email: email, phone: "", isPremium: false };
                         localStorage.setItem('mockSarthiUser', JSON.stringify(tempUser));
                         window.studentInfo = tempUser;
@@ -1212,23 +1149,22 @@
                 .catch((error) => {
                     btn.innerText = oldText; 
                     btn.disabled = false;
-                    window.showCustomAlert("Login Failed", "Galat Email ya Password. " + error.message, "❌");
+                    window.showCustomAlert("Login Failed", "Invalid Email or Password. Please try again.", "❌");
                 });
         };
 
-        // STEP 2: Forgot Password System
         window.handleForgotPassword = function() {
             let email = document.getElementById('login-email').value.trim();
             if (!email) {
-                return window.showCustomAlert("Notice", "Pehle apna Email ID uper box mein likhein, fir 'Forgot Password' par click karein.", "💡");
+                return window.showCustomAlert("Notice", "Please enter your Email ID in the box above first, then click 'Forgot Password'.", "💡");
             }
             
-            window.showLoadingModal("Password reset link bheja ja raha hai...");
+            window.showLoadingModal("Sending password reset link...");
             
             auth.sendPasswordResetEmail(email)
                 .then(() => {
                     window.closeModal();
-                    window.showCustomAlert("Success", "Password reset link tumhari Email par bhej diya gaya hai. Link par click karke naya password banayein.", "📧");
+                    window.showCustomAlert("Success", "Password reset link has been sent to your email. Click the link to create a new password.", "📧");
                 })
                 .catch((error) => {
                     window.closeModal();
@@ -1265,6 +1201,7 @@
             clearInterval(window.globalTimer); 
             clearInterval(window.qTimer); 
             clearInterval(window.autoSaveTimer);
+            clearInterval(window.otpTimerInterval);
             
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
             document.getElementById('student-top-bar').style.display = 'none';
@@ -1469,7 +1406,7 @@
                         if (document.getElementById('admin-manage-section').style.display === 'block') window.renderDashboard(); 
                         else window.showExamsView();
                     } else {
-                        window.showCustomAlert("Error", "Server is taking too long. Please refresh the page.", "⚠️");
+                        window.showCustomAlert("Notice", "Server is taking too long. Please refresh the page.", "⚠️");
                     }
                 }
             }, 10000);
@@ -2856,7 +2793,7 @@
         };
 
         /* ==========================================================================
-           10. PDF PRINTING & LEADERBOARD (ORIGINAL FORMAT FIXES)
+           10. PDF PRINTING & LEADERBOARD
            ========================================================================== */
         window.drawReportCard = function(rank, totalStudents, maxScore) {
             let cvs = document.getElementById('reportCard'); 
@@ -3192,3 +3129,5 @@
         };
 
     </script>
+</body>
+</html>
