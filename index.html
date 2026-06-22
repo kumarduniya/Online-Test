@@ -807,6 +807,7 @@
     </div>
 
     <div id="print-area"></div>
+    <!-- 🟢 YAHAN SE JAVASCRIPT SCRIPT COPY KAREN 🟢 -->
     <script>
         /* ==========================================================================
            1. GLOBAL VARIABLES & INITIALIZATION
@@ -839,7 +840,6 @@
         window.totalTimeSpent = 0;
         
         window.isReattemptMode = false; 
-        window.currentGeneratedPass = "";
         window.globalActiveTests = []; 
         window.adminUnifiedTests = []; 
         
@@ -861,7 +861,6 @@
             return JSON.parse(localStorage.getItem('mockSarthiHidden')) || []; 
         };
         
-        // 🔥 BUG FIX: INSTANT UPDATE FROM PAID TO FREE (MERGING LOGIC CORRECTED) 🔥
         window.getAllMergedTests = function() {
             let hidden = window.getHiddenTests();
             let unifiedMap = new Map();
@@ -875,7 +874,6 @@
             let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
             localTests.forEach(lt => { 
                 if (lt.isActive !== false && !hidden.includes(lt.code)) { 
-                    // This forces the local memory (updated test) to overwrite the old google sheet data instantly
                     unifiedMap.set(lt.code, lt); 
                 } 
             });
@@ -934,10 +932,14 @@
             document.getElementById('modal-btn-ok').style.display = 'none';
         };
 
-        // 🔥 TEST SUMMARY MODAL LOGIC 🔥
-        window.showTestSummary = function(summaryText) {
+        // 🔥 CRITICAL FIX: SAFE ENCODING FOR SUMMARY MODAL 🔥
+        window.showTestSummary = function(encodedSummaryText) {
             let modal = document.getElementById('summary-modal');
             let content = document.getElementById('summary-content');
+            
+            // Decode the safely passed text so quotes don't break the HTML attribute
+            let summaryText = decodeURIComponent(encodedSummaryText);
+            
             content.innerHTML = summaryText.replace(/\n/g, '<br>');
             modal.style.display = 'flex';
             try { history.pushState({ summaryOpen: true }, ""); } catch(e) {}
@@ -991,7 +993,6 @@
                 let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/); 
                 if (matchSubcat) res.subcat = matchSubcat[1];
                 
-                // 🔥 PARSE SUMMARY STRING SAFELY 🔥
                 let matchSummary = raw.match(/\|\|\|SUMMARY:(.*?)(?:\|\|\||$)/);
                 if (matchSummary) res.summary = matchSummary[1];
                 
@@ -1271,12 +1272,25 @@
         };
 
         /* ==========================================================================
-           6. TEST ENTRY SCREEN & SUMMARY DISPLAY
+           6. TEST ENTRY SCREEN (ALL LOGICS FIXED HERE)
            ========================================================================== */
         window.handleTestLoad = function(data) {
             if (data.error) return window.showErrorView("❌ Test not found!");
             if (data.isActive === false) return window.showErrorView("❌ This test is currently inactive.");
             
+            // 🔥 CRITICAL FIX: OVERRIDE OLD SERVER CACHE WITH LATEST LOCAL ADMIN EDIT 🔥
+            let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+            let localTest = localTests.find(t => t.code === data.code);
+            if (localTest) {
+                data.isFree = localTest.isFree;
+                data.price = localTest.price;
+                data.topic = localTest.topic; // This ensures updated Summary is loaded
+                data.marks = localTest.marks;
+                data.neg = localTest.neg;
+                data.totTime = localTest.totTime;
+                data.qTime = localTest.qTime;
+            }
+
             window.examData = data; 
             window.examData.marks = data.marks || 2; 
             window.examData.neg = data.neg || 0; 
@@ -1294,6 +1308,10 @@
             document.getElementById('specific-test-login').style.display = 'block';
             window.toggleAdminLock(false);
             
+            // 🔥 KILL THE DIRECT PDF BOX COMPLETELY FROM TEST ENTRY SCREEN 🔥
+            let pdfBox = document.getElementById('direct-pdf-box');
+            if (pdfBox) { pdfBox.style.display = 'none'; }
+
             document.getElementById('head-exam-name').innerText = window.examData.exam; 
             document.getElementById('test-entry-name').innerText = window.studentInfo.name || "Student";
             document.getElementById('disp-code').innerText = window.examData.code; 
@@ -1308,27 +1326,18 @@
             let isFreeStatus = window.examData.isFree; 
             let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
             let actionArea = document.getElementById('test-action-area'); 
-            let pdfActionArea = document.getElementById('pdf-action-area');
             
             let startBtnHTML = "";
 
-            startBtnHTML += `<button class="btn btn-success" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
-            
-            let savedProg = localStorage.getItem('progress_' + window.examData.code);
-            if (savedProg) { 
-                startBtnHTML += `<button class="btn btn-blue" style="margin-top:10px; background:#0891b2 !important; color:white !important;" onclick="window.resumeExam()">⏯️ Resume Saved Exam</button>`; 
-            }
-
             if (isFreeStatus || isPremiumUser) {
+                startBtnHTML += `<button class="btn btn-success" style="margin-top:0;" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
+                let savedProg = localStorage.getItem('progress_' + window.examData.code);
+                if (savedProg) { 
+                    startBtnHTML += `<button class="btn btn-blue" style="margin-top:10px; background:#0891b2 !important; color:white !important;" onclick="window.resumeExam()">⏯️ Resume Saved Exam</button>`; 
+                }
                 actionArea.innerHTML = startBtnHTML;
-                document.getElementById('free-instructions').style.display = 'block'; 
-                document.getElementById('paid-instructions').style.display = 'none';
-                pdfActionArea.innerHTML = `<button class="btn btn-pdf" style="margin-top:8px;" onclick="window.executePDFPrint(window.studentInfo.name||'Student','full')">📥 Download Full PDF</button>`;
             } else {
                 actionArea.innerHTML = `<button class="btn btn-warning" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
-                document.getElementById('free-instructions').style.display = 'none'; 
-                document.getElementById('paid-instructions').style.display = 'block';
-                pdfActionArea.innerHTML = `<button class="btn btn-outline" style="margin-top:8px;" onclick="window.showPremiumModal()">🔒 Unlock PRO Access</button>`;
             }
             
             let qLen = window.examData.questions.length;
@@ -1339,7 +1348,7 @@
         };
 
         /* ==========================================================================
-           7. DASHBOARD & ACTIVE TESTS
+           7. DASHBOARD & ACTIVE TESTS (NEW SUMMARY BUTTON ADDED ON DASHBOARD)
            ========================================================================== */
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
@@ -1568,10 +1577,11 @@
                     attemptHtml = `<div style="color:var(--success); font-weight:bold; font-size:12px; margin-bottom:5px;">✅ Attempted (Score: ${attemptedRecords[t.code]})</div>`;
                 }
 
-                // 🔥 NEW: SUMMARY BUTTON ON FOLDER CARD 🔥
+                // 🔥 CRITICAL FIX: SUMMARY BUTTON ON FOLDER CARD SAFE ENCODING 🔥
                 let summaryHtml = "";
                 if (p.summary && p.summary.trim() !== "") {
-                    let safeSumm = p.summary.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    // Safe encoding prevents broken HTML from quotes/spaces
+                    let safeSumm = encodeURIComponent(p.summary);
                     summaryHtml = `<button class="btn btn-outline" style="margin:0 0 8px 0; padding:6px 12px; font-size:12px; border-radius:50px; width:100%; font-weight:700;" onclick="window.showTestSummary('${safeSumm}')">📑 View Summary (Topics)</button>`;
                 }
 
@@ -1599,7 +1609,7 @@
         };
 
         /* ==========================================================================
-           8. ADMIN DASHBOARD & TEST CREATION
+           8. ADMIN DASHBOARD & TEST CREATION (WITH SUMMARY FIELD)
            ========================================================================== */
         window.switchAdminTab = function(tab) {
             document.getElementById('admin-create-section').style.display = 'none'; 
@@ -1882,7 +1892,6 @@
                                 <span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
                             </div>
                             <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:6px;border:1px solid var(--border-color);font-size:11px;margin-bottom:6px;border-radius:var(--radius-sm);background:var(--input-bg);color:var(--text-main);">
-                            
                             <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px;">
                                 <button class="btn btn-blue" style="margin:0;padding:5px 8px;font-size:11px;width:auto;" onclick="window.editTest('${t.code}')">✏️ Edit</button>
                                 <button class="btn btn-pdf" style="margin:0;padding:5px 8px;font-size:11px;width:auto;" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button>
@@ -1918,7 +1927,6 @@
             document.body.appendChild(script);
         };
 
-        // 🔥 RESTORED FETCH TEST FOR ADMIN FUNCTION (FIX FOR EDIT/PDF BUG) 🔥
         window.fetchTestForAdmin = function(code, action, mode) {
             window.adminActionCode = code;
             window.adminActionMode = action;
@@ -2066,7 +2074,9 @@
             let eTopicRaw = document.getElementById('a-topic').value || ""; 
             let eCode = document.getElementById('a-code').value;
             
+            // 🔥 REMOVE PIPES FROM SUMMARY SO IT DOESN'T BREAK PARSING 🔥
             let eSummaryRaw = document.getElementById('a-summary') ? document.getElementById('a-summary').value : "";
+            eSummaryRaw = eSummaryRaw.replace(/\|\|\|/g, ''); 
             let eSummary = eSummaryRaw.replace(/\n/g, '<br>');
             
             if (!eCode) { 
@@ -2131,7 +2141,6 @@
                 
                 let tLink = BASE_URL + "?test=" + eCode; 
                 
-                // 🔥 LOCAL CACHE FIX: Immediately update locally so Free to Paid reflects instantly 🔥
                 let sTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
                 let eIdx = sTests.findIndex(t => t.code === eCode);
                 
@@ -2918,7 +2927,7 @@
         };
 
         /* ==========================================================================
-           11. PASSWORDS & UTILS
+           11. MISC UTILS & CONFETTI
            ========================================================================== */
         window.togglePriceBox = function() { 
             let pt = document.getElementById('a-pdf-type');
