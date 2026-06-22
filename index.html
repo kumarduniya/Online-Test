@@ -861,22 +861,26 @@
             return JSON.parse(localStorage.getItem('mockSarthiHidden')) || []; 
         };
         
+        // 🔥 BUG FIX: INSTANT UPDATE FROM PAID TO FREE (MERGING LOGIC CORRECTED) 🔥
         window.getAllMergedTests = function() {
-            let allTests = []; 
             let hidden = window.getHiddenTests();
+            let unifiedMap = new Map();
             
             if (window.globalActiveTests && window.globalActiveTests.length > 0) { 
-                allTests = [...window.globalActiveTests].filter(t => !hidden.includes(t.code) && !HIDDEN_TESTS.includes(t.code)); 
+                window.globalActiveTests.forEach(t => {
+                    if(!hidden.includes(t.code)) unifiedMap.set(t.code, t);
+                });
             }
             
             let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
             localTests.forEach(lt => { 
-                if (lt.isActive && !hidden.includes(lt.code) && !HIDDEN_TESTS.includes(lt.code) && !allTests.find(st => st.code === lt.code)) { 
-                    allTests.push(lt); 
+                if (lt.isActive !== false && !hidden.includes(lt.code)) { 
+                    // This forces the local memory (updated test) to overwrite the old google sheet data instantly
+                    unifiedMap.set(lt.code, lt); 
                 } 
             });
             
-            return allTests;
+            return Array.from(unifiedMap.values());
         };
 
         window.toggleAdminLock = function(show) { 
@@ -987,6 +991,7 @@
                 let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/); 
                 if (matchSubcat) res.subcat = matchSubcat[1];
                 
+                // 🔥 PARSE SUMMARY STRING SAFELY 🔥
                 let matchSummary = raw.match(/\|\|\|SUMMARY:(.*?)(?:\|\|\||$)/);
                 if (matchSummary) res.summary = matchSummary[1];
                 
@@ -1305,7 +1310,9 @@
             let actionArea = document.getElementById('test-action-area'); 
             let pdfActionArea = document.getElementById('pdf-action-area');
             
-            let startBtnHTML = `<button class="btn btn-success" style="margin-top:0;" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
+            let startBtnHTML = "";
+
+            startBtnHTML += `<button class="btn btn-success" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
             
             let savedProg = localStorage.getItem('progress_' + window.examData.code);
             if (savedProg) { 
@@ -1332,7 +1339,7 @@
         };
 
         /* ==========================================================================
-           7. DASHBOARD & ACTIVE TESTS (SUMMARY BUTTON ADDED)
+           7. DASHBOARD & ACTIVE TESTS
            ========================================================================== */
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
@@ -1561,7 +1568,7 @@
                     attemptHtml = `<div style="color:var(--success); font-weight:bold; font-size:12px; margin-bottom:5px;">✅ Attempted (Score: ${attemptedRecords[t.code]})</div>`;
                 }
 
-                // 🔥 SUMMARY BUTTON ADDED JUST ABOVE GIVE TEST BUTTON 🔥
+                // 🔥 NEW: SUMMARY BUTTON ON FOLDER CARD 🔥
                 let summaryHtml = "";
                 if (p.summary && p.summary.trim() !== "") {
                     let safeSumm = p.summary.replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1592,7 +1599,7 @@
         };
 
         /* ==========================================================================
-           8. ADMIN DASHBOARD & TEST CREATION (WITH SUMMARY & EDIT FIX)
+           8. ADMIN DASHBOARD & TEST CREATION
            ========================================================================== */
         window.switchAdminTab = function(tab) {
             document.getElementById('admin-create-section').style.display = 'none'; 
@@ -1875,6 +1882,7 @@
                                 <span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
                             </div>
                             <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:6px;border:1px solid var(--border-color);font-size:11px;margin-bottom:6px;border-radius:var(--radius-sm);background:var(--input-bg);color:var(--text-main);">
+                            
                             <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px;">
                                 <button class="btn btn-blue" style="margin:0;padding:5px 8px;font-size:11px;width:auto;" onclick="window.editTest('${t.code}')">✏️ Edit</button>
                                 <button class="btn btn-pdf" style="margin:0;padding:5px 8px;font-size:11px;width:auto;" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button>
@@ -1910,7 +1918,7 @@
             document.body.appendChild(script);
         };
 
-        // 🔥 RESTORED FETCH TEST FOR ADMIN (CRITICAL FIX FOR EDIT/PDF BUG) 🔥
+        // 🔥 RESTORED FETCH TEST FOR ADMIN FUNCTION (FIX FOR EDIT/PDF BUG) 🔥
         window.fetchTestForAdmin = function(code, action, mode) {
             window.adminActionCode = code;
             window.adminActionMode = action;
@@ -1971,12 +1979,11 @@
             if (!t) return;
             
             let raw = t.rawText || "";
-            
             if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
                 window.fetchTestForAdmin(code, 'edit', null); 
                 return; 
             }
-
+            
             if (!raw && t.questions && t.questions.length > 0) { 
                 raw = t.questions.map((q, i) => { 
                     let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
@@ -1995,7 +2002,7 @@
             document.getElementById('a-logo').value = p.logo || "";
             
             if(document.getElementById('a-summary')) {
-                document.getElementById('a-summary').value = p.summary ? p.summary.replace(/<br>/g, '\n') : "";
+                document.getElementById('a-summary').value = p.summary || "";
             }
             
             let cS = document.getElementById('a-category'); 
@@ -2071,8 +2078,7 @@
             let eNeg = parseFloat(document.getElementById('a-neg').value) || 0; 
             let tTime = parseInt(document.getElementById('a-tot-time').value) || 0; 
             let qTime = parseInt(document.getElementById('a-q-time').value) || 0; 
-            
-            let isFree = (document.getElementById('a-pdf-type').value === "free"); 
+            let isFree = document.getElementById('a-pdf-type').value === "free"; 
             let ePrice = isFree ? "Free" : (document.getElementById('a-price').value || "49"); 
             let eKey = "ANK"; 
             let eCategory = document.getElementById('a-category').value;
@@ -2095,7 +2101,7 @@
                 exam: eName, category: eCategory, logo: eLogo, subject: eSub, sub: eSub, 
                 topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, 
                 qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, 
-                qs: fQs, summary: eSummary, isActive: true 
+                qs: fQs, isActive: true 
             };
             
             let btn = document.getElementById('btn-generate'); 
@@ -2125,26 +2131,32 @@
                 
                 let tLink = BASE_URL + "?test=" + eCode; 
                 
-                // 🔥 LOCAL CACHE FIX: OVERWRITE LOCAL IMMEDIATELY 🔥
-                let tObj = { ...fObj, link: tLink, date: new Date().toLocaleDateString(), rawText: rawText };
-                
+                // 🔥 LOCAL CACHE FIX: Immediately update locally so Free to Paid reflects instantly 🔥
                 let sTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
                 let eIdx = sTests.findIndex(t => t.code === eCode);
+                
+                let tObj = { 
+                    code: eCode, exam: eName, category: eCategory, logo: eLogo, subject: eSub, 
+                    sub: eSub, topic: eTopic, marks: eMarks, neg: eNeg, totTime: tTime, 
+                    qTime: qTime, price: ePrice, isFree: isFree, key: eKey, qs: fQs, 
+                    link: tLink, date: new Date().toLocaleDateString(), rawText: rawText, isActive: true 
+                };
+                
                 if (eIdx >= 0) sTests[eIdx] = tObj; else sTests.push(tObj); 
                 localStorage.setItem('myMockTests', JSON.stringify(sTests));
                 
                 let uIdx = window.adminUnifiedTests.findIndex(t => t.code === eCode); 
                 if (uIdx >= 0) window.adminUnifiedTests[uIdx] = tObj; else window.adminUnifiedTests.push(tObj);
                 
+                let gIdx = window.globalActiveTests.findIndex(t => t.code === eCode);
+                if (gIdx >= 0) window.globalActiveTests[gIdx] = tObj; else window.globalActiveTests.push(tObj);
+                
                 document.getElementById('generatedLink').value = tLink; 
                 document.getElementById('linkContainer').style.display = 'block'; 
                 window.showCustomAlert("Success", `✅ Saved! (${fQs} Qs)`, "🎉"); 
                 window.initQuickFill(); 
                 
-                // FORCE COMPLETE RE-SYNC FROM SERVER
-                if (document.getElementById('admin-manage-section').style.display === 'block') {
-                    window.fetchActiveTests(); 
-                }
+                if (document.getElementById('admin-manage-section').style.display === 'block') window.renderDashboard();
             }).catch(() => { 
                 window.showCustomAlert("Error", "Check connection.", "❌"); 
                 btn.innerText = "🚀 Generate / Update Test"; 
@@ -2163,7 +2175,7 @@
                 window.fetchTestForAdmin(code, 'pdf', mode); 
                 return; 
             }
-
+            
             if (!raw && t.questions && t.questions.length > 0) { 
                 raw = t.questions.map((q, i) => { 
                     let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
@@ -2398,7 +2410,6 @@
             else { o.style.display = 'block'; try { history.pushState({ palette: true }, ""); } catch (e) {} }
         };
 
-        // 🔥 POPSTATE (BACK BUTTON) HANDLES SUMMARY MODAL AND PALETTE MODAL 🔥
         window.addEventListener('popstate', function(e) {
             let sumModal = document.getElementById('summary-modal');
             if (sumModal && sumModal.style.display === 'flex') {
@@ -2738,7 +2749,7 @@
         };
 
         /* ==========================================================================
-           10. PDF PRINTING & LEADERBOARD
+           10. PDF PRINTING & LEADERBOARD (ORIGINAL LOGIC RESTORED)
            ========================================================================== */
         window.drawReportCard = function(rank, totalStudents, maxScore) {
             let cvs = document.getElementById('reportCard'); 
@@ -3078,4 +3089,3 @@
     </script>
 </body>
 </html>
-    
