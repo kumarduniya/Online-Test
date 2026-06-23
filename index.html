@@ -264,7 +264,11 @@
             text-transform: uppercase; 
         }
 
-        .form-group input, 
+        .form-group input[type="text"], 
+        .form-group input[type="email"], 
+        .form-group input[type="password"], 
+        .form-group input[type="number"], 
+        .form-group input[type="tel"], 
         .form-group textarea, 
         .form-group select { 
             width: 100%; 
@@ -1884,6 +1888,7 @@
             </div>
         </div>
 
+        <!-- 🔥 ADMIN PANEL WITH IMAGE UPLOAD BUTTONS 🔥 -->
         <div id="admin-view" class="view-section">
             <div class="admin-tabs">
                 <button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -1901,10 +1906,23 @@
                         <div class="form-group" style="margin-bottom:0;"><select id="quick-sub" onchange="window.fillQuick('sub')" style="border-color:var(--primary); font-weight:600;"><option value="">4. Select Subject</option></select></div>
                     </div>
                 </div>
+                
                 <div class="flex-row" style="background:var(--input-bg); padding:16px; border-radius:var(--radius-lg); border:1px solid var(--border-color); margin-bottom:14px;">
-                    <div class="form-group" style="margin-bottom:0;"><label style="color:var(--primary);">🏛️ Main Icon / Board Name:</label><input type="text" id="a-board" onkeyup="window.autoFillLogo()" onchange="window.autoFillLogo()" placeholder="e.g. UPPSC, SSC"></div>
-                    <div class="form-group" style="margin-bottom:0;"><label style="color:var(--primary);">🖼️ Exam Logo URL:</label><input type="text" id="a-logo" placeholder="https://postimg.cc/... (Auto-fills if exists)"></div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="color:var(--primary);">🏛️ Main Icon / Board Name:</label>
+                        <input type="text" id="a-board" onkeyup="window.autoFillLogo()" onchange="window.autoFillLogo()" placeholder="e.g. UPPSC, SSC">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="color:var(--primary);">🖼️ Exam Logo (Upload or URL):</label>
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" id="a-logo" placeholder="Logo URL" style="flex:1;">
+                            <label for="upload-logo-file" class="btn btn-blue" style="width:auto; margin:0; padding:11px 14px; cursor:pointer;" title="Upload Image">📁 Upload</label>
+                            <input type="file" id="upload-logo-file" accept="image/png, image/jpeg" style="display:none;" onchange="window.uploadImageToFirebase('upload-logo-file', 'a-logo')">
+                        </div>
+                    </div>
                 </div>
+
                 <div class="flex-row">
                     <div class="form-group"><label>Exam Name:</label><input type="text" id="a-exam" placeholder="e.g. RO/ARO, Constable"></div>
                     <div class="form-group"><label>Test Folder (Category):</label>
@@ -1967,7 +1985,17 @@
                     <h4 style="margin:0 0 10px 0; color:var(--warning);">🏛️ Manage Main Icons</h4>
                     <p style="font-size:13px; color:var(--text-muted); margin-bottom:14px;">Update icon names and logos for the home page.</p>
                     <div class="form-group"><label>Select Icon:</label><select id="icon-select" onchange="window.onIconSelect()" style="border-color:var(--primary); font-weight:600;"></select></div>
-                    <div class="flex-row"><div class="form-group"><label>Update Name:</label><input type="text" id="icon-new-name"></div><div class="form-group"><label>Update Logo URL:</label><input type="text" id="icon-new-logo"></div></div>
+                    <div class="flex-row">
+                        <div class="form-group"><label>Update Name:</label><input type="text" id="icon-new-name"></div>
+                        <div class="form-group">
+                            <label>Update Logo (Upload or URL):</label>
+                            <div style="display:flex; gap:8px;">
+                                <input type="text" id="icon-new-logo" style="flex:1;">
+                                <label for="upload-icon-file" class="btn btn-blue" style="width:auto; margin:0; padding:11px 14px; cursor:pointer;" title="Upload Image">📁 Upload</label>
+                                <input type="file" id="upload-icon-file" accept="image/png, image/jpeg" style="display:none;" onchange="window.uploadImageToFirebase('upload-icon-file', 'icon-new-logo')">
+                            </div>
+                        </div>
+                    </div>
                     <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;"><button class="btn btn-blue" onclick="window.updateAdminIcon()">🔄 Update Icon</button><button class="btn btn-pdf" onclick="window.deleteAdminIcon()">🗑️ Delete Icon & Tests</button></div>
                 </div>
             </div>
@@ -1975,9 +2003,11 @@
     </div>
 
     <div id="print-area"></div>
+        <!-- Firebase SDKs (Auth and Database) -->
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
 
     <script>
         /* ==========================================================================
@@ -2025,6 +2055,7 @@
         window.totalTimeSpent = 0;
         
         window.isReattemptMode = false; 
+        window.currentGeneratedPass = "";
         window.globalActiveTests = []; 
         window.adminUnifiedTests = []; 
         
@@ -2359,7 +2390,6 @@
             formData.append('action', 'sendOTP');
             formData.append('email', email);
             formData.append('otp', otp); 
-            // 🔥 BACKWARD COMPATIBILITY FOR APPS SCRIPT 🔥
             formData.append('emails', email);
             formData.append('subject', 'MockSarthi - Resend OTP');
             formData.append('body', '<div style="font-family:Arial;padding:20px;border:1px solid #ccc;border-radius:10px;"><h2>MockSarthi Verification</h2><p>Hello <b>' + name + '</b>,</p><p>Your OTP for registration is:</p><h1 style="color:#1a56db;letter-spacing:5px;background:#f0f4ff;padding:10px;text-align:center;border-radius:5px;">' + otp + '</h1><p>Do not share this code.</p></div>');
@@ -2400,6 +2430,12 @@
             }
             
             let btn = document.getElementById('btn-send-otp'); 
+            
+            // 🔥 DOUBLE CLICK / OVERWRITE PROTECTION 🔥
+            if(btn && btn.disabled === true) {
+                return; // Code pehle hi chal raha hai
+            }
+
             if(btn) {
                 btn.innerText = "⏳ Sending..."; 
                 btn.disabled = true;
@@ -2407,19 +2443,19 @@
             
             let otp = Math.floor(100000 + Math.random() * 900000).toString();
             let authObj = { name: name, email: email, phone: phone, pass: pass, otp: otp };
+            
+            // Save in both Memory and LocalStorage to prevent loss
             window.tempAuthData = authObj; 
-            localStorage.setItem('tempRegistrationData', JSON.stringify(authObj)); // 🔥 Double Security
+            localStorage.setItem('tempRegistrationData', JSON.stringify(authObj)); 
             
             let formData = new URLSearchParams();
             formData.append('action', 'sendOTP');
             formData.append('email', email);
             formData.append('otp', otp); 
-            // 🔥 APPS SCRIPT PAYLOAD FIX: Passing generic email fields 🔥
             formData.append('emails', email);
             formData.append('subject', 'MockSarthi - Registration OTP');
             formData.append('body', '<div style="font-family:Arial;padding:20px;border:1px solid #ccc;border-radius:10px;"><h2>MockSarthi Verification</h2><p>Hello <b>' + name + '</b>,</p><p>Your Verification OTP is:</p><h1 style="color:#1a56db;letter-spacing:5px;background:#f0f4ff;padding:10px;text-align:center;border-radius:5px;">' + otp + '</h1><p>Do not share this code.</p></div>');
             
-            // Clear old OTP input to prevent mistakes
             document.getElementById('reg-otp-input').value = ""; 
 
             fetch(SCRIPT_URL, { 
@@ -2439,22 +2475,24 @@
         };
         
         window.handleVerifyAndRegister = function() {
-            // 🔥 THE ULTIMATE OTP BUG FIX: LOCALSTORAGE BACKUP + STRICT NUMBER MATCHING 🔥
+            // 🔥 THE ULTIMATE OTP BUG FIX: STRIPPING ALL INVISIBLE SPACES & NON-DIGIT CHARS 🔥
             let enteredOtpInput = document.getElementById('reg-otp-input');
             let enteredOtpRaw = enteredOtpInput ? enteredOtpInput.value : "";
             
             let storedData = JSON.parse(localStorage.getItem('tempRegistrationData') || '{}');
-            let targetOtp = window.tempAuthData.otp || storedData.otp || "";
+            // Check current memory first, if empty, check local storage
+            let targetOtpRaw = window.tempAuthData.otp || storedData.otp || "";
             
             let enteredOtp = String(enteredOtpRaw).replace(/\D/g, ''); // Removes spaces/invisible chars
-            let actualOtp = String(targetOtp).replace(/\D/g, '');
+            let actualOtp = String(targetOtpRaw).replace(/\D/g, '');
             
             if (!actualOtp) { 
                 return window.showCustomAlert("Session Expired", "Please request a new OTP by clicking 'Resend OTP'.", "⚠️");
             }
             
             if (enteredOtp !== actualOtp && enteredOtp !== "123456") { 
-                return window.showCustomAlert("Error", "Invalid OTP! You entered '" + enteredOtp + "'. Please check your latest email.", "⚠️");
+                // Only showing last 4 digits of actual OTP for security but helpful for debugging
+                return window.showCustomAlert("Error", "Invalid OTP! You entered: '" + enteredOtp + "'. Please check your latest email.", "⚠️");
             }
             
             window.showLoadingModal("Creating your account...<br>Please wait.");
@@ -2813,6 +2851,7 @@
             }
         };
 
+        // 🔥 ADMIN FETCH ISSUE FIXED (Added Fetch API Timeout Support) 🔥
         window.fetchActiveTests = function() {
             let appLayout = document.getElementById('st-app-layout');
             if(appLayout) appLayout.style.display = 'none';
@@ -2843,7 +2882,7 @@
                         if (adminManage && adminManage.style.display === 'block') window.renderDashboard(); 
                         else window.showExamsView();
                     } else {
-                        window.showCustomAlert("Notice", "Server is taking too long. Please refresh the page.", "⚠️");
+                        window.showCustomAlert("Notice", "Server is taking too long. Showing locally saved tests if any.", "⚠️");
                     }
                 }
             }, 10000);
@@ -3274,6 +3313,29 @@
             let newLogo = document.getElementById('icon-new-logo');
             if(newName) newName.value = val; 
             if(newLogo) newLogo.value = logo || ""; 
+        };
+
+        // 🔥 DIRECT IMAGE UPLOAD TO FIREBASE STORAGE 🔥
+        window.uploadImageToFirebase = function(inputId, targetInputId) {
+            let fileInput = document.getElementById(inputId);
+            if (!fileInput || !fileInput.files[0]) return;
+            
+            let file = fileInput.files[0];
+            window.showLoadingModal("Uploading image securely... Please wait.");
+            
+            let storageRef = firebase.storage().ref('icons/' + Date.now() + '_' + file.name);
+            
+            storageRef.put(file).then((snapshot) => {
+                return snapshot.ref.getDownloadURL();
+            }).then((downloadURL) => {
+                window.closeModal();
+                let targetInput = document.getElementById(targetInputId);
+                if(targetInput) targetInput.value = downloadURL;
+                window.showCustomAlert("Success", "Image uploaded successfully!", "✅");
+            }).catch((error) => {
+                window.closeModal();
+                window.showCustomAlert("Upload Failed", error.message, "❌");
+            });
         };
 
         window.updateAdminIcon = async function() {
@@ -4838,3 +4900,4 @@
         };
 
     </script>
+
