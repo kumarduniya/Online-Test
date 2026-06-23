@@ -119,26 +119,25 @@
         .exam-card .exam-stats span { background: var(--bg-subtle); padding: 2px 12px; border-radius: 50px; font-weight: 600; }
         .exam-card .btn { width: 100%; padding: 8px; font-size: 12px; border-radius: var(--radius); }
 
-        /* Test Card */
+        /* Test Card (Modified for progress line) */
         .test-card { background: var(--bg-card); border: 1px solid var(--border-color); border-left: 5px solid var(--accent); padding: 18px 20px; margin-bottom: 14px; border-radius: var(--radius); box-shadow: var(--shadow-sm); transition: var(--transition); display: flex; flex-direction: column; justify-content: space-between; }
         .test-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
         .test-card .test-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 2px; }
         .test-card .test-title { font-size: 15px; font-weight: 700; color: var(--primary); margin: 0; }
         .test-card .test-subtitle { font-size: 12px; font-weight: 600; color: var(--text-muted); margin: 0 0 8px 0; }
         .test-card .test-meta { font-size: 11px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-        
-        /* Modifying history card layout */
-        .hist-card-layout { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
-        .hist-left { flex: 1; min-width: 250px; }
-        .hist-right { display: flex; align-items: center; gap: 10px; }
-        .hist-details { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
-        .hist-details b { color: var(--text-main); }
-        
         .badge { background: var(--bg-subtle); padding: 3px 12px; border-radius: 50px; font-size: 10px; font-weight: 600; color: var(--text-muted); display: inline-block; border: 1px solid var(--border-color); }
         .badge-primary { background: var(--primary); color: #fff; border: none; }
         
         .progress-line-container { width: 100%; height: 5px; background: var(--border-color); border-radius: 50px; margin-top: 6px; margin-bottom: 10px; overflow: hidden; display: none; }
         .progress-line-fill { height: 100%; border-radius: 50px; transition: width 0.5s ease; }
+
+        /* Modified History Card Layout */
+        .hist-card-layout { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+        .hist-left { flex: 1; min-width: 250px; }
+        .hist-right { display: flex; align-items: center; gap: 10px; }
+        .hist-details { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
+        .hist-details b { color: var(--text-main); }
 
         /* ============================================================
            OTHER UI ELEMENTS (Auth, Forms, Modals, Admin, etc)
@@ -270,6 +269,9 @@
         .question-palette { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 8px 0; }
         .palette-btn { width: 44px; height: 44px; border-radius: var(--radius-sm); font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--transition); color: var(--text-main); border: 2px solid var(--border-color); background: var(--bg-card); }
         .palette-btn:hover { transform: scale(1.08); box-shadow: var(--shadow-md); }
+        .palette-btn.status-not-visited { background: var(--bg-card); color: var(--text-muted); border-color: var(--border-color); }
+        .palette-btn.status-not-answered { background: var(--warning); color: #1a2332; border-color: var(--warning); }
+        .palette-btn.status-answered { background: var(--success); color: #fff; border-color: var(--success); }
         .palette-btn.bookmarked { border-color: var(--accent); position: relative; }
         .palette-btn.bookmarked::after { content: '⭐'; position: absolute; top: -6px; right: -6px; font-size: 10px; }
 
@@ -347,7 +349,7 @@
         }
 
         /* ============================================================
-           PRINT PDF ENGINE (Perfect Pagination Layout)
+           PRINT PDF ENGINE (Fixed to allow natural page breaks)
            ============================================================ */
         body.print-pdf {
             background: #fff !important;
@@ -461,26 +463,26 @@
                 text-decoration: none !important;
             }
             
-            /* The real magic for avoiding middle-page breaks and blank gaps */
+            /* 🔥 FIXED: Allowed natural page breaks so no blank space is left on PDF pages 🔥 */
             .print-q {
                 margin-bottom: 12px !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid-page !important; /* Forces the block to stay together */
                 border-bottom: 1px dashed #ccc !important;
                 padding-bottom: 12px !important;
                 font-size: 16px !important;
-                line-height: 1.4 !important;
+                line-height: 1.5 !important;
                 color: #000 !important;
                 display: block !important;
+                page-break-inside: auto !important; 
+                break-inside: auto !important;
             }
             
             .opt-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 4px !important;
-                margin: 4px 0 !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid-page !important;
+                gap: 8px !important;
+                margin: 8px 0 !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
             }
             
             .opt-item {
@@ -504,8 +506,8 @@
                 background: #f5f5f5 !important;
                 border-left: 3px solid #1a56db !important;
                 line-height: 1.4 !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid-page !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
             }
             
             .print-passage {
@@ -515,8 +517,8 @@
                 border-left: 4px solid #333;
                 font-size: 16px !important;
                 background: transparent !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid-page !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
             }
             
             * {
@@ -636,14 +638,15 @@
             </div>
 
             <div id="st-history-section" style="display:none;">
-                <div style="background:var(--bg-card);border:1px solid var(--border-color);padding:20px;border-radius:var(--radius-lg);margin-bottom:20px;box-shadow:var(--shadow-sm);">
-                    <h4 style="margin:0 0 6px 0;color:var(--primary);">🔍 Check Report by Mobile</h4>
-                    <p style="font-size:12px;color:var(--text-muted);margin:0 0 14px 0;">(Auto-filled if logged in)</p>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                        <input type="tel" id="hist-phone" placeholder="10-digit mobile" style="flex:1;padding:12px;border-radius:var(--radius);border:2px solid var(--border-color);font-weight:600;background:var(--bg-input);color:var(--text-main);" maxlength="10">
-                        <button class="btn btn-primary" style="width:auto;margin:0;padding:12px 24px;" onclick="window.fetchStudentHistoryManual()">Fetch Record</button>
+                <div style="background:var(--bg-card);border:1px solid var(--border-color);padding:20px;border-radius:var(--radius-lg);margin-bottom:20px;box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div>
+                        <h4 style="margin:0 0 6px 0;color:var(--primary);">📈 My Performance Report</h4>
+                        <p style="font-size:13px;color:var(--text-muted);margin:0;">Mobile: <b id="disp-hist-phone" style="color:var(--text-main);">...</b></p>
                     </div>
+                    <button class="btn btn-primary btn-sm" onclick="window.fetchStudentHistory()" style="margin:0;width:auto;">🔄 Refresh Report</button>
+                    <input type="hidden" id="hist-phone"> 
                 </div>
+                
                 <div id="st-hist-content">
                     <div style="background:rgba(15,157,88,0.08);border:2px solid var(--success);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;">
                         <h3 style="margin:0 0 14px 0;color:var(--success);text-align:center;">📊 Overall Report Card</h3>
@@ -919,10 +922,12 @@
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INITIALIZATION
            ========================================================================== */
+        // 🔥 Tumhara exact working URL 🔥
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         const BASE_URL = "https://ankushonlinetest.netlify.app/";
         const HIDDEN_TESTS = [];
 
+        // 🔥 FIREBASE CONFIGURATION 🔥
         const firebaseConfig = {
           apiKey: "AIzaSyA1ePcM8xYUOvYw8uLwiMI87_uv9xoPDyc", 
           authDomain: "mocksarthi-test.firebaseapp.com",
@@ -949,7 +954,8 @@
         window.currentQ = 0;
         
         window.studentInfo = { 
-            name: "", email: "", phone: "", isPremium: "FALSE", 
+            name: "अंकुश कुमार S/O मनोज कुमार", // Default explicitly set as per your profile
+            email: "", phone: "", isPremium: "FALSE", 
             score: 0, right: 0, wrong: 0, blank: 0, time: 0, attempt: 1 
         };
         
@@ -1757,11 +1763,8 @@
                 if(secActive) secActive.style.display = 'none'; 
                 if(secHistory) secHistory.style.display = 'block';
                 
-                if (window.studentInfo && window.studentInfo.phone) {
-                    let histPhone = document.getElementById('hist-phone');
-                    if(histPhone) histPhone.value = window.studentInfo.phone;
-                    window.fetchStudentHistoryManual();
-                }
+                // Privacy lock applied directly here.
+                window.fetchStudentHistory();
             }
         };
 
@@ -2840,10 +2843,11 @@
             if (!pQs || pQs.length === 0) return window.showCustomAlert("Parse Error", "No valid questions.", "❌");
             
             window.examData = { exam: t.exam, subject: t.subject || t.sub || "Subject", topic: t.topic, code: t.code, questions: pQs }; 
-            window.studentInfo.name = "Ankush Kumar S/O Manoj Kumar"; 
+            
+            let customName = window.studentInfo.name || "Student";
             window.userAnswers = []; 
             pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); }); 
-            window.executePDFPrint(window.studentInfo.name, mode);
+            window.executePDFPrint(customName, mode);
         };
 
         /* ==========================================================================
@@ -3065,13 +3069,7 @@
             window.bookmarks[window.currentQ] = !window.bookmarks[window.currentQ];
             window.renderBookmarkState(); 
             window.updateMiniPalette();
-            
-            let pBtn = document.getElementById('pal-' + window.currentQ);
-            if(pBtn) {
-                if(window.bookmarks[window.currentQ]) pBtn.classList.add('bookmarked'); 
-                else pBtn.classList.remove('bookmarked');
-            }
-            
+            window.refreshFullPalette(); // Ensure main palette syncs
             window.saveProgress();
         };
         
@@ -3138,6 +3136,17 @@
             }
         });
 
+        // 🔥 PERFECT PALETTE SYNC FUNCTION 🔥
+        window.refreshFullPalette = function() {
+            for (let i = 0; i < window.examData.questions.length; i++) { 
+                let palBtn = document.getElementById('pal-' + i);
+                if(palBtn) {
+                    palBtn.className = 'palette-btn ' + (window.qStatus[i]===2 ? 'status-answered' : (window.qStatus[i]===1 ? 'status-not-answered' : 'status-not-visited'));
+                    if(window.bookmarks[i]) palBtn.classList.add('bookmarked');
+                }
+            }
+        };
+
         window.updateMiniPalette = function() {
             let s = document.getElementById('mini-palette-strip'); 
             if(!s) return;
@@ -3179,13 +3188,10 @@
             
             if (window.qStatus[idx] === 0) { 
                 window.qStatus[idx] = 1; 
-                let palBtn = document.getElementById('pal-' + idx);
-                if(palBtn) {
-                    palBtn.classList.add('status-not-answered'); 
-                    palBtn.classList.remove('status-not-visited'); 
-                }
                 window.updateCounts(); 
             }
+            
+            window.refreshFullPalette(); // Ensure main palette color updates immediately
             
             let qHeader = document.getElementById('q-no-header');
             let qText = document.getElementById('q-text');
@@ -3238,16 +3244,11 @@
             window.userAnswers[window.currentQ] = v; 
             window.qStatus[window.currentQ] = 2; 
             
-            let palBtn = document.getElementById('pal-' + window.currentQ);
-            if(palBtn) {
-                palBtn.classList.add('status-answered'); 
-                palBtn.classList.remove('status-not-answered'); 
-            }
-            
             document.querySelectorAll('.opt-label').forEach(e => e.classList.remove('selected')); 
             let lblBtn = document.getElementById('lbl-' + v);
             if(lblBtn) lblBtn.classList.add('selected'); 
             
+            window.refreshFullPalette(); // Exact color sync fix for question grid
             window.updateCounts(); 
             window.updateMiniPalette(); 
             window.saveProgress(); 
@@ -3257,12 +3258,7 @@
             window.userAnswers[window.currentQ] = null; 
             window.qStatus[window.currentQ] = 1; 
             
-            let palBtn = document.getElementById('pal-' + window.currentQ);
-            if(palBtn) {
-                palBtn.classList.add('status-not-answered'); 
-                palBtn.classList.remove('status-answered'); 
-            }
-            
+            window.refreshFullPalette();
             window.renderQuestion(window.currentQ); 
             window.updateCounts(); 
             window.updateMiniPalette(); 
@@ -3528,7 +3524,9 @@
             ctx.fillStyle = '#333'; 
             ctx.textAlign = 'left'; 
             ctx.font = 'bold 26px Arial'; 
-            ctx.fillText("Name: " + (window.studentInfo.name || "Student"), 80, 200);
+            
+            let displayName = window.studentInfo.name || "Student";
+            ctx.fillText("Name: " + displayName, 80, 200);
             
             let aT = window.isReattemptMode ? "Mode: Reattempt" : ("Attempt No: " + (window.studentInfo.attempt || 1)); 
             ctx.fillStyle = '#dc3545'; 
@@ -3561,7 +3559,7 @@
             
             ctx.fillStyle = '#0f2b5c'; 
             ctx.font = 'bold 18px Arial'; 
-            ctx.fillText("Prepared by: Ankush Kumar S/O Manoj Kumar", 400, 540); 
+            ctx.fillText("Prepared by: " + displayName, 400, 540); 
             
             ctx.fillStyle = '#777'; 
             ctx.font = '14px Arial'; 
@@ -3570,7 +3568,7 @@
             ctx.fillStyle = '#ccc'; 
             ctx.font = 'bold 44px Arial'; 
             ctx.globalAlpha = 0.15; 
-            ctx.fillText("ANKUSH KUMAR", 400, 400); 
+            ctx.fillText("MOCKSARTHI", 400, 400); 
             ctx.globalAlpha = 1.0;
             
             let rcImg = document.getElementById('reportCardImg');
@@ -3600,7 +3598,9 @@
 
         // 🔥 EXACT INDEX 6 PDF TEMPLATE RESTORED & OPTIMIZED FOR AVOID-PAGE-BREAK 🔥
         window.executePDFPrint = function(wT, mode) {
-            if (wT === "Admin Ankush Kumar" || wT === "Admin") wT = "Ankush Kumar S/O Manoj Kumar";
+            if (wT === "Admin Ankush Kumar" || wT === "Admin" || wT === "Student") {
+                wT = "अंकुश कुमार S/O मनोज कुमार";
+            }
             
             let pA = document.getElementById('print-area'); 
             if(!pA) return;
@@ -3621,10 +3621,10 @@
                 let cA = window.getCleanAns(q.ans); 
                 let gA = window.getCleanAns(uA); 
                 
-                let isW = (window.userAnswers.length > 0 && uA !== "N/A" && gA !== cA && window.studentInfo.name !== "Ankush Kumar S/O Manoj Kumar"); 
+                // Only show wrong mark if it's the specific student comparing
+                let isW = (window.userAnswers.length > 0 && uA !== "N/A" && gA !== cA && window.studentInfo.name !== "अंकुश कुमार S/O मनोज कुमार"); 
                 let wM = (isW && mode === 'full') ? '<span style="color:red;font-size:18px;margin-right:4px;">❌</span>' : "";
                 
-                // Using print-q which has page-break-inside: avoid to prevent splitting
                 h += `<div class="print-q">`;
                 
                 if (q.passage) h += `<div class="print-passage">${q.passage}</div>`; 
@@ -3647,7 +3647,7 @@
                     let resView = document.getElementById('result-view');
                     let isResActive = resView ? resView.classList.contains('active-view') : false;
                     
-                    if (window.userAnswers.length > 0 && (isResActive || window.studentInfo.name === "Ankush Kumar S/O Manoj Kumar") && mode === 'full') { 
+                    if (window.userAnswers.length > 0 && (isResActive || window.studentInfo.name === "अंकुश कुमार S/O मनोज कुमार") && mode === 'full') { 
                         let aC = (gA === cA) ? "color:green;" : "color:red;"; 
                         let uD = (gA && uA !== "N/A") ? gA : "Skipped"; 
                         h += `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span> <span style="margin-left:14px;font-weight:bold;font-size:15px;${aC}">Your Ans: ${uD}</span></div>`; 
@@ -3658,7 +3658,7 @@
                         h += `<div class="print-exp"><b>Explanation:</b><br>${q.exp}</div>`; 
                     }
                 } 
-                h += '</div>'; // close .print-q
+                h += '</div>'; 
             });
             
             let summ = p.summary || window.examData.summary || "";
@@ -3716,14 +3716,16 @@
         };
 
         /* ==========================================================================
-           12. STUDENT HISTORY (FIREBASE FIX + ENHANCED UI)
+           12. STUDENT HISTORY (PRIVACY FIX + ENHANCED UI)
            ========================================================================== */
-        window.fetchStudentHistoryManual = function() {
-            let phoneInputElem = document.getElementById('hist-phone');
-            let phoneInput = phoneInputElem ? phoneInputElem.value.trim() : "";
-            if (!phoneInput || phoneInput.length !== 10) {
-                return window.showCustomAlert("Error", "Please enter a valid 10-digit mobile number.", "⚠️");
+        window.fetchStudentHistory = function() {
+            if (!window.studentInfo || !window.studentInfo.phone) {
+                return window.showCustomAlert("Error", "No registered mobile number found. Cannot fetch report.", "⚠️");
             }
+            
+            let phoneInput = window.studentInfo.phone;
+            let dispPhone = document.getElementById('disp-hist-phone');
+            if(dispPhone) dispPhone.innerText = phoneInput;
             
             let histLoader = document.getElementById('st-hist-loader');
             let histList = document.getElementById('st-hist-list');
@@ -3738,13 +3740,6 @@
                 if(histLoader) histLoader.style.display = 'none'; 
                 window.showCustomAlert("Error", "Failed to fetch history from database.", "❌");
             });
-        };
-
-        window.fetchStudentHistory = function() {
-            if (!window.studentInfo || !window.studentInfo.phone) return;
-            let histPhone = document.getElementById('hist-phone');
-            if(histPhone) histPhone.value = window.studentInfo.phone;
-            window.fetchStudentHistoryManual();
         };
 
         window.handleStudentHistory = function(data) {
@@ -3803,7 +3798,6 @@
             records.forEach(r => { 
                 let pdfCode = r.testCode ? String(r.testCode).replace('-RE', '') : '';
                 
-                // 🔥 Details Fetching for History Card 🔥
                 let tData = allSavedTests.find(t => t.code === pdfCode) || {};
                 let p = window.parseHack(tData.topic || "");
                 
@@ -3894,7 +3888,767 @@
             window.userAnswers = []; 
             pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
             
-            window.executePDFPrint(window.studentInfo.name || "Student", 'full');
+            let customName = window.studentInfo.name || "Student";
+            window.executePDFPrint(customName, 'full');
+        };
+
+        /* ==========================================================================
+           13. ADMIN DASHBOARD & TEST CREATION
+           ========================================================================== */
+        window.switchAdminTab = function(tab) {
+            let createSec = document.getElementById('admin-create-section');
+            let manageSec = document.getElementById('admin-manage-section');
+            let iconSec = document.getElementById('admin-icons-section');
+            
+            if(createSec) createSec.style.display = 'none'; 
+            if(manageSec) manageSec.style.display = 'none'; 
+            if(iconSec) iconSec.style.display = 'none';
+            
+            document.querySelectorAll('.admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            let tabs = document.querySelectorAll('.admin-tabs .tab-btn');
+            
+            if (tab === 'create') {
+                if(tabs.length > 0) tabs[0].classList.add('active'); 
+                if(createSec) createSec.style.display = 'block';
+                let btn = document.getElementById('btn-generate'); 
+                if(btn) {
+                    btn.innerText = "🚀 Generate / Update Test"; 
+                    btn.style.background = "var(--primary)"; 
+                }
+                window.initQuickFill();
+            } 
+            else if (tab === 'manage') {
+                if(tabs.length > 1) tabs[1].classList.add('active'); 
+                if(manageSec) manageSec.style.display = 'block';
+                if (window.globalActiveTests && window.globalActiveTests.length > 0) window.renderDashboard(); 
+                else window.fetchActiveTests();
+            } 
+            else if (tab === 'icons') {
+                if(tabs.length > 2) tabs[2].classList.add('active'); 
+                if(iconSec) iconSec.style.display = 'block'; 
+                window.loadAdminIcons();
+            }
+        };
+        
+        window.initQuickFill = function() {
+            let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
+            window.qTree = {};
+            
+            savedTests.forEach(t => { 
+                let p = window.parseHack(t.topic); 
+                let b = p.board || t.exam || "General Exam"; 
+                let e = t.exam || "Mock Test"; 
+                let c = p.cat || "Mock Tests"; 
+                let s = p.subcat || t.subject || t.sub || "Subject"; 
+                
+                if (!window.qTree[b]) window.qTree[b] = {}; 
+                if (!window.qTree[b][e]) window.qTree[b][e] = {}; 
+                if (!window.qTree[b][e][c]) window.qTree[b][e][c] = new Set(); 
+                window.qTree[b][e][c].add(s); 
+            });
+            
+            let qb = document.getElementById('quick-board'); 
+            if(qb) {
+                qb.innerHTML = '<option value="">1. Select Board</option>'; 
+                for (let b in window.qTree) qb.innerHTML += `<option value="${b}">${b}</option>`; 
+            }
+            
+            let qe = document.getElementById('quick-exam');
+            let qc = document.getElementById('quick-cat');
+            let qs = document.getElementById('quick-sub');
+            
+            if(qe) qe.innerHTML = '<option value="">2. Select Exam</option>'; 
+            if(qc) qc.innerHTML = '<option value="">3. Select Category</option>'; 
+            if(qs) qs.innerHTML = '<option value="">4. Select Subject</option>';
+        };
+
+        window.fillQuick = function(level) {
+            let qb = document.getElementById('quick-board');
+            let qe = document.getElementById('quick-exam');
+            let qc = document.getElementById('quick-cat');
+            let qs = document.getElementById('quick-sub');
+            
+            let bVal = qb ? qb.value : ""; 
+            let eVal = qe ? qe.value : ""; 
+            let cVal = qc ? qc.value : "";
+            
+            if (level === 'board') { 
+                let aBoard = document.getElementById('a-board');
+                if(aBoard) aBoard.value = bVal; 
+                window.autoFillLogo(); 
+                
+                if(qe) {
+                    qe.innerHTML = '<option value="">2. Select Exam</option>';
+                    if (bVal && window.qTree[bVal]) { 
+                        for (let e in window.qTree[bVal]) qe.innerHTML += `<option value="${e}">${e}</option>`; 
+                    }
+                } 
+                if(qc) qc.innerHTML = '<option value="">3. Select Category</option>'; 
+                if(qs) qs.innerHTML = '<option value="">4. Select Subject</option>'; 
+            } 
+            else if (level === 'exam') { 
+                let aExam = document.getElementById('a-exam');
+                if(aExam) aExam.value = eVal; 
+                
+                if(qc) {
+                    qc.innerHTML = '<option value="">3. Select Category</option>';
+                    if (bVal && eVal && window.qTree[bVal][eVal]) { 
+                        for (let c in window.qTree[bVal][eVal]) qc.innerHTML += `<option value="${c}">${c}</option>`; 
+                    } 
+                }
+                if(qs) qs.innerHTML = '<option value="">4. Select Subject</option>'; 
+            } 
+            else if (level === 'cat') { 
+                let catSelect = document.getElementById('a-category'); 
+                let customCat = document.getElementById('a-custom-cat');
+                
+                if(catSelect) {
+                    let options = Array.from(catSelect.options).map(opt => opt.value); 
+                    if (options.includes(cVal)) { 
+                        catSelect.value = cVal; 
+                        if(customCat) customCat.style.display = 'none'; 
+                    } else { 
+                        catSelect.value = "CUSTOM"; 
+                        if(customCat) {
+                            customCat.style.display = 'block'; 
+                            customCat.value = cVal; 
+                        }
+                    }
+                } 
+                
+                if(qs) {
+                    qs.innerHTML = '<option value="">4. Select Subject</option>'; 
+                    if (bVal && eVal && cVal && window.qTree[bVal][eVal][cVal]) { 
+                        window.qTree[bVal][eVal][cVal].forEach(s => { qs.innerHTML += `<option value="${s}">${s}</option>`; }); 
+                    }
+                } 
+            } 
+            else if (level === 'sub') {
+                let aSub = document.getElementById('a-sub');
+                if(aSub && qs) aSub.value = qs.value;
+            }
+        };
+
+        window.autoFillLogo = function() { 
+            let aBoard = document.getElementById('a-board');
+            if(!aBoard) return;
+            let eName = aBoard.value.trim().toLowerCase(); 
+            if (!eName) return; 
+            
+            let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
+            for (let i = 0; i < savedTests.length; i++) { 
+                let p = window.parseHack(savedTests[i].topic); 
+                let bName = (p.board || savedTests[i].exam || "").toLowerCase(); 
+                if (bName === eName && p.logo) { 
+                    let aLogo = document.getElementById('a-logo');
+                    if(aLogo) aLogo.value = p.logo; 
+                    return; 
+                } 
+            } 
+        };
+
+        window.loadAdminIcons = function() { 
+            let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
+            let boards = {}; 
+            savedTests.forEach(t => { 
+                let p = window.parseHack(t.topic); 
+                let bName = p.board || t.exam || "General Exam"; 
+                if (!boards[bName]) boards[bName] = p.logo || ""; 
+            }); 
+            
+            let sel = document.getElementById('icon-select'); 
+            if(sel) {
+                sel.innerHTML = '<option value="">-- Select Icon --</option>'; 
+                for (let b in boards) sel.innerHTML += `<option value="${b}">${b}</option>`; 
+            }
+        };
+
+        window.onIconSelect = function() { 
+            let sel = document.getElementById('icon-select');
+            if(!sel) return;
+            let val = sel.value; 
+            if (!val) return; 
+            
+            let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
+            let logo = ""; 
+            for (let i = 0; i < savedTests.length; i++) { 
+                let t = savedTests[i]; 
+                let p = window.parseHack(t.topic); 
+                let bName = p.board || t.exam || "General Exam"; 
+                if (bName === val) { logo = p.logo; break; } 
+            } 
+            
+            let newName = document.getElementById('icon-new-name');
+            let newLogo = document.getElementById('icon-new-logo');
+            if(newName) newName.value = val; 
+            if(newLogo) newLogo.value = logo || ""; 
+        };
+
+        window.uploadImageToFirebase = function(inputId, targetInputId) {
+            let fileInput = document.getElementById(inputId);
+            if (!fileInput || !fileInput.files[0]) return;
+            
+            let file = fileInput.files[0];
+            window.showLoadingModal("Uploading image securely... Please wait.");
+            
+            let storageRef = firebase.storage().ref('icons/' + Date.now() + '_' + file.name);
+            
+            storageRef.put(file).then((snapshot) => {
+                return snapshot.ref.getDownloadURL();
+            }).then((downloadURL) => {
+                window.closeModal();
+                let targetInput = document.getElementById(targetInputId);
+                if(targetInput) targetInput.value = downloadURL;
+                window.showCustomAlert("Success", "Image uploaded successfully!", "✅");
+            }).catch((error) => {
+                window.closeModal();
+                window.showCustomAlert("Upload Failed", error.message, "❌");
+            });
+        };
+
+        window.updateAdminIcon = async function() {
+            let sel = document.getElementById('icon-select');
+            let oldName = sel ? sel.value : ""; 
+            let newNameElem = document.getElementById('icon-new-name');
+            let newName = newNameElem ? newNameElem.value.trim() : ""; 
+            let newLogoElem = document.getElementById('icon-new-logo');
+            let newLogo = newLogoElem ? newLogoElem.value.trim() : "";
+            
+            if (!oldName || !newName) return window.showCustomAlert("Error", "Select icon and provide new name.", "❌");
+            
+            window.showLoadingModal("Updating logos globally on server...<br>Please wait...");
+            
+            let allTests = window.getAllMergedTests();
+            let count = 0;
+            let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+            
+            for (let i = 0; i < allTests.length; i++) {
+                let t = allTests[i];
+                let p = window.parseHack(t.topic);
+                let bName = p.board || t.exam || "General Exam";
+                
+                if (bName === oldName) {
+                    let finalTopic = (p.topic || "") + "|||QS:" + (p.qs || t.qs || 0) + "|||CAT:" + (p.cat || "") + "|||LOGO:" + newLogo + "|||BOARD:" + newName + "|||EXAM:" + (p.exam || t.exam) + "|||SUBCAT:" + (p.subcat || t.subject || t.sub) + "|||SUMMARY:" + (p.summary || ""); 
+                    t.topic = finalTopic; 
+                    if (!p.board && t.exam === oldName) t.exam = newName;
+                    
+                    let eIdx = savedTests.findIndex(x => x.code === t.code);
+                    if (eIdx >= 0) savedTests[eIdx] = t; else savedTests.push(t);
+                    
+                    try {
+                        await db.collection("tests").doc(t.code).set(t);
+                        count++;
+                    } catch(e) { console.error(e); }
+                }
+            }
+            
+            localStorage.setItem('myMockTests', JSON.stringify(savedTests));
+            window.closeModal();
+            window.showCustomAlert("Success", `${count} tests updated globally!`, "✅"); 
+            window.fetchActiveTests();
+        };
+
+        window.deleteAdminIcon = function() { 
+            let sel = document.getElementById('icon-select');
+            let oldName = sel ? sel.value : ""; 
+            if (!oldName) return; 
+            
+            window.showCustomConfirm("Warning", `Delete icon '${oldName}' and ALL its tests locally?`, () => { 
+                let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                let newTests = savedTests.filter(t => { 
+                    let p = window.parseHack(t.topic); 
+                    return (p.board || t.exam || "General Exam") !== oldName; 
+                }); 
+                localStorage.setItem('myMockTests', JSON.stringify(newTests)); 
+                window.showCustomAlert("Deleted", "Deleted locally.", "🗑️"); 
+                window.fetchActiveTests(); 
+            }); 
+        };
+
+        window.updateQsCount = function() { 
+            let rawData = document.getElementById('a-rawdata');
+            if(!rawData) return 0;
+            let text = rawData.value; 
+            let matches = text.match(/!!\s*\d+\s*!/g); 
+            let count = matches ? matches.length : 0; 
+            let countBox = document.getElementById('a-qs-count'); 
+            if (countBox) countBox.value = count; 
+            return count; 
+        };
+
+        window.clearAdminMemory = function() { 
+            window.showCustomConfirm("Clear Memory", "Clear all saved tests from Admin Panel memory?", () => { 
+                localStorage.removeItem('myMockTests'); 
+                window.fetchActiveTests(); 
+            }, "🗑️"); 
+        };
+
+        window.openAdminLogin = function() { 
+            try { 
+                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); 
+                let authView = document.getElementById('admin-auth-view'); 
+                if (authView) { 
+                    authView.classList.add('active-view'); 
+                    window.toggleAdminLock(false); 
+                    window.scrollTo(0, 0); 
+                } 
+            } catch (e) { console.error(e); } 
+        };
+
+        window.loginAdmin = function() { 
+            let idElem = document.getElementById('admin-id');
+            let passElem = document.getElementById('admin-pass');
+            let id = idElem ? idElem.value.trim() : ""; 
+            let pass = passElem ? passElem.value.trim() : ""; 
+            
+            if (id === "8273684939" && pass === "Ankush@1231@123") { 
+                let authView = document.getElementById('admin-auth-view');
+                let adminView = document.getElementById('admin-view');
+                if(authView) authView.classList.remove('active-view'); 
+                if(adminView) adminView.classList.add('active-view'); 
+                window.switchAdminTab('create'); 
+            } else {
+                window.showCustomAlert("Error", "❌ Invalid credentials!", "❌"); 
+            }
+        };
+        
+        window.renderDashboard = function() {
+            let dbTests = window.globalActiveTests || []; 
+            let hidden = window.getHiddenTests(); 
+            let unifiedMap = new Map();
+            
+            dbTests.forEach(t => { if (!hidden.includes(t.code)) unifiedMap.set(t.code, t); });
+            
+            let localTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+            localTests.forEach(t => { if (!hidden.includes(t.code)) unifiedMap.set(t.code, t); });
+            
+            let sTests = Array.from(unifiedMap.values()); 
+            window.adminUnifiedTests = sTests;
+            
+            let list = document.getElementById('dashboard-list'); 
+            if(!list) return;
+
+            if (sTests.length === 0) { 
+                list.innerHTML = "<p style='text-align:center;color:var(--text-muted);'>No tests saved.</p>"; 
+                return; 
+            }
+            
+            let grp = {}; 
+            sTests.forEach(t => { 
+                let p = window.parseHack(t.topic); 
+                let b = p.board || t.exam || "General Exam"; 
+                if (!grp[b]) grp[b] = []; 
+                grp[b].push(t); 
+            });
+            
+            let h = "";
+            for (let b in grp) {
+                h += `<h3 style="background:var(--primary);color:white;padding:12px 16px;border-radius:var(--radius);margin-top:20px;">🏛️ ${b}</h3>`;
+                grp[b].forEach(t => {
+                    let p = window.parseHack(t.topic); 
+                    let cEx = t.exam || "Mock Test"; 
+                    let cSu = p.subcat || t.subject || t.sub || "Subject"; 
+                    let cCa = p.cat || "Mock Tests"; 
+                    let chapterTopic = p.topic || "";
+                    let isF = (t.isFree === true || String(t.isFree).toLowerCase() === "true"); 
+                    let pT = isF ? "Free" : "₹" + (t.price || 0);
+                    
+                    let sBtn = (t.isActive !== false) ? 
+                        `<button class="btn btn-success btn-sm" style="margin:0;width:auto;" onclick="window.toggleTestStatus('${t.code}',false)">🟢 Active</button>` : 
+                        `<button class="btn btn-outline btn-sm" style="margin:0;width:auto;" onclick="window.toggleTestStatus('${t.code}',true)">🔴 Inactive</button>`;
+                    
+                    let qC = p.qs || t.qs || 0; 
+                    if (!qC || qC === 0 || qC === "N/A") { 
+                        if (t.questions && Array.isArray(t.questions) && t.questions.length > 0) qC = t.questions.length; 
+                        else if (t.rawText) { let m = String(t.rawText).match(/!!\s*\d+\s*!/g); if (m) qC = m.length; } 
+                    }
+                    
+                    h += `
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-title">🎓 ${cEx} | ${cSu} (${t.code})</div>
+                                ${sBtn}
+                            </div>
+                            ${chapterTopic ? `<div class="test-subtitle">📖 ${chapterTopic}</div>` : ""}
+                            <div class="test-meta">
+                                <span class="badge">📂 ${cCa}</span>
+                                <span class="badge badge-primary">Qs: ${qC}</span>
+                                <span class="badge">${pT}</span>
+                                <span class="badge">+${t.marks||2}/-${t.neg||0}</span>
+                            </div>
+                            <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:8px;border:1px solid var(--border-color);font-size:11px;border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-main);margin-bottom:6px;">
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px;">
+                                <button class="btn btn-primary btn-sm" onclick="window.editTest('${t.code}')">✏️ Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button>
+                                <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('${t.link||(BASE_URL+'?test='+t.code)}');window.showCustomAlert('Copied','Link copied!','✅');">📋 Copy</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.adminDownloadPDF('${t.code}','q_only')">📝 Qs</button>
+                                <button class="btn btn-success btn-sm" onclick="window.adminDownloadPDF('${t.code}','q_ans')">✅ Qs+Ans</button>
+                                <button class="btn btn-primary btn-sm" onclick="window.adminDownloadPDF('${t.code}','full')">📚 Full</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            list.innerHTML = h;
+        };
+
+        window.toggleTestStatus = function(code, nS) {
+            let cleanCode = code.trim();
+            db.collection("tests").doc(cleanCode).update({
+                isActive: nS
+            }).then(() => {
+                let sT = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                let idx = sT.findIndex(x => x.code === cleanCode); 
+                if (idx >= 0) { 
+                    sT[idx].isActive = nS; 
+                    localStorage.setItem('myMockTests', JSON.stringify(sT)); 
+                } 
+                window.fetchActiveTests(); 
+            }).catch(err => {
+                window.showCustomAlert("Error", "Failed to update test status in Database.", "❌"); 
+            });
+        };
+
+        // 🔥 FETCH FROM FIREBASE 🔥
+        window.fetchTestForAdmin = function(code, action, mode) {
+            window.adminActionCode = code.trim();
+            window.adminActionMode = action;
+            window.adminPdfMode = mode;
+            window.showLoadingModal("Downloading full test data securely...<br><br><i>Wait just a second...</i>");
+            
+            db.collection("tests").doc(window.adminActionCode).get().then((doc) => {
+                if (doc.exists) {
+                    window.handleAdminTestLoad(doc.data());
+                } else {
+                    window.closeModal();
+                    window.showCustomAlert("Error", "Test not found on server!", "❌"); 
+                }
+            }).catch((error) => {
+                window.closeModal();
+                window.showCustomAlert("Network Error", "Failed to connect to Database.", "❌"); 
+            });
+        };
+
+        window.handleAdminTestLoad = function(data) {
+            window.closeModal();
+            
+            let raw = data.rawText || "";
+            if (!raw && data.questions && data.questions.length > 0) {
+                raw = data.questions.map((q, i) => {
+                    let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
+                    let qs = `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;
+                    let op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
+                    let an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;
+                    let ex = q.exp ? `!!!! ${String(q.exp).replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n` : "";
+                    return pa + qs + op + an + ex;
+                }).join('\n');
+                data.rawText = raw;
+            }
+            
+            data.isFetched = true;
+            
+            let sTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+            let eIdx = sTests.findIndex(t => t.code === data.code);
+            if (eIdx >= 0) { 
+                sTests[eIdx] = { ...sTests[eIdx], ...data }; 
+            } else { 
+                sTests.push(data); 
+            }
+            localStorage.setItem('myMockTests', JSON.stringify(sTests));
+            
+            let uIdx = window.adminUnifiedTests.findIndex(t => t.code === data.code);
+            if (uIdx >= 0) {
+                window.adminUnifiedTests[uIdx] = { ...window.adminUnifiedTests[uIdx], ...data };
+            } else {
+                window.adminUnifiedTests.push(data);
+            }
+            window.renderDashboard();
+
+            if (window.adminActionMode === 'edit') window.editTest(window.adminActionCode);
+            else if (window.adminActionMode === 'pdf') window.adminDownloadPDF(window.adminActionCode, window.adminPdfMode);
+        };
+
+        window.editTest = function(code) {
+            let t = window.adminUnifiedTests.find(x => x.code === code); 
+            if (!t) return;
+            
+            let raw = t.rawText || "";
+            if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
+                window.fetchTestForAdmin(code, 'edit', null); 
+                return; 
+            }
+            
+            if (!raw && t.questions && t.questions.length > 0) { 
+                raw = t.questions.map((q, i) => { 
+                    let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
+                    let qs = `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`; 
+                    let op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n'; 
+                    let an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`; 
+                    let ex = q.exp ? `!!!! ${String(q.exp).replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n` : ""; 
+                    return pa + qs + op + an + ex; 
+                }).join('\n'); 
+                t.rawText = raw; 
+            }
+            
+            let p = window.parseHack(t.topic);
+            
+            let aBoard = document.getElementById('a-board');
+            let aExam = document.getElementById('a-exam');
+            let aLogo = document.getElementById('a-logo');
+            let aSummary = document.getElementById('a-summary');
+            let aCat = document.getElementById('a-category');
+            let aCustomCat = document.getElementById('a-custom-cat');
+            let aSub = document.getElementById('a-sub');
+            let aTopic = document.getElementById('a-topic');
+            let aCode = document.getElementById('a-code');
+            let aMarks = document.getElementById('a-marks');
+            let aNeg = document.getElementById('a-neg');
+            let aTotTime = document.getElementById('a-tot-time');
+            let aQTime = document.getElementById('a-q-time');
+            let aPdfType = document.getElementById('a-pdf-type');
+            let aPrice = document.getElementById('a-price');
+            let aRaw = document.getElementById('a-rawdata');
+            let aQsCount = document.getElementById('a-qs-count');
+
+            if(aBoard) aBoard.value = p.board || t.exam || ""; 
+            if(aExam) aExam.value = t.exam || ""; 
+            if(aLogo) aLogo.value = p.logo || "";
+            if(aSummary) aSummary.value = p.summary || "";
+            
+            if(aCat) {
+                let opts = Array.from(aCat.options).map(o => o.value);
+                if (opts.includes(p.cat)) { 
+                    aCat.value = p.cat; 
+                    if(aCustomCat) aCustomCat.style.display = 'none'; 
+                } else { 
+                    aCat.value = "CUSTOM"; 
+                    if(aCustomCat) {
+                        aCustomCat.style.display = 'block'; 
+                        aCustomCat.value = p.cat; 
+                    }
+                }
+            }
+            
+            if(aSub) aSub.value = p.subcat || t.subject || t.sub || ""; 
+            if(aTopic) aTopic.value = p.topic || ""; 
+            if(aCode) aCode.value = t.code || ""; 
+            if(aMarks) aMarks.value = t.marks || 2; 
+            if(aNeg) aNeg.value = t.neg || 0; 
+            if(aTotTime) aTotTime.value = t.totTime || 0; 
+            if(aQTime) aQTime.value = t.qTime || 0;
+            
+            let isF = (t.isFree === true || String(t.isFree).toLowerCase() === "true"); 
+            if(aPdfType) aPdfType.value = isF ? "free" : "paid"; 
+            if (!isF && aPrice) aPrice.value = t.price || "";
+            
+            if(aRaw) aRaw.value = raw || ""; 
+            if(aQsCount) aQsCount.value = window.parseRawQuestions(raw || "").length;
+            
+            window.togglePriceBox(); 
+            window.switchAdminTab('create'); 
+            window.scrollTo(0, 0); 
+            
+            let btn = document.getElementById('btn-generate'); 
+            if(btn) {
+                btn.innerText = "🚀 Update Test"; 
+                btn.style.background = "#f59e0b";
+            }
+        };
+
+        window.deleteTest = function(code) {
+            let cleanCode = code.trim();
+            window.showCustomConfirm("Delete Test", `Delete <b>${cleanCode}</b> permanently?`, () => {
+                
+                // Delete from Firebase
+                db.collection("tests").doc(cleanCode).delete().then(() => {
+                    let sT = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                    sT = sT.filter(x => x.code !== cleanCode); 
+                    localStorage.setItem('myMockTests', JSON.stringify(sT));
+                    
+                    let hidden = window.getHiddenTests(); 
+                    if (!hidden.includes(cleanCode)) hidden.push(cleanCode); 
+                    localStorage.setItem('mockSarthiHidden', JSON.stringify(hidden));
+                    
+                    window.globalActiveTests = window.globalActiveTests.filter(x => x.code !== cleanCode); 
+                    window.adminUnifiedTests = window.adminUnifiedTests.filter(x => x.code !== cleanCode);
+                    
+                    window.renderDashboard(); 
+                    window.showCustomAlert("Deleted", `Test ${cleanCode} deleted successfully.`, "🗑️");
+                }).catch((error) => {
+                    window.showCustomAlert("Error", "Failed to delete: " + error.message, "❌");
+                });
+                
+            }, "🗑️");
+        };
+
+        // 🔥 SAVE DIRECTLY TO FIREBASE 🔥
+        window.generateAndSaveLink = function() {
+            let aBoard = document.getElementById('a-board');
+            let aExam = document.getElementById('a-exam');
+            let aLogo = document.getElementById('a-logo');
+            let aSub = document.getElementById('a-sub');
+            let aTopicElem = document.getElementById('a-topic');
+            let aCodeElem = document.getElementById('a-code');
+            let aSummaryElem = document.getElementById('a-summary');
+            let aMarks = document.getElementById('a-marks');
+            let aNeg = document.getElementById('a-neg');
+            let aTotTime = document.getElementById('a-tot-time');
+            let aQTime = document.getElementById('a-q-time');
+            let aPdfType = document.getElementById('a-pdf-type');
+            let aPriceElem = document.getElementById('a-price');
+            let aCatElem = document.getElementById('a-category');
+            let aCustomCatElem = document.getElementById('a-custom-cat');
+            let aRawDataElem = document.getElementById('a-rawdata');
+            let btn = document.getElementById('btn-generate');
+
+            let eBoard = aBoard ? aBoard.value : "General Exam"; 
+            let eName = aExam ? aExam.value : "Mock Test"; 
+            let eLogo = aLogo ? aLogo.value : ""; 
+            let eSub = aSub ? aSub.value : "Subject"; 
+            let eTopicRaw = aTopicElem ? aTopicElem.value : ""; 
+            
+            let eCode = aCodeElem ? aCodeElem.value.trim() : "";
+            
+            let eSummaryRaw = aSummaryElem ? aSummaryElem.value : "";
+            eSummaryRaw = eSummaryRaw.replace(/\|\|\|/g, ''); 
+            let eSummary = eSummaryRaw.replace(/\n/g, '<br>');
+            
+            if (!eCode) { 
+                eCode = "T-" + Math.floor(Math.random() * 99999); 
+                if(aCodeElem) aCodeElem.value = eCode; 
+            }
+            
+            let eMarks = aMarks ? parseFloat(aMarks.value) || 2 : 2; 
+            let eNeg = aNeg ? parseFloat(aNeg.value) || 0 : 0; 
+            let tTime = aTotTime ? parseInt(aTotTime.value) || 0 : 0; 
+            let qTime = aQTime ? parseInt(aQTime.value) || 0 : 0; 
+            
+            let pdfType = aPdfType ? aPdfType.value : "free";
+            let isFree = (pdfType === "free"); 
+            let ePrice = isFree ? "Free" : (aPriceElem ? (aPriceElem.value || "49") : "49"); 
+            
+            let eKey = "ANK"; 
+            let eCategory = aCatElem ? aCatElem.value : "Mock Tests";
+            
+            if (eCategory === "CUSTOM" && aCustomCatElem) {
+                eCategory = aCustomCatElem.value || "Custom Category";
+            }
+            
+            let rawText = aRawDataElem ? aRawDataElem.value : ""; 
+            if (!rawText.trim()) return window.showCustomAlert("Empty Box", "Paste questions!", "⚠️");
+            
+            let parsedQs = window.parseRawQuestions(rawText); 
+            if (parsedQs.length === 0) return window.showCustomAlert("Format Error", "❌ Incorrect format.", "⚠️");
+            
+            let fQs = window.updateQsCount(); 
+            if (fQs === 0) fQs = parsedQs.length;
+            
+            let finalTopicRaw = eTopicRaw || eSub || "Test"; 
+            let eTopic = finalTopicRaw + "|||QS:" + fQs + "|||CAT:" + eCategory + "|||LOGO:" + eLogo + "|||BOARD:" + eBoard + "|||EXAM:" + eName + "|||SUBCAT:" + eSub + "|||SUMMARY:" + eSummary;
+            
+            let fObj = { 
+                exam: eName, category: eCategory, logo: eLogo, subject: eSub, sub: eSub, 
+                topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, 
+                qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, 
+                qs: fQs, rawText: rawText, isActive: true 
+            };
+            
+            if(btn) {
+                btn.innerText = "⏳ Saving to Firebase..."; 
+                btn.disabled = true;
+            }
+            
+            db.collection("tests").doc(eCode).set(fObj).then(() => {
+                if(btn) {
+                    btn.innerText = "🚀 Generate / Update Test"; 
+                    btn.disabled = false; 
+                    btn.style.background = "var(--primary)";
+                }
+                
+                if(aSub) aSub.value = ""; 
+                if(aTopicElem) aTopicElem.value = ""; 
+                if(aCodeElem) aCodeElem.value = ""; 
+                if(aRawDataElem) aRawDataElem.value = ""; 
+                
+                let aQsCountElem = document.getElementById('a-qs-count');
+                if(aQsCountElem) aQsCountElem.value = "";
+                
+                if(aSummaryElem) aSummaryElem.value = "";
+                
+                let tLink = BASE_URL + "?test=" + eCode; 
+                
+                let sTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                let eIdx = sTests.findIndex(t => t.code === eCode);
+                
+                let tObj = { 
+                    ...fObj,
+                    link: tLink, 
+                    date: new Date().toLocaleDateString()
+                };
+                
+                if (eIdx >= 0) sTests[eIdx] = tObj; else sTests.push(tObj); 
+                localStorage.setItem('myMockTests', JSON.stringify(sTests));
+                
+                let uIdx = window.adminUnifiedTests.findIndex(t => t.code === eCode); 
+                if (uIdx >= 0) window.adminUnifiedTests[uIdx] = tObj; else window.adminUnifiedTests.push(tObj);
+                
+                let gIdx = window.globalActiveTests.findIndex(t => t.code === eCode);
+                if (gIdx >= 0) window.globalActiveTests[gIdx] = tObj; else window.globalActiveTests.push(tObj);
+                
+                let generatedLink = document.getElementById('generatedLink');
+                let linkContainer = document.getElementById('linkContainer');
+                if(generatedLink) generatedLink.value = tLink; 
+                if(linkContainer) linkContainer.style.display = 'block'; 
+                
+                window.showCustomAlert("Success", `✅ Saved directly to Firebase! (${fQs} Qs)`, "🎉"); 
+                window.initQuickFill(); 
+                
+                let adminManage = document.getElementById('admin-manage-section');
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard();
+            }).catch((error) => { 
+                window.showCustomAlert("Error", error.message, "❌"); 
+                if(btn) {
+                    btn.innerText = "🚀 Generate / Update Test"; 
+                    btn.disabled = false; 
+                    btn.style.background = "var(--primary)"; 
+                }
+            });
+        };
+
+        window.adminDownloadPDF = function(code, mode) {
+            let t = window.adminUnifiedTests.find(x => x.code === code); 
+            if (!t) return window.showCustomAlert("Error", "Data not found!", "❌");
+            
+            let raw = t.rawText || "";
+            
+            if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
+                window.fetchTestForAdmin(code, 'pdf', mode); 
+                return; 
+            }
+            
+            if (!raw && t.questions && t.questions.length > 0) { 
+                raw = t.questions.map((q, i) => { 
+                    let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
+                    let qs = `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`; 
+                    let op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n'; 
+                    let an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`; 
+                    let ex = q.exp ? `!!!! ${String(q.exp).replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n` : ""; 
+                    return pa + qs + op + an + ex; 
+                }).join('\n'); 
+                t.rawText = raw; 
+            }
+            
+            if (!raw) return window.showCustomAlert("Empty Test", "No questions to print!", "❌");
+            
+            let pQs = window.parseRawQuestions(raw); 
+            if (!pQs || pQs.length === 0) return window.showCustomAlert("Parse Error", "No valid questions.", "❌");
+            
+            window.examData = { exam: t.exam, subject: t.subject || t.sub || "Subject", topic: t.topic, code: t.code, questions: pQs }; 
+            
+            let customName = window.studentInfo.name || "अंकुश कुमार S/O मनोज कुमार";
+            window.userAnswers = []; 
+            pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); }); 
+            window.executePDFPrint(customName, mode);
         };
 
     </script>
