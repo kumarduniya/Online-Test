@@ -1698,7 +1698,7 @@
         }
 
         /* ============================================================
-           PRINT
+           PRINT (Fixed to keep #print-area visible outside container)
            ============================================================ */
         body.print-pdf {
             background: #fff !important;
@@ -1716,6 +1716,10 @@
             display: none;
             background: #fff;
             color: #000;
+        }
+        body.print-pdf #print-area {
+            display: block !important;
+            width: 100% !important;
         }
         @media print {
             @page {
@@ -1740,11 +1744,13 @@
             }
             #print-area {
                 display: block !important;
+                position: static !important;
                 width: 100% !important;
                 font-family: Arial, sans-serif !important;
             }
             #print-area * {
                 visibility: visible !important;
+                position: relative;
             }
             .watermark {
                 position: fixed !important;
@@ -1781,6 +1787,17 @@
             .pdf-footer-strip a {
                 color: #fff !important;
                 text-decoration: none !important;
+            }
+            table.pdf-main-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: transparent !important;
+                border: none !important;
+            }
+            table.pdf-main-table th,
+            table.pdf-main-table td {
+                padding: 0 !important;
+                border: none !important;
             }
             .print-q {
                 margin-bottom: 10px !important;
@@ -2212,9 +2229,7 @@
                 </div>
             </div>
         </div>
-
-        <div id="print-area"></div>
-    </div>
+    </div> <div id="print-area"></div>
 
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
@@ -2227,7 +2242,7 @@
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INITIALIZATION
            ========================================================================== */
-        // 🔥 तुम्हारा नया 100% सही URL 🔥
+        // 🔥 Tumhara exact working URL 🔥
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         const BASE_URL = "https://ankushonlinetest.netlify.app/";
         const HIDDEN_TESTS = [];
@@ -2303,7 +2318,7 @@
             localStorage.setItem('mockSarthiTheme', isDark ? 'dark' : 'light');
             let toggleBtn = document.querySelector('.theme-toggle');
             if(toggleBtn) {
-                toggleBtn.innerText = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+                toggleBtn.innerText = isDark ? '☀️ Light' : '🌙 Dark';
             }
         };
 
@@ -2542,7 +2557,7 @@
         };
 
         /* ==========================================================================
-           4. FIREBASE AUTHENTICATION, OTP & LOGIN LOGIC (BUGS 100% FIXED)
+           4. FIREBASE AUTHENTICATION, OTP & LOGIN LOGIC
            ========================================================================== */
         window.showPremiumModal = function() {
             let msg = `To unlock ALL Premium Tests & PDFs, upgrade to PRO.<br><br><b>UPI:</b><br><span style="color:var(--success);font-size:18px;">8273684939@paytm</span><br><br>Send screenshot on WhatsApp (8273684939) to activate!`;
@@ -2562,14 +2577,13 @@
                 window.generateCaptcha();
                 document.getElementById('reg-otp-field').style.display = 'none';
                 
-                // 🔥 THE HELPFUL BLUE MESSAGE FOR STUDENTS 🔥
                 let otpField = document.getElementById('reg-otp-field');
                 if(otpField) {
                     let helperMsg = document.getElementById('otp-helper-msg');
                     if(!helperMsg) {
                         helperMsg = document.createElement('p');
                         helperMsg.id = 'otp-helper-msg';
-                        helperMsg.style = "color:#1a56db; font-size:12px; font-weight:700; margin-top:10px; background:#f0f4ff; padding:8px; border-radius:6px; border:1px solid #1a56db; text-align:center;";
+                        helperMsg.style = "color:var(--primary); font-size:12px; font-weight:700; margin-top:10px; background:var(--bg-subtle); padding:8px; border-radius:6px; border:1px solid var(--border-color); text-align:center;";
                         helperMsg.innerText = "Bhai, email aane mein 1-2 minute lag sakte hain, kripya page refresh na karein.";
                         otpField.insertBefore(helperMsg, otpField.firstChild);
                     }
@@ -2577,7 +2591,7 @@
 
                 let btn = document.getElementById('btn-send-otp');
                 if(btn) {
-                    btn.innerText = "Send Verification OTP 📩";
+                    btn.innerText = "Send OTP 📩";
                     btn.disabled = false;
                 }
             }
@@ -2622,7 +2636,6 @@
             }
             
             let btn = document.getElementById('btn-send-otp'); 
-            
             if(btn && btn.disabled === true) return; 
 
             if(btn) {
@@ -2630,7 +2643,6 @@
                 btn.disabled = true;
             }
             
-            // 🔥 THE DESI JUGAD: SESSION STORAGE TO LOCK OTP 🔥
             let storedData = JSON.parse(sessionStorage.getItem('sessionRegData') || '{}');
             let otp;
             if(storedData.otp && storedData.email === email) {
@@ -2648,7 +2660,7 @@
             formData.append('action', 'sendOTP');
             formData.append('emails', email);
             formData.append('subject', 'MockSarthi - Registration OTP');
-            formData.append('body', '<div style="font-family:Arial;padding:20px;border:1px solid #ccc;border-radius:10px;"><h2>MockSarthi Verification</h2><p>Hello <b>' + name + '</b>,</p><p>Your Verification OTP is:</p><h1 style="color:#1a56db;letter-spacing:5px;background:#f0f4ff;padding:10px;text-align:center;border-radius:5px;">' + otp + '</h1><p>Do not share this code.</p></div>');
+            formData.append('body', '<div style="font-family:Arial;padding:20px;border:1px solid #ccc;border-radius:10px;"><h2>MockSarthi Verification</h2><p>Hello <b>' + name + '</b>,</p><p>Your Verification OTP is:</p><h1 style="color:#0f2b5c;letter-spacing:5px;background:#f0f4fa;padding:10px;text-align:center;border-radius:5px;">' + otp + '</h1><p>Do not share this code.</p></div>');
             
             let otpInput = document.getElementById('reg-otp-input');
             if(otpInput) otpInput.value = ""; 
@@ -2692,7 +2704,7 @@
             formData.append('action', 'sendOTP');
             formData.append('emails', email);
             formData.append('subject', 'MockSarthi - Resend OTP');
-            formData.append('body', '<div style="font-family:Arial;padding:20px;border:1px solid #ccc;border-radius:10px;"><h2>MockSarthi Verification</h2><p>Hello <b>' + name + '</b>,</p><p>Your OTP for registration is:</p><h1 style="color:#1a56db;letter-spacing:5px;background:#f0f4ff;padding:10px;text-align:center;border-radius:5px;">' + otp + '</h1><p>Do not share this code.</p></div>');
+            formData.append('body', '<div style="font-family:Arial;padding:20px;border:1px solid #ccc;border-radius:10px;"><h2>MockSarthi Verification</h2><p>Hello <b>' + name + '</b>,</p><p>Your OTP for registration is:</p><h1 style="color:#0f2b5c;letter-spacing:5px;background:#f0f4fa;padding:10px;text-align:center;border-radius:5px;">' + otp + '</h1><p>Do not share this code.</p></div>');
             
             fetch(SCRIPT_URL, { 
                 method: 'POST', 
@@ -2713,14 +2725,12 @@
         };
         
         window.handleVerifyAndRegister = function() {
-            // 🔥 THE ULTIMATE OTP BUG FIX: STRIPPING ALL INVISIBLE SPACES & NON-DIGIT CHARS 🔥
             let enteredOtpInput = document.getElementById('reg-otp-input');
             let enteredOtpRaw = enteredOtpInput ? enteredOtpInput.value : "";
             
             let storedData = JSON.parse(sessionStorage.getItem('sessionRegData') || '{}');
             let targetOtpRaw = window.tempAuthData.otp || storedData.otp || "";
             
-            // Only keep digits 0-9 to avoid keyboard auto-spacing or unicode issues
             let enteredOtp = String(enteredOtpRaw).replace(/[^0-9]/g, ''); 
             let actualOtp = String(targetOtpRaw).replace(/[^0-9]/g, '');
             
@@ -2729,7 +2739,6 @@
             }
             
             if (enteredOtp !== actualOtp && enteredOtp !== "123456") { 
-                // Only showing actual OTP in error for testing, will remove in final production
                 return window.showCustomAlert("Error", "Invalid OTP!<br><br>System expected: " + actualOtp + "<br>You entered: " + enteredOtp, "⚠️");
             }
             
@@ -2758,7 +2767,7 @@
                     localStorage.setItem('mockSarthiUser', JSON.stringify(userData)); 
                     window.studentInfo = userData; 
                     
-                    sessionStorage.removeItem('sessionRegData'); // Cleanup
+                    sessionStorage.removeItem('sessionRegData');
                     
                     window.showCustomAlert("Welcome!", "Account created successfully! 🎉", "🎓"); 
                     setTimeout(window.checkPendingTestOrGoHome, 1500);
@@ -2869,7 +2878,7 @@
             if(localStorage.getItem('mockSarthiTheme') === 'dark') {
                 document.body.classList.add('dark-mode');
                 let toggleBtn = document.querySelector('.theme-toggle');
-                if(toggleBtn) toggleBtn.innerText = '☀️ Light Mode';
+                if(toggleBtn) toggleBtn.innerText = '☀️ Light';
             }
 
             clearInterval(window.globalTimer); 
@@ -2901,9 +2910,9 @@
                     if (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true) {
                         let badge = document.getElementById('premium-badge'); 
                         if(badge) {
-                            badge.innerText = "⭐ PRO ACCOUNT"; 
-                            badge.style.background = "#f59e0b"; 
-                            badge.style.color = "#000";
+                            badge.innerText = "⭐ PRO"; 
+                            badge.style.background = "var(--accent-gradient)"; 
+                            badge.style.color = "var(--primary-dark)";
                         }
                     }
                 } catch (e) {}
@@ -3008,9 +3017,6 @@
             if(specificTest) specificTest.style.display = 'block';
             
             window.toggleAdminLock(false);
-            
-            let pdfBox = document.getElementById('direct-pdf-box');
-            if (pdfBox) { pdfBox.style.display = 'none'; }
 
             let headExam = document.getElementById('head-exam-name');
             let entryName = document.getElementById('test-entry-name');
@@ -3040,7 +3046,7 @@
                 startBtnHTML += `<button class="btn btn-success" style="margin-top:0;" onclick="window.startExam(false)">🚀 Start Test Now</button>`;
                 let savedProg = localStorage.getItem('progress_' + window.examData.code);
                 if (savedProg) { 
-                    startBtnHTML += `<button class="btn btn-primary" style="margin-top:10px; background:#0891b2 !important; color:white !important;" onclick="window.resumeExam()">⏯️ Resume Saved Exam</button>`; 
+                    startBtnHTML += `<button class="btn btn-primary" style="margin-top:10px; background:#0891b2 !important; color:white !important;" onclick="window.resumeExam()">⏯️ Resume Saved</button>`; 
                 }
                 if(actionArea) actionArea.innerHTML = startBtnHTML;
             } else {
@@ -3138,6 +3144,7 @@
             else window.showExamsView(); 
         };
 
+        // 🔥 Fixed: Home Page Counts and "View Tests" buttons injected accurately
         window.showExamsView = function() {
             let breadcrumb = document.getElementById('breadcrumb-container');
             if(breadcrumb) breadcrumb.style.display = 'none'; 
@@ -3150,6 +3157,7 @@
             if(!list) return;
             
             list.style.display = 'flex';
+            list.style.justifyContent = 'center';
             
             let boards = [...new Set(allTests.map(t => window.parseHack(t.topic).board || t.exam || "General Exam"))]; 
             let examLogos = {};
@@ -3161,14 +3169,23 @@
             });
             
             if (boards.length === 0) { 
-                list.innerHTML = "<p style='width:100%;text-align:center;color:var(--text-muted);'>No tests available right now.</p>"; 
+                list.innerHTML = "<p style='width:100%;text-align:center;color:var(--text-muted);padding:30px 0;'>No tests available right now.</p>"; 
                 return; 
             }
             
             let html = '<div class="exam-grid">';
             boards.forEach(bName => { 
-                let iconHtml = examLogos[bName] ? `<img src="${examLogos[bName]}" class="exam-icon-img" alt="${bName}">` : `<div class="exam-icon-img" style="font-size:38px;display:flex;align-items:center;justify-content:center;color:var(--gray-400);">🏛️</div>`; 
-                html += `<div class="exam-card" onclick="window.showSubExamsView('${bName.replace(/'/g,"\\'")}')"><div class="exam-logo">${iconHtml}</div><h4 class="exam-name">${bName}</h4></div>`; 
+                let count = allTests.filter(t => (window.parseHack(t.topic).board || t.exam || "General Exam") === bName).length;
+                let iconHtml = examLogos[bName] ? `<img src="${examLogos[bName]}" alt="${bName}">` : `<span class="fallback-icon">🏛️</span>`; 
+                html += `
+                    <div class="exam-card" onclick="window.showSubExamsView('${bName.replace(/'/g,"\\'")}')">
+                        <div class="exam-logo">${iconHtml}</div>
+                        <div class="exam-name">${bName}</div>
+                        <div class="exam-subtitle">${count} Test${count>1?'s':''}</div>
+                        <div class="exam-stats"><span>📚 ${count} Tests</span></div>
+                        <button class="btn btn-primary btn-sm">View Tests →</button>
+                    </div>
+                `; 
             });
             html += '</div>'; 
             list.innerHTML = html;
@@ -3194,9 +3211,21 @@
             let boardTests = allTests.filter(t => (window.parseHack(t.topic).board || t.exam || "General Exam") === boardName); 
             let subExams = [...new Set(boardTests.map(t => t.exam || boardName))];
             
+            if (subExams.length === 0) {
+                list.innerHTML = "<p style='width:100%;text-align:center;color:var(--text-muted);padding:30px 0;'>No exams found under this board.</p>";
+                return;
+            }
+
             let html = '<div class="sub-exam-grid">'; 
             subExams.forEach(subEx => { 
-                html += `<div class="exam-card-l2" onclick="window.showAppLayout('${boardName.replace(/'/g,"\\'")}','${subEx.replace(/'/g,"\\'")}')"><div class="exam-card-l2-icon">🎓</div><h4 class="exam-card-l2-title">${subEx}</h4></div>`; 
+                let count = boardTests.filter(t => (t.exam || boardName) === subEx).length;
+                html += `
+                    <div class="exam-card-l2" onclick="window.showAppLayout('${boardName.replace(/'/g,"\\'")}','${subEx.replace(/'/g,"\\'")}')">
+                        <div class="exam-card-l2-icon">🎓</div>
+                        <div class="exam-card-l2-title">${subEx}</div>
+                        <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${count} tests</div>
+                    </div>
+                `; 
             }); 
             html += '</div>'; 
             list.innerHTML = html;
@@ -3235,7 +3264,13 @@
                 let icon = icons[cat] || "📁"; 
                 let isActive = (cat === activeCat) ? "active" : ""; 
                 let testCount = examTests.filter(t => window.parseHack(t.topic).cat === cat).length; 
-                sbHtml += `<div class="cat-item ${isActive}" onclick="window.showAppLayout('${boardName.replace(/'/g,"\\'")}','${subExamName.replace(/'/g,"\\'")}','${cat.replace(/'/g,"\\'")}')"><div class="cat-icon">${icon}</div><div class="cat-label">${cat}</div><div class="cat-count">${testCount} tests</div></div>`; 
+                sbHtml += `
+                    <div class="cat-item ${isActive}" onclick="window.showAppLayout('${boardName.replace(/'/g,"\\'")}','${subExamName.replace(/'/g,"\\'")}','${cat.replace(/'/g,"\\'")}')">
+                        <div class="cat-icon">${icon}</div>
+                        <div class="cat-label">${cat}</div>
+                        <div class="cat-count">${testCount} tests</div>
+                    </div>
+                `; 
             });
             sbHtml += '</div>';
             
@@ -3254,13 +3289,19 @@
             
             if (activeCat === "Chapter Tests") {
                 let subjects = [...new Set(catTests.map(t => window.parseHack(t.topic).subcat || t.subject || t.sub || "General Studies"))];
-                html = `<h3 style="margin:0 0 15px 0;color:var(--primary);border-bottom:2px solid var(--border-color);padding-bottom:10px;">Select Subject</h3><div class="subject-grid">`;
+                html = `<h3 style="margin:0 0 15px 0;color:var(--primary);border-bottom:2px solid var(--border-color);padding-bottom:10px;">📚 Select Subject</h3><div class="subject-grid">`;
                 
-                if (subjects.length === 0) html += `<p style="color:var(--text-muted);width:100%;">No subjects added yet.</p>`;
+                if (subjects.length === 0) html += `<p style="color:var(--text-muted);width:100%;text-align:center;padding:20px 0;">No subjects added yet.</p>`;
                 
                 subjects.forEach(sub => { 
                     let count = catTests.filter(t => (window.parseHack(t.topic).subcat || t.subject || t.sub || "General Studies") === sub).length; 
-                    html += `<div class="folder-card" onclick="window.renderDirectTests('${boardName.replace(/'/g,"\\'")}','${subExamName.replace(/'/g,"\\'")}','${activeCat.replace(/'/g,"\\'")}','${sub.replace(/'/g,"\\'")}')"><div class="folder-icon">📚</div><h4 class="folder-title" style="font-size:14px;">${sub}</h4><p style="margin:5px 0 0 0;font-size:11px;color:var(--text-muted);">${count} Tests</p></div>`; 
+                    html += `
+                        <div class="folder-card" onclick="window.renderDirectTests('${boardName.replace(/'/g,"\\'")}','${subExamName.replace(/'/g,"\\'")}','${activeCat.replace(/'/g,"\\'")}','${sub.replace(/'/g,"\\'")}')">
+                            <div class="folder-icon">📚</div>
+                            <div class="folder-title">${sub}</div>
+                            <div class="folder-count">${count} tests</div>
+                        </div>
+                    `; 
                 }); 
                 
                 html += '</div>'; 
@@ -3303,10 +3344,9 @@
             
             testsToRender.forEach(t => {
                 let p = window.parseHack(t.topic); 
-                let currentSub = p.subcat || t.subject || t.sub || "General"; 
+                let currentSub = p.subcat || t.subject || t.sub || "Test"; 
                 let isFreeStatus = (t.isFree === true || String(t.isFree).toLowerCase() === "true"); 
                 let priceText = isFreeStatus ? "Free" : "₹" + t.price; 
-                let displayTopic = p.topic || t.subject || "Test"; 
                 let qsCount = p.qs || t.qs || 0;
                 
                 if (!qsCount || qsCount === 0 || qsCount === "N/A") { 
@@ -3320,36 +3360,36 @@
                 
                 let attemptHtml = "";
                 if(attemptedRecords[t.code] !== undefined) {
-                    attemptHtml = `<div style="color:var(--success); font-weight:bold; font-size:12px; margin-bottom:5px;">✅ Attempted (Score: ${attemptedRecords[t.code]})</div>`;
+                    attemptHtml = `<div style="color:var(--success); font-weight:700; font-size:12px; margin-bottom:4px;">✅ Attempted (${attemptedRecords[t.code]})</div>`;
                 }
 
                 let summaryHtml = "";
                 if (p.summary && p.summary.trim() !== "") {
                     let safeSumm = encodeURIComponent(p.summary);
-                    summaryHtml = `<button class="btn btn-outline btn-sm" style="margin:0 0 8px 0; width:100%; font-weight:700;" data-summary="${safeSumm}" onclick="window.showTestSummary(this)">📑 View Summary (Topics)</button>`;
+                    summaryHtml = `<button class="btn btn-outline btn-sm" style="margin:0 0 6px 0; width:100%; font-weight:700;" data-summary="${safeSumm}" onclick="window.showTestSummary(this)">📑 View Summary</button>`;
                 }
 
                 let actionBtn = (isFreeStatus || isPremiumUser) ? 
                     `<button class="btn btn-primary btn-sm" style="width:100%;" onclick="window.location.href='?test=${t.code}'">📝 Give Test</button>` : 
                     `<button class="btn btn-warning btn-sm" style="width:100%;" onclick="window.showPremiumModal()">🔒 Unlock PRO</button>`;
                 
-                html += `<div class="test-card" style="width:100%; margin-bottom:0; display:flex; flex-direction:column; justify-content:space-between;">
-                            <div>
-                                <h4 class="test-title" style="margin:0 0 4px 0;">${currentSub}</h4>
-                                <p style="margin:0 0 8px 0;font-size:11px;color:var(--text-muted);"><b>${activeCat}</b> ${displayTopic?"("+displayTopic+")":""}</p>
-                                ${attemptHtml}
-                                <div class="test-meta">
-                                    <span class="badge">Code: ${t.code}</span>
-                                    <span class="badge">⏱️ ${t.totTime||t.time||0} Min</span>
-                                    <span class="badge badge-primary">Qs: ${qsCount}</span>
-                                    <span class="badge">${priceText}</span>
-                                </div>
-                            </div>
-                            <div>
-                                ${summaryHtml}
-                                ${actionBtn}
-                            </div>
-                        </div>`;
+                html += `
+                    <div class="test-card">
+                        <div class="test-header">
+                            <div class="test-title">${currentSub}</div>
+                            <div><span class="badge">${t.code}</span></div>
+                        </div>
+                        <div class="test-meta">
+                            <span class="badge">📂 ${activeCat}</span>
+                            <span class="badge">⏱ ${t.totTime||t.time||0} Min</span>
+                            <span class="badge badge-primary">Qs: ${qsCount}</span>
+                            <span class="badge">${priceText}</span>
+                        </div>
+                        ${attemptHtml}
+                        ${summaryHtml}
+                        ${actionBtn}
+                    </div>
+                `;
             }); 
             
             html += '</div>'; 
@@ -3548,7 +3588,6 @@
             if(newLogo) newLogo.value = logo || ""; 
         };
 
-        // 🔥 Image Upload Setup 🔥
         window.uploadImageToFirebase = function(inputId, targetInputId) {
             let fileInput = document.getElementById(inputId);
             if (!fileInput || !fileInput.files[0]) return;
@@ -3727,7 +3766,8 @@
                         else if (t.rawText) { let m = String(t.rawText).match(/!!\s*\d+\s*!/g); if (m) qC = m.length; } 
                     }
                     
-                    h += `<div class="test-card">
+                    h += `
+                        <div class="test-card">
                             <div class="test-header">
                                 <div class="test-title">🎓 ${cEx} | ${cSu} (${t.code})</div>
                                 ${sBtn}
@@ -3736,18 +3776,19 @@
                                 <span class="badge">📂 ${cCa}</span>
                                 <span class="badge badge-primary">Qs: ${qC}</span>
                                 <span class="badge">${pT}</span>
-                                <span class="badge">M/N: +${t.marks||2}/-${t.neg||0}</span>
+                                <span class="badge">+${t.marks||2}/-${t.neg||0}</span>
                             </div>
-                            <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:6px;border:1px solid var(--border-color);font-size:11px;margin-bottom:6px;border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-main);">
-                            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px;">
-                                <button class="btn btn-primary btn-sm" style="margin:0;width:auto;" onclick="window.editTest('${t.code}')">✏️ Edit</button>
-                                <button class="btn btn-danger btn-sm" style="margin:0;width:auto;" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button>
-                                <button class="btn btn-outline btn-sm" style="margin:0;width:auto;" onclick="navigator.clipboard.writeText('${t.link||(BASE_URL+'?test='+t.code)}');window.showCustomAlert('Copied','Link copied!','✅');">📋 Copy</button>
-                                <button class="btn btn-danger btn-sm" style="margin:0;width:auto;" onclick="window.adminDownloadPDF('${t.code}','q_only')">📝 Qs</button>
-                                <button class="btn btn-success btn-sm" style="margin:0;width:auto;" onclick="window.adminDownloadPDF('${t.code}','q_ans')">✅ Qs+Ans</button>
-                                <button class="btn btn-primary btn-sm" style="margin:0;width:auto;" onclick="window.adminDownloadPDF('${t.code}','full')">📚 Full</button>
+                            <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:8px;border:1px solid var(--border-color);font-size:11px;border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-main);margin-bottom:6px;">
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px;">
+                                <button class="btn btn-primary btn-sm" onclick="window.editTest('${t.code}')">✏️ Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button>
+                                <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('${t.link||(BASE_URL+'?test='+t.code)}');window.showCustomAlert('Copied','Link copied!','✅');">📋 Copy</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.adminDownloadPDF('${t.code}','q_only')">📝 Qs</button>
+                                <button class="btn btn-success btn-sm" onclick="window.adminDownloadPDF('${t.code}','q_ans')">✅ Qs+Ans</button>
+                                <button class="btn btn-primary btn-sm" onclick="window.adminDownloadPDF('${t.code}','full')">📚 Full</button>
                             </div>
-                        </div>`;
+                        </div>
+                    `;
                 });
             }
             list.innerHTML = h;
