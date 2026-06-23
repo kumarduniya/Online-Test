@@ -119,13 +119,21 @@
         .exam-card .exam-stats span { background: var(--bg-subtle); padding: 2px 12px; border-radius: 50px; font-weight: 600; }
         .exam-card .btn { width: 100%; padding: 8px; font-size: 12px; border-radius: var(--radius); }
 
-        /* Test Card (Modified for progress line) */
+        /* Test Card */
         .test-card { background: var(--bg-card); border: 1px solid var(--border-color); border-left: 5px solid var(--accent); padding: 18px 20px; margin-bottom: 14px; border-radius: var(--radius); box-shadow: var(--shadow-sm); transition: var(--transition); display: flex; flex-direction: column; justify-content: space-between; }
         .test-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
         .test-card .test-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 2px; }
         .test-card .test-title { font-size: 15px; font-weight: 700; color: var(--primary); margin: 0; }
         .test-card .test-subtitle { font-size: 12px; font-weight: 600; color: var(--text-muted); margin: 0 0 8px 0; }
         .test-card .test-meta { font-size: 11px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+        
+        /* Modifying history card layout */
+        .hist-card-layout { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+        .hist-left { flex: 1; min-width: 250px; }
+        .hist-right { display: flex; align-items: center; gap: 10px; }
+        .hist-details { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
+        .hist-details b { color: var(--text-main); }
+        
         .badge { background: var(--bg-subtle); padding: 3px 12px; border-radius: 50px; font-size: 10px; font-weight: 600; color: var(--text-muted); display: inline-block; border: 1px solid var(--border-color); }
         .badge-primary { background: var(--primary); color: #fff; border: none; }
         
@@ -327,6 +335,9 @@
             .flex-row .form-group { min-width: 120px; }
             .auth-box { padding: 24px 18px; margin: 16px auto; }
             .modal-box { padding: 24px 18px; }
+            
+            .hist-card-layout { flex-direction: column; align-items: flex-start; }
+            .hist-right { width: 100%; justify-content: flex-end; }
         }
         @media (max-width:480px) {
             .exam-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -336,7 +347,7 @@
         }
 
         /* ============================================================
-           PRINT PDF ENGINE (RESTORED EXACTLY FROM INDEX 6)
+           PRINT PDF ENGINE (Perfect Pagination Layout)
            ============================================================ */
         body.print-pdf {
             background: #fff !important;
@@ -344,7 +355,6 @@
             padding: 0 !important;
         }
         
-        /* HIDDEN DURING PRINT */
         body.print-pdf #main-ui-container,
         body.print-pdf #top-sticky-wrapper,
         body.print-pdf .fullscreen-overlay,
@@ -353,7 +363,6 @@
             display: none !important;
         }
 
-        /* ONLY PRINT AREA VISIBLE */
         #print-area {
             display: none;
             background: #fff;
@@ -428,7 +437,7 @@
             }
             
             .pdf-header-strip {
-                background: #1a56db !important; /* Fixed index 6 color mapping */
+                background: #1a56db !important;
                 padding: 10px 16px !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
@@ -438,7 +447,7 @@
             }
             
             .pdf-footer-strip {
-                background: #1a56db !important; /* Fixed index 6 color mapping */
+                background: #1a56db !important;
                 padding: 10px 16px !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
@@ -452,14 +461,17 @@
                 text-decoration: none !important;
             }
             
+            /* The real magic for avoiding middle-page breaks and blank gaps */
             .print-q {
-                margin-bottom: 10px !important;
+                margin-bottom: 12px !important;
                 page-break-inside: avoid !important;
-                border-bottom: 1px dashed #ddd !important;
-                padding-bottom: 10px !important;
+                break-inside: avoid-page !important; /* Forces the block to stay together */
+                border-bottom: 1px dashed #ccc !important;
+                padding-bottom: 12px !important;
                 font-size: 16px !important;
                 line-height: 1.4 !important;
                 color: #000 !important;
+                display: block !important;
             }
             
             .opt-grid {
@@ -467,6 +479,8 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 4px !important;
                 margin: 4px 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid-page !important;
             }
             
             .opt-item {
@@ -490,6 +504,8 @@
                 background: #f5f5f5 !important;
                 border-left: 3px solid #1a56db !important;
                 line-height: 1.4 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid-page !important;
             }
             
             .print-passage {
@@ -499,6 +515,8 @@
                 border-left: 4px solid #333;
                 font-size: 16px !important;
                 background: transparent !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid-page !important;
             }
             
             * {
@@ -901,12 +919,10 @@
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INITIALIZATION
            ========================================================================== */
-        // 🔥 Tumhara exact working URL 🔥
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         const BASE_URL = "https://ankushonlinetest.netlify.app/";
         const HIDDEN_TESTS = [];
 
-        // 🔥 FIREBASE CONFIGURATION 🔥
         const firebaseConfig = {
           apiKey: "AIzaSyA1ePcM8xYUOvYw8uLwiMI87_uv9xoPDyc", 
           authDomain: "mocksarthi-test.firebaseapp.com",
@@ -1966,7 +1982,6 @@
             }
         };
 
-        // 🔥 Fixed: Topic Names injected in UI + Performance Graphical Line
         window.renderDirectTests = function(boardName, subExamName, activeCat, subjectName, preFilteredTests = null) {
             let contentArea = document.getElementById('st-content-area'); 
             if(!contentArea) return;
@@ -2015,7 +2030,6 @@
                 } 
                 if (!qsCount) qsCount = 0;
                 
-                // Graphical Progress Logic 
                 let attemptHtml = "";
                 if(attemptedRecords[t.code] !== undefined) {
                     let score = Number(attemptedRecords[t.code]) || 0;
@@ -2075,7 +2089,7 @@
         };
 
         /* ==========================================================================
-           8. ADMIN DASHBOARD & TEST CREATION (Firebase Setup)
+           8. ADMIN DASHBOARD & TEST CREATION
            ========================================================================== */
         window.switchAdminTab = function(tab) {
             let createSec = document.getElementById('admin-create-section');
@@ -3481,7 +3495,7 @@
         };
 
         /* ==========================================================================
-           10. PDF PRINTING & LEADERBOARD (Exact Index 6 CSS & HTML Replicated)
+           10. PDF PRINTING & LEADERBOARD
            ========================================================================== */
         window.drawReportCard = function(rank, totalStudents, maxScore) {
             let cvs = document.getElementById('reportCard'); 
@@ -3584,7 +3598,7 @@
             else window.showPremiumModal();
         };
 
-        // 🔥 EXACT INDEX 6 PDF TEMPLATE RESTORED 🔥
+        // 🔥 EXACT INDEX 6 PDF TEMPLATE RESTORED & OPTIMIZED FOR AVOID-PAGE-BREAK 🔥
         window.executePDFPrint = function(wT, mode) {
             if (wT === "Admin Ankush Kumar" || wT === "Admin") wT = "Ankush Kumar S/O Manoj Kumar";
             
@@ -3610,8 +3624,12 @@
                 let isW = (window.userAnswers.length > 0 && uA !== "N/A" && gA !== cA && window.studentInfo.name !== "Ankush Kumar S/O Manoj Kumar"); 
                 let wM = (isW && mode === 'full') ? '<span style="color:red;font-size:18px;margin-right:4px;">❌</span>' : "";
                 
+                // Using print-q which has page-break-inside: avoid to prevent splitting
+                h += `<div class="print-q">`;
+                
                 if (q.passage) h += `<div class="print-passage">${q.passage}</div>`; 
-                h += `<div class="print-q"><b>${wM}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
+                
+                h += `<b>${wM}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
                 
                 (q.opts || []).forEach(o => { 
                     let inS = "padding:2px 0;color:#000;"; 
@@ -3640,7 +3658,7 @@
                         h += `<div class="print-exp"><b>Explanation:</b><br>${q.exp}</div>`; 
                     }
                 } 
-                h += '</div>';
+                h += '</div>'; // close .print-q
             });
             
             let summ = p.summary || window.examData.summary || "";
@@ -3698,7 +3716,7 @@
         };
 
         /* ==========================================================================
-           12. STUDENT HISTORY (FIREBASE FIX)
+           12. STUDENT HISTORY (FIREBASE FIX + ENHANCED UI)
            ========================================================================== */
         window.fetchStudentHistoryManual = function() {
             let phoneInputElem = document.getElementById('hist-phone');
@@ -3780,19 +3798,40 @@
                 bar.innerHTML = `<div class="progress-segment" style="width:${rPct}%;background:var(--success);">${rPct}%</div><div class="progress-segment" style="width:${wPct}%;background:var(--danger);">${wPct}%</div><div class="progress-segment" style="flex:1;background:var(--bg-subtle);"></div>`;
             }
             
+            let allSavedTests = window.getAllMergedTests();
             let h = '';
             records.forEach(r => { 
                 let pdfCode = r.testCode ? String(r.testCode).replace('-RE', '') : '';
-                h += `<div class="test-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                        <div>
-                            <h4 style="margin:0;color:var(--primary);">📝 ${r.testCode||'Test'} (Attempt: ${r.attempt||1})</h4>
-                            <p style="font-size:12px;color:var(--text-muted);margin:5px 0 0 0;">
-                                Score: <b style="color:var(--success);">${r.score||0}</b> | Right: ${r.right||0} | Wrong: ${r.wrong||0} | Blank: ${r.blank||0} <br> 
-                                Time: ${Math.floor((r.timeSpent||0)/60)}m ${(r.timeSpent||0)%60}s
-                            </p>
+                
+                // 🔥 Details Fetching for History Card 🔥
+                let tData = allSavedTests.find(t => t.code === pdfCode) || {};
+                let p = window.parseHack(tData.topic || "");
+                
+                let tBoard = p.board || tData.exam || "Unknown Board";
+                let tExam = tData.exam || "Unknown Exam";
+                let tCat = p.cat || "Mock Test";
+                let tSub = p.subcat || tData.subject || tData.sub || "Subject";
+                let tChap = p.topic || "";
+                
+                h += `
+                    <div class="test-card hist-card-layout">
+                        <div class="hist-left">
+                            <h4 style="margin:0;color:var(--primary);font-size:15px;">📝 ${tBoard} - ${tExam} (${r.testCode||'Test'})</h4>
+                            <div style="font-size:12px;color:var(--text-muted);margin:4px 0 8px 0;font-weight:600;">
+                                📂 ${tCat} | 📚 ${tSub} ${tChap ? ' | 📖 ' + tChap : ''}
+                            </div>
+                            <div style="font-size:12px;color:var(--text-main);background:var(--bg-subtle);padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border-color); display:inline-block;">
+                                Attempt: <b>${r.attempt||1}</b> | Score: <b style="color:var(--success);font-size:14px;">${r.score||0}</b><br>
+                                <span style="color:var(--success);margin-top:4px;display:inline-block;">✅ Right: ${r.right||0}</span> | 
+                                <span style="color:var(--danger);">❌ Wrong: ${r.wrong||0}</span> | 
+                                <span style="color:var(--text-muted);">⬜ Blank: ${r.blank||0}</span><br>
+                                <div style="margin-top:4px;">⏱ Time Taken: ${Math.floor((r.timeSpent||0)/60)}m ${(r.timeSpent||0)%60}s</div>
+                            </div>
                         </div>
-                        <button class="btn btn-danger btn-sm" style="margin:0; width:auto;" onclick="window.downloadHistoryPDF('${pdfCode}')">📥 Download PDF</button>
-                      </div>`; 
+                        <div class="hist-right">
+                            <button class="btn btn-danger btn-sm" style="margin:0; padding:10px 16px; font-size:13px;" onclick="window.downloadHistoryPDF('${pdfCode}')">📥 Download PDF</button>
+                        </div>
+                    </div>`; 
             });
             
             list.innerHTML = h;
