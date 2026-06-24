@@ -915,6 +915,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+
+    </body>
+</html>
     <script>
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INITIALIZATION
@@ -1765,64 +1768,43 @@
             }
         };
 
-        window.activeTestsUnsubscribe = null; // लाइव कनेक्शन को कण्ट्रोल करने के लिए ग्लोबल वेरिएबल
-
         window.fetchActiveTests = function() {
             let appLayout = document.getElementById('st-app-layout');
+            if(appLayout) appLayout.style.display = 'none';
+            
+            if (window.globalActiveTests && window.globalActiveTests.length > 0) { 
+                let adminManage = document.getElementById('admin-manage-section');
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard(); 
+                else window.showExamsView(); 
+                return; 
+            }
+            
             let stLoader = document.getElementById('st-active-loader');
             let stFolder = document.getElementById('st-folder-view');
-
-            // पहली बार लोड होने पर ही लोडर दिखाएंगे
-            if (!window.globalActiveTests || window.globalActiveTests.length === 0) {
-                if(appLayout) appLayout.style.display = 'none';
-                if(stLoader) stLoader.style.display = 'block';
-                if(stFolder) stFolder.innerHTML = '';
-            }
-
-            // अगर पहले से कोई लाइव कनेक्शन चल रहा है, तो उसे बंद करें ताकि डुप्लीकेट न हो
-            if (window.activeTestsUnsubscribe) {
-                window.activeTestsUnsubscribe();
-            }
-
-            window.activeTestsUnsubscribe = db.collection("tests").onSnapshot((querySnapshot) => {
+            
+            if(stLoader) stLoader.style.display = 'block'; 
+            if(stFolder) stFolder.innerHTML = '';
+            
+            db.collection("tests").get().then((querySnapshot) => {
                 let tests = [];
                 querySnapshot.forEach((doc) => {
                     tests.push(doc.data());
                 });
-
+                
                 window.globalActiveTests = tests;
                 if(stLoader) stLoader.style.display = 'none';
-
+                
                 let adminManage = document.getElementById('admin-manage-section');
-                let dashView = document.getElementById('student-dashboard-view');
-                let bc = document.getElementById('breadcrumb-container');
-                
-                // 1. एडमिन पैनल के लिए अपडेट
-                if (adminManage && adminManage.style.display === 'block') {
-                    window.renderDashboard(); 
-                }
-                
-                // 2. स्टूडेंट होम पेज के लिए अपडेट (केवल तभी जब वो सच में मेन फोल्डर वाले व्यू पर हो, ताकि फोल्डर के अंदर डिस्टर्ब न हो)
-                let isStudentHome = dashView && dashView.classList.contains('active-view') && (!appLayout || appLayout.style.display === 'none') && (!bc || bc.style.display === 'none' || bc.innerHTML === '');
-                
-                if (isStudentHome) {
-                    window.showExamsView(); 
-                }
-
-            }, (error) => {
-                console.error("Firebase Listener Error: ", error);
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard(); 
+                else window.showExamsView();
+            }).catch((error) => {
                 if(stLoader) stLoader.style.display = 'none';
                 let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
                 window.globalActiveTests = localTests;
-
+                
                 let adminManage = document.getElementById('admin-manage-section');
-                let isStudentHome = (!appLayout || appLayout.style.display === 'none');
-
-                if (adminManage && adminManage.style.display === 'block') {
-                    window.renderDashboard();
-                } else if (isStudentHome) {
-                    window.showExamsView();
-                }
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard(); 
+                else window.showExamsView();
             });
         };
 
@@ -2727,7 +2709,7 @@
             let eCode = aCodeElem ? aCodeElem.value.trim() : "";
             
             let eSummaryRaw = aSummaryElem ? aSummaryElem.value : "";
-            eSummaryRaw = String(eSummaryRaw).replace(/\|\|\|/g, ''); 
+            eSummaryRaw = eSummaryRaw.replace(/\|\|\|/g, ''); 
             let eSummary = eSummaryRaw.replace(/\n/g, '<br>');
             
             if (!eCode) { 
@@ -2769,11 +2751,6 @@
                 qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, 
                 qs: fQs, rawText: rawText, isActive: true 
             };
-
-            // Firestore errors se bachne ke liye undefined ko hta kar null karna
-            Object.keys(fObj).forEach(key => {
-                if (fObj[key] === undefined) fObj[key] = null;
-            });
             
             if(btn) {
                 btn.innerText = "⏳ Saving to Firebase..."; 
@@ -2813,6 +2790,1810 @@
                 
                 let uIdx = window.adminUnifiedTests.findIndex(t => t.code === eCode); 
                 if (uIdx >= 0) window.adminUnifiedTests[uIdx] = tObj; else window.adminUnifiedTests.push(tObj);
+                
+                let gIdx = window.globalActiveTests.findIndex(t => t.code === eCode);
+                if (gIdx >= 0) window.globalActiveTests[gIdx] = tObj; else window.globalActiveTests.push(tObj);
+                
+                let generatedLink = document.getElementById('generatedLink');
+                let linkContainer = document.getElementById('linkContainer');
+                if(generatedLink) generatedLink.value = tLink; 
+                if(linkContainer) linkContainer.style.display = 'block'; 
+                
+                window.showCustomAlert("Success", `✅ Saved directly to Firebase! (${fQs} Qs)`, "🎉"); 
+                window.initQuickFill(); 
+                
+                let adminManage = document.getElementById('admin-manage-section');
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard();
+            }).catch((error) => { 
+                window.showCustomAlert("Error", error.message, "❌"); 
+                if(btn) {
+                    btn.innerText = "🚀 Generate / Update Test"; 
+                    btn.disabled = false; 
+                    btn.style.background = "var(--primary)"; 
+                }
+            });
+        };
+
+        window.adminDownloadPDF = function(code, mode) {
+            let t = window.adminUnifiedTests.find(x => x.code === code); 
+            if (!t) return window.showCustomAlert("Error", "Data not found!", "❌");
+            
+            let raw = t.rawText || "";
+            
+            if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
+                window.fetchTestForAdmin(code, 'pdf', mode); 
+                return; 
+            }
+            
+            if (!raw && t.questions && t.questions.length > 0) { 
+                raw = t.questions.map((q, i) => { 
+                    let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
+                    let qs = `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`; 
+                    let op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n'; 
+                    let an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`; 
+                    let ex = q.exp ? `!!!! ${String(q.exp).replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n` : ""; 
+                    return pa + qs + op + an + ex; 
+                }).join('\n'); 
+                t.rawText = raw; 
+            }
+            
+            if (!raw) return window.showCustomAlert("Empty Test", "No questions to print!", "❌");
+            
+            let pQs = window.parseRawQuestions(raw); 
+            if (!pQs || pQs.length === 0) return window.showCustomAlert("Parse Error", "No valid questions.", "❌");
+            
+            window.examData = { exam: t.exam, subject: t.subject || t.sub || "Subject", topic: t.topic, code: t.code, questions: pQs }; 
+            
+            let customName = window.studentInfo.name || "Student";
+            window.userAnswers = []; 
+            pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); }); 
+            window.executePDFPrint(customName, mode);
+        };
+
+        /* ==========================================================================
+           9. EXAM ENGINE (Randomize, Auto-Save, Bookmark)
+           ========================================================================== */
+        window.startExam = function(isRe) {
+            try {
+                if (window.examData.rawText && (!window.examData.questions || window.examData.questions.length === 0)) {
+                    window.examData.questions = window.parseRawQuestions(window.examData.rawText);
+                }
+                if (!window.examData.questions || window.examData.questions.length === 0) {
+                    return window.showCustomAlert("Empty Test", "❌ No questions found.", "⚠️");
+                }
+                
+                let randCb = document.getElementById('randomize-qs');
+                if(randCb && randCb.checked && !isRe) { 
+                    window.examData.questions = window.shuffleArray([...window.examData.questions]); 
+                }
+
+                window.isReattemptMode = isRe; 
+                window.studentInfo.score = 0; 
+                window.studentInfo.right = 0; 
+                window.studentInfo.wrong = 0; 
+                window.studentInfo.blank = 0; 
+                window.totalTimeSpent = 0; 
+                window.globalTimeLeft = window.examData.totTime > 0 ? window.examData.totTime * 60 : 0;
+                
+                for (let i = 0; i < window.examData.questions.length; i++) { 
+                    window.userAnswers[i] = null; 
+                    window.qStatus[i] = 0; 
+                    window.bookmarks[i] = false; 
+                }
+                
+                let topSname = document.getElementById('top-sname');
+                let topSexam = document.getElementById('top-sexam');
+                let topBar = document.getElementById('student-top-bar');
+                
+                if(topSname) topSname.innerText = "👤 " + (window.studentInfo.name || "Student"); 
+                if(topSexam) topSexam.innerText = window.examData.exam + (isRe ? " (Reattempt)" : ""); 
+                if(topBar) topBar.style.display = 'flex';
+                
+                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); 
+                
+                let examView = document.getElementById('exam-view');
+                let examControls = document.getElementById('exam-bottom-controls');
+                
+                if(examView) {
+                    examView.style.display = 'flex'; 
+                    examView.classList.add('active-view'); 
+                }
+                if(examControls) examControls.style.display = 'block';
+                
+                window.toggleAdminLock(false); 
+                try { history.pushState({ inTest: true }, "Test Started", "#test"); } catch (e) {} 
+                
+                let timerBox = document.getElementById('timer-box');
+                if(timerBox) timerBox.style.display = 'flex';
+                
+                let g = document.getElementById('palette-grid'); 
+                if(g) {
+                    g.innerHTML = "";
+                    for (let i = 0; i < window.examData.questions.length; i++) { 
+                        let b = document.createElement('button'); 
+                        b.className = 'palette-btn status-not-visited'; 
+                        b.id = 'pal-' + i; 
+                        b.innerText = i + 1; 
+                        b.onclick = () => { window.renderQuestion(i); window.togglePaletteOverlay(false); }; 
+                        g.appendChild(b); 
+                    }
+                }
+                
+                window.updateCounts(); 
+                window.renderQuestion(0);
+                
+                clearInterval(window.globalTimer);
+                window.globalTimer = setInterval(() => {
+                    window.totalTimeSpent++;
+                    let mainTime = document.getElementById('main-time');
+                    if(!mainTime) return;
+                    
+                    if (window.examData.totTime > 0) { 
+                        window.globalTimeLeft--; 
+                        let m = Math.floor(window.globalTimeLeft / 60); 
+                        let s = window.globalTimeLeft % 60; 
+                        mainTime.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
+                        
+                        if (window.globalTimeLeft <= 0) { 
+                            clearInterval(window.globalTimer); 
+                            window.showCustomAlert("Time Up", "⏳ Time's up!", "⏳"); 
+                            window.calculateScoreAndSubmit(); 
+                        } 
+                    } 
+                    else { 
+                        let m = Math.floor(window.totalTimeSpent / 60); 
+                        let s = window.totalTimeSpent % 60; 
+                        mainTime.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
+                    }
+                }, 1000);
+
+                clearInterval(window.autoSaveTimer); 
+                window.autoSaveTimer = setInterval(window.saveProgress, 10000);
+                
+            } catch (err) { 
+                console.error(err); 
+                window.showCustomAlert("Error", "Could not start test.", "❌"); 
+            }
+        };
+
+        window.saveProgress = function() {
+            if(!window.examData || !window.examData.code) return;
+            const progress = { 
+                userAnswers: window.userAnswers, 
+                qStatus: window.qStatus, 
+                bookmarks: window.bookmarks, 
+                globalTimeLeft: window.globalTimeLeft, 
+                totalTimeSpent: window.totalTimeSpent, 
+                currentQ: window.currentQ, 
+                questions: window.examData.questions 
+            };
+            localStorage.setItem('progress_' + window.examData.code, JSON.stringify(progress));
+            let ind = document.getElementById('auto-save-indicator'); 
+            if(ind) {
+                ind.style.display = 'block'; 
+                setTimeout(() => { ind.style.display = 'none'; }, 2000);
+            }
+        };
+
+        window.resumeExam = function() {
+            try {
+                let savedProg = JSON.parse(localStorage.getItem('progress_' + window.examData.code));
+                if(!savedProg) return window.startExam(false);
+                
+                window.userAnswers = savedProg.userAnswers; 
+                window.qStatus = savedProg.qStatus; 
+                window.bookmarks = savedProg.bookmarks || []; 
+                window.globalTimeLeft = savedProg.globalTimeLeft; 
+                window.totalTimeSpent = savedProg.totalTimeSpent; 
+                window.examData.questions = savedProg.questions || window.examData.questions;
+                
+                let topSname = document.getElementById('top-sname');
+                let topSexam = document.getElementById('top-sexam');
+                let topBar = document.getElementById('student-top-bar');
+                
+                if(topSname) topSname.innerText = "👤 " + (window.studentInfo.name || "Student"); 
+                if(topSexam) topSexam.innerText = window.examData.exam + " (Resumed)"; 
+                if(topBar) topBar.style.display = 'flex';
+                
+                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); 
+                
+                let examView = document.getElementById('exam-view');
+                let examControls = document.getElementById('exam-bottom-controls');
+                
+                if(examView) {
+                    examView.style.display = 'flex'; 
+                    examView.classList.add('active-view'); 
+                }
+                if(examControls) examControls.style.display = 'block';
+                
+                window.toggleAdminLock(false); 
+                try { history.pushState({ inTest: true }, "Test Started", "#test"); } catch (e) {} 
+                
+                let timerBox = document.getElementById('timer-box');
+                if(timerBox) timerBox.style.display = 'flex';
+                
+                let g = document.getElementById('palette-grid'); 
+                if(g) {
+                    g.innerHTML = "";
+                    for (let i = 0; i < window.examData.questions.length; i++) { 
+                        let b = document.createElement('button'); 
+                        b.className = 'palette-btn ' + (window.qStatus[i]===2 ? 'status-answered' : (window.qStatus[i]===1 ? 'status-not-answered' : 'status-not-visited')); 
+                        if(window.bookmarks[i]) b.classList.add('bookmarked');
+                        b.id = 'pal-' + i; 
+                        b.innerText = i + 1; 
+                        b.onclick = () => { window.renderQuestion(i); window.togglePaletteOverlay(false); }; 
+                        g.appendChild(b); 
+                    }
+                }
+                
+                window.updateCounts(); 
+                window.renderQuestion(savedProg.currentQ || 0);
+                
+                clearInterval(window.globalTimer);
+                window.globalTimer = setInterval(() => {
+                    window.totalTimeSpent++;
+                    let mainTime = document.getElementById('main-time');
+                    if(!mainTime) return;
+                    
+                    if (window.examData.totTime > 0) { 
+                        window.globalTimeLeft--; 
+                        let m = Math.floor(window.globalTimeLeft / 60); 
+                        let s = window.globalTimeLeft % 60; 
+                        mainTime.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
+                        
+                        if (window.globalTimeLeft <= 0) { 
+                            clearInterval(window.globalTimer); 
+                            window.showCustomAlert("Time Up", "⏳ Time's up!", "⏳"); 
+                            window.calculateScoreAndSubmit(); 
+                        } 
+                    } else { 
+                        let m = Math.floor(window.totalTimeSpent / 60); 
+                        let s = window.totalTimeSpent % 60; 
+                        mainTime.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
+                    }
+                }, 1000);
+                
+                clearInterval(window.autoSaveTimer); 
+                window.autoSaveTimer = setInterval(window.saveProgress, 10000);
+                
+            } catch(e) { 
+                window.startExam(false); 
+            }
+        };
+
+        window.startReattempt = function() { 
+            window.showCustomConfirm("Reattempt", "Reattempt this test?", () => window.startExam(true), "🔄"); 
+        };
+        
+        window.toggleBookmark = function() {
+            window.bookmarks[window.currentQ] = !window.bookmarks[window.currentQ];
+            window.renderBookmarkState(); 
+            window.updateMiniPalette();
+            window.refreshFullPalette(); // Ensure main palette syncs
+            window.saveProgress();
+        };
+        
+        window.renderBookmarkState = function() {
+            let btn = document.getElementById('btn-bookmark');
+            if(!btn) return;
+            
+            if(window.bookmarks[window.currentQ]) { 
+                btn.classList.add('bookmarked'); 
+                btn.innerText = '⭐ Bookmarked'; 
+            } else { 
+                btn.classList.remove('bookmarked'); 
+                btn.innerText = '☆ Bookmark'; 
+            }
+        };
+
+        window.togglePaletteOverlay = function(fs) {
+            let o = document.getElementById('palette-overlay'); 
+            if(!o) return;
+            
+            let isO = o.style.display === 'block';
+            if (fs === false) { if (isO) history.back(); return; }
+            if (isO) history.back(); 
+            else { o.style.display = 'block'; try { history.pushState({ palette: true }, ""); } catch (e) {} }
+        };
+
+        window.addEventListener('popstate', function(e) {
+            let sumModal = document.getElementById('summary-modal');
+            if (sumModal && sumModal.style.display === 'flex') {
+                sumModal.style.display = 'none';
+                return;
+            }
+
+            let o = document.getElementById('palette-overlay');
+            let examView = document.getElementById('exam-view');
+            
+            if (o && o.style.display === 'block') { 
+                o.style.display = 'none'; 
+                try { history.pushState({ inTest: true }, "Test Started", "#test"); } catch (err) {} 
+            } 
+            else if (examView && examView.classList.contains('active-view')) {
+                examView.classList.remove('active-view'); 
+                examView.style.display = 'none';
+                
+                let examControls = document.getElementById('exam-bottom-controls');
+                let topBar = document.getElementById('student-top-bar');
+                let timerBox = document.getElementById('timer-box');
+                let dashView = document.getElementById('student-dashboard-view');
+                
+                if(examControls) examControls.style.display = 'none'; 
+                if(topBar) topBar.style.display = 'none'; 
+                if(timerBox) timerBox.style.display = 'none';
+                
+                clearInterval(window.globalTimer); 
+                clearInterval(window.qTimer); 
+                clearInterval(window.autoSaveTimer); 
+                
+                if(dashView) dashView.classList.add('active-view'); 
+                window.toggleAdminLock(true);
+                
+                let adminManage = document.getElementById('admin-manage-section');
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard(); 
+                else window.showExamsView();
+            }
+        });
+
+        // 🔥 PERFECT PALETTE SYNC FUNCTION 🔥
+        window.refreshFullPalette = function() {
+            for (let i = 0; i < window.examData.questions.length; i++) { 
+                let palBtn = document.getElementById('pal-' + i);
+                if(palBtn) {
+                    palBtn.className = 'palette-btn ' + (window.qStatus[i]===2 ? 'status-answered' : (window.qStatus[i]===1 ? 'status-not-answered' : 'status-not-visited'));
+                    if(window.bookmarks[i]) palBtn.classList.add('bookmarked');
+                }
+            }
+        };
+
+        window.updateMiniPalette = function() {
+            let s = document.getElementById('mini-palette-strip'); 
+            if(!s) return;
+            
+            s.innerHTML = ""; 
+            let st = Math.max(0, window.currentQ - 2); 
+            let en = Math.min(window.examData.questions.length - 1, window.currentQ + 2);
+            
+            for (let i = st; i <= en; i++) { 
+                let c = "status-not-visited"; 
+                if (window.qStatus[i] === 2) c = "status-answered"; 
+                else if (window.qStatus[i] === 1) c = "status-not-answered"; 
+                
+                let ac = (i === window.currentQ) ? "active-q" : ""; 
+                if(window.bookmarks[i]) ac += " bookmarked";
+                
+                s.innerHTML += `<div class="mini-box ${c} ${ac}" onclick="window.renderQuestion(${i})">${i+1}</div>`; 
+            }
+        };
+
+        window.updateCounts = function() { 
+            let a = 0, na = 0, nv = 0; 
+            window.qStatus.forEach(s => { 
+                if (s === 2) a++; else if (s === 1) na++; else nv++; 
+            }); 
+            let cntAns = document.getElementById('cnt-ans');
+            let cntNotAns = document.getElementById('cnt-notans');
+            let cntNotVis = document.getElementById('cnt-notvis');
+            
+            if(cntAns) cntAns.innerText = a; 
+            if(cntNotAns) cntNotAns.innerText = na; 
+            if(cntNotVis) cntNotVis.innerText = nv; 
+        };
+
+        window.renderQuestion = function(idx) {
+            window.currentQ = idx; 
+            let q = window.examData.questions[idx]; 
+            window.renderBookmarkState();
+            
+            if (window.qStatus[idx] === 0) { 
+                window.qStatus[idx] = 1; 
+                window.updateCounts(); 
+            }
+            
+            window.refreshFullPalette(); // Ensure main palette color updates immediately
+            
+            let qHeader = document.getElementById('q-no-header');
+            let qText = document.getElementById('q-text');
+            if(qHeader) qHeader.innerText = `Question No. ${idx+1}`; 
+            if(qText) qText.innerHTML = q.q;
+            
+            let pd = document.getElementById('q-passage'); 
+            if(pd) {
+                if (q.passage) { pd.innerHTML = q.passage; pd.style.display = 'block'; } 
+                else pd.style.display = 'none';
+            }
+            
+            let oH = ""; 
+            (q.opts || []).forEach(o => { 
+                let iC = (window.userAnswers[idx] === o.id) ? "checked" : ""; 
+                let hC = (window.userAnswers[idx] === o.id) ? "selected" : ""; 
+                oH += `<label class="opt-label ${hC}" id="lbl-${o.id}"><input type="radio" name="option" value="${o.id}" ${iC} onchange="window.markAnswered('${o.id}')"> <b>${o.id}.</b> ${o.text}</label>`; 
+            }); 
+            let optBox = document.getElementById('options-box');
+            if(optBox) optBox.innerHTML = oH;
+            
+            window.updateMiniPalette(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            
+            clearInterval(window.qTimer); 
+            let bg = document.getElementById('q-timer-badge');
+            let qSecLeft = document.getElementById('q-sec-left');
+            
+            if(bg && qSecLeft) {
+                if (window.examData.qTime > 0) { 
+                    bg.style.display = 'inline-flex'; 
+                    window.qTimeLeft = window.examData.qTime; 
+                    qSecLeft.innerText = window.qTimeLeft; 
+                    
+                    window.qTimer = setInterval(() => { 
+                        window.qTimeLeft--; 
+                        qSecLeft.innerText = window.qTimeLeft; 
+                        if (window.qTimeLeft <= 0) { 
+                            clearInterval(window.qTimer); 
+                            window.nextQ(true); 
+                        } 
+                    }, 1000); 
+                } else {
+                    bg.style.display = 'none';
+                }
+            }
+        };
+
+        window.markAnswered = function(v) { 
+            window.userAnswers[window.currentQ] = v; 
+            window.qStatus[window.currentQ] = 2; 
+            
+            document.querySelectorAll('.opt-label').forEach(e => e.classList.remove('selected')); 
+            let lblBtn = document.getElementById('lbl-' + v);
+            if(lblBtn) lblBtn.classList.add('selected'); 
+            
+            window.refreshFullPalette(); // Exact color sync fix for question grid
+            window.updateCounts(); 
+            window.updateMiniPalette(); 
+            window.saveProgress(); 
+        };
+
+        window.clearResponse = function() { 
+            window.userAnswers[window.currentQ] = null; 
+            window.qStatus[window.currentQ] = 1; 
+            
+            window.refreshFullPalette();
+            window.renderQuestion(window.currentQ); 
+            window.updateCounts(); 
+            window.updateMiniPalette(); 
+            window.saveProgress(); 
+        };
+
+        window.nextQ = function(isA) { 
+            if (window.currentQ < window.examData.questions.length - 1) {
+                window.renderQuestion(window.currentQ + 1); 
+            } else { 
+                if (isA) { 
+                    clearInterval(window.globalTimer); 
+                    window.calculateScoreAndSubmit(); 
+                } else {
+                    window.showCustomConfirm("Submit", "Submit test?", () => { 
+                        clearInterval(window.globalTimer); 
+                        window.calculateScoreAndSubmit(); 
+                    }, "✅"); 
+                }
+            } 
+        };
+
+        window.prevQ = function() { 
+            if (window.currentQ > 0) window.renderQuestion(window.currentQ - 1); 
+        };
+        
+        window.submitExamConfirmation = function() { 
+            window.showCustomConfirm("Submit", "Submit test?", () => { 
+                clearInterval(window.globalTimer); 
+                clearInterval(window.qTimer); 
+                window.calculateScoreAndSubmit(); 
+            }, "📤"); 
+        };
+
+        // 🔥 FIREBASE SCORE SUBMISSION 🔥
+        window.calculateScoreAndSubmit = function() {
+            clearInterval(window.globalTimer); 
+            clearInterval(window.qTimer); 
+            clearInterval(window.autoSaveTimer); 
+            localStorage.removeItem('progress_' + window.examData.code);
+            
+            let topBar = document.getElementById('student-top-bar');
+            let examControls = document.getElementById('exam-bottom-controls');
+            let examView = document.getElementById('exam-view');
+            let resView = document.getElementById('result-view');
+            let timerBox = document.getElementById('timer-box');
+            
+            if(topBar) topBar.style.display = 'none'; 
+            if(examControls) examControls.style.display = 'none'; 
+            if(examView) {
+                examView.classList.remove('active-view'); 
+                examView.style.display = 'none'; 
+            }
+            if(resView) resView.classList.add('active-view'); 
+            if(timerBox) timerBox.style.display = 'none';
+            
+            window.studentInfo.right = 0; 
+            window.studentInfo.wrong = 0; 
+            window.studentInfo.blank = 0;
+            
+            for (let i = 0; i < window.examData.questions.length; i++) { 
+                let cA = window.getCleanAns(window.examData.questions[i].ans); 
+                let gA = window.getCleanAns(window.userAnswers[i]); 
+                if (!window.userAnswers[i]) window.studentInfo.blank++; 
+                else if (gA === cA) window.studentInfo.right++; 
+                else window.studentInfo.wrong++; 
+            }
+            
+            let btnRight = document.getElementById('btn-cnt-right');
+            let btnWrong = document.getElementById('btn-cnt-wrong');
+            let btnBlank = document.getElementById('btn-cnt-blank');
+            
+            if(btnRight) btnRight.innerText = window.studentInfo.right; 
+            if(btnWrong) btnWrong.innerText = window.studentInfo.wrong; 
+            if(btnBlank) btnBlank.innerText = window.studentInfo.blank;
+            
+            let rS = (window.studentInfo.right * window.examData.marks) - (window.studentInfo.wrong * window.examData.neg); 
+            window.studentInfo.score = Math.max(0, Math.round(rS * 100) / 100); 
+            
+            let mS = window.examData.questions.length * window.examData.marks; 
+            let p = (window.studentInfo.score / mS) * 100;
+            
+            let rH = document.getElementById('result-heading'); 
+            if(rH) {
+                if (p >= 80) { 
+                    rH.innerText = "🎉 Outstanding! 🎉"; 
+                    rH.style.color = "var(--success)"; 
+                    window.blastConfetti();
+                } else { 
+                    rH.innerText = "💪 Keep it up!"; 
+                    rH.style.color = "var(--danger)"; 
+                }
+            }
+            
+            window.drawReportCard("...", "...", mS); 
+            let rankLoader = document.getElementById('rank-loader');
+            if(rankLoader) rankLoader.style.display = 'block'; 
+            window.toggleAdminLock(true);
+            
+            let sC = window.isReattemptMode ? (window.examData.code + "-RE") : window.examData.code;
+            
+            let resData = {
+                name: window.studentInfo.name || "Student", 
+                phone: window.studentInfo.phone || "",
+                score: window.studentInfo.score, 
+                testCode: sC,
+                right: window.studentInfo.right, 
+                wrong: window.studentInfo.wrong, 
+                blank: window.studentInfo.blank,
+                timeSpent: window.totalTimeSpent, 
+                timestamp: Date.now()
+            };
+            
+            db.collection("results").add(resData).then(() => {
+                let attemptedRecords = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+                attemptedRecords[window.examData.code] = window.studentInfo.score;
+                localStorage.setItem('mockSarthiAttempted', JSON.stringify(attemptedRecords));
+                
+                db.collection("results").where("testCode", "==", sC).get().then(snap => {
+                    let scores = []; 
+                    snap.forEach(d => scores.push(d.data().score));
+                    scores.sort((a,b) => b - a);
+                    let rank = scores.indexOf(window.studentInfo.score) + 1;
+                    if(rankLoader) rankLoader.style.display = 'none'; 
+                    window.drawReportCard((window.isReattemptMode && scores.length <= 1) ? "N/A" : rank, scores.length, mS); 
+                });
+            }).catch(() => {
+                if(rankLoader) rankLoader.style.display = 'none'; 
+                window.drawReportCard("N/A", "N/A", mS); 
+            });
+        };
+
+        window.showAnalysis = function(t) {
+            window.currentAnalysisArray = []; 
+            window.currentAnalysisType = t;
+            
+            window.examData.questions.forEach((q, i) => { 
+                let u = window.userAnswers[i]; 
+                let c = window.getCleanAns(q.ans); 
+                let g = window.getCleanAns(u); 
+                let iR = (g === c) && (u !== null); 
+                let iB = u === null; 
+                let iW = !iB && !iR; 
+                
+                if ((t === 'right' && iR) || (t === 'wrong' && iW) || (t === 'blank' && iB)) {
+                    window.currentAnalysisArray.push({ q: q, originalIndex: i, uAns: u, isRight: iR, isBlank: iB }); 
+                }
+            });
+            
+            let ansBox = document.getElementById('analysis-box');
+            if(!ansBox) return;
+
+            if (window.currentAnalysisArray.length === 0) { 
+                ansBox.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:16px;">No questions found.</div>`; 
+                ansBox.style.display = 'block'; 
+                return; 
+            }
+            
+            window.currentAnalysisIndex = 0; 
+            window.renderAnalysisSlide(); 
+            ansBox.style.display = 'block'; 
+            
+            setTimeout(() => { 
+                let e = document.getElementById('analysis-box'); 
+                if(e) {
+                    let y = e.getBoundingClientRect().top + window.scrollY - 130; 
+                    window.scrollTo({ top: y, behavior: 'smooth' }); 
+                }
+            }, 100);
+        };
+
+        window.renderAnalysisSlide = function() {
+            let d = window.currentAnalysisArray[window.currentAnalysisIndex]; 
+            let q = d.q; 
+            let i = d.originalIndex; 
+            let uA = d.uAns; 
+            let cA = window.getCleanAns(q.ans); 
+            let gA = window.getCleanAns(uA); 
+            let sI = d.isRight ? "✅" : (d.isBlank ? "⬜" : "❌"); 
+            let tt = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
+            
+            let pH = q.passage ? `<div style="background:var(--bg-subtle);padding:12px;border-left:4px solid var(--accent);margin-bottom:14px;font-size:14px;font-style:italic;color:var(--text-main);border-radius:var(--radius-sm);">${q.passage}</div>` : "";
+            let uT = ""; 
+            let tC = ""; 
+            
+            if (d.isBlank) { 
+                uT = "Skipped"; 
+                tC = "color:var(--text-muted);"; 
+            } else if (d.isRight) { 
+                uT = `Your Answer: ${uA} (Correct ✅)`; 
+                tC = "color:var(--success);"; 
+            } else { 
+                uT = `Your Answer: ${uA} (Wrong ❌) | Correct: ${cA||"N/A"}`; 
+                tC = "color:var(--danger);"; 
+            }
+            
+            let oH = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">';
+            (q.opts || []).forEach(o => { 
+                let b = "var(--bg-card)";
+                let br = "1px solid var(--border-color)";
+                let f = "normal";
+                let c = "var(--text-main)";
+                let oC = window.getCleanAns(o.id);
+                let ic = '<span style="margin-right:6px;visibility:hidden;">✅</span>'; 
+                
+                if (oC === cA) { 
+                    b = "rgba(15, 157, 88, 0.10)"; br = "2px solid var(--success)"; f = "bold"; c = "var(--success)"; ic = '<span style="margin-right:6px;">✅</span>'; 
+                } else if (oC === gA && !d.isRight) { 
+                    b = "rgba(220, 53, 69, 0.10)"; br = "2px solid var(--danger)"; f = "bold"; c = "var(--danger)"; ic = '<span style="margin-right:6px;">❌</span>'; 
+                } 
+                
+                oH += `<div style="padding:10px;border:${br};border-radius:var(--radius-sm);background:${b};color:${c};font-weight:${f};font-size:14px;display:flex;align-items:flex-start;gap:6px;">${ic}<div><b>${o.id}.</b> ${o.text}</div></div>`; 
+            }); 
+            oH += '</div>';
+            
+            let eH = q.exp ? `<div style="font-size:13px;color:var(--text-main);margin-top:10px;line-height:1.5;background:var(--bg-subtle);padding:12px;border-radius:var(--radius-sm);border-left:4px solid var(--primary);max-height:160px;overflow-y:auto;"><b>Explanation:</b><br>${q.exp}</div>` : "";
+            
+            let h = `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:10px;margin-bottom:14px;flex-wrap:wrap;gap:8px;"><b style="color:var(--primary);font-size:15px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b><button class="btn btn-danger btn-sm" onclick="document.getElementById('analysis-box').style.display='none';">✕ Close</button></div>${pH}<b style="font-size:17px;color:var(--text-main);display:block;margin-bottom:14px;line-height:1.5;">${sI} Q${i+1}. ${q.q}</b><div style="${tC}font-weight:700;margin-bottom:14px;padding:10px;border-radius:var(--radius-sm);background:var(--bg-subtle);border:1px solid var(--border-color);">${uT}</div>${oH}${eH}<div style="display:flex;justify-content:space-between;margin-top:20px;border-top:1px solid var(--border-color);padding-top:14px;gap:10px;"><button class="btn btn-outline btn-sm" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''}>⬅️ Prev</button><button class="btn btn-primary btn-sm" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''}>Next ➡️</button></div>`;
+            
+            let ansBox = document.getElementById('analysis-box');
+            if(ansBox) ansBox.innerHTML = h;
+        };
+        
+        window.prevAnalysis = function() { 
+            if (window.currentAnalysisIndex > 0) { window.currentAnalysisIndex--; window.renderAnalysisSlide(); } 
+        };
+        
+        window.nextAnalysis = function() { 
+            if (window.currentAnalysisIndex < window.currentAnalysisArray.length - 1) { window.currentAnalysisIndex++; window.renderAnalysisSlide(); } 
+        };
+
+        /* ==========================================================================
+           10. PDF PRINTING & LEADERBOARD
+           ========================================================================== */
+        window.drawReportCard = function(rank, totalStudents, maxScore) {
+            let cvs = document.getElementById('reportCard'); 
+            if(!cvs) return;
+            let ctx = cvs.getContext('2d'); 
+            
+            ctx.fillStyle = '#fdfdfd'; 
+            ctx.fillRect(0, 0, 800, 650);
+            
+            let grad = ctx.createLinearGradient(0, 0, 800, 0); 
+            grad.addColorStop(0, '#0f2b5c'); 
+            grad.addColorStop(1, '#1a4b8c'); 
+            ctx.fillStyle = grad; 
+            ctx.fillRect(0, 0, 800, 140);
+            
+            ctx.fillStyle = '#ffffff'; 
+            ctx.textAlign = 'center'; 
+            ctx.font = 'bold 34px Poppins, Arial'; 
+            ctx.fillText(window.examData.exam.toUpperCase(), 400, 50);
+            
+            let p = window.parseHack(window.examData.topic); 
+            let dT = p.topic || ""; 
+            ctx.font = '20px Arial'; 
+            ctx.fillText((window.examData.subject || window.examData.sub || "Subject") + (dT ? " - " + dT : ""), 400, 85);
+            
+            ctx.font = '14px Arial'; 
+            ctx.fillStyle = '#f0d68a'; 
+            ctx.fillText("TEST CODE: " + window.examData.code, 400, 115);
+            
+            ctx.fillStyle = '#333'; 
+            ctx.textAlign = 'left'; 
+            ctx.font = 'bold 26px Arial'; 
+            
+            let displayName = window.studentInfo.name || "Student";
+            ctx.fillText("Name: " + displayName, 80, 200);
+            
+            let aT = window.isReattemptMode ? "Mode: Reattempt" : ("Attempt No: " + (window.studentInfo.attempt || 1)); 
+            ctx.fillStyle = '#dc3545'; 
+            ctx.font = 'bold 18px Arial'; 
+            ctx.textAlign = 'right'; 
+            ctx.fillText(aT, 720, 200);
+            
+            ctx.fillStyle = '#0f9d58'; ctx.fillRect(80, 240, 300, 120); 
+            ctx.fillStyle = '#f59e0b'; ctx.fillRect(420, 240, 300, 120); 
+            ctx.fillStyle = '#0f2b5c'; ctx.fillRect(80, 380, 640, 120);
+            
+            ctx.fillStyle = '#ffffff'; 
+            ctx.textAlign = 'center'; 
+            ctx.font = '18px Arial'; 
+            ctx.fillText("Right / Wrong", 230, 275); 
+            ctx.font = 'bold 38px Arial'; 
+            ctx.fillText(window.studentInfo.right + " / " + window.studentInfo.wrong, 230, 330);
+            
+            ctx.font = '18px Arial'; 
+            ctx.fillText("Rank / Students", 570, 275); 
+            let rT = (rank === "...") ? "Loading..." : (rank === "N/A" ? "Only Score" : "#" + rank + " / " + totalStudents); 
+            ctx.font = (rank === "..." || rank === "N/A") ? 'bold 24px Arial' : 'bold 38px Arial'; 
+            ctx.fillText(rT, 570, 330);
+            
+            ctx.font = '22px Arial'; 
+            ctx.fillText("Final Marks Scored", 400, 420); 
+            ctx.font = 'bold 48px Arial'; 
+            ctx.fillStyle = '#f0d68a'; 
+            ctx.fillText(window.studentInfo.score + " / " + maxScore, 400, 475);
+            
+            ctx.fillStyle = '#0f2b5c'; 
+            ctx.font = 'bold 18px Arial'; 
+            ctx.fillText("Prepared by: " + displayName, 400, 540); 
+            
+            ctx.fillStyle = '#777'; 
+            ctx.font = '14px Arial'; 
+            ctx.fillText("Generated: " + new Date().toLocaleString(), 400, 580);
+            
+            ctx.fillStyle = '#ccc'; 
+            ctx.font = 'bold 44px Arial'; 
+            ctx.globalAlpha = 0.15; 
+            ctx.fillText("MOCKSARTHI", 400, 400); 
+            ctx.globalAlpha = 1.0;
+            
+            let rcImg = document.getElementById('reportCardImg');
+            if(rcImg) {
+                rcImg.src = cvs.toDataURL('image/png'); 
+                rcImg.style.display = 'block'; 
+            }
+            cvs.style.display = 'none';
+        };
+
+        window.downloadImage = function() { 
+            const link = document.createElement('a'); 
+            link.download = (window.studentInfo.name || "Student") + '_Scorecard.png'; 
+            let rcImg = document.getElementById('reportCardImg');
+            if(rcImg) {
+                link.href = rcImg.src; 
+                link.click(); 
+            }
+        };
+
+        window.handleResultPDFClick = function() {
+            let isFreeStatus = (window.examData.isFree === true || String(window.examData.isFree).toLowerCase() === "true"); 
+            let isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
+            if (isFreeStatus || isPremiumUser) window.executePDFPrint(window.studentInfo.name || "Student", 'full'); 
+            else window.showPremiumModal();
+        };
+
+        // 🔥 EXACT INDEX 6 PDF TEMPLATE RESTORED & OPTIMIZED FOR AVOID-PAGE-BREAK 🔥
+        window.executePDFPrint = function(wT, mode) {
+            if (wT === "Admin Ankush Kumar" || wT === "Admin" || wT === "Student") {
+                wT = "अंकुश कुमार S/O मनोज कुमार";
+            }
+            
+            let pA = document.getElementById('print-area'); 
+            if(!pA) return;
+            
+            let sU = BASE_URL + "?test=" + window.examData.code; 
+            let p = window.parseHack(window.examData.topic); 
+            let dT = p.topic || "";
+            
+            let h = `<div class="watermark">${wT}</div><table class="pdf-main-table"><thead style="display:table-header-group;"><tr><td style="padding:0;border:none;"><div class="pdf-header-strip"><table style="width:100%;border:none;"><tr><td style="text-align:left;border:none;padding:0;"><a href="https://studynotesmanager.netlify.app/" style="color:#ffffff;font-weight:bold;font-size:14px;text-decoration:none;">🌐 Study Notes Manager</a></td><td style="text-align:right;border:none;padding:0;"><a href="${sU}" style="color:#f0d68a;font-weight:bold;font-size:14px;text-decoration:none;">📝 Give Online Test</a></td></tr></table></div></td></tr></thead><tfoot style="display:table-footer-group;"><tr><td style="padding:0;border:none;"><div class="pdf-footer-strip"><div style="text-align:center;width:100%;font-size:11px;font-weight:bold;color:#fff;"><a href="tel:+918273684939" style="color:#fff;text-decoration:none;">📞 +91-8273684939</a> | <a href="${BASE_URL}" style="color:#fff;text-decoration:none;">🌐 Website</a> | <a href="https://t.me/ankushonlinetest" style="color:#fff;text-decoration:none;">📢 Telegram</a> | <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k" style="color:#fff;text-decoration:none;">💬 WhatsApp</a> | <a href="https://www.youtube.com/@ankushonlinetest" style="color:#fff;text-decoration:none;">▶️ YouTube</a></div></div></td></tr></tfoot><tbody><tr><td style="padding:10px 20px;position:relative;z-index:10;">
+            <div class="print-header" style="text-align:center; border-bottom:2px solid #1a56db; padding-bottom:10px; margin-bottom:20px;">
+                <h2 style="color:#1a56db; margin:0 0 5px 0;">${window.examData.exam.toUpperCase()} ${mode==='q_only'?"(Questions Only)":(mode==='q_ans'?"(Questions + Answer Key)":"(Full Solution)")}</h2>
+                <h3 style="color:#333; margin:0 0 5px 0;">${window.examData.subject||window.examData.sub||"Subject"} ${dT ? " - "+dT : ""}</h3>
+                <p style="margin:0; font-size:14px; color:#555;"><b>Test Code:</b> ${window.examData.code} | <b>Watermark:</b> ${wT}</p>
+            </div>`;
+            
+            window.examData.questions.forEach((q, i) => {
+                let uA = window.userAnswers[i] ? window.userAnswers[i] : "N/A"; 
+                let cA = window.getCleanAns(q.ans); 
+                let gA = window.getCleanAns(uA); 
+                
+                // Only show wrong mark if it's the specific student comparing
+                let isW = (window.userAnswers.length > 0 && uA !== "N/A" && gA !== cA && window.studentInfo.name !== "अंकुश कुमार S/O मनोज कुमार"); 
+                let wM = (isW && mode === 'full') ? '<span style="color:red;font-size:18px;margin-right:4px;">❌</span>' : "";
+                
+                h += `<div class="print-q">`;
+                
+                if (q.passage) h += `<div class="print-passage">${q.passage}</div>`; 
+                
+                h += `<b>${wM}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
+                
+                (q.opts || []).forEach(o => { 
+                    let inS = "padding:2px 0;color:#000;"; 
+                    let oC = window.getCleanAns(o.id); 
+                    
+                    if (mode !== 'q_only' && oC === cA) { 
+                        inS = "background-color:#065f46 !important; color:#fff !important; font-weight:bold; padding:4px 8px; border-radius:4px; display:inline-block; -webkit-print-color-adjust:exact; print-color-adjust:exact;"; 
+                    } 
+                    h += `<div class="opt-item"><span style="${inS}">${o.id}. ${o.text}</span></div>`; 
+                }); 
+                
+                h += '</div>';
+                
+                if (mode !== 'q_only') { 
+                    let resView = document.getElementById('result-view');
+                    let isResActive = resView ? resView.classList.contains('active-view') : false;
+                    
+                    if (window.userAnswers.length > 0 && (isResActive || window.studentInfo.name === "अंकुश कुमार S/O मनोज कुमार") && mode === 'full') { 
+                        let aC = (gA === cA) ? "color:green;" : "color:red;"; 
+                        let uD = (gA && uA !== "N/A") ? gA : "Skipped"; 
+                        h += `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span> <span style="margin-left:14px;font-weight:bold;font-size:15px;${aC}">Your Ans: ${uD}</span></div>`; 
+                    } else {
+                        h += `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span></div>`; 
+                    }
+                    if (mode === 'full' && q.exp) {
+                        h += `<div class="print-exp"><b>Explanation:</b><br>${q.exp}</div>`; 
+                    }
+                } 
+                h += '</div>'; 
+            });
+            
+            let summ = p.summary || window.examData.summary || "";
+            if (summ.trim() !== "") {
+                h += `<div style="margin-top:20px; padding:15px; border:2px solid #1a56db; border-radius:8px; background:#f0f4fa; page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;">
+                        <h3 style="color:#1a56db; margin-top:0; margin-bottom:8px;">📑 Test Summary (Topics Covered)</h3>
+                        <p style="font-size:15px; color:#333; line-height:1.5; margin-bottom:0;">${summ.replace(/\n/g, '<br>')}</p>
+                      </div>`;
+            }
+
+            pA.innerHTML = h + '</td></tr></tbody></table>'; 
+            let oT = document.title; 
+            document.title = `${window.examData.subject||window.examData.sub||"Subject"} ${dT?" "+dT:""} MockSarthi test`; 
+            document.body.classList.add('print-pdf');
+            
+            setTimeout(() => { 
+                window.print(); 
+                setTimeout(() => { 
+                    document.body.classList.remove('print-pdf'); 
+                    document.title = oT; 
+                }, 1000); 
+            }, 800);
+        };
+
+        /* ==========================================================================
+           11. MISC UTILS & CONFETTI
+           ========================================================================== */
+        window.togglePriceBox = function() { 
+            let pt = document.getElementById('a-pdf-type');
+            let pBox = document.getElementById('price-box');
+            if(pt && pBox) {
+                pBox.style.display = (pt.value === 'free') ? 'none' : 'block'; 
+            }
+        };
+        
+        window.blastConfetti = function() {
+            let colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#01a3a4', '#f368e0', '#ff6348'];
+            for (let i = 0; i < 60; i++) { 
+                setTimeout(() => { 
+                    let confetti = document.createElement('div'); 
+                    confetti.className = 'confetti'; 
+                    confetti.style.left = Math.random() * 100 + '%'; 
+                    confetti.style.top = -(Math.random() * 30 + 10) + 'px'; 
+                    confetti.style.color = colors[Math.floor(Math.random() * colors.length)]; 
+                    confetti.innerText = ['🎉', '✨', '🌟', '💫', '🎊', '🏆', '⭐', '💎'][Math.floor(Math.random() * 8)]; 
+                    let resView = document.getElementById('result-view');
+                    if(resView) resView.appendChild(confetti); 
+                    setTimeout(() => confetti.remove(), 3000); 
+                }, i * 40); 
+            }
+        };
+
+        window.downloadLeaderboardImage = function() { 
+            window.showCustomAlert("Info", "Leaderboard image download ready. Take a screenshot or use browser print.", "📸"); 
+        };
+
+        /* ==========================================================================
+           12. STUDENT HISTORY (PRIVACY FIX + ENHANCED UI)
+           ========================================================================== */
+        window.fetchStudentHistory = function() {
+            if (!window.studentInfo || !window.studentInfo.phone) {
+                return window.showCustomAlert("Error", "No registered mobile number found. Cannot fetch report.", "⚠️");
+            }
+            
+            let phoneInput = window.studentInfo.phone;
+            let dispPhone = document.getElementById('disp-hist-phone');
+            if(dispPhone) dispPhone.innerText = phoneInput;
+            
+            let histLoader = document.getElementById('st-hist-loader');
+            let histList = document.getElementById('st-hist-list');
+            if(histLoader) histLoader.style.display = 'block';
+            if(histList) histList.innerHTML = '';
+            
+            db.collection("results").where("phone", "==", phoneInput).get().then(snap => {
+                let records = []; 
+                snap.forEach(d => records.push(d.data()));
+                window.handleStudentHistory({records: records});
+            }).catch(err => {
+                if(histLoader) histLoader.style.display = 'none'; 
+                window.showCustomAlert("Error", "Failed to fetch history from database.", "❌");
+            });
+        };
+
+        window.handleStudentHistory = function(data) {
+            let histLoader = document.getElementById('st-hist-loader');
+            if(histLoader) histLoader.style.display = 'none'; 
+            
+            let records = data.records || []; 
+            let list = document.getElementById('st-hist-list');
+            if(!list) return;
+            
+            let attemptedRecords = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+            records.forEach(r => { 
+                if(r.testCode) {
+                    let code = r.testCode.replace('-RE', '');
+                    attemptedRecords[code] = r.score;
+                }
+            });
+            localStorage.setItem('mockSarthiAttempted', JSON.stringify(attemptedRecords));
+
+            if (records.length === 0) { 
+                list.innerHTML = "<p style='text-align:center;color:var(--text-muted);padding:20px;'>No test history found for this number.</p>"; 
+                return; 
+            }
+            
+            let totRight = 0, totWrong = 0, totBlank = 0; 
+            records.forEach(r => { 
+                totRight += (r.right || 0); 
+                totWrong += (r.wrong || 0); 
+                totBlank += (r.blank || 0); 
+            }); 
+            let totQs = totRight + totWrong + totBlank;
+            
+            let grTot = document.getElementById('gr-tot');
+            let grQs = document.getElementById('gr-qs');
+            let grAcc = document.getElementById('gr-acc');
+            let grR = document.getElementById('gr-r');
+            let grW = document.getElementById('gr-w');
+            let grB = document.getElementById('gr-b');
+            
+            if(grTot) grTot.innerText = records.length; 
+            if(grQs) grQs.innerText = totQs; 
+            if(grAcc) grAcc.innerText = totQs > 0 ? Math.round((totRight / totQs) * 100) + '%' : '0%'; 
+            if(grR) grR.innerText = totRight; 
+            if(grW) grW.innerText = totWrong; 
+            if(grB) grB.innerText = totBlank;
+            
+            let bar = document.getElementById('gr-bar'); 
+            if(bar) {
+                let rPct = totQs > 0 ? Math.round((totRight / totQs) * 100) : 0; 
+                let wPct = totQs > 0 ? Math.round((totWrong / totQs) * 100) : 0;
+                bar.innerHTML = `<div class="progress-segment" style="width:${rPct}%;background:var(--success);">${rPct}%</div><div class="progress-segment" style="width:${wPct}%;background:var(--danger);">${wPct}%</div><div class="progress-segment" style="flex:1;background:var(--bg-subtle);"></div>`;
+            }
+            
+            let allSavedTests = window.getAllMergedTests();
+            let h = '';
+            records.forEach(r => { 
+                let pdfCode = r.testCode ? String(r.testCode).replace('-RE', '') : '';
+                
+                let tData = allSavedTests.find(t => t.code === pdfCode) || {};
+                let p = window.parseHack(tData.topic || "");
+                
+                let tBoard = p.board || tData.exam || "Unknown Board";
+                let tExam = tData.exam || "Unknown Exam";
+                let tCat = p.cat || "Mock Test";
+                let tSub = p.subcat || tData.subject || tData.sub || "Subject";
+                let tChap = p.topic || "";
+                
+                h += `
+                    <div class="test-card hist-card-layout">
+                        <div class="hist-left">
+                            <h4 style="margin:0;color:var(--primary);font-size:15px;">📝 ${tBoard} - ${tExam} (${r.testCode||'Test'})</h4>
+                            <div style="font-size:12px;color:var(--text-muted);margin:4px 0 8px 0;font-weight:600;">
+                                📂 ${tCat} | 📚 ${tSub} ${tChap ? ' | 📖 ' + tChap : ''}
+                            </div>
+                            <div style="font-size:12px;color:var(--text-main);background:var(--bg-subtle);padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border-color); display:inline-block;">
+                                Attempt: <b>${r.attempt||1}</b> | Score: <b style="color:var(--success);font-size:14px;">${r.score||0}</b><br>
+                                <span style="color:var(--success);margin-top:4px;display:inline-block;">✅ Right: ${r.right||0}</span> | 
+                                <span style="color:var(--danger);">❌ Wrong: ${r.wrong||0}</span> | 
+                                <span style="color:var(--text-muted);">⬜ Blank: ${r.blank||0}</span><br>
+                                <div style="margin-top:4px;">⏱ Time Taken: ${Math.floor((r.timeSpent||0)/60)}m ${(r.timeSpent||0)%60}s</div>
+                            </div>
+                        </div>
+                        <div class="hist-right">
+                            <button class="btn btn-danger btn-sm" style="margin:0; padding:10px 16px; font-size:13px;" onclick="window.downloadHistoryPDF('${pdfCode}')">📥 Download PDF</button>
+                        </div>
+                    </div>`; 
+            });
+            
+            list.innerHTML = h;
+        };
+
+        window.downloadHistoryPDF = function(code) {
+            if(!code) return window.showCustomAlert("Error", "Invalid test code", "❌");
+            window.showLoadingModal("Fetching PDF data securely...<br><i>Please wait...</i>");
+            
+            db.collection("tests").doc(code).get().then(doc => {
+                if(doc.exists) {
+                    window.handleHistoryPDFLoad(doc.data());
+                } else {
+                    window.closeModal(); 
+                    window.showCustomAlert("Error", "Test data missing in database.", "❌"); 
+                }
+            }).catch(err => {
+                window.closeModal(); 
+                window.showCustomAlert("Error", "Network Error.", "❌"); 
+            });
+        };
+
+        window.handleHistoryPDFLoad = function(data) {
+            window.closeModal(); 
+            if (data.error) return window.showCustomAlert("Error", "Test data missing.", "❌");
+            
+            let raw = data.rawText || "";
+            if (!raw && data.questions && data.questions.length > 0) { 
+                raw = data.questions.map((q, i) => { 
+                    let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
+                    let qs = `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`; 
+                    let op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n'; 
+                    let an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`; 
+                    let ex = q.exp ? `!!!! ${String(q.exp).replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n` : ""; 
+                    return pa + qs + op + an + ex; 
+                }).join('\n'); 
+            }
+            
+            let pQs = window.parseRawQuestions(raw);
+            let oldExam = window.examData; 
+            
+            window.examData = { 
+                exam: data.exam, 
+                subject: data.subject || data.sub || "Subject", 
+                topic: data.topic, 
+                code: data.code, 
+                questions: pQs, 
+                isFree: data.isFree,
+                summary: window.parseHack(data.topic).summary || "" 
+            };
+            
+            let isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true"); 
+            let isPrem = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo.isPremium === true));
+            
+            if(!isFree && !isPrem) { 
+                window.examData = oldExam; 
+                return window.showPremiumModal(); 
+            }
+            
+            window.userAnswers = []; 
+            pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
+            
+            let customName = window.studentInfo.name || "Student";
+            window.executePDFPrint(customName, 'full');
+        };
+
+        /* ==========================================================================
+           13. ADMIN DASHBOARD & TEST CREATION
+           ========================================================================== */
+        window.switchAdminTab = function(tab) {
+            let createSec = document.getElementById('admin-create-section');
+            let manageSec = document.getElementById('admin-manage-section');
+            let iconSec = document.getElementById('admin-icons-section');
+            
+            if(createSec) createSec.style.display = 'none'; 
+            if(manageSec) manageSec.style.display = 'none'; 
+            if(iconSec) iconSec.style.display = 'none';
+            
+            document.querySelectorAll('.admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            let tabs = document.querySelectorAll('.admin-tabs .tab-btn');
+            
+            if (tab === 'create') {
+                if(tabs.length > 0) tabs[0].classList.add('active'); 
+                if(createSec) createSec.style.display = 'block';
+                let btn = document.getElementById('btn-generate'); 
+                if(btn) {
+                    btn.innerText = "🚀 Generate / Update Test"; 
+                    btn.style.background = "var(--primary)"; 
+                }
+                window.initQuickFill();
+            } 
+            else if (tab === 'manage') {
+                if(tabs.length > 1) tabs[1].classList.add('active'); 
+                if(manageSec) manageSec.style.display = 'block';
+                if (window.globalActiveTests && window.globalActiveTests.length > 0) window.renderDashboard(); 
+                else window.fetchActiveTests();
+            } 
+            else if (tab === 'icons') {
+                if(tabs.length > 2) tabs[2].classList.add('active'); 
+                if(iconSec) iconSec.style.display = 'block'; 
+                window.loadAdminIcons();
+            }
+        };
+        
+        window.initQuickFill = function() {
+            let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
+            window.qTree = {};
+            
+            savedTests.forEach(t => { 
+                let p = window.parseHack(t.topic); 
+                let b = p.board || t.exam || "General Exam"; 
+                let e = t.exam || "Mock Test"; 
+                let c = p.cat || "Mock Tests"; 
+                let s = p.subcat || t.subject || t.sub || "Subject"; 
+                
+                if (!window.qTree[b]) window.qTree[b] = {}; 
+                if (!window.qTree[b][e]) window.qTree[b][e] = {}; 
+                if (!window.qTree[b][e][c]) window.qTree[b][e][c] = new Set(); 
+                window.qTree[b][e][c].add(s); 
+            });
+            
+            let qb = document.getElementById('quick-board'); 
+            if(qb) {
+                qb.innerHTML = '<option value="">1. Select Board</option>'; 
+                for (let b in window.qTree) qb.innerHTML += `<option value="${b}">${b}</option>`; 
+            }
+            
+            let qe = document.getElementById('quick-exam');
+            let qc = document.getElementById('quick-cat');
+            let qs = document.getElementById('quick-sub');
+            
+            if(qe) qe.innerHTML = '<option value="">2. Select Exam</option>'; 
+            if(qc) qc.innerHTML = '<option value="">3. Select Category</option>'; 
+            if(qs) qs.innerHTML = '<option value="">4. Select Subject</option>';
+        };
+
+        window.fillQuick = function(level) {
+            let qb = document.getElementById('quick-board');
+            let qe = document.getElementById('quick-exam');
+            let qc = document.getElementById('quick-cat');
+            let qs = document.getElementById('quick-sub');
+            
+            let bVal = qb ? qb.value : ""; 
+            let eVal = qe ? qe.value : ""; 
+            let cVal = qc ? qc.value : "";
+            
+            if (level === 'board') { 
+                let aBoard = document.getElementById('a-board');
+                if(aBoard) aBoard.value = bVal; 
+                window.autoFillLogo(); 
+                
+                if(qe) {
+                    qe.innerHTML = '<option value="">2. Select Exam</option>';
+                    if (bVal && window.qTree[bVal]) { 
+                        for (let e in window.qTree[bVal]) qe.innerHTML += `<option value="${e}">${e}</option>`; 
+                    }
+                } 
+                if(qc) qc.innerHTML = '<option value="">3. Select Category</option>'; 
+                if(qs) qs.innerHTML = '<option value="">4. Select Subject</option>'; 
+            } 
+            else if (level === 'exam') { 
+                let aExam = document.getElementById('a-exam');
+                if(aExam) aExam.value = eVal; 
+                
+                if(qc) {
+                    qc.innerHTML = '<option value="">3. Select Category</option>';
+                    if (bVal && eVal && window.qTree[bVal][eVal]) { 
+                        for (let c in window.qTree[bVal][eVal]) qc.innerHTML += `<option value="${c}">${c}</option>`; 
+                    } 
+                }
+                if(qs) qs.innerHTML = '<option value="">4. Select Subject</option>'; 
+            } 
+            else if (level === 'cat') { 
+                let catSelect = document.getElementById('a-category'); 
+                let customCat = document.getElementById('a-custom-cat');
+                
+                if(catSelect) {
+                    let options = Array.from(catSelect.options).map(opt => opt.value); 
+                    if (options.includes(cVal)) { 
+                        catSelect.value = cVal; 
+                        if(customCat) customCat.style.display = 'none'; 
+                    } else { 
+                        catSelect.value = "CUSTOM"; 
+                        if(customCat) {
+                            customCat.style.display = 'block'; 
+                            customCat.value = cVal; 
+                        }
+                    }
+                } 
+                
+                if(qs) {
+                    qs.innerHTML = '<option value="">4. Select Subject</option>'; 
+                    if (bVal && eVal && cVal && window.qTree[bVal][eVal][cVal]) { 
+                        window.qTree[bVal][eVal][cVal].forEach(s => { qs.innerHTML += `<option value="${s}">${s}</option>`; }); 
+                    }
+                } 
+            } 
+            else if (level === 'sub') {
+                let aSub = document.getElementById('a-sub');
+                if(aSub && qs) aSub.value = qs.value;
+            }
+        };
+
+        window.autoFillLogo = function() { 
+            let aBoard = document.getElementById('a-board');
+            if(!aBoard) return;
+            let eName = aBoard.value.trim().toLowerCase(); 
+            if (!eName) return; 
+            
+            let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
+            for (let i = 0; i < savedTests.length; i++) { 
+                let p = window.parseHack(savedTests[i].topic); 
+                let bName = (p.board || savedTests[i].exam || "").toLowerCase(); 
+                if (bName === eName && p.logo) { 
+                    let aLogo = document.getElementById('a-logo');
+                    if(aLogo) aLogo.value = p.logo; 
+                    return; 
+                } 
+            } 
+        };
+
+        window.loadAdminIcons = function() { 
+            let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
+            let boards = {}; 
+            savedTests.forEach(t => { 
+                let p = window.parseHack(t.topic); 
+                let bName = p.board || t.exam || "General Exam"; 
+                if (!boards[bName]) boards[bName] = p.logo || ""; 
+            }); 
+            
+            let sel = document.getElementById('icon-select'); 
+            if(sel) {
+                sel.innerHTML = '<option value="">-- Select Icon --</option>'; 
+                for (let b in boards) sel.innerHTML += `<option value="${b}">${b}</option>`; 
+            }
+        };
+
+        window.onIconSelect = function() { 
+            let sel = document.getElementById('icon-select');
+            if(!sel) return;
+            let val = sel.value; 
+            if (!val) return; 
+            
+            let savedTests = window.adminUnifiedTests.length > 0 ? window.adminUnifiedTests : window.getAllMergedTests(); 
+            let logo = ""; 
+            for (let i = 0; i < savedTests.length; i++) { 
+                let t = savedTests[i]; 
+                let p = window.parseHack(t.topic); 
+                let bName = p.board || t.exam || "General Exam"; 
+                if (bName === val) { logo = p.logo; break; } 
+            } 
+            
+            let newName = document.getElementById('icon-new-name');
+            let newLogo = document.getElementById('icon-new-logo');
+            if(newName) newName.value = val; 
+            if(newLogo) newLogo.value = logo || ""; 
+        };
+
+        window.uploadImageToFirebase = function(inputId, targetInputId) {
+            let fileInput = document.getElementById(inputId);
+            if (!fileInput || !fileInput.files[0]) return;
+            
+            let file = fileInput.files[0];
+            window.showLoadingModal("Uploading image securely... Please wait.");
+            
+            let storageRef = firebase.storage().ref('icons/' + Date.now() + '_' + file.name);
+            
+            storageRef.put(file).then((snapshot) => {
+                return snapshot.ref.getDownloadURL();
+            }).then((downloadURL) => {
+                window.closeModal();
+                let targetInput = document.getElementById(targetInputId);
+                if(targetInput) targetInput.value = downloadURL;
+                window.showCustomAlert("Success", "Image uploaded successfully!", "✅");
+            }).catch((error) => {
+                window.closeModal();
+                window.showCustomAlert("Upload Failed", error.message, "❌");
+            });
+        };
+
+        window.updateAdminIcon = async function() {
+            let sel = document.getElementById('icon-select');
+            let oldName = sel ? sel.value : ""; 
+            let newNameElem = document.getElementById('icon-new-name');
+            let newName = newNameElem ? newNameElem.value.trim() : ""; 
+            let newLogoElem = document.getElementById('icon-new-logo');
+            let newLogo = newLogoElem ? newLogoElem.value.trim() : "";
+            
+            if (!oldName || !newName) return window.showCustomAlert("Error", "Select icon and provide new name.", "❌");
+            
+            window.showLoadingModal("Updating logos globally on server...<br>Please wait...");
+            
+            let allTests = window.getAllMergedTests();
+            let count = 0;
+            let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+            
+            for (let i = 0; i < allTests.length; i++) {
+                let t = allTests[i];
+                let p = window.parseHack(t.topic);
+                let bName = p.board || t.exam || "General Exam";
+                
+                if (bName === oldName) {
+                    let finalTopic = (p.topic || "") + "|||QS:" + (p.qs || t.qs || 0) + "|||CAT:" + (p.cat || "") + "|||LOGO:" + newLogo + "|||BOARD:" + newName + "|||EXAM:" + (p.exam || t.exam) + "|||SUBCAT:" + (p.subcat || t.subject || t.sub) + "|||SUMMARY:" + (p.summary || ""); 
+                    t.topic = finalTopic; 
+                    if (!p.board && t.exam === oldName) t.exam = newName;
+                    
+                    let eIdx = savedTests.findIndex(x => x.code === t.code);
+                    if (eIdx >= 0) savedTests[eIdx] = t; else savedTests.push(t);
+                    
+                    try {
+                        await db.collection("tests").doc(t.code).set(t);
+                        count++;
+                    } catch(e) { console.error(e); }
+                }
+            }
+            
+            localStorage.setItem('myMockTests', JSON.stringify(savedTests));
+            window.closeModal();
+            window.showCustomAlert("Success", `${count} tests updated globally!`, "✅"); 
+            window.fetchActiveTests();
+        };
+
+        window.deleteAdminIcon = function() { 
+            let sel = document.getElementById('icon-select');
+            let oldName = sel ? sel.value : ""; 
+            if (!oldName) return; 
+            
+            window.showCustomConfirm("Warning", `Delete icon '${oldName}' and ALL its tests locally?`, () => { 
+                let savedTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                let newTests = savedTests.filter(t => { 
+                    let p = window.parseHack(t.topic); 
+                    return (p.board || t.exam || "General Exam") !== oldName; 
+                }); 
+                localStorage.setItem('myMockTests', JSON.stringify(newTests)); 
+                window.showCustomAlert("Deleted", "Deleted locally.", "🗑️"); 
+                window.fetchActiveTests(); 
+            }); 
+        };
+
+        window.updateQsCount = function() { 
+            let rawData = document.getElementById('a-rawdata');
+            if(!rawData) return 0;
+            let text = rawData.value; 
+            let matches = text.match(/!!\s*\d+\s*!/g); 
+            let count = matches ? matches.length : 0; 
+            let countBox = document.getElementById('a-qs-count'); 
+            if (countBox) countBox.value = count; 
+            return count; 
+        };
+
+        window.clearAdminMemory = function() { 
+            window.showCustomConfirm("Clear Memory", "Clear all saved tests from Admin Panel memory?", () => { 
+                localStorage.removeItem('myMockTests'); 
+                window.fetchActiveTests(); 
+            }, "🗑️"); 
+        };
+
+        window.openAdminLogin = function() { 
+            try { 
+                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view')); 
+                let authView = document.getElementById('admin-auth-view'); 
+                if (authView) { 
+                    authView.classList.add('active-view'); 
+                    window.toggleAdminLock(false); 
+                    window.scrollTo(0, 0); 
+                } 
+            } catch (e) { console.error(e); } 
+        };
+
+        window.loginAdmin = function() { 
+            let idElem = document.getElementById('admin-id');
+            let passElem = document.getElementById('admin-pass');
+            let id = idElem ? idElem.value.trim() : ""; 
+            let pass = passElem ? passElem.value.trim() : ""; 
+            
+            if (id === "8273684939" && pass === "Ankush@1231@123") { 
+                let authView = document.getElementById('admin-auth-view');
+                let adminView = document.getElementById('admin-view');
+                if(authView) authView.classList.remove('active-view'); 
+                if(adminView) adminView.classList.add('active-view'); 
+                window.switchAdminTab('create'); 
+            } else {
+                window.showCustomAlert("Error", "❌ Invalid credentials!", "❌"); 
+            }
+        };
+        
+        window.renderDashboard = function() {
+            let dbTests = window.globalActiveTests || []; 
+            let hidden = window.getHiddenTests(); 
+            let unifiedMap = new Map();
+            
+            dbTests.forEach(t => { if (!hidden.includes(t.code)) unifiedMap.set(t.code, t); });
+            
+            let localTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+            localTests.forEach(t => { if (!hidden.includes(t.code)) unifiedMap.set(t.code, t); });
+            
+            let sTests = Array.from(unifiedMap.values()); 
+            window.adminUnifiedTests = sTests;
+            
+            let list = document.getElementById('dashboard-list'); 
+            if(!list) return;
+
+            if (sTests.length === 0) { 
+                list.innerHTML = "<p style='text-align:center;color:var(--text-muted);'>No tests saved.</p>"; 
+                return; 
+            }
+            
+            let grp = {}; 
+            sTests.forEach(t => { 
+                let p = window.parseHack(t.topic); 
+                let b = p.board || t.exam || "General Exam"; 
+                if (!grp[b]) grp[b] = []; 
+                grp[b].push(t); 
+            });
+            
+            let h = "";
+            for (let b in grp) {
+                h += `<h3 style="background:var(--primary);color:white;padding:12px 16px;border-radius:var(--radius);margin-top:20px;">🏛️ ${b}</h3>`;
+                grp[b].forEach(t => {
+                    let p = window.parseHack(t.topic); 
+                    let cEx = t.exam || "Mock Test"; 
+                    let cSu = p.subcat || t.subject || t.sub || "Subject"; 
+                    let cCa = p.cat || "Mock Tests"; 
+                    let chapterTopic = p.topic || "";
+                    let isF = (t.isFree === true || String(t.isFree).toLowerCase() === "true"); 
+                    let pT = isF ? "Free" : "₹" + (t.price || 0);
+                    
+                    let sBtn = (t.isActive !== false) ? 
+                        `<button class="btn btn-success btn-sm" style="margin:0;width:auto;" onclick="window.toggleTestStatus('${t.code}',false)">🟢 Active</button>` : 
+                        `<button class="btn btn-outline btn-sm" style="margin:0;width:auto;" onclick="window.toggleTestStatus('${t.code}',true)">🔴 Inactive</button>`;
+                    
+                    let qC = p.qs || t.qs || 0; 
+                    if (!qC || qC === 0 || qC === "N/A") { 
+                        if (t.questions && Array.isArray(t.questions) && t.questions.length > 0) qC = t.questions.length; 
+                        else if (t.rawText) { let m = String(t.rawText).match(/!!\s*\d+\s*!/g); if (m) qC = m.length; } 
+                    }
+                    
+                    h += `
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-title">🎓 ${cEx} | ${cSu} (${t.code})</div>
+                                ${sBtn}
+                            </div>
+                            ${chapterTopic ? `<div class="test-subtitle">📖 ${chapterTopic}</div>` : ""}
+                            <div class="test-meta">
+                                <span class="badge">📂 ${cCa}</span>
+                                <span class="badge badge-primary">Qs: ${qC}</span>
+                                <span class="badge">${pT}</span>
+                                <span class="badge">+${t.marks||2}/-${t.neg||0}</span>
+                            </div>
+                            <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:8px;border:1px solid var(--border-color);font-size:11px;border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-main);margin-bottom:6px;">
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:10px;">
+                                <button class="btn btn-primary btn-sm" onclick="window.editTest('${t.code}')">✏️ Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.deleteTest('${t.code}')">🗑️ Delete</button>
+                                <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('${t.link||(BASE_URL+'?test='+t.code)}');window.showCustomAlert('Copied','Link copied!','✅');">📋 Copy</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.adminDownloadPDF('${t.code}','q_only')">📝 Qs</button>
+                                <button class="btn btn-success btn-sm" onclick="window.adminDownloadPDF('${t.code}','q_ans')">✅ Qs+Ans</button>
+                                <button class="btn btn-primary btn-sm" onclick="window.adminDownloadPDF('${t.code}','full')">📚 Full</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            list.innerHTML = h;
+        };
+
+        window.toggleTestStatus = function(code, nS) {
+            let cleanCode = code.trim();
+            db.collection("tests").doc(cleanCode).update({
+                isActive: nS
+            }).then(() => {
+                let sT = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                let idx = sT.findIndex(x => x.code === cleanCode); 
+                if (idx >= 0) { 
+                    sT[idx].isActive = nS; 
+                    localStorage.setItem('myMockTests', JSON.stringify(sT)); 
+                } 
+                window.fetchActiveTests(); 
+            }).catch(err => {
+                window.showCustomAlert("Error", "Failed to update test status in Database.", "❌"); 
+            });
+        };
+
+        // 🔥 FETCH FROM FIREBASE 🔥
+        window.fetchTestForAdmin = function(code, action, mode) {
+            window.adminActionCode = code.trim();
+            window.adminActionMode = action;
+            window.adminPdfMode = mode;
+            window.showLoadingModal("Downloading full test data securely...<br><br><i>Wait just a second...</i>");
+            
+            db.collection("tests").doc(window.adminActionCode).get().then((doc) => {
+                if (doc.exists) {
+                    window.handleAdminTestLoad(doc.data());
+                } else {
+                    window.closeModal();
+                    window.showCustomAlert("Error", "Test not found on server!", "❌"); 
+                }
+            }).catch((error) => {
+                window.closeModal();
+                window.showCustomAlert("Network Error", "Failed to connect to Database.", "❌"); 
+            });
+        };
+
+        window.handleAdminTestLoad = function(data) {
+            window.closeModal();
+            
+            let raw = data.rawText || "";
+            if (!raw && data.questions && data.questions.length > 0) {
+                raw = data.questions.map((q, i) => {
+                    let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
+                    let qs = `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;
+                    let op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
+                    let an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;
+                    let ex = q.exp ? `!!!! ${String(q.exp).replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n` : "";
+                    return pa + qs + op + an + ex;
+                }).join('\n');
+                data.rawText = raw;
+            }
+            
+            data.isFetched = true;
+            
+            let sTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+            let eIdx = sTests.findIndex(t => t.code === data.code);
+            if (eIdx >= 0) { 
+                sTests[eIdx] = { ...sTests[eIdx], ...data }; 
+            } else { 
+                sTests.push(data); 
+            }
+            localStorage.setItem('myMockTests', JSON.stringify(sTests));
+            
+            let uIdx = window.adminUnifiedTests.findIndex(t => t.code === data.code);
+            if (uIdx >= 0) {
+                window.adminUnifiedTests[uIdx] = { ...window.adminUnifiedTests[uIdx], ...data };
+            } else {
+                window.adminUnifiedTests.push(data);
+            }
+            window.renderDashboard();
+
+            if (window.adminActionMode === 'edit') window.editTest(window.adminActionCode);
+            else if (window.adminActionMode === 'pdf') window.adminDownloadPDF(window.adminActionCode, window.adminPdfMode);
+        };
+
+        window.editTest = function(code) {
+            let t = window.adminUnifiedTests.find(x => x.code === code); 
+            if (!t) return;
+            
+            let raw = t.rawText || "";
+            if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { 
+                window.fetchTestForAdmin(code, 'edit', null); 
+                return; 
+            }
+            
+            if (!raw && t.questions && t.questions.length > 0) { 
+                raw = t.questions.map((q, i) => { 
+                    let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : ""; 
+                    let qs = `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`; 
+                    let op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n'; 
+                    let an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`; 
+                    let ex = q.exp ? `!!!! ${String(q.exp).replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n` : ""; 
+                    return pa + qs + op + an + ex; 
+                }).join('\n'); 
+                t.rawText = raw; 
+            }
+            
+            let p = window.parseHack(t.topic);
+            
+            let aBoard = document.getElementById('a-board');
+            let aExam = document.getElementById('a-exam');
+            let aLogo = document.getElementById('a-logo');
+            let aSummary = document.getElementById('a-summary');
+            let aCat = document.getElementById('a-category');
+            let aCustomCat = document.getElementById('a-custom-cat');
+            let aSub = document.getElementById('a-sub');
+            let aTopic = document.getElementById('a-topic');
+            let aCode = document.getElementById('a-code');
+            let aMarks = document.getElementById('a-marks');
+            let aNeg = document.getElementById('a-neg');
+            let aTotTime = document.getElementById('a-tot-time');
+            let aQTime = document.getElementById('a-q-time');
+            let aPdfType = document.getElementById('a-pdf-type');
+            let aPrice = document.getElementById('a-price');
+            let aRaw = document.getElementById('a-rawdata');
+            let aQsCount = document.getElementById('a-qs-count');
+
+            if(aBoard) aBoard.value = p.board || t.exam || ""; 
+            if(aExam) aExam.value = t.exam || ""; 
+            if(aLogo) aLogo.value = p.logo || "";
+            if(aSummary) aSummary.value = p.summary || "";
+            
+            if(aCat) {
+                let opts = Array.from(aCat.options).map(o => o.value);
+                if (opts.includes(p.cat)) { 
+                    aCat.value = p.cat; 
+                    if(aCustomCat) aCustomCat.style.display = 'none'; 
+                } else { 
+                    aCat.value = "CUSTOM"; 
+                    if(aCustomCat) {
+                        aCustomCat.style.display = 'block'; 
+                        aCustomCat.value = p.cat; 
+                    }
+                }
+            }
+            
+            if(aSub) aSub.value = p.subcat || t.subject || t.sub || ""; 
+            if(aTopic) aTopic.value = p.topic || ""; 
+            if(aCode) aCode.value = t.code || ""; 
+            if(aMarks) aMarks.value = t.marks || 2; 
+            if(aNeg) aNeg.value = t.neg || 0; 
+            if(aTotTime) aTotTime.value = t.totTime || 0; 
+            if(aQTime) aQTime.value = t.qTime || 0;
+            
+            let isF = (t.isFree === true || String(t.isFree).toLowerCase() === "true"); 
+            if(aPdfType) aPdfType.value = isF ? "free" : "paid"; 
+            if (!isF && aPrice) aPrice.value = t.price || "";
+            
+            if(aRaw) aRaw.value = raw || ""; 
+            if(aQsCount) aQsCount.value = window.parseRawQuestions(raw || "").length;
+            
+            window.togglePriceBox(); 
+            window.switchAdminTab('create'); 
+            window.scrollTo(0, 0); 
+            
+            let btn = document.getElementById('btn-generate'); 
+            if(btn) {
+                btn.innerText = "🚀 Update Test"; 
+                btn.style.background = "#f59e0b";
+            }
+        };
+
+        window.deleteTest = function(code) {
+            let cleanCode = code.trim();
+            window.showCustomConfirm("Delete Test", `Delete <b>${cleanCode}</b> permanently?`, () => {
+                
+                // Delete from Firebase
+                db.collection("tests").doc(cleanCode).delete().then(() => {
+                    let sT = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                    sT = sT.filter(x => x.code !== cleanCode); 
+                    localStorage.setItem('myMockTests', JSON.stringify(sT));
+                    
+                    let hidden = window.getHiddenTests(); 
+                    if (!hidden.includes(cleanCode)) hidden.push(cleanCode); 
+                    localStorage.setItem('mockSarthiHidden', JSON.stringify(hidden));
+                    
+                    window.globalActiveTests = window.globalActiveTests.filter(x => x.code !== cleanCode); 
+                    window.adminUnifiedTests = window.adminUnifiedTests.filter(x => x.code !== cleanCode);
+                    
+                    window.renderDashboard(); 
+                    window.showCustomAlert("Deleted", `Test ${cleanCode} deleted successfully.`, "🗑️");
+                }).catch((error) => {
+                    window.showCustomAlert("Error", "Failed to delete: " + error.message, "❌");
+                });
+                
+            }, "🗑️");
+        };
+
+        // 🔥 SAVE DIRECTLY TO FIREBASE 🔥
+        window.generateAndSaveLink = function() {
+            let aBoard = document.getElementById('a-board');
+            let aExam = document.getElementById('a-exam');
+            let aLogo = document.getElementById('a-logo');
+            let aSub = document.getElementById('a-sub');
+            let aTopicElem = document.getElementById('a-topic');
+            let aCodeElem = document.getElementById('a-code');
+            let aSummaryElem = document.getElementById('a-summary');
+            let aMarks = document.getElementById('a-marks');
+            let aNeg = document.getElementById('a-neg');
+            let aTotTime = document.getElementById('a-tot-time');
+            let aQTime = document.getElementById('a-q-time');
+            let aPdfType = document.getElementById('a-pdf-type');
+            let aPriceElem = document.getElementById('a-price');
+            let aCatElem = document.getElementById('a-category');
+            let aCustomCatElem = document.getElementById('a-custom-cat');
+            let aRawDataElem = document.getElementById('a-rawdata');
+            let btn = document.getElementById('btn-generate');
+
+            let eBoard = aBoard ? aBoard.value : "General Exam"; 
+            let eName = aExam ? aExam.value : "Mock Test"; 
+            let eLogo = aLogo ? aLogo.value : ""; 
+            let eSub = aSub ? aSub.value : "Subject"; 
+            let eTopicRaw = aTopicElem ? aTopicElem.value : ""; 
+            
+            let eCode = aCodeElem ? aCodeElem.value.trim() : "";
+            
+            let eSummaryRaw = aSummaryElem ? aSummaryElem.value : "";
+            eSummaryRaw = eSummaryRaw.replace(/\|\|\|/g, ''); 
+            let eSummary = eSummaryRaw.replace(/\n/g, '<br>');
+            
+            if (!eCode) { 
+                eCode = "T-" + Math.floor(Math.random() * 99999); 
+                if(aCodeElem) aCodeElem.value = eCode; 
+            }
+            
+            let eMarks = aMarks ? parseFloat(aMarks.value) || 2 : 2; 
+            let eNeg = aNeg ? parseFloat(aNeg.value) || 0 : 0; 
+            let tTime = aTotTime ? parseInt(aTotTime.value) || 0 : 0; 
+            let qTime = aQTime ? parseInt(aQTime.value) || 0 : 0; 
+            
+            let pdfType = aPdfType ? aPdfType.value : "free";
+            let isFree = (pdfType === "free"); 
+            let ePrice = isFree ? "Free" : (aPriceElem ? (aPriceElem.value || "49") : "49"); 
+            
+            let eKey = "ANK"; 
+            let eCategory = aCatElem ? aCatElem.value : "Mock Tests";
+            
+            if (eCategory === "CUSTOM" && aCustomCatElem) {
+                eCategory = aCustomCatElem.value || "Custom Category";
+            }
+            
+            let rawText = aRawDataElem ? aRawDataElem.value : ""; 
+            if (!rawText.trim()) return window.showCustomAlert("Empty Box", "Paste questions!", "⚠️");
+            
+            let parsedQs = window.parseRawQuestions(rawText); 
+            if (parsedQs.length === 0) return window.showCustomAlert("Format Error", "❌ Incorrect format.", "⚠️");
+            
+            let fQs = window.updateQsCount(); 
+            if (fQs === 0) fQs = parsedQs.length;
+            
+            let finalTopicRaw = eTopicRaw || eSub || "Test"; 
+            let eTopic = finalTopicRaw + "|||QS:" + fQs + "|||CAT:" + eCategory + "|||LOGO:" + eLogo + "|||BOARD:" + eBoard + "|||EXAM:" + eName + "|||SUBCAT:" + eSub + "|||SUMMARY:" + eSummary;
+            
+            let fObj = { 
+                exam: eName, category: eCategory, logo: eLogo, subject: eSub, sub: eSub, 
+                topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, 
+                qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, 
+                qs: fQs, rawText: rawText, isActive: true 
+            };
+            
+            if(btn) {
+                btn.innerText = "⏳ Saving to Firebase..."; 
+                btn.disabled = true;
+            }
+            
+            db.collection("tests").doc(eCode).set(fObj).then(() => {
+                if(btn) {
+                    btn.innerText = "🚀 Generate / Update Test"; 
+                    btn.disabled = false; 
+                    btn.style.background = "var(--primary)";
+                }
+                
+                if(aSub) aSub.value = ""; 
+                if(aTopicElem) aTopicElem.value = ""; 
+                if(aCodeElem) aCodeElem.value = ""; 
+                if(aRawDataElem) aRawDataElem.value = ""; 
+                
+                let aQsCountElem = document.getElementById('a-qs-count');
+                if(aQsCountElem) aQsCountElem.value = "";
+                
+                if(aSummaryElem) aSummaryElem.value = "";
+                
+                let tLink = BASE_URL + "?test=" + eCode; 
+                
+                let sTests = JSON.parse(localStorage.getItem('myMockTests')) || []; 
+                let eIdx = sTests.findIndex(t => t.code === eCode);
+                
+                let tObj = { 
+                    ...fObj,
+                    link: tLink, 
+                    date: new Date().toLocaleDateString()
+                };
+                
+                if (eIdx >= 0) sTests[eIdx] = tObj; else sTests.push(tObj); 
+                localStorage.setItem('myMockTests', JSON.stringify(sTests));
+                
+                let uIdx = window.adminUnifiedTests.findIndex(t => t.code === eCode); 
+                if (uIdx >= 0) window.adminUnifiedTests[uIdx] = tObj; else window.adminUnifiedTests.push(tObj);
+                
+                let gIdx = window.globalActiveTests.findIndex(t => t.code === eCode);
+                if (gIdx >= 0) window.globalActiveTests[gIdx] = tObj; else window.globalActiveTests.push(tObj);
                 
                 let generatedLink = document.getElementById('generatedLink');
                 let linkContainer = document.getElementById('linkContainer');
@@ -2871,5 +4652,3 @@
         };
 
     </script>
-</body>
-</html>
