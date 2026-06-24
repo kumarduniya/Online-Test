@@ -919,7 +919,7 @@
     </body>
 </html>
     <script>
-            /* ==========================================================================
+        /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INITIALIZATION
            ========================================================================== */
         // 🔥 Tumhara exact working URL 🔥
@@ -1768,61 +1768,43 @@
             }
         };
 
-        window.activeTestsUnsubscribe = null; // लाइव कनेक्शन को कण्ट्रोल करने के लिए ग्लोबल वेरिएबल
-
         window.fetchActiveTests = function() {
             let appLayout = document.getElementById('st-app-layout');
+            if(appLayout) appLayout.style.display = 'none';
+            
+            if (window.globalActiveTests && window.globalActiveTests.length > 0) { 
+                let adminManage = document.getElementById('admin-manage-section');
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard(); 
+                else window.showExamsView(); 
+                return; 
+            }
+            
             let stLoader = document.getElementById('st-active-loader');
             let stFolder = document.getElementById('st-folder-view');
-
-            // पहली बार लोड होने पर ही लोडर दिखाएंगे
-            if (!window.globalActiveTests || window.globalActiveTests.length === 0) {
-                if(appLayout) appLayout.style.display = 'none';
-                if(stLoader) stLoader.style.display = 'block';
-                if(stFolder) stFolder.innerHTML = '';
-            }
-
-            // अगर पहले से कोई लाइव कनेक्शन चल रहा है, तो उसे बंद करें ताकि डुप्लीकेट न हो
-            if (window.activeTestsUnsubscribe) {
-                window.activeTestsUnsubscribe();
-            }
-
-            // .get() की जगह .onSnapshot() लगाया गया है (बिना रिफ्रेश लाइव अपडेट के लिए)
-            window.activeTestsUnsubscribe = db.collection("tests").onSnapshot((querySnapshot) => {
+            
+            if(stLoader) stLoader.style.display = 'block'; 
+            if(stFolder) stFolder.innerHTML = '';
+            
+            db.collection("tests").get().then((querySnapshot) => {
                 let tests = [];
                 querySnapshot.forEach((doc) => {
                     tests.push(doc.data());
                 });
-
+                
                 window.globalActiveTests = tests;
                 if(stLoader) stLoader.style.display = 'none';
-
-                let adminManage = document.getElementById('admin-manage-section');
                 
-                // पता लगाते हैं कि स्टूडेंट मेन होम स्क्रीन पर है या किसी फोल्डर के अंदर
-                let isMainViewActive = (!appLayout || appLayout.style.display === 'none');
-
-                if (adminManage && adminManage.style.display === 'block') {
-                    window.renderDashboard(); // एडमिन के लिए लाइव अपडेट
-                } else if (isMainViewActive) {
-                    window.showExamsView(); // स्टूडेंट के लिए होम स्क्रीन पर लाइव अपडेट
-                }
-                // अगर स्टूडेंट फोल्डर के अंदर है, तो डेटा बैकग्राउंड में अपडेट हो जाएगा 
-                // और उसे बिना डिस्टर्ब किए, वापस आने पर नया डेटा मिल जाएगा।
-
-            }, (error) => {
+                let adminManage = document.getElementById('admin-manage-section');
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard(); 
+                else window.showExamsView();
+            }).catch((error) => {
                 if(stLoader) stLoader.style.display = 'none';
                 let localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
                 window.globalActiveTests = localTests;
-
+                
                 let adminManage = document.getElementById('admin-manage-section');
-                let isMainViewActive = (!appLayout || appLayout.style.display === 'none');
-
-                if (adminManage && adminManage.style.display === 'block') {
-                    window.renderDashboard();
-                } else if (isMainViewActive) {
-                    window.showExamsView();
-                }
+                if (adminManage && adminManage.style.display === 'block') window.renderDashboard(); 
+                else window.showExamsView();
             });
         };
 
@@ -2862,7 +2844,7 @@
             
             window.examData = { exam: t.exam, subject: t.subject || t.sub || "Subject", topic: t.topic, code: t.code, questions: pQs }; 
             
-            let customName = window.studentInfo.name || "अंकुश कुमार S/O मनोज कुमार";
+            let customName = window.studentInfo.name || "Student";
             window.userAnswers = []; 
             pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); }); 
             window.executePDFPrint(customName, mode);
@@ -4668,17 +4650,5 @@
             pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); }); 
             window.executePDFPrint(customName, mode);
         };
-</script>
-</body>
-</html>
 
-                 
-                             
-                                            
-                                                    
-                 
-                                
-                            
-                                                                     
-                   
-                
+    </script>
