@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MockSarthi – Online Test Portal</title>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     
-    <!-- MathJax for rendering Math & Fractions beautifully -->
     <script>
       window.MathJax = {
         tex: {
@@ -87,18 +85,18 @@
             transition: background 0.3s, color 0.3s;
         }
         
-        /* Auto-adjust images & SVG on mobile/tablet so they don't blur or stretch */
+        /* FIX: Auto-adjust images & SVG so they don't blur, and LEFT ALIGN them */
         img, svg { 
             max-width: 100%; 
             height: auto; 
             display: block; 
-            margin: 8px auto; /* Centers the image perfectly */
+            margin: 8px 0; /* Changed from auto to 0 for Left Alignment */
         }
         .q-text img, .opt-label img, .q-passage-box img, .analysis-box img,
         .q-text svg, .opt-label svg, .q-passage-box svg, .analysis-box svg {
             border-radius: 8px; 
-            max-height: 250px; /* Mobile/Tablet par jyada badi na dikhe */
-            width: auto; /* Image failegi nahi, original quality me rahegi */
+            max-height: 250px; 
+            width: auto; 
             object-fit: contain; 
         }
         .MathJax { font-size: 1.15em !important; }
@@ -546,10 +544,15 @@
             .print-exp { color: #222 !important; font-size: 14px !important; margin-top: 8px !important; padding: 8px !important; background: #f5f5f5 !important; border-left: 3px solid #1a56db !important; line-height: 1.4 !important; page-break-inside: auto !important; break-inside: auto !important; }
             .print-passage { padding: 6px !important; margin-bottom: 4px !important; font-style: italic; border-left: 4px solid #333; font-size: 16px !important; background: transparent !important; page-break-inside: auto !important; break-inside: auto !important; }
             
-            /* PDF Print specific rules for images & SVG so they dont cut or blur */
+            /* FIX: PDF Print specific rules for images & SVG so they are compact and left aligned */
             .print-q img, .print-exp img, .print-passage img,
             .print-q svg, .print-exp svg, .print-passage svg { 
-                max-width: 90% !important; max-height: 300px !important; object-fit: contain !important; page-break-inside: avoid !important; display: block; margin: 10px auto; 
+                max-width: 250px !important; /* Compact Size */
+                max-height: 130px !important; /* Compact Size */
+                object-fit: contain !important; 
+                page-break-inside: avoid !important; 
+                display: block !important; 
+                margin: 6px 0 !important; /* Left Aligned */
             }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
@@ -605,20 +608,41 @@
             <div id="auth-login-box" class="auth-box">
                 <h3>Welcome Back <span class="highlight">👋</span></h3>
                 <p class="sub-text">Login to continue your learning journey</p>
-                <div class="form-group"><label>📧 Email</label><input type="email" id="login-email" placeholder="your@email.com" /></div>
-                <div class="form-group"><label>🔒 Password</label><input type="password" id="login-password" placeholder="Enter password" /></div>
-                <div style="text-align:right;margin:-6px 0 16px 0;"><span style="color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;" onclick="window.handleForgotPassword()">Forgot Password?</span></div>
+                <div class="form-group">
+                    <label>📧 Email</label>
+                    <input type="email" id="login-email" placeholder="your@email.com" />
+                </div>
+                <div class="form-group">
+                    <label>🔒 Password</label>
+                    <input type="password" id="login-password" placeholder="Enter password" />
+                </div>
+                <div style="text-align:right;margin:-6px 0 16px 0;">
+                    <span style="color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;" onclick="window.handleForgotPassword()">Forgot Password?</span>
+                </div>
                 <button class="btn btn-primary" onclick="window.handleStudentLogin()">Login 🔓</button>
                 <p class="sub-text" style="margin-top:16px;margin-bottom:0;">New student? <span style="color:var(--accent);font-weight:700;cursor:pointer;" onclick="window.toggleAuthScreens('register')">Register Here</span></p>
             </div>
+            
             <div id="auth-register-box" class="auth-box" style="display:none;">
                 <h3>Create Account <span class="highlight">📝</span></h3>
                 <p class="sub-text">Register once & unlock all tests</p>
                 <div id="reg-form-fields">
-                    <div class="form-group"><label>👤 Full Name</label><input type="text" id="reg-name" placeholder="Enter your full name" /></div>
-                    <div class="form-group"><label>📧 Email (for OTP)</label><input type="email" id="reg-email" placeholder="your@email.com" /></div>
-                    <div class="form-group"><label>📱 Mobile</label><input type="tel" id="reg-phone" placeholder="10-digit number" maxlength="10" /></div>
-                    <div class="form-group"><label>🔒 Password</label><input type="password" id="reg-password" placeholder="Min 6 characters" /></div>
+                    <div class="form-group">
+                        <label>👤 Full Name</label>
+                        <input type="text" id="reg-name" placeholder="Enter your full name" />
+                    </div>
+                    <div class="form-group">
+                        <label>📧 Email (for OTP)</label>
+                        <input type="email" id="reg-email" placeholder="your@email.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>📱 Mobile</label>
+                        <input type="tel" id="reg-phone" placeholder="10-digit number" maxlength="10" />
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Password</label>
+                        <input type="password" id="reg-password" placeholder="Min 6 characters" />
+                    </div>
                     <div class="form-group">
                         <label>🛡️ Security Check</label>
                         <div class="captcha-container">
@@ -629,6 +653,7 @@
                     </div>
                     <button id="btn-send-otp" class="btn btn-primary" onclick="window.handleSendOTP()">Send OTP 📩</button>
                 </div>
+                
                 <div id="reg-otp-field" style="display:none;margin-top:16px;background:rgba(212,168,67,0.08);padding:18px;border-radius:var(--radius);border:2px solid var(--accent);">
                     <div class="form-group">
                         <label style="color:var(--accent);">🔑 Enter 6-Digit OTP</label>
@@ -656,9 +681,13 @@
                 <button class="tab-btn" id="tab-st-history" style="border-radius:var(--radius);flex:none;width:45%;" onclick="window.switchStudentTab('history')">📈 My Report</button>
             </div>
 
+            <!-- Active Tests Section -->
             <div id="st-active-section">
                 <div id="breadcrumb-container" class="breadcrumb-nav" style="display:none;"></div>
-                <div id="st-active-loader" style="text-align:center;display:none;padding:30px;"><div class="loader-mini" style="width:30px; height:30px;"></div> <br /><span style="color:var(--text-muted); margin-top:10px; display:inline-block;">Loading active tests...</span></div>
+                <div id="st-active-loader" style="text-align:center;display:none;padding:30px;">
+                    <div class="loader-mini" style="width:30px; height:30px;"></div> <br />
+                    <span style="color:var(--text-muted); margin-top:10px; display:inline-block;">Loading active tests...</span>
+                </div>
                 <div id="st-folder-view"></div>
                 <div id="st-app-layout" class="app-layout" style="display:none;flex-direction:column;gap:16px;">
                     <div id="st-sidebar-menu" class="category-grid-wrapper"></div>
@@ -666,6 +695,7 @@
                 </div>
             </div>
 
+            <!-- History Section -->
             <div id="st-history-section" style="display:none;">
                 <div style="background:var(--bg-card);border:1px solid var(--border-color);padding:20px;border-radius:var(--radius-lg);margin-bottom:20px;box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                     <div>
@@ -675,6 +705,7 @@
                     <button class="btn btn-primary btn-sm" onclick="window.fetchStudentHistory()" style="margin:0;width:auto;">🔄 Refresh Report</button>
                     <input type="hidden" id="hist-phone" />
                 </div>
+                
                 <div id="st-hist-content">
                     <div style="background:rgba(15,157,88,0.08);border:2px solid var(--success);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;">
                         <h3 style="margin:0 0 14px 0;color:var(--success);text-align:center;">📊 Overall Report Card</h3>
@@ -690,8 +721,12 @@
                             <span style="color:var(--text-muted);">⬜ Blank (<span id="gr-b">0</span>)</span>
                         </div>
                     </div>
+                    
                     <h3 style="color:var(--primary);border-bottom:2px solid var(--border-color);padding-bottom:8px;">📜 Individual Test Records</h3>
-                    <div id="st-hist-loader" style="text-align:center; display:none; margin-top:20px;"><div class="loader-mini" style="width:30px; height:30px;"></div><br /><span style="color:var(--text-muted); margin-top:10px; display:inline-block;">Loading report history...</span></div>
+                    <div id="st-hist-loader" style="text-align:center; display:none; margin-top:20px;">
+                        <div class="loader-mini" style="width:30px; height:30px;"></div><br />
+                        <span style="color:var(--text-muted); margin-top:10px; display:inline-block;">Loading report history...</span>
+                    </div>
                     <div id="st-hist-list" style="display:flex;flex-direction:column;gap:14px;margin-top:14px;"></div>
                 </div>
             </div>
@@ -704,17 +739,21 @@
                 <p style="text-align:center;color:var(--danger);font-weight:700;margin:0;">Code: <span id="disp-code">...</span></p>
                 <p style="text-align:center;color:var(--text-muted);font-size:13px;margin:2px 0 4px 0;">+<span id="disp-marks"></span> / -<span id="disp-neg"></span></p>
                 <p id="disp-time-info" style="text-align:center;color:var(--primary);font-size:12px;font-weight:700;margin:0 0 14px 0;"></p>
+                
                 <div style="margin:12px 0 16px 0;text-align:center;border-bottom:1px dashed var(--border-color);padding-bottom:12px;">
                     <label style="font-weight:700;color:var(--text-main);cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
                         <input type="checkbox" id="randomize-qs" style="transform:scale(1.3);accent-color:var(--accent);" /> 🔀 Randomize Order
                     </label>
                 </div>
+                
                 <div style="background:var(--bg-subtle);padding:16px;border-radius:var(--radius-lg);border:1px solid var(--border-color);margin-bottom:16px;">
                     <h4 style="margin:0 0 6px 0;color:var(--text-main);">📝 Ready to start?</h4>
                     <p style="text-align:center;color:var(--success);font-size:13px;font-weight:700;margin:0 0 12px 0;border-bottom:1px dashed var(--border-color);padding-bottom:10px;">Logged in as: <b id="test-entry-name">Student</b></p>
                     <div id="test-action-area"></div>
                 </div>
-                <div style="text-align:center;"><button class="btn btn-outline btn-sm" onclick="window.closeAndRedirect()">🏠 Back to Dashboard</button></div>
+                <div style="text-align:center;">
+                    <button class="btn btn-outline btn-sm" onclick="window.closeAndRedirect()">🏠 Back to Dashboard</button>
+                </div>
             </div>
         </div>
 
@@ -772,21 +811,28 @@
         <div id="result-view" class="view-section" oncontextmenu="return false;">
             <div class="result-title" id="result-heading"><span class="highlight">🎉</span> Test Submitted!</div>
             <div id="rank-loader" style="margin:8px 0 12px 0;color:var(--primary);font-weight:700;display:none;"><div class="loader-mini"></div> Calculating rank...</div>
+            
             <div id="report-section" style="text-align:center;">
                 <canvas id="reportCard" width="800" height="650" style="display:none;"></canvas>
                 <img id="reportCardImg" style="max-width:100%;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid var(--border-color);margin:16px auto;display:none;" />
+                
                 <div style="display:flex;gap:10px;max-width:600px;margin:14px auto;flex-wrap:wrap;justify-content:center;">
                     <button id="btn-img-down" class="btn btn-primary" style="flex:1;min-width:120px;" onclick="window.downloadImage()">🖼️ Score Card</button>
                     <button id="btn-pdf-down-res" class="btn btn-danger" style="flex:1;min-width:120px;" onclick="window.handleResultPDFClick()">📄 Q&A PDF</button>
                     <button id="btn-reattempt" class="btn btn-warning" style="flex:1;min-width:120px;" onclick="window.startReattempt()">🔄 Reattempt</button>
                 </div>
+                
                 <div id="analysis-btn-container" style="display:flex;gap:6px;max-width:600px;margin:12px auto;justify-content:center;flex-wrap:wrap;position:sticky;top:65px;z-index:900;background:var(--bg-container);padding:10px;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid var(--border-color);">
                     <button class="btn btn-success btn-sm" onclick="window.showAnalysis('right')">✅ Correct (<span id="btn-cnt-right">0</span>)</button>
                     <button class="btn btn-danger btn-sm" onclick="window.showAnalysis('wrong')">❌ Wrong (<span id="btn-cnt-wrong">0</span>)</button>
                     <button class="btn btn-outline btn-sm" style="border-color:var(--text-muted);color:var(--text-muted);" onclick="window.showAnalysis('blank')">⬜ Blank (<span id="btn-cnt-blank">0</span>)</button>
                 </div>
+                
                 <div id="analysis-box" class="analysis-box"></div>
-                <div style="text-align:center;margin:20px 0;"><button class="btn btn-primary" style="max-width:300px;margin:0 auto;" onclick="window.closeAndRedirect()">🏠 Close & Go Home</button></div>
+                
+                <div style="text-align:center;margin:20px 0;">
+                    <button class="btn btn-primary" style="max-width:300px;margin:0 auto;" onclick="window.closeAndRedirect()">🏠 Close & Go Home</button>
+                </div>
             </div>
         </div>
 
@@ -808,8 +854,14 @@
         <div id="admin-auth-view" class="view-section" style="text-align:center;padding:40px 20px;">
             <div style="max-width:420px;margin:0 auto;background:var(--bg-card);padding:32px;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);border-top:5px solid var(--accent);">
                 <h3 style="color:var(--primary);margin-top:0;">🔒 Admin Login</h3>
-                <div class="form-group"><label>Admin ID</label><input type="text" id="admin-id" placeholder="Enter ID" /></div>
-                <div class="form-group"><label>Password</label><input type="password" id="admin-pass" placeholder="Enter Password" /></div>
+                <div class="form-group">
+                    <label>Admin ID</label>
+                    <input type="text" id="admin-id" placeholder="Enter ID" />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="admin-pass" placeholder="Enter Password" />
+                </div>
                 <button class="btn btn-primary" onclick="window.loginAdmin()">Login to Dashboard</button>
                 <button class="btn btn-outline btn-sm" style="margin-top:10px;" onclick="window.closeAndRedirect()">⬅ Back to Home</button>
             </div>
@@ -825,17 +877,34 @@
                 <button class="tab-btn" id="tab-students" onclick="window.switchAdminTab('students')">👨‍🎓 Student Performance</button>
             </div>
 
-            <!-- CREATE / EDIT -->
+            <!-- CREATE / EDIT SECTION -->
             <div id="admin-create-section">
                 <div class="admin-section" style="background:rgba(212,168,67,0.06);border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);">⚡ Quick Auto-Fill <span class="badge-admin">Smart</span></div>
                     <div class="flex-row">
-                        <div class="form-group" style="margin-bottom:0;"><select id="quick-board" onchange="window.fillQuick('board')" style="border-color:var(--accent);font-weight:600;"><option value="">1. Board</option></select></div>
-                        <div class="form-group" style="margin-bottom:0;"><select id="quick-exam" onchange="window.fillQuick('exam')" style="border-color:var(--accent);font-weight:600;"><option value="">2. Exam</option></select></div>
-                        <div class="form-group" style="margin-bottom:0;"><select id="quick-cat" onchange="window.fillQuick('cat')" style="border-color:var(--accent);font-weight:600;"><option value="">3. Category</option></select></div>
-                        <div class="form-group" style="margin-bottom:0;"><select id="quick-sub" onchange="window.fillQuick('sub')" style="border-color:var(--accent);font-weight:600;"><option value="">4. Subject</option></select></div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <select id="quick-board" onchange="window.fillQuick('board')" style="border-color:var(--accent);font-weight:600;">
+                                <option value="">1. Board</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <select id="quick-exam" onchange="window.fillQuick('exam')" style="border-color:var(--accent);font-weight:600;">
+                                <option value="">2. Exam</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <select id="quick-cat" onchange="window.fillQuick('cat')" style="border-color:var(--accent);font-weight:600;">
+                                <option value="">3. Category</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <select id="quick-sub" onchange="window.fillQuick('sub')" style="border-color:var(--accent);font-weight:600;">
+                                <option value="">4. Subject</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="admin-section">
                     <div class="admin-section-title">📋 Test Details</div>
                     <div class="admin-grid-2">
@@ -945,6 +1014,7 @@
                     <!-- END VISUAL EDITOR SECTION -->
 
                     <button id="btn-generate" class="btn btn-primary" onclick="window.generateAndSaveLink()">🚀 Generate / Update Test</button>
+                    
                     <div id="linkContainer" style="display:none;margin-top:16px;background:var(--bg-subtle);padding:16px;border-radius:var(--radius);border:2px solid var(--accent);">
                         <label style="color:var(--warning);font-weight:700;">👇 Copy this link:</label>
                         <input type="text" id="generatedLink" readonly onclick="this.select();navigator.clipboard.writeText(this.value);window.showCustomAlert('Copied','Link copied!','✅');" style="font-weight:700;padding:14px;width:100%;border-radius:var(--radius);border:1px solid var(--border-color);cursor:pointer;background:var(--bg-card);color:var(--text-main);" />
@@ -952,7 +1022,7 @@
                 </div>
             </div>
 
-            <!-- MANAGE TESTS -->
+            <!-- MANAGE TESTS SECTION -->
             <div id="admin-manage-section" style="display:none;">
                 <div id="leaderboard-view" style="display:none;background:var(--bg-card);padding:16px;border:2px solid var(--primary);border-radius:var(--radius-lg);margin-bottom:20px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:10px;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
@@ -964,6 +1034,7 @@
                     </div>
                     <div style="overflow-x:auto;" id="leaderboard-content"></div>
                 </div>
+                
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
                     <h3 style="color:var(--primary);margin:0;">📁 Active Tests List</h3>
                     <button class="btn btn-danger btn-sm" onclick="window.clearAdminMemory()">🗑️ Clear Memory</button>
@@ -971,14 +1042,20 @@
                 <div id="dashboard-list"></div>
             </div>
 
-            <!-- MANAGE ICONS -->
+            <!-- MANAGE ICONS SECTION -->
             <div id="admin-icons-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);">🏛️ Manage Main Icons</div>
                     <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Update icon names and logos for the home page.</p>
                     <div class="admin-grid-2">
-                        <div class="form-group"><label>Select Icon</label><select id="icon-select" onchange="window.onIconSelect()" style="border-color:var(--accent);font-weight:600;"></select></div>
-                        <div class="form-group"><label>Update Name</label><input type="text" id="icon-new-name" /></div>
+                        <div class="form-group">
+                            <label>Select Icon</label>
+                            <select id="icon-select" onchange="window.onIconSelect()" style="border-color:var(--accent);font-weight:600;"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Update Name</label>
+                            <input type="text" id="icon-new-name" />
+                        </div>
                         <div class="form-group" style="grid-column:1/3;">
                             <label>Update Logo (URL or Upload)</label>
                             <div style="display:flex;gap:8px;">
@@ -1022,7 +1099,9 @@
                         <button class="btn btn-primary" onclick="window.exportStudentPerformanceExcel()">📊 Export to Excel</button>
                         <button class="btn btn-outline" onclick="window.exportStudentPerformanceCSV()">📄 Export CSV</button>
                     </div>
-                    <div id="perf-loader" style="display:none;text-align:center;padding:20px;"><div class="loader-mini"></div> Loading student data...</div>
+                    <div id="perf-loader" style="display:none;text-align:center;padding:20px;">
+                        <div class="loader-mini"></div> Loading student data...
+                    </div>
                     <div id="perf-table-wrap" class="perf-table-wrap" style="display:none;"></div>
                     <div id="perf-empty" style="display:none;text-align:center;padding:30px;color:var(--text-muted);">No student data found.</div>
                 </div>
@@ -1043,9 +1122,10 @@
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INIT
            ========================================================================== */
+        // Yeh purana OTP wala URL hai
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         
-        // Tumhara Naya Google Drive Image Upload URL (Form Data Supported)
+        // Naya Google Drive Form-Data Image Upload URL
         const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
         
         const BASE_URL = "https://ankushonlinetest.netlify.app/";
@@ -1117,7 +1197,7 @@
 
         window.navStack = [];
         
-        // Visual Editor Tool ke liye naya variable
+        // Visual Editor State Variable
         window.currentImageUploadLineIndex = -1;
 
         /* ==========================================================================
@@ -1196,10 +1276,7 @@
             let bc = document.getElementById('modal-btn-cancel');
             if (onCancel) {
                 bc.style.display = 'block';
-                bc.onclick = () => { 
-                    window.closeModal();
-                    onCancel(); 
-                };
+                bc.onclick = () => { window.closeModal(); onCancel(); };
             } else {
                 bc.style.display = 'none';
             }
@@ -1241,10 +1318,8 @@
 
             let examControls = document.getElementById('exam-bottom-controls');
             if (examControls) examControls.style.display = 'none';
-            
             let topBar = document.getElementById('student-top-bar');
             if (topBar) topBar.style.display = 'none';
-            
             let timerBox = document.getElementById('timer-box');
             if (timerBox) timerBox.style.display = 'none';
 
@@ -1321,22 +1396,16 @@
                 
                 let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/);
                 if (matchQs) res.qs = matchQs[1];
-                
                 let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/);
                 if (matchCat) res.cat = matchCat[1];
-                
                 let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/);
                 if (matchLogo) res.logo = matchLogo[1];
-                
                 let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/);
                 if (matchBoard) res.board = matchBoard[1];
-                
                 let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/);
                 if (matchExam) res.exam = matchExam[1];
-                
                 let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/);
                 if (matchSubcat) res.subcat = matchSubcat[1];
-                
                 let matchSummary = raw.match(/\|\|\|SUMMARY:(.*?)(?:\|\|\||$)/);
                 if (matchSummary) res.summary = matchSummary[1];
                 
@@ -2648,14 +2717,8 @@
         };
 
         window.fillQuick = function(level) {
-            let qb = document.getElementById('quick-board');
-            let qe = document.getElementById('quick-exam');
-            let qc = document.getElementById('quick-cat');
-            let qs = document.getElementById('quick-sub');
-            
-            let bVal = qb ? qb.value : "";
-            let eVal = qe ? qe.value : "";
-            let cVal = qc ? qc.value : "";
+            let qb = document.getElementById('quick-board'); let qe = document.getElementById('quick-exam'); let qc = document.getElementById('quick-cat'); let qs = document.getElementById('quick-sub');
+            let bVal = qb ? qb.value : ""; let eVal = qe ? qe.value : ""; let cVal = qc ? qc.value : "";
             
             if (level === 'board') {
                 let aBoard = document.getElementById('a-board'); if (aBoard) aBoard.value = bVal;
@@ -2845,8 +2908,8 @@
                             let rawDataElem = document.getElementById('a-rawdata');
                             let lines = rawDataElem.value.split('\n');
                             
-                            // Image code update (No extra classes, pure drive link)
-                            lines[lineIdx] = lines[lineIdx] + ` <br><img src="${data.url}" width="100%">`;
+                            // Image Code Insert (WITHOUT width=100% so CSS handles the compact left layout)
+                            lines[lineIdx] = lines[lineIdx] + ` <br><img src="${data.url}">`;
                             rawDataElem.value = lines.join('\n');
                             
                             window.showCustomAlert("Success", "Image directly added to your question! 🎉", "✅");
@@ -2856,7 +2919,7 @@
                             if(btn) { btn.innerText = "🖼️ Add Image"; btn.classList.remove('uploading'); }
                         }
                     } catch(jsonErr) {
-                        window.showCustomAlert("Error", "Failed to parse Google Script response. Check your App Script.", "❌");
+                        window.showCustomAlert("Error", "Failed to parse Google Script response. Check your App Script deployment.", "❌");
                         if(btn) { btn.innerText = "🖼️ Add Image"; btn.classList.remove('uploading'); }
                     }
                 })
@@ -3337,7 +3400,7 @@
             window.examData.questions.forEach((q, i) => {
                 let u = window.userAnswers[i]; let c = window.getCleanAns(q.ans); let g = window.getCleanAns(u);
                 let iR = (g === c) && (u !== null); let iB = u === null; let iW = !iB && !iR;
-                if ((t === 'right' && iR) || (t === 'wrong' && iW) || (t === 'blank' && iB)) { window.currentAnalysisArray.push({ q: q, originalIndex: i, uAns: u, isRight: iR, isBlank: iB }); }
+                if ((t === 'right' && iR) || (t === 'wrong' && iW) || (t === 'blank' && iB)) { window.currentAnalysisArraypush({ q: q, originalIndex: i, uAns: u, isRight: iR, isBlank: iB }); }
             });
             let ansBox = document.getElementById('analysis-box'); if (!ansBox) return;
             if (window.currentAnalysisArray.length === 0) { ansBox.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:16px;">No questions found.</div>`; ansBox.style.display = 'block'; return; }
