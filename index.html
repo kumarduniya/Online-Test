@@ -1122,10 +1122,9 @@
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INIT
            ========================================================================== */
-        // Yeh purana OTP wala URL hai
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         
-        // Naya Google Drive Form-Data Image Upload URL
+        // Tumhara Naya Google Drive Image Upload URL (Form Data Supported)
         const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
         
         const BASE_URL = "https://ankushonlinetest.netlify.app/";
@@ -1196,8 +1195,6 @@
         window.otpTimerInterval = null;
 
         window.navStack = [];
-        
-        // Visual Editor State Variable
         window.currentImageUploadLineIndex = -1;
 
         /* ==========================================================================
@@ -1276,7 +1273,10 @@
             let bc = document.getElementById('modal-btn-cancel');
             if (onCancel) {
                 bc.style.display = 'block';
-                bc.onclick = () => { window.closeModal(); onCancel(); };
+                bc.onclick = () => { 
+                    window.closeModal();
+                    onCancel(); 
+                };
             } else {
                 bc.style.display = 'none';
             }
@@ -1318,8 +1318,10 @@
 
             let examControls = document.getElementById('exam-bottom-controls');
             if (examControls) examControls.style.display = 'none';
+            
             let topBar = document.getElementById('student-top-bar');
             if (topBar) topBar.style.display = 'none';
+            
             let timerBox = document.getElementById('timer-box');
             if (timerBox) timerBox.style.display = 'none';
 
@@ -1396,16 +1398,22 @@
                 
                 let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/);
                 if (matchQs) res.qs = matchQs[1];
+                
                 let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/);
                 if (matchCat) res.cat = matchCat[1];
+                
                 let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/);
                 if (matchLogo) res.logo = matchLogo[1];
+                
                 let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/);
                 if (matchBoard) res.board = matchBoard[1];
+                
                 let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/);
                 if (matchExam) res.exam = matchExam[1];
+                
                 let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/);
                 if (matchSubcat) res.subcat = matchSubcat[1];
+                
                 let matchSummary = raw.match(/\|\|\|SUMMARY:(.*?)(?:\|\|\||$)/);
                 if (matchSummary) res.summary = matchSummary[1];
                 
@@ -2717,8 +2725,14 @@
         };
 
         window.fillQuick = function(level) {
-            let qb = document.getElementById('quick-board'); let qe = document.getElementById('quick-exam'); let qc = document.getElementById('quick-cat'); let qs = document.getElementById('quick-sub');
-            let bVal = qb ? qb.value : ""; let eVal = qe ? qe.value : ""; let cVal = qc ? qc.value : "";
+            let qb = document.getElementById('quick-board');
+            let qe = document.getElementById('quick-exam');
+            let qc = document.getElementById('quick-cat');
+            let qs = document.getElementById('quick-sub');
+            
+            let bVal = qb ? qb.value : "";
+            let eVal = qe ? qe.value : "";
+            let cVal = qc ? qc.value : "";
             
             if (level === 'board') {
                 let aBoard = document.getElementById('a-board'); if (aBoard) aBoard.value = bVal;
@@ -2908,7 +2922,7 @@
                             let rawDataElem = document.getElementById('a-rawdata');
                             let lines = rawDataElem.value.split('\n');
                             
-                            // Image Code Insert (WITHOUT width=100% so CSS handles the compact left layout)
+                            // Image Code Insert
                             lines[lineIdx] = lines[lineIdx] + ` <br><img src="${data.url}">`;
                             rawDataElem.value = lines.join('\n');
                             
@@ -3396,16 +3410,42 @@
         };
 
         window.showAnalysis = function(t) {
-            window.currentAnalysisArray = []; window.currentAnalysisType = t;
+            window.currentAnalysisArray = []; 
+            window.currentAnalysisType = t;
+            
             window.examData.questions.forEach((q, i) => {
-                let u = window.userAnswers[i]; let c = window.getCleanAns(q.ans); let g = window.getCleanAns(u);
-                let iR = (g === c) && (u !== null); let iB = u === null; let iW = !iB && !iR;
-                if ((t === 'right' && iR) || (t === 'wrong' && iW) || (t === 'blank' && iB)) { window.currentAnalysisArraypush({ q: q, originalIndex: i, uAns: u, isRight: iR, isBlank: iB }); }
+                let u = window.userAnswers[i]; 
+                let c = window.getCleanAns(q.ans); 
+                let g = window.getCleanAns(u);
+                let iR = (g === c) && (u !== null); 
+                let iB = u === null; 
+                let iW = !iB && !iR;
+                
+                if ((t === 'right' && iR) || (t === 'wrong' && iW) || (t === 'blank' && iB)) { 
+                    window.currentAnalysisArray.push({ q: q, originalIndex: i, uAns: u, isRight: iR, isBlank: iB }); 
+                }
             });
-            let ansBox = document.getElementById('analysis-box'); if (!ansBox) return;
-            if (window.currentAnalysisArray.length === 0) { ansBox.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:16px;">No questions found.</div>`; ansBox.style.display = 'block'; return; }
-            window.currentAnalysisIndex = 0; window.renderAnalysisSlide(); ansBox.style.display = 'block';
-            setTimeout(() => { let e = document.getElementById('analysis-box'); if (e) { let y = e.getBoundingClientRect().top + window.scrollY - 130; window.scrollTo({ top: y, behavior: 'smooth' }); } }, 100);
+            
+            let ansBox = document.getElementById('analysis-box'); 
+            if (!ansBox) return;
+            
+            if (window.currentAnalysisArray.length === 0) { 
+                ansBox.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:16px;">No questions found.</div>`; 
+                ansBox.style.display = 'block'; 
+                return; 
+            }
+            
+            window.currentAnalysisIndex = 0; 
+            window.renderAnalysisSlide(); 
+            ansBox.style.display = 'block';
+            
+            setTimeout(() => { 
+                let e = document.getElementById('analysis-box'); 
+                if (e) { 
+                    let y = e.getBoundingClientRect().top + window.scrollY - 130; 
+                    window.scrollTo({ top: y, behavior: 'smooth' }); 
+                } 
+            }, 100);
         };
 
         window.renderAnalysisSlide = function() {
@@ -3592,5 +3632,3 @@
         console.log('🚀 MockSarthi v4.0 — All features ready!');
         console.log('✨ Advanced Visual Editor with bulletproof Form Data upload active.');
     </script>
-</body>
-</html>
