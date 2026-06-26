@@ -73,7 +73,7 @@
         }
 
         /* ============================================================
-           GLOBAL RESET & NEW RESPONSIVE IMAGE/SVG SETTINGS
+           GLOBAL RESET & RESPONSIVE IMAGE/SVG SETTINGS
            ============================================================ */
         *, *::before, *::after {
             box-sizing: border-box; margin: 0; padding: 0;
@@ -85,12 +85,12 @@
             transition: background 0.3s, color 0.3s;
         }
         
-        /* FIX: Auto-adjust images & SVG so they don't blur, and LEFT ALIGN them */
+        /* Auto-adjust images & SVG so they don't blur, and LEFT ALIGN them */
         img, svg { 
             max-width: 100%; 
             height: auto; 
             display: block; 
-            margin: 8px 0; /* Changed from auto to 0 for Left Alignment */
+            margin: 8px 0; 
         }
         .q-text img, .opt-label img, .q-passage-box img, .analysis-box img,
         .q-text svg, .opt-label svg, .q-passage-box svg, .analysis-box svg {
@@ -107,12 +107,32 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
         /* ============================================================
-           NEW VISUAL EDITOR STYLES (For Admin Panel Image & SVG Upload)
+           NEW VISUAL EDITOR STYLES (Search Box & Sticky Header)
            ============================================================ */
         .visual-preview-box {
-            background: var(--bg-subtle); padding: 15px; border-radius: var(--radius);
+            background: var(--bg-subtle); padding: 0 15px 15px 15px; border-radius: var(--radius);
             border: 2px dashed var(--accent); margin-top: 15px; display: none;
+            max-height: 80vh; overflow-y: auto; position: relative;
         }
+        
+        .vp-sticky-header {
+            position: sticky; top: 0; background: var(--bg-subtle); z-index: 100;
+            padding: 15px 0 15px 0; border-bottom: 2px solid var(--border-color); margin-bottom: 15px;
+        }
+
+        .vp-search-bar {
+            display: flex; gap: 10px; margin-top: 10px; align-items: center; flex-wrap: wrap;
+        }
+
+        .vp-search-bar input {
+            flex: 1; padding: 10px 14px; border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm); font-size: 14px; outline: none; transition: var(--transition);
+        }
+        
+        .vp-search-bar input:focus {
+            border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 43, 92, 0.1);
+        }
+
         .vp-q-block {
             background: var(--bg-card); padding: 15px; border-radius: var(--radius-sm);
             border: 1px solid var(--border-color); margin-bottom: 15px; box-shadow: var(--shadow-sm);
@@ -193,7 +213,11 @@
         .tcs-sub-header .s-name { font-weight: 700; color: var(--primary); font-size: 14px; display: flex; align-items: center; gap: 8px; }
         body.dark-mode .tcs-sub-header .s-name { color: var(--accent-light); }
         .tcs-sub-header .s-exam { font-size: 12px; color: var(--danger); font-weight: 700; background: rgba(220, 53, 69, 0.10); padding: 4px 16px; border-radius: 50px; border: 1px solid rgba(220, 53, 69, 0.20); }
-        #auto-save-indicator { display: none; background: var(--success); color: #fff; text-align: center; font-size: 11px; font-weight: 700; padding: 4px 0; letter-spacing: 0.5px; }
+        
+        /* FIX: Auto-save background mein kaam karega, lekin patti bilkul nahi dikhegi */
+        #auto-save-indicator { 
+            display: none !important; 
+        }
 
         /* ============================================================
            VIEW SECTIONS & CARDS
@@ -544,23 +568,21 @@
             .print-exp { color: #222 !important; font-size: 14px !important; margin-top: 8px !important; padding: 8px !important; background: #f5f5f5 !important; border-left: 3px solid #1a56db !important; line-height: 1.4 !important; page-break-inside: auto !important; break-inside: auto !important; }
             .print-passage { padding: 6px !important; margin-bottom: 4px !important; font-style: italic; border-left: 4px solid #333; font-size: 16px !important; background: transparent !important; page-break-inside: auto !important; break-inside: auto !important; }
             
-            /* FIX: PDF Print specific rules for images & SVG so they are compact and left aligned */
             .print-q img, .print-exp img, .print-passage img,
             .print-q svg, .print-exp svg, .print-passage svg { 
-                max-width: 250px !important; /* Compact Size */
-                max-height: 130px !important; /* Compact Size */
+                max-width: 250px !important; 
+                max-height: 130px !important; 
                 object-fit: contain !important; 
                 page-break-inside: avoid !important; 
                 display: block !important; 
-                margin: 6px 0 !important; /* Left Aligned */
+                margin: 6px 0 !important; 
             }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
     </style>
 </head>
-<body>
+    <body>
 
-    <!-- ===== MODALS ===== -->
     <div id="custom-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-icon" id="modal-icon">⚠️</div>
@@ -584,10 +606,8 @@
         </div>
     </div>
 
-    <!-- ===== MAIN UI ===== -->
     <div class="container" id="main-ui-container">
 
-        <!-- TOP STICKY WRAPPER -->
         <div id="top-sticky-wrapper">
             <div class="tcs-header">
                 <h2 id="head-exam-name" onclick="window.location.reload();">Mock<span>Sarthi</span></h2>
@@ -603,7 +623,6 @@
             <div id="auto-save-indicator">✅ Progress Auto-Saved</div>
         </div>
 
-        <!-- ===== STUDENT AUTH ===== -->
         <div id="student-auth-view" class="view-section">
             <div id="auth-login-box" class="auth-box">
                 <h3>Welcome Back <span class="highlight">👋</span></h3>
@@ -669,7 +688,6 @@
             </div>
         </div>
 
-        <!-- ===== STUDENT DASHBOARD ===== -->
         <div id="student-dashboard-view" class="view-section">
             <div class="dash-welcome-box" id="sticky-welcome-box">
                 <div class="greeting">👋 Welcome, <span class="name" id="dash-user-name">Student</span> <span id="premium-badge" class="premium-badge" style="background:var(--text-muted);color:#fff;">FREE</span></div>
@@ -681,7 +699,6 @@
                 <button class="tab-btn" id="tab-st-history" style="border-radius:var(--radius);flex:none;width:45%;" onclick="window.switchStudentTab('history')">📈 My Report</button>
             </div>
 
-            <!-- Active Tests Section -->
             <div id="st-active-section">
                 <div id="breadcrumb-container" class="breadcrumb-nav" style="display:none;"></div>
                 <div id="st-active-loader" style="text-align:center;display:none;padding:30px;">
@@ -695,7 +712,6 @@
                 </div>
             </div>
 
-            <!-- History Section -->
             <div id="st-history-section" style="display:none;">
                 <div style="background:var(--bg-card);border:1px solid var(--border-color);padding:20px;border-radius:var(--radius-lg);margin-bottom:20px;box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                     <div>
@@ -732,7 +748,6 @@
             </div>
         </div>
 
-        <!-- ===== TEST ENTRY ===== -->
         <div id="login-view" class="view-section">
             <div id="specific-test-login" style="max-width:480px;margin:20px auto;background:var(--bg-card);padding:32px;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);border-top:5px solid var(--accent);">
                 <h3 style="color:var(--primary);text-align:center;margin-bottom:2px;" id="login-test-name">Test Entry</h3>
@@ -757,7 +772,6 @@
             </div>
         </div>
 
-        <!-- ===== EXAM VIEW ===== -->
         <div id="exam-view" class="view-section" style="padding:0;display:none;" oncontextmenu="return false;">
             <div class="exam-container">
                 <div class="left-panel">
@@ -777,7 +791,6 @@
             </div>
         </div>
 
-        <!-- ===== EXAM BOTTOM CONTROLS ===== -->
         <div id="exam-bottom-controls">
             <div class="mini-palette-wrapper">
                 <button onclick="window.togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
@@ -791,7 +804,6 @@
             </div>
         </div>
 
-        <!-- ===== PALETTE OVERLAY ===== -->
         <div id="palette-overlay" class="fullscreen-overlay">
             <div class="fs-container">
                 <div class="fs-header">
@@ -807,7 +819,6 @@
             </div>
         </div>
 
-        <!-- ===== RESULT VIEW ===== -->
         <div id="result-view" class="view-section" oncontextmenu="return false;">
             <div class="result-title" id="result-heading"><span class="highlight">🎉</span> Test Submitted!</div>
             <div id="rank-loader" style="margin:8px 0 12px 0;color:var(--primary);font-weight:700;display:none;"><div class="loader-mini"></div> Calculating rank...</div>
@@ -836,7 +847,6 @@
             </div>
         </div>
 
-        <!-- ===== LOADING / ERROR ===== -->
         <div id="loading-view" class="view-section" style="text-align:center; padding: 60px 20px;">
             <div class="loader-mini" style="width:40px; height:40px; border-width:4px;"></div>
             <h3 style="color:var(--primary); margin-top:20px;">Loading data, please wait...</h3>
@@ -847,10 +857,8 @@
             <button class="btn btn-primary" style="max-width:250px; margin:0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
         </div>
 
-        <!-- ===== ADMIN LOCK ===== -->
         <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin();" title="Admin Login">🔒</div>
 
-        <!-- ===== ADMIN AUTH ===== -->
         <div id="admin-auth-view" class="view-section" style="text-align:center;padding:40px 20px;">
             <div style="max-width:420px;margin:0 auto;background:var(--bg-card);padding:32px;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);border-top:5px solid var(--accent);">
                 <h3 style="color:var(--primary);margin-top:0;">🔒 Admin Login</h3>
@@ -867,7 +875,6 @@
             </div>
         </div>
 
-        <!-- ===== ADMIN DASHBOARD ===== -->
         <div id="admin-view" class="view-section">
             <div class="admin-tabs">
                 <button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -877,7 +884,6 @@
                 <button class="tab-btn" id="tab-students" onclick="window.switchAdminTab('students')">👨‍🎓 Student Performance</button>
             </div>
 
-            <!-- CREATE / EDIT SECTION -->
             <div id="admin-create-section">
                 <div class="admin-section" style="background:rgba(212,168,67,0.06);border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);">⚡ Quick Auto-Fill <span class="badge-admin">Smart</span></div>
@@ -990,7 +996,6 @@
                         </div>
                     </div>
 
-                    <!-- NEW VISUAL EDITOR SECTION -->
                     <div class="form-group">
                         <label style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                             <span style="color:var(--danger);"><b>📄 Paste Questions Here <span style="font-weight:normal; font-size:11px; color:var(--text-muted);">(Use $$ for Math)</span></b></span>
@@ -1000,19 +1005,7 @@
                     </div>
 
                     <div id="visual-editor-container" class="visual-preview-box">
-                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--accent); padding-bottom:10px; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-                            <h4 style="color:var(--primary); margin:0;">🖼️ Visual Image & SVG Editor</h4>
-                            <button class="btn btn-danger btn-sm" onclick="window.closeVisualEditor()">Done & Close</button>
                         </div>
-                        <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px; line-height:1.5;">Click <b>"Add Image"</b> to upload from Drive, or <b>"Add SVG"</b> to paste raw SVG code. Use <b>"Delete"</b> to remove any added image/code.</p>
-                        
-                        <div id="visual-editor-content"></div>
-                        
-                        <!-- Hidden file input for Drive Upload -->
-                        <input type="file" id="hidden-drive-file" accept="image/*" style="display:none;" onchange="window.handleVisualImageSelect(event)" />
-                    </div>
-                    <!-- END VISUAL EDITOR SECTION -->
-
                     <button id="btn-generate" class="btn btn-primary" onclick="window.generateAndSaveLink()">🚀 Generate / Update Test</button>
                     
                     <div id="linkContainer" style="display:none;margin-top:16px;background:var(--bg-subtle);padding:16px;border-radius:var(--radius);border:2px solid var(--accent);">
@@ -1022,7 +1015,6 @@
                 </div>
             </div>
 
-            <!-- MANAGE TESTS SECTION -->
             <div id="admin-manage-section" style="display:none;">
                 <div id="leaderboard-view" style="display:none;background:var(--bg-card);padding:16px;border:2px solid var(--primary);border-radius:var(--radius-lg);margin-bottom:20px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:10px;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
@@ -1042,7 +1034,6 @@
                 <div id="dashboard-list"></div>
             </div>
 
-            <!-- MANAGE ICONS SECTION -->
             <div id="admin-icons-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);">🏛️ Manage Main Icons</div>
@@ -1072,7 +1063,6 @@
                 </div>
             </div>
 
-            <!-- ===== REORDER ICONS – SERIAL NUMBER APPROACH ===== -->
             <div id="admin-reorder-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);">🔢 Reorder Icons by Serial Number</div>
@@ -1089,7 +1079,6 @@
                 </div>
             </div>
 
-            <!-- ===== STUDENT PERFORMANCE ===== -->
             <div id="admin-students-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--primary);">
                     <div class="admin-section-title" style="color:var(--primary);">👨‍🎓 Student Performance Dashboard</div>
@@ -1107,13 +1096,8 @@
                 </div>
             </div>
 
-        </div><!-- end admin-view -->
-    </div><!-- end container -->
+        </div></div><div id="print-area"></div>
 
-    <!-- ===== PRINT AREA ===== -->
-    <div id="print-area"></div>
-
-    <!-- ===== FIREBASE SCRIPT TAGS ===== -->
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
@@ -1122,9 +1106,10 @@
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INIT
            ========================================================================== */
+        // Yeh purana OTP wala URL hai
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         
-        // Tumhara Naya Google Drive Image Upload URL (Form Data Supported)
+        // Naya Google Drive Form-Data Image Upload URL
         const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
         
         const BASE_URL = "https://ankushonlinetest.netlify.app/";
@@ -1273,10 +1258,7 @@
             let bc = document.getElementById('modal-btn-cancel');
             if (onCancel) {
                 bc.style.display = 'block';
-                bc.onclick = () => { 
-                    window.closeModal();
-                    onCancel(); 
-                };
+                bc.onclick = () => { window.closeModal(); onCancel(); };
             } else {
                 bc.style.display = 'none';
             }
@@ -1318,10 +1300,8 @@
 
             let examControls = document.getElementById('exam-bottom-controls');
             if (examControls) examControls.style.display = 'none';
-            
             let topBar = document.getElementById('student-top-bar');
             if (topBar) topBar.style.display = 'none';
-            
             let timerBox = document.getElementById('timer-box');
             if (timerBox) timerBox.style.display = 'none';
 
@@ -2794,13 +2774,34 @@
         };
 
         /* ==========================================================================
-           8.5 VISUAL EDITOR LOGIC (NEW FEATURES: SVG & DELETE)
+           8.5 VISUAL EDITOR LOGIC (NEW: SEARCH BOX & STICKY HEADER)
            ========================================================================== */
         window.openVisualEditor = function() {
             let rawData = document.getElementById('a-rawdata').value;
             if (!rawData.trim()) { return window.showCustomAlert("Empty Box", "Bhai, pehle 'Paste Questions Here' wale box mein apna text paste karo, uske baad is editor ko open karna.", "⚠️"); }
             let container = document.getElementById('visual-editor-container');
-            if (container) { container.style.display = 'block'; window.renderVisualEditorContent(); }
+            if (container) { 
+                container.style.display = 'block'; 
+                
+                // Injecting New UI with Sticky Header, Search Bar and Sticky Update Button
+                container.innerHTML = `
+                    <div class="vp-sticky-header">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <h4 style="color:var(--primary); margin:0;">🖼️ Visual Image & SVG Editor</h4>
+                            <button class="btn btn-danger btn-sm" onclick="window.closeVisualEditor()">✕ Close</button>
+                        </div>
+                        <p style="font-size:11px; color:var(--text-muted); margin-top:5px; margin-bottom:10px;">Search question number to quickly add SVG/Images without scrolling.</p>
+                        <div class="vp-search-bar">
+                            <input type="number" id="vp-search-input" placeholder="🔍 Search Q. No. (e.g. 111)" onkeyup="window.renderVisualEditorContent()" oninput="window.renderVisualEditorContent()" />
+                            <button id="btn-vp-update" class="btn btn-success btn-sm" onclick="window.generateAndSaveLink()">🚀 Update Test</button>
+                        </div>
+                    </div>
+                    <div id="visual-editor-content"></div>
+                    <input type="file" id="hidden-drive-file" accept="image/*" style="display:none;" onchange="window.handleVisualImageSelect(event)" />
+                `;
+                
+                window.renderVisualEditorContent(); 
+            }
         };
 
         window.closeVisualEditor = function() {
@@ -2810,16 +2811,44 @@
         };
 
         window.renderVisualEditorContent = function() {
-            let rawData = document.getElementById('a-rawdata').value;
+            let rawDataElem = document.getElementById('a-rawdata');
+            if(!rawDataElem) return;
+            let rawData = rawDataElem.value;
             let lines = rawData.split('\n');
             let html = '';
+            
+            let searchInput = document.getElementById('vp-search-input');
+            let searchQ = searchInput ? searchInput.value.trim() : "";
+            
+            let currentQNum = 0;
             
             for(let i=0; i<lines.length; i++) {
                 let line = lines[i].trim();
                 if(!line) continue;
                 
+                // Track Question Number
+                if (line.match(/^!!\s*\d+\s*!/)) { 
+                    let match = line.match(/^!!\s*(\d+)\s*!/);
+                    if(match) {
+                        currentQNum = parseInt(match[1]);
+                    } else {
+                        currentQNum++;
+                    }
+                }
+                
+                // Logic: Passage !P belongs to the UPCOMING question
+                let associatedQ = currentQNum;
+                if (line.match(/^!P/i)) {
+                    associatedQ = currentQNum + 1;
+                }
+                
+                // Filtering Logic
+                if (searchQ !== "" && associatedQ.toString() !== searchQ) {
+                    continue; // Skip rendering this line if it doesn't match search
+                }
+                
                 let type = ""; 
-                if (line.match(/^!!\s*\d+\s*!/)) { type = "📝 Question"; } 
+                if (line.match(/^!!\s*\d+\s*!/)) { type = "📝 Q" + associatedQ; } 
                 else if (line.match(/^![A-D]/i)) { type = "🔘 Option " + line.charAt(1).toUpperCase(); } 
                 else if (line.match(/^!!!!/)) { type = "💡 Explanation"; } 
                 else if (line.match(/^!P/i)) { type = "📜 Passage"; }
@@ -2854,7 +2883,13 @@
             }
             
             let contentDiv = document.getElementById('visual-editor-content');
-            if (contentDiv) { contentDiv.innerHTML = html || "<p style='color:var(--text-muted); padding:10px;'>No valid format detected. Make sure to use !!1! for questions.</p>"; }
+            if (contentDiv) { 
+                if(html === '') {
+                    contentDiv.innerHTML = `<p style='color:var(--danger); font-weight:bold; padding:10px;'>No data found for Question No. ${searchQ}</p>`;
+                } else {
+                    contentDiv.innerHTML = html; 
+                }
+            }
         };
 
         window.triggerVisualUpload = function(lineIdx) {
@@ -2922,7 +2957,6 @@
                             let rawDataElem = document.getElementById('a-rawdata');
                             let lines = rawDataElem.value.split('\n');
                             
-                            // Image Code Insert
                             lines[lineIdx] = lines[lineIdx] + ` <br><img src="${data.url}">`;
                             rawDataElem.value = lines.join('\n');
                             
@@ -3128,7 +3162,10 @@
             if (aCat) { let opts = Array.from(aCat.options).map(o => o.value); if (opts.includes(p.cat)) { aCat.value = p.cat; if (aCustomCat) aCustomCat.style.display = 'none'; } else { aCat.value = "CUSTOM"; if (aCustomCat) { aCustomCat.style.display = 'block'; aCustomCat.value = p.cat; } } }
             if (aSub) aSub.value = p.subcat || t.subject || t.sub || ""; if (aTopic) aTopic.value = p.topic || ""; if (aCode) aCode.value = t.code || ""; if (aMarks) aMarks.value = t.marks || 2; if (aNeg) aNeg.value = t.neg || 0; if (aTotTime) aTotTime.value = t.totTime || 0; if (aQTime) aQTime.value = t.qTime || 0;
             let isF = (t.isFree === true || String(t.isFree).toLowerCase() === "true"); if (aPdfType) aPdfType.value = isF ? "free" : "paid"; if (!isF && aPrice) aPrice.value = t.price || ""; if (aRaw) aRaw.value = raw || ""; if (aQsCount) aQsCount.value = window.parseRawQuestions(raw || "").length;
-            window.togglePriceBox(); window.switchAdminTab('create'); window.scrollTo(0, 0); let btn = document.getElementById('btn-generate'); if (btn) { btn.innerText = "🚀 Update Test"; btn.style.background = "#f59e0b"; }
+            window.togglePriceBox(); window.switchAdminTab('create'); window.scrollTo(0, 0); 
+            
+            let btn = document.getElementById('btn-generate'); 
+            if (btn) { btn.innerText = "🚀 Update Test"; btn.style.background = "#f59e0b"; }
         };
 
         window.deleteTest = function(code) {
@@ -3143,7 +3180,10 @@
         };
 
         window.generateAndSaveLink = function() {
-            let aBoard = document.getElementById('a-board'); let aExam = document.getElementById('a-exam'); let aLogo = document.getElementById('a-logo'); let aSub = document.getElementById('a-sub'); let aTopicElem = document.getElementById('a-topic'); let aCodeElem = document.getElementById('a-code'); let aSummaryElem = document.getElementById('a-summary'); let aMarks = document.getElementById('a-marks'); let aNeg = document.getElementById('a-neg'); let aTotTime = document.getElementById('a-tot-time'); let aQTime = document.getElementById('a-q-time'); let aPdfType = document.getElementById('a-pdf-type'); let aPriceElem = document.getElementById('a-price'); let aCatElem = document.getElementById('a-category'); let aCustomCatElem = document.getElementById('a-custom-cat'); let aRawDataElem = document.getElementById('a-rawdata'); let btn = document.getElementById('btn-generate');
+            let aBoard = document.getElementById('a-board'); let aExam = document.getElementById('a-exam'); let aLogo = document.getElementById('a-logo'); let aSub = document.getElementById('a-sub'); let aTopicElem = document.getElementById('a-topic'); let aCodeElem = document.getElementById('a-code'); let aSummaryElem = document.getElementById('a-summary'); let aMarks = document.getElementById('a-marks'); let aNeg = document.getElementById('a-neg'); let aTotTime = document.getElementById('a-tot-time'); let aQTime = document.getElementById('a-q-time'); let aPdfType = document.getElementById('a-pdf-type'); let aPriceElem = document.getElementById('a-price'); let aCatElem = document.getElementById('a-category'); let aCustomCatElem = document.getElementById('a-custom-cat'); let aRawDataElem = document.getElementById('a-rawdata'); 
+            
+            let btn = document.getElementById('btn-generate');
+            let btnVp = document.getElementById('btn-vp-update');
             
             let eBoard = aBoard ? aBoard.value : "General Exam"; let eName = aExam ? aExam.value : "Mock Test"; let eLogo = aLogo ? aLogo.value : ""; let eSub = aSub ? aSub.value : "Subject"; let eTopicRaw = aTopicElem ? aTopicElem.value : ""; let eCode = aCodeElem ? aCodeElem.value.trim() : ""; let eSummaryRaw = aSummaryElem ? aSummaryElem.value : ""; eSummaryRaw = eSummaryRaw.replace(/\|\|\|/g, ''); let eSummary = eSummaryRaw.replace(/\n/g, '<br>');
             if (!eCode) { eCode = "T-" + Math.floor(Math.random() * 99999); if (aCodeElem) aCodeElem.value = eCode; }
@@ -3158,9 +3198,13 @@
             
             let fObj = { exam: eName, category: eCategory, logo: eLogo, subject: eSub, sub: eSub, topic: eTopic, code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice, key: eKey, questions: parsedQs, qs: fQs, rawText: rawText, isActive: true };
             
-            if (btn) { btn.innerText = "⏳ Saving to Firebase..."; btn.disabled = true; }
+            if (btn) { btn.innerText = "⏳ Saving..."; btn.disabled = true; }
+            if (btnVp) { btnVp.innerText = "⏳ Saving..."; btnVp.disabled = true; }
+            
             db.collection("tests").doc(eCode).set(fObj).then(() => {
                 if (btn) { btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false; btn.style.background = "var(--primary)"; }
+                if (btnVp) { btnVp.innerText = "🚀 Update Test"; btnVp.disabled = false; }
+                
                 if (aSub) aSub.value = ""; if (aTopicElem) aTopicElem.value = ""; if (aCodeElem) aCodeElem.value = ""; if (aRawDataElem) aRawDataElem.value = ""; if (document.getElementById('a-qs-count')) document.getElementById('a-qs-count').value = ""; if (aSummaryElem) aSummaryElem.value = "";
                 
                 let tLink = BASE_URL + "?test=" + eCode;
@@ -3178,6 +3222,7 @@
             }).catch((error) => {
                 window.showCustomAlert("Error", error.message, "❌");
                 if (btn) { btn.innerText = "🚀 Generate / Update Test"; btn.disabled = false; btn.style.background = "var(--primary)"; }
+                if (btnVp) { btnVp.innerText = "🚀 Update Test"; btnVp.disabled = false; }
             });
         };
 
@@ -3261,7 +3306,7 @@
             if (!window.examData || !window.examData.code) return;
             const progress = { userAnswers: window.userAnswers, qStatus: window.qStatus, bookmarks: window.bookmarks, globalTimeLeft: window.globalTimeLeft, totalTimeSpent: window.totalTimeSpent, currentQ: window.currentQ, questions: window.examData.questions };
             localStorage.setItem('progress_' + window.examData.code, JSON.stringify(progress));
-            let ind = document.getElementById('auto-save-indicator'); if (ind) { ind.style.display = 'block'; setTimeout(() => { ind.style.display = 'none'; }, 2000); }
+            // CSS hide auto-save banner logic is active, so we just silently save.
         };
 
         window.resumeExam = function() {
@@ -3630,5 +3675,6 @@
            ========================================================================== */
         window.generateCaptcha();
         console.log('🚀 MockSarthi v4.0 — All features ready!');
-        console.log('✨ Advanced Visual Editor with bulletproof Form Data upload active.');
+        console.log('✨ Advanced Visual Editor with Search & Sticky Headers active.');
     </script>
+    </html>
