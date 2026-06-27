@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MockSarthi – Online Test Portal</title>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     
-    <!-- MathJax for rendering Math & Fractions beautifully -->
     <script>
       window.MathJax = {
         tex: {
@@ -1160,6 +1158,11 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+
     <script>
         /* ==========================================================================
            1. GLOBAL VARIABLES & FIREBASE INIT
@@ -1441,10 +1444,13 @@
             
             // MATHJAX AUTO-FIX: Automatically escapes # and wraps Hindi words in \text{} inside $$ or $ blocks
             rawText = rawText.replace(/\$\$([\s\S]*?)\$\$|\$([\s\S]*?)\$/g, function(match) {
-                let parsed = match.replace(/#/g, '\\#'); // Fix the # macro error
+                // Fix the # macro error
+                let parsed = match.replace(/#/g, '\\#'); 
+                
+                // Wrap hindi text inside math mode with \text{}
                 parsed = parsed.replace(/([\u0900-\u097F]+(?:\s+[\u0900-\u097F]+)*)/g, function(hindiMatch, p1, offset, fullStr) {
                     let before = fullStr.substring(Math.max(0, offset - 6), offset);
-                    if (before.includes("\\text{")) return hindiMatch; // Already wrapped
+                    if (before.includes("\\text{")) return hindiMatch; // Already wrapped manually
                     return '\\text{' + hindiMatch + '}';
                 });
                 return parsed;
