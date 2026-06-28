@@ -164,6 +164,7 @@
             max-width: 1320px; margin: 0 auto; background: var(--bg-container);
             min-height: 100vh; display: flex; flex-direction: column; position: relative;
             box-shadow: var(--shadow-lg); transition: background 0.3s;
+            transform-origin: top center; /* for zoom feature */
         }
         @media (min-width:769px) {
             .container { border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
@@ -192,6 +193,19 @@
         .tcs-header h2::before { content: '🎯'; font-size: 1.5rem; }
         .tcs-header h2 span { color: var(--accent); }
         .header-controls { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; flex-wrap: wrap; }
+        
+        /* ZOOM CONTROLS CSS */
+        .zoom-controls {
+            display: flex; gap: 8px; align-items: center;
+            background: rgba(255, 255, 255, 0.10); border: 1px solid rgba(255, 255, 255, 0.20);
+            padding: 4px 12px; border-radius: 50px; backdrop-filter: blur(4px);
+        }
+        .zoom-btn {
+            font-size: 13px; font-weight: 800; color: #fff; cursor: pointer; transition: var(--transition);
+            user-select: none;
+        }
+        .zoom-btn:hover { color: var(--accent-light); transform: scale(1.1); }
+
         .theme-toggle {
             background: rgba(255, 255, 255, 0.10); border: 1px solid rgba(255, 255, 255, 0.20);
             color: #fff; border-radius: 50px; padding: 6px 16px; cursor: pointer;
@@ -533,6 +547,7 @@
             .serial-item .s-input { width: 60px; }
             .perf-table { font-size: 11px; min-width: 500px; }
             .perf-table th, .perf-table td { padding: 8px 10px; }
+            .zoom-controls { display: none !important; } /* Hide Zoom on Mobile as it's for Laptop */
         }
         @media (max-width:480px) {
             .exam-grid, .sub-exam-grid, .category-grid, .subject-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -576,7 +591,7 @@
                 display: block !important;
             }
 
-            /* Allow question to flow naturally, fill blank space */
+            /* Allow question to flow naturally, fill blank space, added justify text */
             .print-q { 
                 margin-bottom: 15px !important; 
                 border-bottom: 1px dashed #ccc !important; 
@@ -587,14 +602,15 @@
                 display: block !important; 
                 width: 100% !important; 
                 page-break-inside: auto !important; 
-                break-inside: auto !important; 
+                break-inside: auto !important;
+                text-align: justify !important; 
             }
             
             .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px !important; margin: 8px 0 !important; page-break-inside: auto !important; break-inside: auto !important; }
-            .opt-item { font-size: 14px !important; color: #000 !important; padding: 2px 0 !important; }
+            .opt-item { font-size: 14px !important; color: #000 !important; padding: 2px 0 !important; text-align: left !important; }
             .print-ans { font-weight: 700 !important; font-size: 13px !important; color: #000 !important; margin-top: 4px !important; display: block !important; }
-            .print-exp { color: #222 !important; font-size: 13px !important; margin-top: 8px !important; padding: 8px !important; background: #f5f5f5 !important; border-left: 3px solid #1a56db !important; line-height: 1.4 !important; page-break-inside: auto !important; break-inside: auto !important; }
-            .print-passage { padding: 6px !important; margin-bottom: 4px !important; font-style: italic; border-left: 4px solid #333; font-size: 14px !important; background: transparent !important; page-break-inside: auto !important; break-inside: auto !important; }
+            .print-exp { color: #222 !important; font-size: 13px !important; margin-top: 8px !important; padding: 8px !important; background: #f5f5f5 !important; border-left: 3px solid #1a56db !important; line-height: 1.4 !important; page-break-inside: auto !important; break-inside: auto !important; text-align: justify !important; }
+            .print-passage { padding: 6px !important; margin-bottom: 4px !important; font-style: italic; border-left: 4px solid #333; font-size: 14px !important; background: transparent !important; page-break-inside: auto !important; break-inside: auto !important; text-align: justify !important; }
             
             /* Restrict image width inside 2-columns */
             .print-q img, .print-exp img, .print-passage img,
@@ -612,7 +628,6 @@
 </head>
 <body>
 
-    <!-- ===== MODALS ===== -->
     <div id="custom-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-icon" id="modal-icon">⚠️</div>
@@ -636,14 +651,17 @@
         </div>
     </div>
 
-    <!-- ===== MAIN UI ===== -->
     <div class="container" id="main-ui-container">
 
-        <!-- TOP STICKY WRAPPER -->
         <div id="top-sticky-wrapper">
             <div class="tcs-header">
                 <h2 id="head-exam-name" onclick="window.location.reload();">Mock<span>Sarthi</span></h2>
                 <div class="header-controls">
+                    <div class="zoom-controls">
+                        <span class="zoom-btn" onclick="window.changeZoom(-0.05)" title="Zoom Out">A-</span>
+                        <span class="zoom-btn" onclick="window.resetZoom()" title="Reset Zoom">A</span>
+                        <span class="zoom-btn" onclick="window.changeZoom(0.05)" title="Zoom In">A+</span>
+                    </div>
                     <button class="theme-toggle" onclick="window.toggleDarkMode()" title="Toggle Theme">🌙 Dark</button>
                     <div id="timer-box" class="timer" style="display:none;"><span>⏱</span><span id="main-time">00:00</span></div>
                 </div>
@@ -655,7 +673,6 @@
             <div id="auto-save-indicator">✅ Progress Auto-Saved</div>
         </div>
 
-        <!-- ===== STUDENT AUTH ===== -->
         <div id="student-auth-view" class="view-section">
             <div id="auth-login-box" class="auth-box">
                 <h3>Welcome Back <span class="highlight">👋</span></h3>
@@ -721,7 +738,6 @@
             </div>
         </div>
 
-        <!-- ===== STUDENT DASHBOARD ===== -->
         <div id="student-dashboard-view" class="view-section">
             <div class="dash-welcome-box" id="sticky-welcome-box">
                 <div class="greeting">👋 Welcome, <span class="name" id="dash-user-name">Student</span> <span id="premium-badge" class="premium-badge" style="background:var(--text-muted);color:#fff;">FREE</span></div>
@@ -733,7 +749,6 @@
                 <button class="tab-btn" id="tab-st-history" style="border-radius:var(--radius);flex:none;width:45%;" onclick="window.switchStudentTab('history')">📈 My Report</button>
             </div>
 
-            <!-- Active Tests Section -->
             <div id="st-active-section">
                 <div id="breadcrumb-container" class="breadcrumb-nav" style="display:none;"></div>
                 <div id="st-active-loader" style="text-align:center;display:none;padding:30px;">
@@ -747,7 +762,6 @@
                 </div>
             </div>
 
-            <!-- History Section -->
             <div id="st-history-section" style="display:none;">
                 <div style="background:var(--bg-card);border:1px solid var(--border-color);padding:20px;border-radius:var(--radius-lg);margin-bottom:20px;box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                     <div>
@@ -784,7 +798,6 @@
             </div>
         </div>
 
-        <!-- ===== TEST ENTRY ===== -->
         <div id="login-view" class="view-section">
             <div id="specific-test-login" style="max-width:480px;margin:20px auto;background:var(--bg-card);padding:32px;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);border-top:5px solid var(--accent);">
                 <h3 style="color:var(--primary);text-align:center;margin-bottom:2px;" id="login-test-name">Test Entry</h3>
@@ -809,7 +822,6 @@
             </div>
         </div>
 
-        <!-- ===== EXAM VIEW ===== -->
         <div id="exam-view" class="view-section" style="padding:0;display:none;" oncontextmenu="return false;">
             <div class="exam-container">
                 <div class="left-panel">
@@ -829,7 +841,6 @@
             </div>
         </div>
 
-        <!-- ===== EXAM BOTTOM CONTROLS ===== -->
         <div id="exam-bottom-controls">
             <div class="mini-palette-wrapper">
                 <button onclick="window.togglePaletteOverlay()" class="pulse-btn">🔠 All Questions</button>
@@ -843,7 +854,6 @@
             </div>
         </div>
 
-        <!-- ===== PALETTE OVERLAY ===== -->
         <div id="palette-overlay" class="fullscreen-overlay">
             <div class="fs-container">
                 <div class="fs-header">
@@ -859,7 +869,6 @@
             </div>
         </div>
 
-        <!-- ===== RESULT VIEW ===== -->
         <div id="result-view" class="view-section" oncontextmenu="return false;">
             <div class="result-title" id="result-heading"><span class="highlight">🎉</span> Test Submitted!</div>
             <div id="rank-loader" style="margin:8px 0 12px 0;color:var(--primary);font-weight:700;display:none;"><div class="loader-mini"></div> Calculating rank...</div>
@@ -888,7 +897,6 @@
             </div>
         </div>
 
-        <!-- ===== LOADING / ERROR ===== -->
         <div id="loading-view" class="view-section" style="text-align:center; padding: 60px 20px;">
             <div class="loader-mini" style="width:40px; height:40px; border-width:4px;"></div>
             <h3 style="color:var(--primary); margin-top:20px;">Loading data, please wait...</h3>
@@ -899,10 +907,8 @@
             <button class="btn btn-primary" style="max-width:250px; margin:0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
         </div>
 
-        <!-- ===== ADMIN LOCK ===== -->
         <div class="admin-lock" id="admin-lock-btn" onclick="window.openAdminLogin();" title="Admin Login">🔒</div>
 
-        <!-- ===== ADMIN AUTH ===== -->
         <div id="admin-auth-view" class="view-section" style="text-align:center;padding:40px 20px;">
             <div style="max-width:420px;margin:0 auto;background:var(--bg-card);padding:32px;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);border-top:5px solid var(--accent);">
                 <h3 style="color:var(--primary);margin-top:0;">🔒 Admin Login</h3>
@@ -919,7 +925,6 @@
             </div>
         </div>
 
-        <!-- ===== ADMIN DASHBOARD ===== -->
         <div id="admin-view" class="view-section">
             <div class="admin-tabs">
                 <button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button>
@@ -929,7 +934,6 @@
                 <button class="tab-btn" id="tab-students" onclick="window.switchAdminTab('students')">👨‍🎓 Student Performance</button>
             </div>
 
-            <!-- CREATE / EDIT SECTION -->
             <div id="admin-create-section">
                 <div class="admin-section" style="background:rgba(212,168,67,0.06);border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);">⚡ Quick Auto-Fill <span class="badge-admin">Smart</span></div>
@@ -1042,7 +1046,6 @@
                         </div>
                     </div>
 
-                    <!-- VISUAL EDITOR SECTION -->
                     <div class="form-group">
                         <label style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                             <span style="color:var(--danger);"><b>📄 Paste Questions Here <span style="font-weight:normal; font-size:11px; color:var(--text-muted);">(Use $$ for Math)</span></b></span>
@@ -1052,10 +1055,7 @@
                     </div>
 
                     <div id="visual-editor-container" class="visual-preview-box">
-                        <!-- Content will be injected by JavaScript -->
-                    </div>
-                    <!-- END VISUAL EDITOR SECTION -->
-
+                        </div>
                     <button id="btn-generate" class="btn btn-primary" onclick="window.generateAndSaveLink()">🚀 Generate / Update Test</button>
                     
                     <div id="linkContainer" style="display:none;margin-top:16px;background:var(--bg-subtle);padding:16px;border-radius:var(--radius);border:2px solid var(--accent);">
@@ -1065,7 +1065,6 @@
                 </div>
             </div>
 
-            <!-- MANAGE TESTS SECTION -->
             <div id="admin-manage-section" style="display:none;">
                 <div id="leaderboard-view" style="display:none;background:var(--bg-card);padding:16px;border:2px solid var(--primary);border-radius:var(--radius-lg);margin-bottom:20px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:10px;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
@@ -1085,7 +1084,6 @@
                 <div id="dashboard-list"></div>
             </div>
 
-            <!-- MANAGE ICONS SECTION -->
             <div id="admin-icons-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);">🏛️ Manage Main Icons</div>
@@ -1115,7 +1113,6 @@
                 </div>
             </div>
 
-            <!-- ===== REORDER ICONS – SERIAL NUMBER APPROACH ===== -->
             <div id="admin-reorder-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);">🔢 Reorder Icons by Serial Number</div>
@@ -1132,7 +1129,6 @@
                 </div>
             </div>
 
-            <!-- ===== STUDENT PERFORMANCE ===== -->
             <div id="admin-students-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--primary);">
                     <div class="admin-section-title" style="color:var(--primary);">👨‍🎓 Student Performance Dashboard</div>
@@ -1150,12 +1146,8 @@
                 </div>
             </div>
 
-        </div><!-- end admin-view -->
-    </div><!-- end container -->
-
-    <!-- ===== PRINT AREA ===== -->
-    <div id="print-area"></div>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+        </div></div><div id="print-area"></div>
+        <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
@@ -1256,6 +1248,21 @@
                 }
                 return safeQ;
             });
+        };
+
+        /* ==========================================================================
+           1.6 ZOOM IN / ZOOM OUT FEATURE
+           ========================================================================== */
+        window.currentZoomLevel = 1;
+        window.changeZoom = function(amount) {
+            window.currentZoomLevel += amount;
+            if(window.currentZoomLevel < 0.6) window.currentZoomLevel = 0.6; // Min zoom limit
+            if(window.currentZoomLevel > 1.8) window.currentZoomLevel = 1.8; // Max zoom limit
+            document.body.style.zoom = window.currentZoomLevel;
+        };
+        window.resetZoom = function() {
+            window.currentZoomLevel = 1;
+            document.body.style.zoom = window.currentZoomLevel;
         };
 
         /* ==========================================================================
@@ -4017,3 +4024,4 @@
     </script>
 </body>
 </html>
+
