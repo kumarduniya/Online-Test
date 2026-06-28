@@ -576,7 +576,7 @@
                 display: block !important;
             }
 
-            /* Prevent question from splitting across pages/columns */
+            /* Allow question to flow naturally, fill blank space */
             .print-q { 
                 margin-bottom: 15px !important; 
                 border-bottom: 1px dashed #ccc !important; 
@@ -586,15 +586,15 @@
                 color: #000 !important; 
                 display: block !important; 
                 width: 100% !important; 
-                page-break-inside: avoid !important; 
-                break-inside: avoid-column !important; 
+                page-break-inside: auto !important; 
+                break-inside: auto !important; 
             }
             
-            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px !important; margin: 8px 0 !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+            .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px !important; margin: 8px 0 !important; page-break-inside: auto !important; break-inside: auto !important; }
             .opt-item { font-size: 14px !important; color: #000 !important; padding: 2px 0 !important; }
             .print-ans { font-weight: 700 !important; font-size: 13px !important; color: #000 !important; margin-top: 4px !important; display: block !important; }
-            .print-exp { color: #222 !important; font-size: 13px !important; margin-top: 8px !important; padding: 8px !important; background: #f5f5f5 !important; border-left: 3px solid #1a56db !important; line-height: 1.4 !important; page-break-inside: avoid !important; break-inside: avoid !important; }
-            .print-passage { padding: 6px !important; margin-bottom: 4px !important; font-style: italic; border-left: 4px solid #333; font-size: 14px !important; background: transparent !important; page-break-inside: avoid !important; break-inside: avoid !important; }
+            .print-exp { color: #222 !important; font-size: 13px !important; margin-top: 8px !important; padding: 8px !important; background: #f5f5f5 !important; border-left: 3px solid #1a56db !important; line-height: 1.4 !important; page-break-inside: auto !important; break-inside: auto !important; }
+            .print-passage { padding: 6px !important; margin-bottom: 4px !important; font-style: italic; border-left: 4px solid #333; font-size: 14px !important; background: transparent !important; page-break-inside: auto !important; break-inside: auto !important; }
             
             /* Restrict image width inside 2-columns */
             .print-q img, .print-exp img, .print-passage img,
@@ -1166,7 +1166,9 @@
            ========================================================================== */
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
-        const BASE_URL = "https://ankushonlinetest.netlify.app/";
+        
+        // UPDATED DOMAIN NAME AS REQUESTED
+        const BASE_URL = "https://setupportal.netlify.app/"; 
         const HIDDEN_TESTS = [];
 
         const firebaseConfig = {
@@ -1215,14 +1217,14 @@
         window.currentImageUploadLineIndex = -1;
 
         /* ==========================================================================
-           1.5 AUTO-SANITIZE FILTER (MAGIC FIX FOR OLD SAVED TESTS)
+           1.5 AUTO-SANITIZE FILTER (MAGIC FIX FOR OLD SAVED TESTS & NEW ERRORS)
            ========================================================================== */
         window.sanitizeMath = function(text) {
             if (!text) return text;
             let str = String(text);
             
-            // Fix for R$K or L$M (Single $ acting as math mode bug)
-            str = str.replace(/([a-zA-Z])\$([a-zA-Z])/g, '$1\\$$2');
+            // Fix for L$M, R$K, or L$2 (Single $ acting as math mode bug with letters & numbers)
+            str = str.replace(/([a-zA-Z0-9])\$([a-zA-Z0-9])/g, '$1\\$$2');
             
             // Find all math blocks and fix # errors and Hindi text breaking
             str = str.replace(/\$\$([\s\S]*?)\$\$|\$([\s\S]*?)\$/g, function(match) {
@@ -1448,13 +1450,28 @@
                 res.topic = p1[0];
                 res.subcat = p1[0];
                 let r1 = p1[1] || "";
-                let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/); if (matchQs) res.qs = matchQs[1];
-                let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/); if (matchCat) res.cat = matchCat[1];
-                let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/); if (matchLogo) res.logo = matchLogo[1];
-                let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/); if (matchBoard) res.board = matchBoard[1];
-                let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/); if (matchExam) res.exam = matchExam[1];
-                let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/); if (matchSubcat) res.subcat = matchSubcat[1];
-                let matchSummary = raw.match(/\|\|\|SUMMARY:(.*?)(?:\|\|\||$)/); if (matchSummary) res.summary = matchSummary[1];
+                
+                let matchQs = r1.match(/^(.*?)(?:\|\|\||$)/);
+                if (matchQs) res.qs = matchQs[1];
+                
+                let matchCat = raw.match(/\|\|\|CAT:(.*?)(?:\|\|\||$)/);
+                if (matchCat) res.cat = matchCat[1];
+                
+                let matchLogo = raw.match(/\|\|\|LOGO:(.*?)(?:\|\|\||$)/);
+                if (matchLogo) res.logo = matchLogo[1];
+                
+                let matchBoard = raw.match(/\|\|\|BOARD:(.*?)(?:\|\|\||$)/);
+                if (matchBoard) res.board = matchBoard[1];
+                
+                let matchExam = raw.match(/\|\|\|EXAM:(.*?)(?:\|\|\||$)/);
+                if (matchExam) res.exam = matchExam[1];
+                
+                let matchSubcat = raw.match(/\|\|\|SUBCAT:(.*?)(?:\|\|\||$)/);
+                if (matchSubcat) res.subcat = matchSubcat[1];
+                
+                let matchSummary = raw.match(/\|\|\|SUMMARY:(.*?)(?:\|\|\||$)/);
+                if (matchSummary) res.summary = matchSummary[1];
+                
                 return res;
             } else {
                 res.topic = raw;
