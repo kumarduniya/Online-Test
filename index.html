@@ -1161,7 +1161,7 @@
 
     <!-- ===== PRINT AREA ===== -->
     <div id="print-area"></div>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+   <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
@@ -1173,7 +1173,7 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
         
-        // UPDATED DOMAIN NAME AS REQUESTED
+        // DOMAIN NAME
         const BASE_URL = "https://setupportal.netlify.app/"; 
         const HIDDEN_TESTS = [];
 
@@ -1223,40 +1223,34 @@
         window.currentImageUploadLineIndex = -1;
 
         /* ==========================================================================
-           1.5 SMART AUTO-SANITIZE FILTER (MAGIC FIX FOR OLD SAVED TESTS & NEW ERRORS)
+           1.5 UNIVERSAL AUTO-SANITIZE FILTER (BULLETPROOF MAGIC FIX)
            ========================================================================== */
         window.sanitizeMath = function(text) {
             if (!text) return text;
             let str = String(text);
             
-            // 1. Fix for Reasoning Bug: L$M or L$2 
-            // Only escape $ if it's sandwiched between letters/numbers, preventing accidental math mode
+            // 1. Prevent single $ in reasoning from triggering math mode (e.g. L$2, A$B)
+            // It will safely escape it to L\$2 so it prints normally.
             str = str.replace(/([a-zA-Z0-9])\$([a-zA-Z0-9])/g, '$1\\$$2');
             
-            // 2. Process Actual Math Blocks ($...$ or $$...$$)
+            // 2. Process STRICTLY INSIDE math blocks to prevent \text{} leaking outside
             str = str.replace(/\$\$([\s\S]*?)\$\$|\$([\s\S]*?)\$/g, function(match) {
                 // Ignore completely empty blocks
                 if (match === '$' || match === '$$') return match;
                 
-                let parsed = match;
+                let inner = match;
                 
-                // Fix # Error: Replace all naked # with \# securely (without breaking older browsers)
-                // Split by # and join with \#, then fix any double escaped \\#
-                parsed = parsed.split('#').join('\\#').replace(/\\\\#/g, '\\#');
+                // Fix # error inside math safely without breaking browsers
+                inner = inner.split('#').join('\\#').replace(/\\\\#/g, '\\#'); 
                 
-                // Fix Hindi Splitting: Smartly wrap naked Hindi text in \text{}
-                // This regex checks: "Is it already \text{हिंदी}?" -> Keep it safe. "Is it naked हिंदी?" -> Wrap it!
-                parsed = parsed.replace(/\\text\{([^}]+)\}|([\u0900-\u097F]+(?:\s+[\u0900-\u097F]+)*)/g, function(m, alreadyWrapped, needsWrapping) {
-                    if (alreadyWrapped !== undefined) {
-                        return m; // This Hindi is already safe inside \text{}, don't touch it!
-                    }
-                    if (needsWrapping) {
-                        return '\\text{' + needsWrapping + '}'; // Pack the naked Hindi in \text{} so it doesn't break
-                    }
-                    return m;
-                });
+                // Fix Hindi Splitting: Smartly unwrap and re-wrap
+                // Step A: Unwrap any existing \text{} that contains Hindi to avoid double wrapping errors
+                inner = inner.replace(/\\text\{([^}]*[\u0900-\u097F]+[^}]*)\}/g, '$1');
                 
-                return parsed;
+                // Step B: Wrap ALL consecutive Hindi words (even near +, -, /, 1, 2, 3) purely in \text{}
+                inner = inner.replace(/([\u0900-\u097F]+(?:\s+[\u0900-\u097F]+)*)/g, '\\text{$1}');
+                
+                return inner;
             });
             
             return str;
@@ -1503,7 +1497,7 @@
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
             
-            // Run our smart sanitizer filter first
+            // Run our universal sanitizer filter first
             rawText = window.sanitizeMath(rawText);
             
             rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, '')
@@ -3851,9 +3845,6 @@
         window.handleHistoryPDFLoad = function(data) {
             window.closeModal();
             if (data.error) return window.showCustomAlert("Error", "Test data missing.", "❌");
-            
-            // MAGIC FIX FOR HISTORY PDF: Sanitize before generating PDF!
-            if (data.questions) { data.questions = window.sanitizeQuestions(data.questions); }
             
             let raw = data.rawText || "";
             if (!raw && data.questions && data.questions.length > 0) {
