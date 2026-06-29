@@ -613,7 +613,10 @@
                 margin: 6px 0 !important; 
             }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            <body>
+        }
+    </style>
+</head>
+<body>
 
     <!-- ===== MODALS ===== -->
     <div id="custom-modal" class="modal-overlay">
@@ -1157,8 +1160,8 @@
     </div><!-- end container -->
 
     <!-- ===== PRINT AREA ===== -->
-    <div id="print-area"></div
-            <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <div id="print-area"></div>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
@@ -1169,9 +1172,7 @@
            ========================================================================== */
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
-        
-        // UPDATED DOMAIN NAME AS REQUESTED
-        const BASE_URL = "https://setupportal.netlify.app/"; 
+        const BASE_URL = "https://setupportal.netlify.app/";
         const HIDDEN_TESTS = [];
 
         const firebaseConfig = {
@@ -1218,48 +1219,6 @@
         window.otpTimerInterval = null;
         window.navStack = [];
         window.currentImageUploadLineIndex = -1;
-
-        /* ==========================================================================
-           1.5 AUTO-SANITIZE FILTER (MAGIC FIX FOR OLD SAVED TESTS & NEW ERRORS)
-           ========================================================================== */
-        window.sanitizeMath = function(text) {
-            if (!text) return text;
-            let str = String(text);
-            
-            // Fix for L$M, R$K, or L$2 (Single $ acting as math mode bug with letters & numbers)
-            str = str.replace(/([a-zA-Z0-9])\$([a-zA-Z0-9])/g, '$1\\$$2');
-            
-            // Find all math blocks and fix # errors and Hindi text breaking
-            str = str.replace(/\$\$([\s\S]*?)\$\$|\$([\s\S]*?)\$/g, function(match) {
-                // Escape # to prevent Macro Parameter Error
-                let parsed = match.replace(/(?<!\\)#/g, '\\#'); 
-                
-                // Wrap Hindi Words in \text{} automatically
-                parsed = parsed.replace(/([\u0900-\u097F]+(?:\s+[\u0900-\u097F]+)*)/g, function(hindiMatch, p1, offset, fullStr) {
-                    let before = fullStr.substring(Math.max(0, offset - 6), offset);
-                    if (before.includes("\\text{")) return hindiMatch; // Already wrapped
-                    return '\\text{' + hindiMatch + '}';
-                });
-                return parsed;
-            });
-            return str;
-        };
-
-        window.sanitizeQuestions = function(questionsArray) {
-            if (!questionsArray || !Array.isArray(questionsArray)) return [];
-            return questionsArray.map(q => {
-                let safeQ = { ...q };
-                if (safeQ.q) safeQ.q = window.sanitizeMath(safeQ.q);
-                if (safeQ.exp) safeQ.exp = window.sanitizeMath(safeQ.exp);
-                if (safeQ.passage) safeQ.passage = window.sanitizeMath(safeQ.passage);
-                if (safeQ.opts) {
-                    safeQ.opts = safeQ.opts.map(o => {
-                        return { ...o, text: window.sanitizeMath(o.text) };
-                    });
-                }
-                return safeQ;
-            });
-        };
 
         /* ==========================================================================
            2. CAPTCHA, DARK MODE, MODALS
@@ -1485,9 +1444,6 @@
 
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
-            
-            // Run our sanitizer filter first
-            rawText = window.sanitizeMath(rawText);
             
             rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, '')
                 .replace(/\r\n?/g, '\n')
@@ -1908,15 +1864,11 @@
                     let localTestInfo = localTests.find(t => t.code === testCode);
                     
                     if (localTestInfo) {
-                        // Apply the safe filter on old local tests
-                        localTestInfo.questions = window.sanitizeQuestions(localTestInfo.questions);
                         window.handleTestLoad(localTestInfo);
                     } else {
                         db.collection("tests").doc(testCode).get().then((doc) => {
                             if (doc.exists) {
                                 let fData = doc.data();
-                                // Apply the safe filter on old database tests
-                                fData.questions = window.sanitizeQuestions(fData.questions);
                                 window.handleTestLoad(fData);
                             } else {
                                 let loadingV = document.getElementById('loading-view');
@@ -3178,8 +3130,7 @@
 
         window.handleAdminTestLoad = function(data) {
             window.closeModal(); let raw = data.rawText || "";
-            // Removed buggy Auto-Filter from Admin Load so it doesn't break old questions
-            
+            // Safe Load - NO auto filter here. Relies strictly on Master Prompt.
             if (!raw && data.questions && data.questions.length > 0) {
                 raw = data.questions.map((q, i) => {
                     let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
@@ -3291,8 +3242,6 @@
         window.adminDownloadPDF = function(code, mode) {
             let t = window.adminUnifiedTests.find(x => x.code === code); if (!t) return window.showCustomAlert("Error", "Data not found!", "❌"); let raw = t.rawText || "";
             if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { window.fetchTestForAdmin(code, 'pdf', mode); return; }
-            
-            // Removed Buggy Filter from here
             
             if (!raw && t.questions && t.questions.length > 0) {
                 raw = t.questions.map((q, i) => {
@@ -4010,10 +3959,7 @@
            ========================================================================== */
         window.generateCaptcha();
         console.log('🚀 MockSarthi v4.0 — All features ready!');
-        console.log('✨ Advanced Fixes: MathJax Auto-Filter Removed, 2-Column PDF, and Custom Watermark active.');
+        console.log('✨ Advanced Fixes: Filter Removed, Layout Centered, Custom Watermark active.');
     </script>
 </body>
 </html>
-        }
-    </style>
-</head>
