@@ -1172,7 +1172,9 @@
            ========================================================================== */
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
         const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
-        const BASE_URL = "https://setupportal.netlify.app/";
+        
+        // UPDATED DOMAIN NAME AS REQUESTED
+        const BASE_URL = "https://setupportal.netlify.app/"; 
         const HIDDEN_TESTS = [];
 
         const firebaseConfig = {
@@ -1219,6 +1221,62 @@
         window.otpTimerInterval = null;
         window.navStack = [];
         window.currentImageUploadLineIndex = -1;
+
+        /* ==========================================================================
+           1.5 SMART AUTO-SANITIZE FILTER (MAGIC FIX FOR OLD SAVED TESTS & NEW ERRORS)
+           ========================================================================== */
+        window.sanitizeMath = function(text) {
+            if (!text) return text;
+            let str = String(text);
+            
+            // 1. Fix for Reasoning Bug: L$M or L$2 
+            // Only escape $ if it's sandwiched between letters/numbers, preventing accidental math mode
+            str = str.replace(/([a-zA-Z0-9])\$([a-zA-Z0-9])/g, '$1\\$$2');
+            
+            // 2. Process Actual Math Blocks ($...$ or $$...$$)
+            str = str.replace(/\$\$([\s\S]*?)\$\$|\$([\s\S]*?)\$/g, function(match) {
+                // Ignore completely empty blocks
+                if (match === '$' || match === '$$') return match;
+                
+                let parsed = match;
+                
+                // Fix # Error: Replace all naked # with \# securely (without breaking older browsers)
+                // Split by # and join with \#, then fix any double escaped \\#
+                parsed = parsed.split('#').join('\\#').replace(/\\\\#/g, '\\#');
+                
+                // Fix Hindi Splitting: Smartly wrap naked Hindi text in \text{}
+                // This regex checks: "Is it already \text{हिंदी}?" -> Keep it safe. "Is it naked हिंदी?" -> Wrap it!
+                parsed = parsed.replace(/\\text\{([^}]+)\}|([\u0900-\u097F]+(?:\s+[\u0900-\u097F]+)*)/g, function(m, alreadyWrapped, needsWrapping) {
+                    if (alreadyWrapped !== undefined) {
+                        return m; // This Hindi is already safe inside \text{}, don't touch it!
+                    }
+                    if (needsWrapping) {
+                        return '\\text{' + needsWrapping + '}'; // Pack the naked Hindi in \text{} so it doesn't break
+                    }
+                    return m;
+                });
+                
+                return parsed;
+            });
+            
+            return str;
+        };
+
+        window.sanitizeQuestions = function(questionsArray) {
+            if (!questionsArray || !Array.isArray(questionsArray)) return [];
+            return questionsArray.map(q => {
+                let safeQ = { ...q };
+                if (safeQ.q) safeQ.q = window.sanitizeMath(safeQ.q);
+                if (safeQ.exp) safeQ.exp = window.sanitizeMath(safeQ.exp);
+                if (safeQ.passage) safeQ.passage = window.sanitizeMath(safeQ.passage);
+                if (safeQ.opts) {
+                    safeQ.opts = safeQ.opts.map(o => {
+                        return { ...o, text: window.sanitizeMath(o.text) };
+                    });
+                }
+                return safeQ;
+            });
+        };
 
         /* ==========================================================================
            2. CAPTCHA, DARK MODE, MODALS
@@ -1444,6 +1502,9 @@
 
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
+            
+            // Run our smart sanitizer filter first
+            rawText = window.sanitizeMath(rawText);
             
             rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, '')
                 .replace(/\r\n?/g, '\n')
@@ -1864,11 +1925,15 @@
                     let localTestInfo = localTests.find(t => t.code === testCode);
                     
                     if (localTestInfo) {
+                        // Apply the safe filter on old local tests
+                        localTestInfo.questions = window.sanitizeQuestions(localTestInfo.questions);
                         window.handleTestLoad(localTestInfo);
                     } else {
                         db.collection("tests").doc(testCode).get().then((doc) => {
                             if (doc.exists) {
                                 let fData = doc.data();
+                                // Apply the safe filter on old database tests
+                                fData.questions = window.sanitizeQuestions(fData.questions);
                                 window.handleTestLoad(fData);
                             } else {
                                 let loadingV = document.getElementById('loading-view');
@@ -3130,7 +3195,11 @@
 
         window.handleAdminTestLoad = function(data) {
             window.closeModal(); let raw = data.rawText || "";
-            // Safe Load - NO auto filter here. Relies strictly on Master Prompt.
+            
+            // Run Safe Sanitizer when loading old test from DB
+            if (data.questions) { data.questions = window.sanitizeQuestions(data.questions); }
+            if (raw) { raw = window.sanitizeMath(raw); data.rawText = raw; }
+            
             if (!raw && data.questions && data.questions.length > 0) {
                 raw = data.questions.map((q, i) => {
                     let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
@@ -3242,6 +3311,9 @@
         window.adminDownloadPDF = function(code, mode) {
             let t = window.adminUnifiedTests.find(x => x.code === code); if (!t) return window.showCustomAlert("Error", "Data not found!", "❌"); let raw = t.rawText || "";
             if (!raw && (!t.questions || t.questions.length === 0) && !t.isFetched) { window.fetchTestForAdmin(code, 'pdf', mode); return; }
+            
+            // Clean before PDF printing if raw exists
+            if(raw) raw = window.sanitizeMath(raw);
             
             if (!raw && t.questions && t.questions.length > 0) {
                 raw = t.questions.map((q, i) => {
@@ -3779,6 +3851,9 @@
         window.handleHistoryPDFLoad = function(data) {
             window.closeModal();
             if (data.error) return window.showCustomAlert("Error", "Test data missing.", "❌");
+            
+            // MAGIC FIX FOR HISTORY PDF: Sanitize before generating PDF!
+            if (data.questions) { data.questions = window.sanitizeQuestions(data.questions); }
             
             let raw = data.rawText || "";
             if (!raw && data.questions && data.questions.length > 0) {
