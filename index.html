@@ -1173,7 +1173,6 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
     const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
     
-    // DOMAIN NAME
     const BASE_URL = "https://setupportal.netlify.app/"; 
     const HIDDEN_TESTS = [];
 
@@ -2961,6 +2960,8 @@
         let rawDataElem = document.getElementById('a-rawdata');
         if(!rawDataElem) return;
         let rawData = rawDataElem.value;
+        // Sanitize the whole raw data before displaying
+        rawData = window.sanitizeMath(rawData);
         let lines = rawData.split('\n');
         let html = '';
         let searchInput = document.getElementById('vp-search-input');
@@ -3318,6 +3319,8 @@
         let eMarks = aMarks ? parseFloat(aMarks.value) || 2 : 2; let eNeg = aNeg ? parseFloat(aNeg.value) || 0 : 0; let tTime = aTotTime ? parseInt(aTotTime.value) || 0 : 0; let qTime = aQTime ? parseInt(aQTime.value) || 0 : 0; let pdfType = aPdfType ? aPdfType.value : "free"; let isFree = (pdfType === "free"); let ePrice = isFree ? "Free" : (aPriceElem ? (aPriceElem.value || "49") : "49"); let eKey = "ANK"; let eCategory = aCatElem ? aCatElem.value : "Mock Tests"; if (eCategory === "CUSTOM" && aCustomCatElem) { eCategory = aCustomCatElem.value || "Custom Category"; }
         let rawText = aRawDataElem ? aRawDataElem.value : ""; if (!rawText.trim()) return window.showCustomAlert("Empty Box", "Paste questions!", "⚠️");
         
+        // Sanitize raw text before parsing
+        rawText = window.sanitizeMath(rawText);
         let parsedQs = window.parseRawQuestions(rawText); if (parsedQs.length === 0) return window.showCustomAlert("Format Error", "❌ Incorrect format.", "⚠️");
         let fQs = window.updateQsCount(); if (fQs === 0) fQs = parsedQs.length;
         
@@ -3519,25 +3522,44 @@
     };
 
     window.renderQuestion = function(idx) {
-        window.currentQ = idx; let q = window.examData.questions[idx]; window.renderBookmarkState();
+        window.currentQ = idx; 
+        let q = window.examData.questions[idx];
+        
+        // Sanitize on the fly to be absolutely sure
+        let safeQ = {
+            q: window.sanitizeMath(q.q || ''),
+            opts: (q.opts || []).map(o => ({ ...o, text: window.sanitizeMath(o.text || '') })),
+            passage: window.sanitizeMath(q.passage || ''),
+            exp: window.sanitizeMath(q.exp || '')
+        };
+        
+        window.renderBookmarkState();
         if (window.qStatus[idx] === 0) { window.qStatus[idx] = 1; window.updateCounts(); }
         window.refreshFullPalette();
         
         let qHeader = document.getElementById('q-no-header'); let qText = document.getElementById('q-text');
-        if (qHeader) qHeader.innerText = `Question No. ${idx+1}`; if (qText) qText.innerHTML = q.q;
+        if (qHeader) qHeader.innerText = `Question No. ${idx+1}`; 
+        if (qText) qText.innerHTML = safeQ.q;
         
         let pd = document.getElementById('q-passage');
-        if (pd) { if (q.passage) { pd.innerHTML = q.passage; pd.style.display = 'block'; } else pd.style.display = 'none'; }
+        if (pd) { 
+            if (safeQ.passage) { 
+                pd.innerHTML = safeQ.passage; 
+                pd.style.display = 'block'; 
+            } else pd.style.display = 'none'; 
+        }
         
         let oH = "";
-        (q.opts || []).forEach(o => {
+        safeQ.opts.forEach(o => {
             let iC = (window.userAnswers[idx] === o.id) ? "checked" : "";
             let hC = (window.userAnswers[idx] === o.id) ? "selected" : "";
             oH += `<label class="opt-label ${hC}" id="lbl-${o.id}"><input type="radio" name="option" value="${o.id}" ${iC} onchange="window.markAnswered('${o.id}')"> <b>${o.id}.</b> ${o.text}</label>`;
         });
         let optBox = document.getElementById('options-box'); if (optBox) optBox.innerHTML = oH;
         
-        if(window.MathJax) { window.MathJax.typesetPromise([document.getElementById('q-scroll-area')]).catch(e => console.log(e)); }
+        if(window.MathJax) { 
+            window.MathJax.typesetPromise([document.getElementById('q-scroll-area')]).catch(e => console.log(e)); 
+        }
         
         window.updateMiniPalette(); window.scrollTo({ top: 0, behavior: 'smooth' }); clearInterval(window.qTimer);
         let bg = document.getElementById('q-timer-badge'); let qSecLeft = document.getElementById('q-sec-left');
@@ -3625,23 +3647,50 @@
     };
 
     window.renderAnalysisSlide = function() {
-        let d = window.currentAnalysisArray[window.currentAnalysisIndex]; let q = d.q; let i = d.originalIndex; let uA = d.uAns; let cA = window.getCleanAns(q.ans); let gA = window.getCleanAns(uA);
-        let sI = d.isRight ? "✅" : (d.isBlank ? "⬜" : "❌"); let tt = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
-        let pH = q.passage ? `<div style="background:var(--bg-subtle);padding:12px;border-left:4px solid var(--accent);margin-bottom:14px;font-size:14px;font-style:italic;color:var(--text-main);border-radius:var(--radius-sm);">${q.passage}</div>` : "";
+        let d = window.currentAnalysisArray[window.currentAnalysisIndex]; 
+        let q = d.q; 
+        let i = d.originalIndex; 
+        let uA = d.uAns; 
+        let cA = window.getCleanAns(q.ans); 
+        let gA = window.getCleanAns(uA);
+        
+        // Sanitize every piece of text
+        let safeQ = {
+            q: window.sanitizeMath(q.q || ''),
+            opts: (q.opts || []).map(o => ({ ...o, text: window.sanitizeMath(o.text || '') })),
+            passage: window.sanitizeMath(q.passage || ''),
+            exp: window.sanitizeMath(q.exp || '')
+        };
+        
+        let sI = d.isRight ? "✅" : (d.isBlank ? "⬜" : "❌"); 
+        let tt = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
+        let pH = safeQ.passage ? `<div style="background:var(--bg-subtle);padding:12px;border-left:4px solid var(--accent);margin-bottom:14px;font-size:14px;font-style:italic;color:var(--text-main);border-radius:var(--radius-sm);">${safeQ.passage}</div>` : "";
         let uT = ""; let tC = "";
-        if (d.isBlank) { uT = "Skipped"; tC = "color:var(--text-muted);"; } else if (d.isRight) { uT = `Your Answer: ${uA} (Correct ✅)`; tC = "color:var(--success);"; } else { uT = `Your Answer: ${uA} (Wrong ❌) | Correct: ${cA||"N/A"}`; tC = "color:var(--danger);"; }
+        if (d.isBlank) { uT = "Skipped"; tC = "color:var(--text-muted);"; } 
+        else if (d.isRight) { uT = `Your Answer: ${uA} (Correct ✅)`; tC = "color:var(--success);"; } 
+        else { uT = `Your Answer: ${uA} (Wrong ❌) | Correct: ${cA||"N/A"}`; tC = "color:var(--danger);"; }
+        
         let oH = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">';
-        (q.opts || []).forEach(o => {
-            let b = "var(--bg-card)"; let br = "1px solid var(--border-color)"; let f = "normal"; let c = "var(--text-main)"; let oC = window.getCleanAns(o.id); let ic = '<span style="margin-right:6px;visibility:hidden;">✅</span>';
+        safeQ.opts.forEach(o => {
+            let b = "var(--bg-card)"; let br = "1px solid var(--border-color)"; let f = "normal"; let c = "var(--text-main)"; 
+            let oC = window.getCleanAns(o.id); 
+            let ic = '<span style="margin-right:6px;visibility:hidden;">✅</span>';
             if (oC === cA) { b = "rgba(15, 157, 88, 0.10)"; br = "2px solid var(--success)"; f = "bold"; c = "var(--success)"; ic = '<span style="margin-right:6px;">✅</span>'; }
             else if (oC === gA && !d.isRight) { b = "rgba(220, 53, 69, 0.10)"; br = "2px solid var(--danger)"; f = "bold"; c = "var(--danger)"; ic = '<span style="margin-right:6px;">❌</span>'; }
             oH += `<div style="padding:10px;border:${br};border-radius:var(--radius-sm);background:${b};color:${c};font-weight:${f};font-size:14px;display:flex;align-items:flex-start;gap:6px;">${ic}<div><b>${o.id}.</b> ${o.text}</div></div>`;
         });
         oH += '</div>';
-        let eH = q.exp ? `<div style="font-size:13px;color:var(--text-main);margin-top:10px;line-height:1.5;background:var(--bg-subtle);padding:12px;border-radius:var(--radius-sm);border-left:4px solid var(--primary);max-height:160px;overflow-y:auto;"><b>Explanation:</b><br>${q.exp}</div>` : "";
-        let h = `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:10px;margin-bottom:14px;flex-wrap:wrap;gap:8px;"><b style="color:var(--primary);font-size:15px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b><button class="btn btn-danger btn-sm" onclick="document.getElementById('analysis-box').style.display='none';">✕ Close</button></div>${pH}<b style="font-size:17px;color:var(--text-main);display:block;margin-bottom:14px;line-height:1.5;">${sI} Q${i+1}. ${q.q}</b><div style="${tC}font-weight:700;margin-bottom:14px;padding:10px;border-radius:var(--radius-sm);background:var(--bg-subtle);border:1px solid var(--border-color);">${uT}</div>${oH}${eH}<div style="display:flex;justify-content:space-between;margin-top:20px;border-top:1px solid var(--border-color);padding-top:14px;gap:10px;"><button class="btn btn-outline btn-sm" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''}>⬅️ Prev</button><button class="btn btn-primary btn-sm" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''}>Next ➡️</button></div>`;
+        
+        let eH = safeQ.exp ? `<div style="font-size:13px;color:var(--text-main);margin-top:10px;line-height:1.5;background:var(--bg-subtle);padding:12px;border-radius:var(--radius-sm);border-left:4px solid var(--primary);max-height:160px;overflow-y:auto;"><b>Explanation:</b><br>${safeQ.exp}</div>` : "";
+        
+        let h = `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:10px;margin-bottom:14px;flex-wrap:wrap;gap:8px;"><b style="color:var(--primary);font-size:15px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b><button class="btn btn-danger btn-sm" onclick="document.getElementById('analysis-box').style.display='none';">✕ Close</button></div>${pH}<b style="font-size:17px;color:var(--text-main);display:block;margin-bottom:14px;line-height:1.5;">${sI} Q${i+1}. ${safeQ.q}</b><div style="${tC}font-weight:700;margin-bottom:14px;padding:10px;border-radius:var(--radius-sm);background:var(--bg-subtle);border:1px solid var(--border-color);">${uT}</div>${oH}${eH}<div style="display:flex;justify-content:space-between;margin-top:20px;border-top:1px solid var(--border-color);padding-top:14px;gap:10px;"><button class="btn btn-outline btn-sm" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''}>⬅️ Prev</button><button class="btn btn-primary btn-sm" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''}>Next ➡️</button></div>`;
         let ansBox = document.getElementById('analysis-box');
-        if (ansBox) { ansBox.innerHTML = h; if(window.MathJax) { window.MathJax.typesetPromise([ansBox]).catch(e => console.log(e)); } }
+        if (ansBox) { 
+            ansBox.innerHTML = h; 
+            if(window.MathJax) { 
+                window.MathJax.typesetPromise([ansBox]).catch(e => console.log(e)); 
+            } 
+        }
     };
 
     window.prevAnalysis = function() { if (window.currentAnalysisIndex > 0) { window.currentAnalysisIndex--; window.renderAnalysisSlide(); } };
