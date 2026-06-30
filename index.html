@@ -1161,7 +1161,7 @@
 
     <!-- ===== PRINT AREA ===== -->
     <div id="print-area"></div>
- <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
@@ -1232,69 +1232,73 @@
 
         /* ==========================================================
            STEP 1: Remove ALL rogue \text{} wrappers globally
-           Example:
-           \text{का अर्थ}  →  का अर्थ
            ========================================================== */
         str = str.replace(/\\text\{([^{}]*)\}/g, '$1');
 
         /* ==========================================================
            STEP 2: Hide reasoning dollars temporarily
-           Rule:
-           If $ is sandwiched between alphanumeric chars,
-           it is NOT math.
-
-           Examples:
-           L$2 → L__RS_DOLLAR__2
-           P$Q → P__RS_DOLLAR__Q
            ========================================================== */
         const PLACEHOLDER = "__RS_DOLLAR__";
-
         str = str.replace(
             /([a-zA-Z0-9])\$([a-zA-Z0-9])/g,
             `$1${PLACEHOLDER}$2`
         );
 
         /* ==========================================================
-           STEP 3: Process ONLY valid MathJax blocks
+           STEP 3: Process ALL valid MathJax/LaTeX math blocks
            Supports:
-           $...$
-           $$...$$
+           $...$  (inline)
+           $$...$$ (display)
+           \(...\) (inline, LaTeX style)
+           \[...\] (display, LaTeX style)
            ========================================================== */
+        function processMath(math) {
+            if (!math || !math.trim()) return math;
+            let processed = math;
+            // Escape # safely
+            processed = processed.replace(/(?<!\\)#/g, '\\#');
+            // Wrap Hindi words inside \text{}
+            processed = processed.replace(
+                /([\u0900-\u097F]+)/g,
+                '\\text{$1}'
+            );
+            return processed;
+        }
+
+        // $$...$$ (display)
         str = str.replace(
-            /(\$\$?)([\s\S]*?)\1/g,
-            function (fullMatch, delimiter, innerMath) {
-                if (!innerMath || !innerMath.trim()) {
-                    return fullMatch;
-                }
+            /\$\$([\s\S]*?)\$\$/g,
+            function (fullMatch, innerMath) {
+                return '$$' + processMath(innerMath) + '$$';
+            }
+        );
 
-                let math = innerMath;
+        // $...$ (inline) – avoid overlapping with $$
+        str = str.replace(
+            /\$(?!\$)([\s\S]*?)(?<!\$)\$/g,
+            function (fullMatch, innerMath) {
+                return '$' + processMath(innerMath) + '$';
+            }
+        );
 
-                /* ------------------------------------------
-                   3A. Escape # safely
-                   ------------------------------------------ */
-                math = math.replace(/(?<!\\)#/g, '\\#');
+        // \[...\] (display)
+        str = str.replace(
+            /\\\[([\s\S]*?)\\\]/g,
+            function (fullMatch, innerMath) {
+                return '\\[' + processMath(innerMath) + '\\]';
+            }
+        );
 
-                /* ------------------------------------------
-                   3B. Wrap Hindi words inside \text{}
-                   so MathJax doesn't split them.
-
-                   Example:
-                   दूरी → \text{दूरी}
-                   समय → \text{समय}
-                   ------------------------------------------ */
-                math = math.replace(
-                    /([\u0900-\u097F]+)/g,
-                    '\\text{$1}'
-                );
-
-                return delimiter + math + delimiter;
+        // \(...\) (inline)
+        str = str.replace(
+            /\\\(([\s\S]*?)\\\)/g,
+            function (fullMatch, innerMath) {
+                return '\\(' + processMath(innerMath) + '\\)';
             }
         );
 
         /* ==========================================================
            STEP 4: Restore reasoning placeholders as escaped dollars
-           Example:
-           L__RS_DOLLAR__2 → L\$2
            ========================================================== */
         str = str.replace(
             new RegExp(PLACEHOLDER, 'g'),
