@@ -239,14 +239,24 @@
             height: var(--header-logo-height);
             width: auto;
             max-height: 42px;
-            border-radius: 6px;
-            transition: transform 0.3s;
+            border-radius: 50%;
+            /* round logo support */
             object-fit: contain;
             background: rgba(255, 255, 255, 0.05);
-            padding: 2px 4px;
+            padding: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            transition: transform 0.3s, border-color 0.3s;
         }
         .brand-wrapper .brand-logo:hover {
-            transform: scale(1.04);
+            transform: scale(1.06);
+            border-color: var(--accent);
+        }
+        /* If the logo is square/round, we keep it round; if it's rectangular, we respect aspect ratio */
+        .brand-wrapper .brand-logo[data-shape="round"] {
+            border-radius: 50% !important;
+        }
+        .brand-wrapper .brand-logo[data-shape="square"] {
+            border-radius: 8px !important;
         }
         .brand-wrapper .brand-name {
             font-size: 1.3rem;
@@ -495,7 +505,7 @@
             position: relative;
             scroll-behavior: smooth;
         }
-        /* subtle watermark behind question */
+        /* subtle watermark behind question (logo will be injected via JS) */
         .exam-left::before {
             content: '';
             position: fixed;
@@ -515,7 +525,6 @@
             position: relative;
             z-index: 1;
         }
-        /* watermark on each question (actual image) - we'll add via JS */
 
         /* ---- RIGHT SIDEBAR (scrollable palette) ---- */
         .exam-sidebar {
@@ -994,7 +1003,7 @@
         }
 
         /* ============================================================
-           PROFILE PHOTO UPLOAD
+           PROFILE PHOTO UPLOAD (updated with App Script)
            ============================================================ */
         .profile-upload-area {
             display: flex;
@@ -1487,7 +1496,7 @@
             width: 100%;
             position: relative;
         }
-        /* watermark inside question area */
+        /* watermark inside question area (logo will be injected via JS) */
         .q-text .q-watermark {
             position: absolute;
             top: 50%;
@@ -1501,6 +1510,14 @@
             white-space: nowrap;
             z-index: 0;
             font-family: 'Poppins', sans-serif;
+            max-width: 80%;
+            text-align: center;
+        }
+        .q-text .q-watermark img {
+            max-width: 150px;
+            height: auto;
+            margin: 0 auto;
+            border-radius: 8px;
         }
         .q-text>* {
             position: relative;
@@ -2453,7 +2470,100 @@
         }
 
         /* ============================================================
-           PRINT PDF – UPDATED WITH TEST BODHI WATERMARK
+           ADMIN LOGO MANAGER – NEW SECTION
+           ============================================================ */
+        .logo-manager-area {
+            background: var(--bg-subtle);
+            border: 2px solid var(--accent);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .logo-manager-area .lm-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .logo-manager-area .lm-row .lm-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            object-fit: contain;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-muted);
+            overflow: hidden;
+            flex-shrink: 0;
+            padding: 4px;
+        }
+        .logo-manager-area .lm-row .lm-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .logo-manager-area .lm-row .lm-info {
+            flex: 1;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .logo-manager-area .lm-row .lm-info .lm-label {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 13px;
+        }
+        .logo-manager-area .lm-row .lm-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .logo-manager-area .lm-row .lm-btns .btn {
+            font-size: 11px;
+            padding: 6px 14px;
+            margin: 0;
+        }
+        .logo-manager-area .lm-url-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            background: var(--bg-card);
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+        .logo-manager-area .lm-url-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-family: var(--font-sans);
+            background: var(--bg-input);
+            color: var(--text-main);
+            outline: none;
+            min-width: 150px;
+        }
+        .logo-manager-area .lm-url-row input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.15);
+        }
+        .logo-manager-area .lm-url-row .btn {
+            font-size: 11px;
+            padding: 6px 16px;
+            margin: 0;
+        }
+
+        /* ============================================================
+           PRINT PDF – UPDATED WITH DYNAMIC LOGO WATERMARK
            ============================================================ */
         body.print-pdf {
             background: #fff !important;
@@ -2513,7 +2623,7 @@
                 position: relative;
             }
 
-            /* ---- WATERMARK: LOGO + TEXT ---- */
+            /* ---- PDF WATERMARK: LOGO + TEXT (dynamic) ---- */
             .pdf-watermark-wrapper {
                 position: fixed !important;
                 top: 0 !important;
@@ -2538,6 +2648,7 @@
                 max-width: 200px !important;
                 height: auto !important;
                 opacity: 0.8 !important;
+                border-radius: 12px !important;
             }
             .pdf-watermark-wrapper .wm-content .wm-text {
                 font-size: 32px !important;
@@ -2576,9 +2687,10 @@
             .pdf-header-strip .hdr-brand img {
                 height: 28px !important;
                 width: auto !important;
-                border-radius: 4px !important;
+                border-radius: 50% !important;
                 background: rgba(255, 255, 255, 0.05) !important;
                 padding: 2px !important;
+                border: 1px solid rgba(255, 255, 255, 0.10) !important;
             }
             .pdf-header-strip .hdr-brand .hdr-name {
                 color: #fff !important;
@@ -2956,11 +3068,11 @@
         <!-- TOP STICKY WRAPPER -->
         <div id="top-sticky-wrapper">
             <div class="tcs-header">
-                <!-- Brand: Logo + TEST BODHI -->
+                <!-- Brand: Logo + TEST BODHI (dynamic logo from Firestore) -->
                 <div class="brand-wrapper" onclick="window.openLogoLightbox()">
                     <img class="brand-logo" id="header-logo-img"
                     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 70'><rect width='280' height='70' rx='10' fill='%230f2b5c'/><text x='20' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23ffffff'>TEST</text><text x='150' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23d4a843'>BODHI</text><text x='20' y='62' font-family='Inter, sans-serif' font-size='12' font-weight='600' fill='%2390a8c0' letter-spacing='2'>PRACTICE · PREPARE · SUCCEED</text></svg>"
-                    alt="TEST BODHI Logo" title="Click to enlarge" />
+                    alt="TEST BODHI Logo" title="Click to enlarge" data-shape="round" />
                     <span class="brand-name">TEST <span>BODHI</span></span>
                 </div>
 
@@ -3176,7 +3288,7 @@
                     <div id="q-scroll-area">
                         <div id="q-passage" class="q-passage-box" style="display:none;"></div>
                         <div class="q-text" id="q-text">
-                            <!-- watermark will be added by JS -->
+                            <!-- watermark will be added by JS (dynamic logo) -->
                             Loading question...
                         </div>
                         <div class="options-div" id="options-box"></div>
@@ -3310,6 +3422,7 @@
                 <button class="tab-btn" id="tab-icons" onclick="window.switchAdminTab('icons')">🏛️ Manage Icons</button>
                 <button class="tab-btn" id="tab-reorder" onclick="window.switchAdminTab('reorder')">🔢 Reorder Icons</button>
                 <button class="tab-btn" id="tab-students" onclick="window.switchAdminTab('students')">👨‍🎓 Student Performance</button>
+                <button class="tab-btn" id="tab-logo" onclick="window.switchAdminTab('logo')">🖼️ Logo Manager</button>
             </div>
 
             <!-- CREATE / EDIT -->
@@ -3529,6 +3642,61 @@
                 </div>
             </div>
 
+            <!-- ===== LOGO MANAGER (NEW) ===== -->
+            <div id="admin-logo-section" style="display:none;">
+                <div class="admin-section" style="border:2px solid var(--accent);">
+                    <div class="admin-section-title" style="color:var(--accent);font-size:14px;">🖼️ Portal Logo Manager</div>
+                    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
+                        Upload or paste a logo URL. The logo will appear in the header, PDF watermark, and question watermark.
+                        <br><b>Tip:</b> For round logos, use a square image with transparent background.
+                    </p>
+
+                    <div class="logo-manager-area">
+                        <!-- Current Logo Preview -->
+                        <div class="lm-row">
+                            <div class="lm-preview" id="lm-preview">
+                                <span id="lm-preview-text">🏛️</span>
+                                <img id="lm-preview-img" style="display:none;" />
+                            </div>
+                            <div class="lm-info">
+                                <div class="lm-label">Current Portal Logo</div>
+                                <div id="lm-status" style="font-size:11px;color:var(--text-muted);">No logo set. Using default.</div>
+                            </div>
+                            <div class="lm-btns">
+                                <button class="btn btn-danger btn-sm" onclick="window.removePortalLogo()" style="font-size:10px;">🗑️ Remove</button>
+                            </div>
+                        </div>
+
+                        <!-- Upload Option -->
+                        <div class="lm-row">
+                            <label for="logo-upload-file" class="btn btn-primary" style="margin:0;cursor:pointer;font-size:12px;padding:8px 18px;">📁 Upload Logo</label>
+                            <input type="file" id="logo-upload-file" accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp" style="display:none;" onchange="window.uploadPortalLogo(event)" />
+                            <span style="font-size:11px;color:var(--text-muted);">PNG, JPG, SVG, WEBP (max 2MB)</span>
+                        </div>
+
+                        <!-- Paste URL Option -->
+                        <div class="lm-url-row">
+                            <input type="text" id="logo-url-input" placeholder="Paste image URL here..." style="flex:1;" />
+                            <button class="btn btn-success" onclick="window.setPortalLogoFromUrl()" style="font-size:12px;padding:8px 18px;">🔗 Apply URL</button>
+                            <button class="btn btn-outline" onclick="document.getElementById('logo-url-input').value='';" style="font-size:11px;padding:6px 12px;">✕ Clear</button>
+                        </div>
+
+                        <!-- Shape toggle -->
+                        <div class="lm-row" style="justify-content:flex-start;gap:16px;border-top:1px solid var(--border-color);padding-top:10px;margin-top:4px;">
+                            <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;">
+                                <input type="radio" name="logo-shape" value="round" checked onchange="window.setLogoShape('round')" /> 🔵 Round
+                            </label>
+                            <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;">
+                                <input type="radio" name="logo-shape" value="square" onchange="window.setLogoShape('square')" /> ◻️ Square
+                            </label>
+                            <span style="font-size:11px;color:var(--text-muted);">Shape applies to header and PDF</span>
+                        </div>
+                    </div>
+
+                    <div id="logo-save-status" style="margin-top:8px;text-align:center;font-weight:600;color:var(--success);display:none;font-size:13px;">✅ Logo updated successfully!</div>
+                </div>
+            </div>
+
         </div><!-- end admin-view -->
     </div><!-- end container -->
 
@@ -3544,11 +3712,12 @@
     <script>
         /* ==========================================================================
            FULL SCRIPT – All features integrated
+           UPDATED: Profile photo uses App Script (Google Drive), Logo Manager added
            ========================================================================== */
 
         // ---- CONFIG ----
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4zojNKR8iI_74GbzgdXrav7-DWQuhUTrmUT5rx6so62OuUmbA3NBm1BREebvlaOcVTA/exec";
-        const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbzHWQZYwxOBUnryvy9z1ivRY0vTAG5EOUw-0lnReMuNFaKqYh9kcOEQmC_PXeUUpjwu6Q/exec";
+        const IMAGE_UPLOAD_URL = "https://script.google.com/macros/s/AKfycbwtBaNMQLEuEL4LGNe45GBan0laNDVAT4yxahleQ_v_R8M-3LBuH_v9lym7Xd-l9akjzQ/exec";
         const BASE_URL = "https://setupportal.netlify.app/";
 
         const firebaseConfig = {
@@ -3615,6 +3784,8 @@
         window.navStack = [];
         window.currentImageUploadLineIndex = -1;
         window.sidebarOpen = false;
+        window.portalLogoURL = "";
+        window.portalLogoShape = "round";
 
         /* ==========================================================================
            0. DEVICE DETECTION
@@ -4213,7 +4384,7 @@
         };
 
         /* ==========================================================================
-           4. PROFILE PHOTO – NOW USING FIREBASE STORAGE (RELIABLE)
+           4. PROFILE PHOTO – NOW USING APP SCRIPT (GOOGLE DRIVE) – RELIABLE
            ========================================================================== */
         window.updateProfileUI = function() {
             const user = window.studentInfo;
@@ -4265,6 +4436,8 @@
                         badge.style.color = "var(--primary-dark)"; }
                 }
             }
+            // Also load portal logo
+            window.loadPortalLogo();
         };
 
         window.openProfileUpload = function() {
@@ -4288,43 +4461,76 @@
             }
         };
 
-        /* ---- FIXED: Profile photo upload using Firebase Storage (reliable) ---- */
+        /* ---- FIXED: Profile photo upload using App Script (Google Drive) ---- */
         window.uploadProfilePhoto = function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            window.showLoadingModal("Uploading profile photo securely...<br>Please wait.");
+            window.showLoadingModal("Uploading profile photo to Google Drive...<br>Please wait.");
 
-            // Use Firebase Storage directly (reliable, no CORS issues)
-            const storageRef = firebase.storage().ref('profiles/' + Date.now() + '_' + file.name);
-            storageRef.put(file).then((snapshot) => {
-                return snapshot.ref.getDownloadURL();
-            }).then((downloadURL) => {
-                window.closeModal();
-                // Save to Firestore
-                const user = firebase.auth().currentUser;
-                if (user) {
-                    db.collection("users").doc(user.uid).update({ photoURL: downloadURL }).then(() => {
-                        window.studentInfo.photoURL = downloadURL;
-                        localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                        window.updateProfileUI();
-                        window.showCustomAlert("Success", "Profile photo updated successfully! 📸", "✅");
-                    }).catch(() => {
-                        window.studentInfo.photoURL = downloadURL;
-                        localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                        window.updateProfileUI();
-                        window.showCustomAlert("Success", "Profile photo updated locally! 📸", "✅");
-                    });
-                } else {
-                    window.studentInfo.photoURL = downloadURL;
-                    localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                    window.updateProfileUI();
-                    window.showCustomAlert("Success", "Profile photo updated! 📸", "✅");
-                }
-            }).catch((error) => {
-                window.closeModal();
-                window.showCustomAlert("Upload Failed", "Error: " + error.message, "❌");
-            });
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Data = evt.target.result.split(',')[1];
+                const formData = new URLSearchParams();
+                formData.append('action', 'upload');
+                formData.append('type', 'profile');
+                formData.append('name', 'profile_' + Date.now() + '_' + file.name);
+                formData.append('mimeType', file.type);
+                formData.append('image', base64Data);
+
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: formData,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).then(res => res.text()).then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        if (data.status === "success" && data.url) {
+                            const downloadURL = data.url;
+                            // Save to Firestore
+                            const user = firebase.auth().currentUser;
+                            if (user) {
+                                db.collection("users").doc(user.uid).update({ photoURL: downloadURL })
+                                    .then(() => {
+                                        window.closeModal();
+                                        window.studentInfo.photoURL = downloadURL;
+                                        localStorage.setItem('mockSarthiUser', JSON.stringify(window
+                                            .studentInfo));
+                                        window.updateProfileUI();
+                                        window.showCustomAlert("Success",
+                                            "Profile photo updated successfully! 📸", "✅");
+                                    }).catch(() => {
+                                        window.closeModal();
+                                        window.studentInfo.photoURL = downloadURL;
+                                        localStorage.setItem('mockSarthiUser', JSON.stringify(window
+                                            .studentInfo));
+                                        window.updateProfileUI();
+                                        window.showCustomAlert("Success",
+                                            "Profile photo updated locally! 📸", "✅");
+                                    });
+                            } else {
+                                window.closeModal();
+                                window.studentInfo.photoURL = downloadURL;
+                                localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                                window.updateProfileUI();
+                                window.showCustomAlert("Success", "Profile photo updated! 📸", "✅");
+                            }
+                        } else {
+                            window.closeModal();
+                            window.showCustomAlert("Upload Failed", data.message || "Unknown error from server.",
+                                "❌");
+                        }
+                    } catch (jsonErr) {
+                        window.closeModal();
+                        window.showCustomAlert("Error", "Server response parse error. Check App Script deployment.",
+                            "❌");
+                    }
+                }).catch(err => {
+                    window.closeModal();
+                    window.showCustomAlert("Network Error", "Failed to upload. Please try again.", "❌");
+                });
+            };
+            reader.readAsDataURL(file);
         };
 
         window.removeProfilePhoto = function() {
@@ -4352,7 +4558,237 @@
         };
 
         /* ==========================================================================
-           5. LOGO LIGHTBOX
+           5. PORTAL LOGO MANAGER (NEW)
+           ========================================================================== */
+        window.loadPortalLogo = function() {
+            db.collection("settings").doc("portalLogo").get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    window.portalLogoURL = data.url || "";
+                    window.portalLogoShape = data.shape || "round";
+                    window.applyPortalLogo();
+                } else {
+                    window.portalLogoURL = "";
+                    window.portalLogoShape = "round";
+                    window.applyPortalLogo();
+                }
+            }).catch(() => {
+                // Try local cache
+                const cached = localStorage.getItem('portalLogoData');
+                if (cached) {
+                    try {
+                        const data = JSON.parse(cached);
+                        window.portalLogoURL = data.url || "";
+                        window.portalLogoShape = data.shape || "round";
+                        window.applyPortalLogo();
+                    } catch (e) {}
+                }
+            });
+        };
+
+        window.applyPortalLogo = function() {
+            const headerImg = document.getElementById('header-logo-img');
+            const lightboxImg = document.getElementById('lightbox-logo-img');
+            const lmPreviewImg = document.getElementById('lm-preview-img');
+            const lmPreviewText = document.getElementById('lm-preview-text');
+            const lmStatus = document.getElementById('lm-status');
+
+            // Update header
+            if (headerImg) {
+                if (window.portalLogoURL && window.portalLogoURL.startsWith('http')) {
+                    headerImg.src = window.portalLogoURL;
+                    headerImg.style.display = 'block';
+                    headerImg.setAttribute('data-shape', window.portalLogoShape);
+                    // For round shape, use border-radius: 50%
+                    if (window.portalLogoShape === 'round') {
+                        headerImg.style.borderRadius = '50%';
+                    } else {
+                        headerImg.style.borderRadius = '8px';
+                    }
+                } else {
+                    // Default SVG fallback
+                    headerImg.src =
+                        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 70'><rect width='280' height='70' rx='10' fill='%230f2b5c'/><text x='20' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23ffffff'>TEST</text><text x='150' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23d4a843'>BODHI</text><text x='20' y='62' font-family='Inter, sans-serif' font-size='12' font-weight='600' fill='%2390a8c0' letter-spacing='2'>PRACTICE · PREPARE · SUCCEED</text></svg>";
+                    headerImg.style.borderRadius = '8px';
+                    headerImg.setAttribute('data-shape', 'square');
+                }
+            }
+
+            // Update lightbox
+            if (lightboxImg && window.portalLogoURL) {
+                lightboxImg.src = window.portalLogoURL;
+            }
+
+            // Update logo manager preview
+            if (lmPreviewImg && lmPreviewText) {
+                if (window.portalLogoURL && window.portalLogoURL.startsWith('http')) {
+                    lmPreviewImg.src = window.portalLogoURL;
+                    lmPreviewImg.style.display = 'block';
+                    lmPreviewText.style.display = 'none';
+                } else {
+                    lmPreviewImg.style.display = 'none';
+                    lmPreviewText.style.display = 'block';
+                    lmPreviewText.innerText = '🏛️';
+                }
+            }
+            if (lmStatus) {
+                if (window.portalLogoURL && window.portalLogoURL.startsWith('http')) {
+                    lmStatus.innerText = '✅ Logo set: ' + window.portalLogoURL.substring(0, 40) + '... (shape: ' +
+                        window.portalLogoShape + ')';
+                    lmStatus.style.color = 'var(--success)';
+                } else {
+                    lmStatus.innerText = 'No logo set. Using default.';
+                    lmStatus.style.color = 'var(--text-muted)';
+                }
+            }
+
+            // Update radio buttons
+            const shapeRadios = document.querySelectorAll('input[name="logo-shape"]');
+            shapeRadios.forEach(r => {
+                r.checked = (r.value === window.portalLogoShape);
+            });
+
+            // Update PDF watermark and question watermark will be handled in render functions
+        };
+
+        window.uploadPortalLogo = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Check file size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                return window.showCustomAlert("Error", "File too large. Max 2MB allowed.", "⚠️");
+            }
+
+            window.showLoadingModal("Uploading logo to Google Drive...<br>Please wait.");
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Data = evt.target.result.split(',')[1];
+                const formData = new URLSearchParams();
+                formData.append('action', 'upload');
+                formData.append('type', 'logo');
+                formData.append('name', 'logo_' + Date.now() + '_' + file.name);
+                formData.append('mimeType', file.type);
+                formData.append('image', base64Data);
+
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: formData,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).then(res => res.text()).then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        if (data.status === "success" && data.url) {
+                            const logoUrl = data.url;
+                            // Save to Firestore
+                            db.collection("settings").doc("portalLogo").set({
+                                url: logoUrl,
+                                shape: window.portalLogoShape || "round",
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            }).then(() => {
+                                window.closeModal();
+                                window.portalLogoURL = logoUrl;
+                                localStorage.setItem('portalLogoData', JSON.stringify({ url: logoUrl,
+                                    shape: window.portalLogoShape }));
+                                window.applyPortalLogo();
+                                const status = document.getElementById('logo-save-status');
+                                if (status) { status.style.display = 'block';
+                                    status.innerText = '✅ Logo uploaded & saved successfully!';
+                                    setTimeout(() => { status.style.display = 'none'; }, 4000); }
+                                window.showCustomAlert("Success", "Portal logo updated! 🎉", "✅");
+                            }).catch((err) => {
+                                window.closeModal();
+                                window.portalLogoURL = logoUrl;
+                                localStorage.setItem('portalLogoData', JSON.stringify({ url: logoUrl,
+                                    shape: window.portalLogoShape }));
+                                window.applyPortalLogo();
+                                window.showCustomAlert("Success",
+                                    "Logo uploaded but server save failed. Refresh to apply.", "⚠️");
+                            });
+                        } else {
+                            window.closeModal();
+                            window.showCustomAlert("Upload Failed", data.message || "Unknown error.", "❌");
+                        }
+                    } catch (jsonErr) {
+                        window.closeModal();
+                        window.showCustomAlert("Error", "Server response error. Check App Script.", "❌");
+                    }
+                }).catch(err => {
+                    window.closeModal();
+                    window.showCustomAlert("Network Error", "Failed to upload. Please try again.", "❌");
+                });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.setPortalLogoFromUrl = function() {
+            const urlInput = document.getElementById('logo-url-input');
+            const url = urlInput ? urlInput.value.trim() : "";
+            if (!url || !url.startsWith('http')) {
+                return window.showCustomAlert("Error", "Please enter a valid image URL starting with http:// or https://",
+                    "⚠️");
+            }
+
+            window.showLoadingModal("Saving logo URL...<br>Please wait.");
+
+            db.collection("settings").doc("portalLogo").set({
+                url: url,
+                shape: window.portalLogoShape || "round",
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                window.closeModal();
+                window.portalLogoURL = url;
+                localStorage.setItem('portalLogoData', JSON.stringify({ url: url, shape: window.portalLogoShape }));
+                window.applyPortalLogo();
+                const status = document.getElementById('logo-save-status');
+                if (status) { status.style.display = 'block';
+                    status.innerText = '✅ Logo URL saved successfully!';
+                    setTimeout(() => { status.style.display = 'none'; }, 4000); }
+                window.showCustomAlert("Success", "Portal logo updated from URL! 🎉", "✅");
+            }).catch((err) => {
+                window.closeModal();
+                window.portalLogoURL = url;
+                localStorage.setItem('portalLogoData', JSON.stringify({ url: url, shape: window.portalLogoShape }));
+                window.applyPortalLogo();
+                window.showCustomAlert("Success", "Logo URL saved locally. Server sync failed.", "⚠️");
+            });
+        };
+
+        window.removePortalLogo = function() {
+            window.showCustomConfirm("Remove Logo", "Remove the portal logo and revert to default?", () => {
+                db.collection("settings").doc("portalLogo").delete().then(() => {
+                    window.portalLogoURL = "";
+                    localStorage.removeItem('portalLogoData');
+                    window.applyPortalLogo();
+                    const status = document.getElementById('logo-save-status');
+                    if (status) { status.style.display = 'block';
+                        status.innerText = '✅ Logo removed. Default restored.';
+                        setTimeout(() => { status.style.display = 'none'; }, 4000); }
+                    window.showCustomAlert("Removed", "Portal logo removed.", "🗑️");
+                }).catch(() => {
+                    window.portalLogoURL = "";
+                    localStorage.removeItem('portalLogoData');
+                    window.applyPortalLogo();
+                    window.showCustomAlert("Removed", "Portal logo removed locally.", "🗑️");
+                });
+            }, "🗑️");
+        };
+
+        window.setLogoShape = function(shape) {
+            window.portalLogoShape = shape;
+            // Save shape to Firestore
+            db.collection("settings").doc("portalLogo").update({ shape: shape }).catch(() => {});
+            localStorage.setItem('portalLogoData', JSON.stringify({ url: window.portalLogoURL, shape: shape }));
+            window.applyPortalLogo();
+            const status = document.getElementById('logo-save-status');
+            if (status) { status.style.display = 'block';
+                status.innerText = '✅ Shape updated to ' + shape.toUpperCase();
+                setTimeout(() => { status.style.display = 'none'; }, 3000); }
+        };
+
+        /* ==========================================================================
+           6. LOGO LIGHTBOX
            ========================================================================== */
         window.openLogoLightbox = function() {
             const lightbox = document.getElementById('logo-lightbox');
@@ -4374,7 +4810,7 @@
         };
 
         /* ==========================================================================
-           6. ONLOAD & POPSTATE
+           7. ONLOAD & POPSTATE
            ========================================================================== */
         window.onload = function() {
             if (localStorage.getItem('mockSarthiTheme') === 'dark') {
@@ -4393,6 +4829,9 @@
             if (rawDataElem) rawDataElem.addEventListener('input', window.updateQsCount);
 
             window.applyDeviceAdjustments();
+
+            // Load portal logo
+            window.loadPortalLogo();
 
             const savedUser = localStorage.getItem('mockSarthiUser');
             let isLoggedIn = false;
@@ -4501,7 +4940,7 @@
         };
 
         /* ==========================================================================
-           7. TEST ENTRY
+           8. TEST ENTRY
            ========================================================================== */
         window.handleTestLoad = function(data) {
             if (data.error) return window.showErrorView("❌ Test not found!");
@@ -4582,7 +5021,7 @@
         };
 
         /* ==========================================================================
-           8. SIDEBAR TOGGLE & CLOSE
+           9. SIDEBAR TOGGLE & CLOSE
            ========================================================================== */
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('exam-sidebar');
@@ -4609,7 +5048,7 @@
         };
 
         /* ==========================================================================
-           9. DASHBOARD & ACTIVE TESTS
+           10. DASHBOARD & ACTIVE TESTS
            ========================================================================== */
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
@@ -5056,7 +5495,7 @@
         };
 
         /* ==========================================================================
-           10. ADMIN DASHBOARD
+           11. ADMIN DASHBOARD
            ========================================================================== */
         window.switchAdminTab = function(tab) {
             const createSec = document.getElementById('admin-create-section');
@@ -5064,11 +5503,13 @@
             const iconSec = document.getElementById('admin-icons-section');
             const reorderSec = document.getElementById('admin-reorder-section');
             const studentsSec = document.getElementById('admin-students-section');
+            const logoSec = document.getElementById('admin-logo-section');
             if (createSec) createSec.style.display = 'none';
             if (manageSec) manageSec.style.display = 'none';
             if (iconSec) iconSec.style.display = 'none';
             if (reorderSec) reorderSec.style.display = 'none';
             if (studentsSec) studentsSec.style.display = 'none';
+            if (logoSec) logoSec.style.display = 'none';
             document.querySelectorAll('.admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
             const tabs = document.querySelectorAll('.admin-tabs .tab-btn');
             if (tab === 'create') {
@@ -5095,6 +5536,20 @@
                 if (tabs.length > 4) tabs[4].classList.add('active');
                 if (studentsSec) studentsSec.style.display = 'block';
                 window.fetchStudentPerformance();
+            } else if (tab === 'logo') {
+                if (tabs.length > 5) tabs[5].classList.add('active');
+                if (logoSec) logoSec.style.display = 'block';
+                window.loadPortalLogo();
+                // Update logo manager preview
+                const status = document.getElementById('logo-save-status');
+                if (status) status.style.display = 'none';
+                const urlInput = document.getElementById('logo-url-input');
+                if (urlInput && window.portalLogoURL) urlInput.value = window.portalLogoURL;
+                // Sync shape radios
+                const shapeRadios = document.querySelectorAll('input[name="logo-shape"]');
+                shapeRadios.forEach(r => {
+                    r.checked = (r.value === window.portalLogoShape);
+                });
             }
         };
 
@@ -5161,7 +5616,8 @@
                 }
                 if (qs) { qs.innerHTML = '<option value="">4. Select Subject</option>';
                     if (bVal && eVal && cVal && window.qTree[bVal][eVal][cVal]) { window.qTree[bVal][eVal][cVal]
-                            .forEach(s => { qs.innerHTML += `<option value="${s}">${s}</option>`; }); } }
+                            .forEach(s => { qs.innerHTML += `<option value="${s}">${s}</option>`; }); }
+                }
             } else if (level === 'sub') {
                 const aSub = document.getElementById('a-sub');
                 if (aSub && qs) aSub.value = qs.value;
@@ -5223,7 +5679,7 @@
         };
 
         /* ==========================================================================
-           11. VISUAL EDITOR
+           12. VISUAL EDITOR
            ========================================================================== */
         window.openVisualEditor = function() {
             const rawData = document.getElementById('a-rawdata').value;
@@ -5366,17 +5822,19 @@
             reader.onload = function(evt) {
                 const base64Data = evt.target.result.split(',')[1];
                 const formData = new URLSearchParams();
+                formData.append('action', 'upload');
+                formData.append('type', 'question');
                 formData.append('name', file.name);
                 formData.append('mimeType', file.type);
                 formData.append('image', base64Data);
-                fetch(IMAGE_UPLOAD_URL, {
+                fetch(SCRIPT_URL, {
                     method: "POST",
                     body: formData,
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 }).then(res => res.text()).then(text => {
                     try {
                         const data = JSON.parse(text);
-                        if (data.status === "success" || data.url) {
+                        if (data.status === "success" && data.url) {
                             const rawDataElem = document.getElementById('a-rawdata');
                             const lines = rawDataElem.value.split('\n');
                             lines[lineIdx] = lines[lineIdx] + ` <br><img src="${data.url}">`;
@@ -5828,7 +6286,7 @@
         };
 
         /* ==========================================================================
-           12. EXAM ENGINE
+           13. EXAM ENGINE
            ========================================================================== */
         window.startExam = function(isRe) {
             try {
@@ -6120,6 +6578,9 @@
             window.updateSidebarStats();
         };
 
+        /* ==========================================================================
+           14. RENDER QUESTION – with dynamic logo watermark
+           ========================================================================== */
         window.renderQuestion = function(idx) {
             window.currentQ = idx;
             const q = window.examData.questions[idx];
@@ -6132,9 +6593,18 @@
             const qHeader = document.getElementById('q-no-header');
             const qText = document.getElementById('q-text');
             if (qHeader) qHeader.innerText = `Question No. ${idx+1}`;
-            // Add watermark inside question
+
+            // Build watermark with dynamic logo
+            let watermarkHtml = '<span class="q-watermark">';
+            if (window.portalLogoURL && window.portalLogoURL.startsWith('http')) {
+                watermarkHtml += `<img src="${window.portalLogoURL}" alt="Logo" style="max-width:120px;opacity:0.6;border-radius:${window.portalLogoShape === 'round' ? '50%' : '8px'};" />`;
+            } else {
+                watermarkHtml += 'TEST BODHI';
+            }
+            watermarkHtml += '</span>';
+
             if (qText) {
-                qText.innerHTML = `<span class="q-watermark">TEST BODHI</span>` + q.q;
+                qText.innerHTML = watermarkHtml + q.q;
             }
 
             const pd = document.getElementById('q-passage');
@@ -6214,7 +6684,7 @@
         };
 
         /* ==========================================================================
-           13. SUBMISSION SUMMARY POPUP
+           15. SUBMISSION SUMMARY POPUP
            ========================================================================== */
         window.openSubmitSummary = function() {
             const totalQ = window.examData.questions.length;
@@ -6254,7 +6724,7 @@
         };
 
         /* ==========================================================================
-           14. SCORE CALCULATION & LEADERBOARD
+           16. SCORE CALCULATION & LEADERBOARD
            ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
@@ -6345,7 +6815,7 @@
         };
 
         /* ==========================================================================
-           15. LEADERBOARD
+           17. LEADERBOARD
            ========================================================================== */
         window.fetchLeaderboard = function(testCode) {
             const container = document.getElementById('leaderboard-container');
@@ -6424,7 +6894,7 @@
         };
 
         /* ==========================================================================
-           16. ANALYSIS
+           18. ANALYSIS
            ========================================================================== */
         window.showAnalysis = function(t) {
             window.currentAnalysisArray = [];
@@ -6517,7 +6987,7 @@
                 window.renderAnalysisSlide(); } };
 
         /* ==========================================================================
-           17. REPORT CARD & PDF (UPDATED WATERMARK: TEST BODHI)
+           19. REPORT CARD & PDF – with dynamic logo watermark
            ========================================================================== */
         window.drawReportCard = function(rank, totalStudents, maxScore) {
             const cvs = document.getElementById('reportCard');
@@ -6579,12 +7049,39 @@
             ctx.fillStyle = '#777';
             ctx.font = '14px Arial';
             ctx.fillText("Generated: " + new Date().toLocaleString(), 400, 580);
-            // Watermark on scorecard
-            ctx.fillStyle = '#ccc';
-            ctx.font = 'bold 44px Arial';
-            ctx.globalAlpha = 0.12;
-            ctx.fillText("TEST BODHI", 400, 400);
-            ctx.globalAlpha = 1.0;
+            // Watermark on scorecard with dynamic logo
+            ctx.globalAlpha = 0.10;
+            if (window.portalLogoURL && window.portalLogoURL.startsWith('http')) {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.src = window.portalLogoURL;
+                img.onload = function() {
+                    ctx.drawImage(img, 300, 300, 200, 200);
+                    ctx.globalAlpha = 1.0;
+                    const rcImg = document.getElementById('reportCardImg');
+                    if (rcImg) { rcImg.src = cvs.toDataURL('image/png');
+                        rcImg.style.display = 'block'; }
+                    cvs.style.display = 'none';
+                };
+                img.onerror = function() {
+                    ctx.fillStyle = '#ccc';
+                    ctx.font = 'bold 44px Arial';
+                    ctx.globalAlpha = 0.12;
+                    ctx.fillText("TEST BODHI", 400, 400);
+                    ctx.globalAlpha = 1.0;
+                    const rcImg = document.getElementById('reportCardImg');
+                    if (rcImg) { rcImg.src = cvs.toDataURL('image/png');
+                        rcImg.style.display = 'block'; }
+                    cvs.style.display = 'none';
+                };
+                return;
+            } else {
+                ctx.fillStyle = '#ccc';
+                ctx.font = 'bold 44px Arial';
+                ctx.globalAlpha = 0.12;
+                ctx.fillText("TEST BODHI", 400, 400);
+                ctx.globalAlpha = 1.0;
+            }
             const rcImg = document.getElementById('reportCardImg');
             if (rcImg) { rcImg.src = cvs.toDataURL('image/png');
                 rcImg.style.display = 'block'; }
@@ -6608,6 +7105,9 @@
             else window.showPremiumModal();
         };
 
+        /* ==========================================================================
+           20. PDF PRINT – with dynamic logo watermark
+           ========================================================================== */
         window.executePDFPrint = function(wT, mode) {
             let studentName = wT;
             if (studentName === "Admin Ankush Kumar" || studentName === "Admin" || studentName === "Student") {
@@ -6618,14 +7118,15 @@
             const sU = BASE_URL + "?test=" + window.examData.code;
             const p = window.parseHack(window.examData.topic);
             const dT = p.topic || "";
-            // Get logo from header (use a placeholder if not available)
-            const logoUrl = document.getElementById('header-logo-img')?.src || '';
+            const logoUrl = window.portalLogoURL || document.getElementById('header-logo-img')?.src || '';
+            const logoShape = window.portalLogoShape || 'round';
+            const logoStyle = logoShape === 'round' ? 'border-radius:50%;' : 'border-radius:8px;';
 
             let h = `
-            <!-- PDF WATERMARK: LOGO + TEXT -->
+            <!-- PDF WATERMARK: LOGO + TEXT (dynamic) -->
             <div class="pdf-watermark-wrapper">
                 <div class="wm-content">
-                    ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" />` : ''}
+                    ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" style="${logoStyle}" />` : ''}
                     <div class="wm-text">TEST BODHI</div>
                     <div style="font-size:16px;font-weight:600;color:#0f2b5c;letter-spacing:3px;">testbodi.com</div>
                 </div>
@@ -6640,7 +7141,7 @@
                                     <tr>
                                         <td style="text-align:left;border:none;padding:0;">
                                             <div class="hdr-brand">
-                                                ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" />` : ''}
+                                                ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" style="${logoStyle}" />` : ''}
                                                 <span class="hdr-name">TEST <span>BODHI</span></span>
                                             </div>
                                         </td>
@@ -6754,7 +7255,7 @@
         };
 
         /* ==========================================================================
-           18. CONFETTI
+           21. CONFETTI
            ========================================================================== */
         window.blastConfetti = function() {
             const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#01a3a4', '#f368e0', '#ff6348'];
@@ -6780,7 +7281,7 @@
         };
 
         /* ==========================================================================
-           19. STUDENT HISTORY
+           22. STUDENT HISTORY
            ========================================================================== */
         window.fetchStudentHistory = function() {
             if (!window.studentInfo || !window.studentInfo.phone) {
@@ -6905,7 +7406,7 @@
         };
 
         /* ==========================================================================
-           20. SERIAL ORDER
+           23. SERIAL ORDER
            ========================================================================== */
         window.loadSerialOrderUI = function() {
             const container = document.getElementById('serial-reorder-container');
@@ -6999,7 +7500,7 @@
         };
 
         /* ==========================================================================
-           21. STUDENT PERFORMANCE (Admin)
+           24. STUDENT PERFORMANCE (Admin)
            ========================================================================== */
         window.fetchStudentPerformance = function() {
             const loader = document.getElementById('perf-loader');
@@ -7116,7 +7617,7 @@
         };
 
         /* ==========================================================================
-           22. PRICE TOGGLE
+           25. PRICE TOGGLE
            ========================================================================== */
         window.togglePriceBox = function() {
             const pt = document.getElementById('a-pdf-type');
@@ -7125,18 +7626,20 @@
         };
 
         /* ==========================================================================
-           23. INIT
+           26. INIT
            ========================================================================== */
         window.generateCaptcha();
+        window.loadPortalLogo();
 
-        // ---- REASON FOR UPLOAD FAILURE ----
-        console.log('🔍 PROFILE PHOTO UPLOAD FIX:');
-        console.log('   ❌ OLD: Used Google Apps Script endpoint (IMAGE_UPLOAD_URL) which had CORS/network issues.');
-        console.log('   ✅ NEW: Uses Firebase Storage directly (same as admin icon upload) — reliable, no CORS.');
-        console.log('   📌 Reason: Apps Script web app requires "Anyone" access + proper CORS; Firebase Storage works out-of-the-box.');
+        console.log('🔄 IMAGE UPLOAD FIX:');
+        console.log('   ✅ Profile photos now use App Script → Google Drive (reliable)');
+        console.log('   ✅ Admin Logo Manager added with Upload + Paste URL');
+        console.log('   ✅ Logo appears in header, PDF watermark, question watermark');
+        console.log('   ✅ Shape toggle (Round / Square) for logo');
+        console.log('   ✅ All uploads go through unified App Script endpoint');
 
-        console.log('🚀 TEST BODHI v6.0 — All features ready!');
-        console.log('✨ Updates: Logo + branding, scrollable Q & sidebar, PDF watermarks, mobile 2-col grid.');
+        console.log('🚀 TEST BODHI v7.0 — Logo Manager + Profile Upload Fix + PDF Watermark');
+        console.log('📌 App Script updated: supports type=profile, type=logo, type=question');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
