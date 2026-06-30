@@ -63,8 +63,7 @@
             --radius-xl: 28px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --font-sans: 'Inter', 'Poppins', system-ui, sans-serif;
-            --sidebar-width: 220px;
-            --sidebar-collapsed: 0px;
+            --sidebar-width: 240px;
         }
 
         body.dark-mode {
@@ -146,10 +145,11 @@
         }
 
         /* ============================================================
-           CONTAINER & HEADER
+           CONTAINER & HEADER – WIDE LAYOUT FOR LAPTOP
            ============================================================ */
         .container {
-            max-width: 1200px;
+            max-width: 1440px;
+            width: 100%;
             margin: 0 auto;
             background: var(--bg-container);
             min-height: 100vh;
@@ -159,23 +159,35 @@
             box-shadow: var(--shadow-xl);
             transition: background 0.3s;
         }
-        @media (min-width:769px) {
+        @media (min-width: 1024px) {
             body {
-                padding: 20px 0 40px 0;
+                padding: 16px 24px 32px 24px;
+                background: var(--bg-body);
             }
             .container {
                 border-radius: var(--radius-xl);
                 border: 1px solid var(--border-color);
                 overflow: hidden;
+                box-shadow: var(--shadow-lg);
             }
             #exam-bottom-controls {
-                max-width: 1200px;
+                max-width: 1440px;
                 margin: 0 auto;
                 border-radius: 0 0 var(--radius-xl) var(--radius-xl);
                 left: 50%;
                 transform: translateX(-50%);
                 border-left: 1px solid var(--border-color);
                 border-right: 1px solid var(--border-color);
+            }
+        }
+        @media (min-width: 768px) and (max-width: 1023px) {
+            body {
+                padding: 12px 16px 24px 16px;
+            }
+            .container {
+                border-radius: var(--radius-xl);
+                border: 1px solid var(--border-color);
+                overflow: hidden;
             }
         }
 
@@ -191,7 +203,7 @@
         .tcs-header {
             background: var(--bg-header);
             color: #fff;
-            padding: 10px 20px;
+            padding: 10px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -272,7 +284,7 @@
             font-size: 12px;
             font-weight: 600;
             color: #fff;
-            max-width: 80px;
+            max-width: 100px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -416,16 +428,15 @@
             position: relative;
         }
 
-        /* ---- LEFT PANEL (Question Area) ---- */
         .exam-left {
             flex: 1;
-            padding: 16px 20px 140px 20px;
+            padding: 16px 24px 140px 24px;
             overflow-y: auto;
             min-width: 0;
             background: var(--bg-container);
         }
 
-        /* ---- RIGHT SIDEBAR (Palette) ---- */
+        /* ---- RIGHT SIDEBAR ---- */
         .exam-sidebar {
             width: var(--sidebar-width);
             min-width: var(--sidebar-width);
@@ -451,12 +462,31 @@
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 8px;
             margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         body.dark-mode .exam-sidebar .sb-title {
             color: var(--accent-light);
         }
+        /* Close button inside sidebar (visible on mobile/tablet) */
+        .sb-close-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+            transition: var(--transition);
+        }
+        .sb-close-btn:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
 
-        /* Question palette grid */
         .sb-palette-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -516,7 +546,6 @@
             font-size: 9px;
         }
 
-        /* Sidebar stats */
         .sb-stats {
             display: flex;
             flex-direction: column;
@@ -566,6 +595,23 @@
             margin-top: 2px;
         }
 
+        /* ---- SIDEBAR BACKDROP (for mobile/tablet) ---- */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.40);
+            z-index: 9998;
+            backdrop-filter: blur(4px);
+            transition: opacity 0.3s;
+        }
+        .sidebar-backdrop.active {
+            display: block;
+        }
+
         /* ---- SIDEBAR TOGGLE (mobile) ---- */
         .sidebar-toggle {
             display: none;
@@ -591,7 +637,7 @@
             transform: scale(1.08);
         }
 
-        /* ---- EXAM BOTTOM CONTROLS (simplified) ---- */
+        /* ---- EXAM BOTTOM CONTROLS ---- */
         #exam-bottom-controls {
             position: fixed;
             bottom: 0;
@@ -646,7 +692,7 @@
         }
 
         /* ============================================================
-           SUBMISSION SUMMARY POPUP (Testbook style)
+           SUBMISSION SUMMARY POPUP
            ============================================================ */
         #submit-summary-modal {
             display: none;
@@ -867,7 +913,7 @@
         }
 
         /* ============================================================
-           PROFILE PHOTO UPLOAD (in dashboard)
+           PROFILE PHOTO UPLOAD
            ============================================================ */
         .profile-upload-area {
             display: flex;
@@ -934,8 +980,8 @@
                 position: fixed;
                 top: 0;
                 right: -100%;
-                width: 260px;
-                min-width: 260px;
+                width: 280px;
+                min-width: 280px;
                 max-height: 100vh;
                 height: 100%;
                 z-index: 9999;
@@ -946,9 +992,16 @@
                 box-shadow: var(--shadow-xl);
                 padding: 16px 14px;
                 border-radius: 0;
+                max-height: 100vh;
             }
             .exam-sidebar.open {
                 right: 0;
+            }
+            .exam-sidebar .sb-close-btn {
+                display: block;
+            }
+            .sidebar-backdrop.active {
+                display: block;
             }
             .sidebar-toggle {
                 display: flex;
@@ -1021,14 +1074,30 @@
                 min-height: 28px;
             }
             .exam-sidebar {
-                width: 220px;
-                min-width: 220px;
+                width: 240px;
+                min-width: 240px;
             }
             .ss-box .ss-btns {
                 flex-direction: column;
             }
             .ss-box .ss-btns .btn {
                 width: 100%;
+            }
+            .exam-grid,
+            .sub-exam-grid,
+            .category-grid,
+            .subject-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (min-width: 821px) {
+            .exam-sidebar .sb-close-btn {
+                display: none !important;
+            }
+            .sidebar-backdrop {
+                display: none !important;
             }
         }
 
@@ -1635,7 +1704,6 @@
             font-size: 9px;
         }
 
-        /* Keep existing dashboard/admin styles */
         .dash-welcome-box {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -2222,7 +2290,7 @@
         }
 
         /* ============================================================
-           PRINT PDF (kept from original)
+           PRINT PDF
            ============================================================ */
         body.print-pdf {
             background: #fff !important;
@@ -2234,7 +2302,8 @@
         body.print-pdf .fullscreen-overlay,
         body.print-pdf #exam-bottom-controls,
         body.print-pdf .admin-lock,
-        body.print-pdf .sidebar-toggle {
+        body.print-pdf .sidebar-toggle,
+        body.print-pdf .sidebar-backdrop {
             display: none !important;
         }
         #print-area {
@@ -2265,7 +2334,8 @@
             .fullscreen-overlay,
             #exam-bottom-controls,
             .admin-lock,
-            .sidebar-toggle {
+            .sidebar-toggle,
+            .sidebar-backdrop {
                 display: none !important;
             }
             #print-area {
@@ -2597,14 +2667,12 @@
         </div>
     </div>
 
-    <!-- ===== SUBMISSION SUMMARY POPUP (Testbook style) ===== -->
+    <!-- ===== SUBMISSION SUMMARY POPUP ===== -->
     <div id="submit-summary-modal">
         <div class="ss-box">
             <div class="ss-title">📊 Test Summary</div>
             <div class="ss-subtitle">Review your attempt before final submission</div>
-            <div id="ss-body">
-                <!-- dynamically filled -->
-            </div>
+            <div id="ss-body"></div>
             <div class="ss-divider"></div>
             <div class="ss-btns">
                 <button class="btn btn-outline" onclick="window.closeSubmitSummary()">✕ Cancel</button>
@@ -2612,6 +2680,9 @@
             </div>
         </div>
     </div>
+
+    <!-- ===== SIDEBAR BACKDROP (for mobile/tablet) ===== -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="window.closeSidebar()"></div>
 
     <!-- ===== MAIN UI ===== -->
     <div class="container" id="main-ui-container">
@@ -2621,7 +2692,6 @@
             <div class="tcs-header">
                 <h2 id="head-exam-name" onclick="window.location.reload();">Mock<span>Sarthi</span></h2>
                 <div class="header-controls">
-                    <!-- Profile Photo (shown when logged in) -->
                     <div class="header-profile" id="header-profile" style="display:none;">
                         <div class="profile-avatar" id="header-avatar">
                             <span id="header-avatar-text">👤</span>
@@ -2722,7 +2792,6 @@
                 </div>
             </div>
 
-            <!-- Profile Photo Upload (hidden by default) -->
             <div id="profile-upload-section" style="display:none;margin-bottom:14px;">
                 <div class="profile-upload-area">
                     <div class="pua-preview" id="pua-preview">
@@ -2840,7 +2909,10 @@
 
                 <!-- RIGHT SIDEBAR (Palette) -->
                 <div class="exam-sidebar" id="exam-sidebar">
-                    <div class="sb-title">📋 Question Palette</div>
+                    <div class="sb-title">
+                        <span>📋 Question Palette</span>
+                        <button class="sb-close-btn" id="sb-close-btn" onclick="window.closeSidebar()">✕</button>
+                    </div>
                     <div class="sb-palette-grid" id="sb-palette-grid"></div>
                     <div class="sb-stats" id="sb-stats">
                         <div class="stat-row"><span>✅ Answered</span><span class="stat-val green" id="sb-answered">0</span></div>
@@ -3277,32 +3349,32 @@
             let device = 'laptop';
             if (width < 480) device = 'smartphone';
             else if (width < 820) device = 'tablet';
-            // Additional check for touch
             const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
             if (isTouch && device === 'laptop' && width < 1024) device = 'tablet';
             return { device, width, isTouch };
         };
 
-        // Apply device-specific adjustments
         window.applyDeviceAdjustments = function() {
             const info = window.getDeviceInfo();
             const sidebar = document.getElementById('exam-sidebar');
             const toggleBtn = document.getElementById('sidebar-toggle');
+            const closeBtn = document.getElementById('sb-close-btn');
+            const backdrop = document.getElementById('sidebar-backdrop');
             if (info.device === 'smartphone' || info.device === 'tablet') {
                 if (sidebar) sidebar.classList.remove('open');
                 if (toggleBtn) toggleBtn.style.display = 'flex';
+                if (closeBtn) closeBtn.style.display = 'block';
             } else {
                 if (toggleBtn) toggleBtn.style.display = 'none';
+                if (closeBtn) closeBtn.style.display = 'none';
                 if (sidebar) sidebar.classList.add('open');
             }
-            // Adjust sidebar width for tablet
             if (info.device === 'tablet') {
-                if (sidebar) sidebar.style.width = '200px';
+                if (sidebar) sidebar.style.width = '240px';
             }
             console.log('📱 Device detected:', info.device, '| Width:', info.width);
         };
 
-        // Run on load and resize
         window.addEventListener('resize', window.applyDeviceAdjustments);
 
         /* ==========================================================================
@@ -3865,7 +3937,7 @@
         };
 
         /* ==========================================================================
-           4. PROFILE PHOTO
+           4. PROFILE PHOTO – NOW USING GOOGLE DRIVE APPS SCRIPT (SAME AS QUESTION IMAGES)
            ========================================================================== */
         window.updateProfileUI = function() {
             const user = window.studentInfo;
@@ -3887,7 +3959,7 @@
                 if (dashName) dashName.innerText = user.name;
                 if (puaName) puaName.innerText = user.name;
                 const photo = user.photoURL || '';
-                if (photo) {
+                if (photo && photo.startsWith('http')) {
                     if (headerAvatarImg) { headerAvatarImg.src = photo;
                         headerAvatarImg.style.display = 'block';
                         headerAvatarText.style.display = 'none'; }
@@ -3923,13 +3995,12 @@
             const section = document.getElementById('profile-upload-section');
             if (section) {
                 section.style.display = section.style.display === 'none' ? 'block' : 'none';
-                // Update preview
                 const user = window.studentInfo;
                 const puaName = document.getElementById('pua-name');
                 const puaPreviewText = document.getElementById('pua-preview-text');
                 const puaPreviewImg = document.getElementById('pua-preview-img');
                 if (puaName) puaName.innerText = user.name || 'Student';
-                if (user.photoURL) {
+                if (user.photoURL && user.photoURL.startsWith('http')) {
                     if (puaPreviewImg) { puaPreviewImg.src = user.photoURL;
                         puaPreviewImg.style.display = 'block';
                         puaPreviewText.style.display = 'none'; }
@@ -3944,36 +4015,70 @@
         window.uploadProfilePhoto = function(event) {
             const file = event.target.files[0];
             if (!file) return;
-            window.showLoadingModal("Uploading profile photo...");
-            const storageRef = firebase.storage().ref('profiles/' + Date.now() + '_' + file.name);
-            storageRef.put(file).then((snapshot) => {
-                return snapshot.ref.getDownloadURL();
-            }).then((downloadURL) => {
-                window.closeModal();
-                // Save to Firestore
-                const user = firebase.auth().currentUser;
-                if (user) {
-                    db.collection("users").doc(user.uid).update({ photoURL: downloadURL }).then(() => {
-                        window.studentInfo.photoURL = downloadURL;
-                        localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                        window.updateProfileUI();
-                        window.showCustomAlert("Success", "Profile photo updated! 📸", "✅");
-                    }).catch(() => {
-                        window.studentInfo.photoURL = downloadURL;
-                        localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                        window.updateProfileUI();
-                        window.showCustomAlert("Success", "Profile photo updated locally! 📸", "✅");
-                    });
-                } else {
-                    window.studentInfo.photoURL = downloadURL;
-                    localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                    window.updateProfileUI();
-                    window.showCustomAlert("Success", "Profile photo updated! 📸", "✅");
-                }
-            }).catch((error) => {
-                window.closeModal();
-                window.showCustomAlert("Upload Failed", error.message, "❌");
-            });
+
+            // Show loading
+            window.showLoadingModal("Uploading profile photo to Google Drive...<br>Please wait.");
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Data = evt.target.result.split(',')[1];
+                const formData = new URLSearchParams();
+                formData.append('name', file.name);
+                formData.append('mimeType', file.type);
+                formData.append('image', base64Data);
+
+                fetch(IMAGE_UPLOAD_URL, {
+                    method: "POST",
+                    body: formData,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).then(res => res.text()).then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        if (data.status === "success" || data.url) {
+                            const downloadURL = data.url;
+                            // Save to Firestore and update UI
+                            const user = firebase.auth().currentUser;
+                            if (user) {
+                                db.collection("users").doc(user.uid).update({ photoURL: downloadURL }).then(() => {
+                                    window.closeModal();
+                                    window.studentInfo.photoURL = downloadURL;
+                                    localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                                    window.updateProfileUI();
+                                    window.showCustomAlert("Success", "Profile photo updated successfully! 📸",
+                                        "✅");
+                                }).catch(() => {
+                                    window.closeModal();
+                                    window.studentInfo.photoURL = downloadURL;
+                                    localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                                    window.updateProfileUI();
+                                    window.showCustomAlert("Success", "Profile photo updated locally! 📸",
+                                        "✅");
+                                });
+                            } else {
+                                window.closeModal();
+                                window.studentInfo.photoURL = downloadURL;
+                                localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                                window.updateProfileUI();
+                                window.showCustomAlert("Success", "Profile photo updated! 📸", "✅");
+                            }
+                        } else {
+                            window.closeModal();
+                            window.showCustomAlert("Upload Failed", data.message || "Unknown error from server.",
+                                "❌");
+                        }
+                    } catch (jsonErr) {
+                        window.closeModal();
+                        window.showCustomAlert("Upload Error",
+                            "Failed to parse response from Google Drive. Check your Apps Script deployment.",
+                            "❌");
+                    }
+                }).catch(err => {
+                    window.closeModal();
+                    window.showCustomAlert("Network Error", "Failed to reach the upload server. Please try again.",
+                        "❌");
+                });
+            };
+            reader.readAsDataURL(file);
         };
 
         window.removeProfilePhoto = function() {
@@ -4019,7 +4124,6 @@
             const rawDataElem = document.getElementById('a-rawdata');
             if (rawDataElem) rawDataElem.addEventListener('input', window.updateQsCount);
 
-            // Device detection
             window.applyDeviceAdjustments();
 
             const savedUser = localStorage.getItem('mockSarthiUser');
@@ -4085,10 +4189,13 @@
                 const o = document.getElementById('palette-overlay');
                 if (o && o.style.display === 'block') { o.style.display = 'none';
                     try { history.pushState({}, "", window.location.pathname); } catch (err) {} return; }
-                // Close sidebar on back
                 const sidebar = document.getElementById('exam-sidebar');
-                if (sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); }
-                // Check if we are in exam view
+                if (sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open');
+                    window.sidebarOpen = false;
+                    const backdrop = document.getElementById('sidebar-backdrop');
+                    if (backdrop) backdrop.classList.remove('active');
+                    const toggleBtn = document.getElementById('sidebar-toggle');
+                    if (toggleBtn) toggleBtn.innerText = '📋'; }
                 const examView = document.getElementById('exam-view');
                 if (examView && examView.classList.contains('active-view')) {
                     examView.classList.remove('active-view');
@@ -4207,16 +4314,30 @@
         };
 
         /* ==========================================================================
-           7. SIDEBAR TOGGLE
+           7. SIDEBAR TOGGLE & CLOSE
            ========================================================================== */
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('exam-sidebar');
-            if (sidebar) {
-                sidebar.classList.toggle('open');
-                window.sidebarOpen = sidebar.classList.contains('open');
-                const toggleBtn = document.getElementById('sidebar-toggle');
-                if (toggleBtn) toggleBtn.innerText = window.sidebarOpen ? '✕' : '📋';
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            if (!sidebar) return;
+            sidebar.classList.toggle('open');
+            window.sidebarOpen = sidebar.classList.contains('open');
+            if (backdrop) {
+                if (window.sidebarOpen) backdrop.classList.add('active');
+                else backdrop.classList.remove('active');
             }
+            if (toggleBtn) toggleBtn.innerText = window.sidebarOpen ? '✕' : '📋';
+        };
+
+        window.closeSidebar = function() {
+            const sidebar = document.getElementById('exam-sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            if (sidebar) sidebar.classList.remove('open');
+            window.sidebarOpen = false;
+            if (backdrop) backdrop.classList.remove('active');
+            if (toggleBtn) toggleBtn.innerText = '📋';
         };
 
         /* ==========================================================================
@@ -4403,7 +4524,7 @@
             list.style.justifyContent = 'center';
             const allTests = window.getAllMergedTests();
             const boardTests = allTests.filter(t => (window.parseHack(t.topic).board || t.exam || "General Exam") ===
-            boardName);
+                boardName);
             const subExams = [...new Set(boardTests.map(t => t.exam || boardName))];
             if (subExams.length === 0) {
                 list.innerHTML =
@@ -5465,7 +5586,6 @@
                 window.qStatus = new Array(totalQ).fill(0);
                 window.bookmarks = new Array(totalQ).fill(false);
 
-                // Build sidebar palette
                 window.buildSidebarPalette();
 
                 const topSname = document.getElementById('top-sname');
@@ -5474,7 +5594,6 @@
                 if (topSname) topSname.innerText = "👤 " + (window.studentInfo.name || "Student");
                 if (topSexam) topSexam.innerText = window.examData.exam + (isRe ? " (Reattempt)" : "");
                 if (topBar) topBar.style.display = 'flex';
-                // Show profile in top bar
                 window.updateProfileUI();
                 const topProfileSmall = document.getElementById('top-profile-small');
                 if (topProfileSmall) topProfileSmall.style.display = 'flex';
@@ -5567,7 +5686,6 @@
             if (sbNot) sbNot.innerText = notAns;
             if (sbMarked) sbMarked.innerText = marked;
             if (sbTotal) sbTotal.innerText = totalQ;
-            // Update sidebar buttons
             for (let i = 0; i < totalQ; i++) {
                 const btn = document.getElementById('sb-pal-' + i);
                 if (!btn) continue;
@@ -5606,7 +5724,6 @@
                 window.totalTimeSpent = savedProg.totalTimeSpent;
                 window.examData.questions = savedProg.questions || window.examData.questions;
                 const totalQ = window.examData.questions.length;
-                // Ensure arrays length
                 while (window.userAnswers.length < totalQ) window.userAnswers.push(null);
                 while (window.qStatus.length < totalQ) window.qStatus.push(0);
                 while (window.bookmarks.length < totalQ) window.bookmarks.push(false);
@@ -5768,7 +5885,6 @@
                 window.MathJax.typesetPromise([document.getElementById('q-scroll-area')]).catch(e => console.log(e));
             }
 
-            // Scroll to top of question
             const leftPanel = document.getElementById('exam-left-panel');
             if (leftPanel) leftPanel.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -5828,7 +5944,7 @@
         };
 
         /* ==========================================================================
-           12. SUBMISSION SUMMARY POPUP (Testbook style)
+           12. SUBMISSION SUMMARY POPUP
            ========================================================================== */
         window.openSubmitSummary = function() {
             const totalQ = window.examData.questions.length;
@@ -5887,7 +6003,6 @@
                 examView.style.display = 'none'; }
             if (resView) resView.classList.add('active-view');
             if (timerBox) timerBox.style.display = 'none';
-            // Close sidebar
             const sidebar = document.getElementById('exam-sidebar');
             if (sidebar) sidebar.classList.remove('open');
 
@@ -5942,7 +6057,6 @@
                 const attemptedRecords = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
                 attemptedRecords[window.examData.code] = window.studentInfo.score;
                 localStorage.setItem('mockSarthiAttempted', JSON.stringify(attemptedRecords));
-                // Fetch leaderboard
                 window.fetchLeaderboard(window.examData.code);
                 db.collection("results").where("testCode", "==", sC).get().then(snap => {
                     const scores = [];
@@ -5956,7 +6070,6 @@
             }).catch(() => {
                 if (rankLoader) rankLoader.style.display = 'none';
                 window.drawReportCard("N/A", "N/A", mS);
-                // Still try to fetch leaderboard
                 window.fetchLeaderboard(window.examData.code);
             });
         };
@@ -5971,11 +6084,9 @@
             container.style.display = 'block';
             list.innerHTML = '<div style="text-align:center;padding:12px;"><div class="loader-mini"></div> Loading ranks...</div>';
 
-            // Fetch all results for this test
             db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
                 const results = [];
                 snapshot.forEach(doc => results.push(doc.data()));
-                // Also check for reattempt versions
                 db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
                     snap2.forEach(doc => results.push(doc.data()));
                     window.renderLeaderboard(results, list);
@@ -5983,7 +6094,6 @@
                     window.renderLeaderboard(results, list);
                 });
             }).catch(() => {
-                // Fallback: try local storage
                 const attempted = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
                 const results = [];
                 for (const key in attempted) {
@@ -6002,7 +6112,6 @@
                     '<div class="lb-empty">📭 No other students have taken this test yet. Be the first! 🏆</div>';
                 return;
             }
-            // Aggregate by phone/name to avoid duplicates
             const map = new Map();
             results.forEach(r => {
                 const key = r.phone || r.name || 'Anonymous';
@@ -6012,7 +6121,6 @@
                 }
             });
             const sorted = Array.from(map.values()).sort((a, b) => b.score - a.score);
-            // Get current user's photo
             const userPhoto = window.studentInfo.photoURL || '';
 
             let html = '';
@@ -6026,7 +6134,6 @@
                 const isCurrentUser = (item.phone === window.studentInfo.phone) || (item.name === window.studentInfo
                     .name);
 
-                // Use photo if available and matches current user
                 const avatarHtml = isCurrentUser && userPhoto ?
                     `<img src="${userPhoto}" alt="${item.name.charAt(0)}">` :
                     `<span>${item.name.charAt(0).toUpperCase()}</span>`;
@@ -6731,8 +6838,8 @@
            22. INIT
            ========================================================================== */
         window.generateCaptcha();
-        console.log('🚀 MockSarthi v5.0 — All features ready!');
-        console.log('✨ New: Sidebar Palette, Summary Popup, Profile Photo, Leaderboard, Device Detection');
+        console.log('🚀 MockSarthi v5.1 — All features ready!');
+        console.log('✨ Fixed: Laptop layout, Google Drive profile upload, Sidebar close button.');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
