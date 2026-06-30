@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>MockSarthi – Online Test Portal</title>
+    <title>TEST BODHI – Online Test Portal</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -64,6 +64,7 @@
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --font-sans: 'Inter', 'Poppins', system-ui, sans-serif;
             --sidebar-width: 240px;
+            --header-logo-height: 38px;
         }
 
         body.dark-mode {
@@ -145,7 +146,7 @@
         }
 
         /* ============================================================
-           CONTAINER & HEADER – WIDE LAYOUT FOR LAPTOP
+           CONTAINER & HEADER – WIDE LAYOUT
            ============================================================ */
         .container {
             max-width: 1440px;
@@ -200,10 +201,12 @@
             border-radius: 0;
             transition: background 0.3s;
         }
+
+        /* ---- HEADER WITH LOGO ---- */
         .tcs-header {
             background: var(--bg-header);
             color: #fff;
-            padding: 10px 24px;
+            padding: 8px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -223,25 +226,77 @@
             border-radius: 50%;
             pointer-events: none;
         }
-        .tcs-header h2 {
-            font-size: 1.2rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            cursor: pointer;
+        /* ---- Brand Logo + Name ---- */
+        .brand-wrapper {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             position: relative;
             z-index: 1;
-            font-family: 'Poppins', var(--font-sans);
+            cursor: pointer;
         }
-        .tcs-header h2::before {
-            content: '🎯';
+        .brand-wrapper .brand-logo {
+            height: var(--header-logo-height);
+            width: auto;
+            max-height: 42px;
+            border-radius: 6px;
+            transition: transform 0.3s;
+            object-fit: contain;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 4px;
+        }
+        .brand-wrapper .brand-logo:hover {
+            transform: scale(1.04);
+        }
+        .brand-wrapper .brand-name {
             font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            font-family: 'Poppins', var(--font-sans);
+            color: #fff;
+            line-height: 1;
         }
-        .tcs-header h2 span {
+        .brand-wrapper .brand-name span {
             color: var(--accent);
         }
+        /* Full-size logo overlay on click */
+        .logo-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 99999999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+            padding: 30px;
+        }
+        .logo-lightbox.active {
+            display: flex;
+        }
+        .logo-lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+        .logo-lightbox .close-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
         .header-controls {
             display: flex;
             align-items: center;
@@ -251,7 +306,6 @@
             flex-wrap: wrap;
         }
 
-        /* ===== PROFILE PHOTO IN HEADER ===== */
         .header-profile {
             display: flex;
             align-items: center;
@@ -260,8 +314,8 @@
             position: relative;
         }
         .header-profile .profile-avatar {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             border: 2px solid var(--accent);
             object-fit: cover;
@@ -269,7 +323,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             color: var(--text-main);
             overflow: hidden;
@@ -415,7 +469,7 @@
         }
 
         /* ============================================================
-           EXAM LAYOUT – SIDEBAR + CONTENT (Testbook style)
+           EXAM LAYOUT – SIDEBAR + CONTENT (with independent scrolling)
            ============================================================ */
         .exam-wrapper {
             display: flex;
@@ -426,33 +480,60 @@
             border-radius: var(--radius);
             overflow: hidden;
             position: relative;
+            height: calc(100vh - 160px);
+            max-height: calc(100vh - 140px);
         }
 
+        /* ---- LEFT PANEL (scrollable question area) ---- */
         .exam-left {
             flex: 1;
-            padding: 16px 24px 140px 24px;
+            padding: 16px 24px 20px 24px;
             overflow-y: auto;
             min-width: 0;
             background: var(--bg-container);
+            height: 100%;
+            position: relative;
+            scroll-behavior: smooth;
         }
+        /* subtle watermark behind question */
+        .exam-left::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" opacity="0.04"><text x="0" y="40" font-family="Poppins, sans-serif" font-size="28" font-weight="900" fill="%230f2b5c">TEST BODHI</text></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .exam-left>* {
+            position: relative;
+            z-index: 1;
+        }
+        /* watermark on each question (actual image) - we'll add via JS */
 
-        /* ---- RIGHT SIDEBAR ---- */
+        /* ---- RIGHT SIDEBAR (scrollable palette) ---- */
         .exam-sidebar {
             width: var(--sidebar-width);
             min-width: var(--sidebar-width);
             background: var(--bg-subtle);
             border-left: 2px solid var(--border-color);
-            padding: 16px 12px;
+            padding: 14px 12px 16px 12px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             position: sticky;
             top: 0;
-            max-height: calc(100vh - 160px);
-            height: fit-content;
-            transition: all 0.3s;
+            height: 100%;
+            max-height: 100%;
             flex-shrink: 0;
+            scroll-behavior: smooth;
         }
         .exam-sidebar .sb-title {
             font-size: 13px;
@@ -465,11 +546,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
         }
         body.dark-mode .exam-sidebar .sb-title {
             color: var(--accent-light);
         }
-        /* Close button inside sidebar (visible on mobile/tablet) */
         .sb-close-btn {
             display: none;
             background: transparent;
@@ -490,8 +571,9 @@
         .sb-palette-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            margin: 4px 0 8px 0;
+            gap: 5px;
+            margin: 2px 0 6px 0;
+            flex-shrink: 0;
         }
         .sb-palette-btn {
             aspect-ratio: 1/1;
@@ -500,7 +582,7 @@
             background: var(--bg-card);
             color: var(--text-main);
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
@@ -508,7 +590,7 @@
             justify-content: center;
             font-family: var(--font-sans);
             position: relative;
-            min-height: 34px;
+            min-height: 32px;
         }
         .sb-palette-btn:hover {
             transform: scale(1.05);
@@ -543,23 +625,24 @@
             position: absolute;
             top: -6px;
             right: -6px;
-            font-size: 9px;
+            font-size: 8px;
         }
 
         .sb-stats {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
             background: var(--bg-card);
             border-radius: var(--radius-sm);
-            padding: 10px 12px;
+            padding: 8px 12px;
             border: 1px solid var(--border-color);
-            margin-top: 4px;
+            margin-top: 2px;
+            flex-shrink: 0;
         }
         .sb-stats .stat-row {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-muted);
             padding: 2px 0;
@@ -582,12 +665,12 @@
         }
         .sb-stats .stat-divider {
             border-top: 1px solid var(--border-color);
-            margin: 4px 0;
+            margin: 3px 0;
         }
         .sb-stats .stat-total {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-main);
             padding-top: 4px;
@@ -595,7 +678,6 @@
             margin-top: 2px;
         }
 
-        /* ---- SIDEBAR BACKDROP (for mobile/tablet) ---- */
         .sidebar-backdrop {
             display: none;
             position: fixed;
@@ -612,7 +694,6 @@
             display: block;
         }
 
-        /* ---- SIDEBAR TOGGLE (mobile) ---- */
         .sidebar-toggle {
             display: none;
             position: fixed;
@@ -807,7 +888,7 @@
         }
 
         /* ============================================================
-           LEADERBOARD / RANK LIST
+           LEADERBOARD
            ============================================================ */
         .leaderboard-container {
             background: var(--bg-card);
@@ -1028,10 +1109,13 @@
                 font-size: 13px;
             }
             .tcs-header {
-                padding: 8px 14px;
+                padding: 6px 14px;
             }
-            .tcs-header h2 {
+            .brand-wrapper .brand-name {
                 font-size: 1.0rem;
+            }
+            .brand-wrapper .brand-logo {
+                height: 30px;
             }
             .header-profile .profile-name {
                 display: none;
@@ -1062,6 +1146,40 @@
             .container {
                 border-radius: 0 !important;
             }
+            /* Home page: 2 columns on mobile */
+            .exam-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            .exam-card {
+                padding: 12px 8px !important;
+            }
+            .exam-card .exam-logo {
+                width: 48px !important;
+                height: 48px !important;
+            }
+            .exam-card .exam-name {
+                font-size: 12px !important;
+            }
+            .exam-card .exam-subtitle {
+                font-size: 9px !important;
+            }
+            .exam-card .exam-stats {
+                font-size: 9px !important;
+            }
+            .exam-card .btn {
+                font-size: 10px !important;
+                padding: 4px 6px !important;
+            }
+            .sub-exam-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .subject-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1070,8 +1188,8 @@
                 gap: 4px;
             }
             .sb-palette-btn {
-                font-size: 11px;
-                min-height: 28px;
+                font-size: 10px;
+                min-height: 26px;
             }
             .exam-sidebar {
                 width: 240px;
@@ -1083,12 +1201,25 @@
             .ss-box .ss-btns .btn {
                 width: 100%;
             }
-            .exam-grid,
-            .sub-exam-grid,
-            .category-grid,
-            .subject-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
+            .exam-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+            }
+            .exam-card {
+                padding: 10px 6px !important;
+            }
+            .exam-card .exam-logo {
+                width: 40px !important;
+                height: 40px !important;
+            }
+            .exam-card .exam-name {
+                font-size: 10px !important;
+            }
+            .brand-wrapper .brand-name {
+                font-size: 0.85rem !important;
+            }
+            .brand-wrapper .brand-logo {
+                height: 26px !important;
             }
         }
 
@@ -1099,10 +1230,18 @@
             .sidebar-backdrop {
                 display: none !important;
             }
+            .exam-left {
+                height: 100%;
+                overflow-y: auto;
+            }
+            .exam-wrapper {
+                height: calc(100vh - 160px);
+                max-height: calc(100vh - 140px);
+            }
         }
 
         /* ============================================================
-           OTHER EXISTING STYLES (kept from original)
+           OTHER EXISTING STYLES (kept & modified)
            ============================================================ */
         .exam-grid {
             display: grid;
@@ -1346,12 +1485,34 @@
             margin-bottom: 14px;
             font-weight: 600;
             width: 100%;
+            position: relative;
+        }
+        /* watermark inside question area */
+        .q-text .q-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.04;
+            pointer-events: none;
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--primary);
+            white-space: nowrap;
+            z-index: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        .q-text>* {
+            position: relative;
+            z-index: 1;
         }
         .options-div {
             display: flex;
             flex-direction: column;
             width: 100%;
             gap: 8px;
+            position: relative;
+            z-index: 1;
         }
         .opt-label {
             display: flex;
@@ -1400,6 +1561,8 @@
             font-size: 14px;
             line-height: 1.6;
             color: var(--text-main);
+            position: relative;
+            z-index: 1;
         }
 
         .modal-overlay {
@@ -2290,7 +2453,7 @@
         }
 
         /* ============================================================
-           PRINT PDF
+           PRINT PDF – UPDATED WITH TEST BODHI WATERMARK
            ============================================================ */
         body.print-pdf {
             background: #fff !important;
@@ -2315,6 +2478,7 @@
             display: block !important;
             width: 100% !important;
         }
+
         @media print {
             @page {
                 size: A4;
@@ -2348,20 +2512,41 @@
                 visibility: visible !important;
                 position: relative;
             }
-            .watermark {
+
+            /* ---- WATERMARK: LOGO + TEXT ---- */
+            .pdf-watermark-wrapper {
                 position: fixed !important;
-                top: 50vh !important;
-                left: 50vw !important;
-                transform: translate(-50%, -50%) rotate(-45deg) !important;
-                font-size: 80px !important;
-                font-weight: 900 !important;
-                color: rgba(0, 0, 0, 0.05) !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                pointer-events: none !important;
                 z-index: 99999 !important;
-                white-space: nowrap;
-                pointer-events: none;
-                text-align: center;
-                text-transform: uppercase;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                opacity: 0.06 !important;
             }
+            .pdf-watermark-wrapper .wm-content {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 8px !important;
+                transform: rotate(-30deg) !important;
+            }
+            .pdf-watermark-wrapper .wm-content img {
+                max-width: 200px !important;
+                height: auto !important;
+                opacity: 0.8 !important;
+            }
+            .pdf-watermark-wrapper .wm-content .wm-text {
+                font-size: 32px !important;
+                font-weight: 900 !important;
+                color: #0f2b5c !important;
+                letter-spacing: 4px !important;
+                font-family: 'Poppins', sans-serif !important;
+            }
+
             table.pdf-main-table {
                 width: 100%;
                 border-collapse: collapse;
@@ -2373,21 +2558,44 @@
                 padding: 0 !important;
                 border: none !important;
             }
+
             .pdf-header-strip {
-                background: #1a56db !important;
+                background: #0f2b5c !important;
                 padding: 8px 14px !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
-                border-bottom: 2px solid #1a56db;
+                border-bottom: 2px solid #0f2b5c;
                 border-radius: 4px 4px 0 0;
                 margin-bottom: 6px;
             }
+            .pdf-header-strip .hdr-brand {
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+            }
+            .pdf-header-strip .hdr-brand img {
+                height: 28px !important;
+                width: auto !important;
+                border-radius: 4px !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                padding: 2px !important;
+            }
+            .pdf-header-strip .hdr-brand .hdr-name {
+                color: #fff !important;
+                font-size: 18px !important;
+                font-weight: 800 !important;
+                font-family: 'Poppins', sans-serif !important;
+            }
+            .pdf-header-strip .hdr-brand .hdr-name span {
+                color: #d4a843 !important;
+            }
+
             .pdf-footer-strip {
-                background: #1a56db !important;
+                background: #0f2b5c !important;
                 padding: 8px 14px !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
-                border-top: 2px solid #1a56db;
+                border-top: 2px solid #0f2b5c;
                 border-radius: 0 0 4px 4px;
                 margin-top: 6px;
             }
@@ -2396,6 +2604,17 @@
                 color: #fff !important;
                 text-decoration: none !important;
             }
+            .pdf-footer-strip .ftr-text {
+                text-align: center;
+                width: 100%;
+                font-size: 11px;
+                font-weight: 600;
+                color: #fff;
+            }
+            .pdf-footer-strip .ftr-text a {
+                color: #f0d68a !important;
+            }
+
             .pdf-questions-container {
                 column-count: 2 !important;
                 -webkit-column-count: 2 !important;
@@ -2418,6 +2637,7 @@
                 page-break-inside: auto !important;
                 break-inside: auto !important;
                 text-align: justify !important;
+                position: relative !important;
             }
             .opt-grid {
                 display: grid;
@@ -2446,7 +2666,7 @@
                 margin-top: 6px !important;
                 padding: 6px !important;
                 background: #f5f5f5 !important;
-                border-left: 3px solid #1a56db !important;
+                border-left: 3px solid #0f2b5c !important;
                 line-height: 1.4 !important;
                 page-break-inside: auto !important;
                 break-inside: auto !important;
@@ -2649,6 +2869,46 @@
                 opacity: 0;
             }
         }
+
+        /* ============================================================
+           LOGO LIGHTBOX
+           ============================================================ */
+        .logo-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 99999999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+            padding: 30px;
+        }
+        .logo-lightbox.active {
+            display: flex;
+        }
+        .logo-lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+        }
+        .logo-lightbox .close-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -2681,8 +2941,14 @@
         </div>
     </div>
 
-    <!-- ===== SIDEBAR BACKDROP (for mobile/tablet) ===== -->
+    <!-- ===== SIDEBAR BACKDROP ===== -->
     <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="window.closeSidebar()"></div>
+
+    <!-- ===== LOGO LIGHTBOX ===== -->
+    <div class="logo-lightbox" id="logo-lightbox" onclick="window.closeLogoLightbox()">
+        <img id="lightbox-logo-img" src="" alt="TEST BODHI Logo" />
+        <div class="close-hint">✕ Click anywhere to close</div>
+    </div>
 
     <!-- ===== MAIN UI ===== -->
     <div class="container" id="main-ui-container">
@@ -2690,7 +2956,14 @@
         <!-- TOP STICKY WRAPPER -->
         <div id="top-sticky-wrapper">
             <div class="tcs-header">
-                <h2 id="head-exam-name" onclick="window.location.reload();">Mock<span>Sarthi</span></h2>
+                <!-- Brand: Logo + TEST BODHI -->
+                <div class="brand-wrapper" onclick="window.openLogoLightbox()">
+                    <img class="brand-logo" id="header-logo-img"
+                    src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 70'><rect width='280' height='70' rx='10' fill='%230f2b5c'/><text x='20' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23ffffff'>TEST</text><text x='150' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23d4a843'>BODHI</text><text x='20' y='62' font-family='Inter, sans-serif' font-size='12' font-weight='600' fill='%2390a8c0' letter-spacing='2'>PRACTICE · PREPARE · SUCCEED</text></svg>"
+                    alt="TEST BODHI Logo" title="Click to enlarge" />
+                    <span class="brand-name">TEST <span>BODHI</span></span>
+                </div>
+
                 <div class="header-controls">
                     <div class="header-profile" id="header-profile" style="display:none;">
                         <div class="profile-avatar" id="header-avatar">
@@ -2891,7 +3164,7 @@
         <!-- ===== EXAM VIEW (with Sidebar) ===== -->
         <div id="exam-view" class="view-section" style="padding:0;display:none;" oncontextmenu="return false;">
             <div class="exam-wrapper">
-                <!-- LEFT PANEL -->
+                <!-- LEFT PANEL – scrollable question area -->
                 <div class="exam-left" id="exam-left-panel">
                     <div class="q-header">
                         <span class="q-number" id="q-no-header">Question 1</span>
@@ -2902,12 +3175,15 @@
                     </div>
                     <div id="q-scroll-area">
                         <div id="q-passage" class="q-passage-box" style="display:none;"></div>
-                        <div class="q-text" id="q-text">Loading question...</div>
+                        <div class="q-text" id="q-text">
+                            <!-- watermark will be added by JS -->
+                            Loading question...
+                        </div>
                         <div class="options-div" id="options-box"></div>
                     </div>
                 </div>
 
-                <!-- RIGHT SIDEBAR (Palette) -->
+                <!-- RIGHT SIDEBAR – scrollable palette -->
                 <div class="exam-sidebar" id="exam-sidebar">
                     <div class="sb-title">
                         <span>📋 Question Palette</span>
@@ -2921,7 +3197,7 @@
                         <div class="stat-divider"></div>
                         <div class="stat-total"><span>📌 Total</span><span id="sb-total">0</span></div>
                     </div>
-                    <div style="margin-top:8px;text-align:center;font-size:10px;color:var(--text-muted);border-top:1px solid var(--border-color);padding-top:8px;">
+                    <div style="margin-top:8px;text-align:center;font-size:10px;color:var(--text-muted);border-top:1px solid var(--border-color);padding-top:8px;flex-shrink:0;">
                         <span class="legend-item" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;margin:0 4px;"><span class="box status-answered" style="width:14px;height:14px;font-size:6px;">✓</span> Ans</span>
                         <span class="legend-item" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;margin:0 4px;"><span class="box status-not-answered" style="width:14px;height:14px;font-size:6px;">!</span> Not</span>
                         <span class="legend-item" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;margin:0 4px;"><span class="box status-not-visited" style="width:14px;height:14px;font-size:6px;">◻</span> Visited</span>
@@ -3937,7 +4213,7 @@
         };
 
         /* ==========================================================================
-           4. PROFILE PHOTO – NOW USING GOOGLE DRIVE APPS SCRIPT (SAME AS QUESTION IMAGES)
+           4. PROFILE PHOTO – NOW USING FIREBASE STORAGE (RELIABLE)
            ========================================================================== */
         window.updateProfileUI = function() {
             const user = window.studentInfo;
@@ -4012,73 +4288,43 @@
             }
         };
 
+        /* ---- FIXED: Profile photo upload using Firebase Storage (reliable) ---- */
         window.uploadProfilePhoto = function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            // Show loading
-            window.showLoadingModal("Uploading profile photo to Google Drive...<br>Please wait.");
+            window.showLoadingModal("Uploading profile photo securely...<br>Please wait.");
 
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const base64Data = evt.target.result.split(',')[1];
-                const formData = new URLSearchParams();
-                formData.append('name', file.name);
-                formData.append('mimeType', file.type);
-                formData.append('image', base64Data);
-
-                fetch(IMAGE_UPLOAD_URL, {
-                    method: "POST",
-                    body: formData,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                }).then(res => res.text()).then(text => {
-                    try {
-                        const data = JSON.parse(text);
-                        if (data.status === "success" || data.url) {
-                            const downloadURL = data.url;
-                            // Save to Firestore and update UI
-                            const user = firebase.auth().currentUser;
-                            if (user) {
-                                db.collection("users").doc(user.uid).update({ photoURL: downloadURL }).then(() => {
-                                    window.closeModal();
-                                    window.studentInfo.photoURL = downloadURL;
-                                    localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                                    window.updateProfileUI();
-                                    window.showCustomAlert("Success", "Profile photo updated successfully! 📸",
-                                        "✅");
-                                }).catch(() => {
-                                    window.closeModal();
-                                    window.studentInfo.photoURL = downloadURL;
-                                    localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                                    window.updateProfileUI();
-                                    window.showCustomAlert("Success", "Profile photo updated locally! 📸",
-                                        "✅");
-                                });
-                            } else {
-                                window.closeModal();
-                                window.studentInfo.photoURL = downloadURL;
-                                localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                                window.updateProfileUI();
-                                window.showCustomAlert("Success", "Profile photo updated! 📸", "✅");
-                            }
-                        } else {
-                            window.closeModal();
-                            window.showCustomAlert("Upload Failed", data.message || "Unknown error from server.",
-                                "❌");
-                        }
-                    } catch (jsonErr) {
-                        window.closeModal();
-                        window.showCustomAlert("Upload Error",
-                            "Failed to parse response from Google Drive. Check your Apps Script deployment.",
-                            "❌");
-                    }
-                }).catch(err => {
-                    window.closeModal();
-                    window.showCustomAlert("Network Error", "Failed to reach the upload server. Please try again.",
-                        "❌");
-                });
-            };
-            reader.readAsDataURL(file);
+            // Use Firebase Storage directly (reliable, no CORS issues)
+            const storageRef = firebase.storage().ref('profiles/' + Date.now() + '_' + file.name);
+            storageRef.put(file).then((snapshot) => {
+                return snapshot.ref.getDownloadURL();
+            }).then((downloadURL) => {
+                window.closeModal();
+                // Save to Firestore
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    db.collection("users").doc(user.uid).update({ photoURL: downloadURL }).then(() => {
+                        window.studentInfo.photoURL = downloadURL;
+                        localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                        window.updateProfileUI();
+                        window.showCustomAlert("Success", "Profile photo updated successfully! 📸", "✅");
+                    }).catch(() => {
+                        window.studentInfo.photoURL = downloadURL;
+                        localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                        window.updateProfileUI();
+                        window.showCustomAlert("Success", "Profile photo updated locally! 📸", "✅");
+                    });
+                } else {
+                    window.studentInfo.photoURL = downloadURL;
+                    localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                    window.updateProfileUI();
+                    window.showCustomAlert("Success", "Profile photo updated! 📸", "✅");
+                }
+            }).catch((error) => {
+                window.closeModal();
+                window.showCustomAlert("Upload Failed", "Error: " + error.message, "❌");
+            });
         };
 
         window.removeProfilePhoto = function() {
@@ -4106,7 +4352,29 @@
         };
 
         /* ==========================================================================
-           5. ONLOAD & POPSTATE
+           5. LOGO LIGHTBOX
+           ========================================================================== */
+        window.openLogoLightbox = function() {
+            const lightbox = document.getElementById('logo-lightbox');
+            const img = document.getElementById('lightbox-logo-img');
+            const headerLogo = document.getElementById('header-logo-img');
+            if (lightbox && img && headerLogo) {
+                img.src = headerLogo.src;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeLogoLightbox = function() {
+            const lightbox = document.getElementById('logo-lightbox');
+            if (lightbox) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        /* ==========================================================================
+           6. ONLOAD & POPSTATE
            ========================================================================== */
         window.onload = function() {
             if (localStorage.getItem('mockSarthiTheme') === 'dark') {
@@ -4233,7 +4501,7 @@
         };
 
         /* ==========================================================================
-           6. TEST ENTRY
+           7. TEST ENTRY
            ========================================================================== */
         window.handleTestLoad = function(data) {
             if (data.error) return window.showErrorView("❌ Test not found!");
@@ -4255,7 +4523,7 @@
             window.examData.totTime = data.totTime || 0;
             window.examData.qTime = data.qTime || 0;
             window.examData.isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
-            document.title = `${window.examData.subject||window.examData.sub||"Subject"} MockSarthi test`;
+            document.title = `TEST BODHI – ${window.examData.subject||window.examData.sub||"Subject"} test`;
             window.setupLoginScreen();
             const board = window.currentBoard || "General Exam";
             const subExam = window.currentSubExam || window.examData.exam || "Mock Test";
@@ -4314,7 +4582,7 @@
         };
 
         /* ==========================================================================
-           7. SIDEBAR TOGGLE & CLOSE
+           8. SIDEBAR TOGGLE & CLOSE
            ========================================================================== */
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('exam-sidebar');
@@ -4341,7 +4609,7 @@
         };
 
         /* ==========================================================================
-           8. DASHBOARD & ACTIVE TESTS
+           9. DASHBOARD & ACTIVE TESTS
            ========================================================================== */
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
@@ -4788,7 +5056,7 @@
         };
 
         /* ==========================================================================
-           9. ADMIN DASHBOARD
+           10. ADMIN DASHBOARD
            ========================================================================== */
         window.switchAdminTab = function(tab) {
             const createSec = document.getElementById('admin-create-section');
@@ -4955,7 +5223,7 @@
         };
 
         /* ==========================================================================
-           10. VISUAL EDITOR
+           11. VISUAL EDITOR
            ========================================================================== */
         window.openVisualEditor = function() {
             const rawData = document.getElementById('a-rawdata').value;
@@ -5560,7 +5828,7 @@
         };
 
         /* ==========================================================================
-           11. EXAM ENGINE
+           12. EXAM ENGINE
            ========================================================================== */
         window.startExam = function(isRe) {
             try {
@@ -5646,7 +5914,6 @@
                 }, 1000);
                 clearInterval(window.autoSaveTimer);
                 window.autoSaveTimer = setInterval(window.saveProgress, 10000);
-                // Close sidebar on mobile after start
                 const sidebar = document.getElementById('exam-sidebar');
                 if (sidebar && window.innerWidth < 820) sidebar.classList.remove('open');
             } catch (err) { window.showCustomAlert("Error", "Could not start test.", "❌"); }
@@ -5865,7 +6132,10 @@
             const qHeader = document.getElementById('q-no-header');
             const qText = document.getElementById('q-text');
             if (qHeader) qHeader.innerText = `Question No. ${idx+1}`;
-            if (qText) qText.innerHTML = q.q;
+            // Add watermark inside question
+            if (qText) {
+                qText.innerHTML = `<span class="q-watermark">TEST BODHI</span>` + q.q;
+            }
 
             const pd = document.getElementById('q-passage');
             if (pd) { if (q.passage) { pd.innerHTML = q.passage;
@@ -5944,7 +6214,7 @@
         };
 
         /* ==========================================================================
-           12. SUBMISSION SUMMARY POPUP
+           13. SUBMISSION SUMMARY POPUP
            ========================================================================== */
         window.openSubmitSummary = function() {
             const totalQ = window.examData.questions.length;
@@ -5984,7 +6254,7 @@
         };
 
         /* ==========================================================================
-           13. SCORE CALCULATION & LEADERBOARD
+           14. SCORE CALCULATION & LEADERBOARD
            ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
@@ -6075,7 +6345,7 @@
         };
 
         /* ==========================================================================
-           14. LEADERBOARD
+           15. LEADERBOARD
            ========================================================================== */
         window.fetchLeaderboard = function(testCode) {
             const container = document.getElementById('leaderboard-container');
@@ -6154,7 +6424,7 @@
         };
 
         /* ==========================================================================
-           15. ANALYSIS
+           16. ANALYSIS
            ========================================================================== */
         window.showAnalysis = function(t) {
             window.currentAnalysisArray = [];
@@ -6247,7 +6517,7 @@
                 window.renderAnalysisSlide(); } };
 
         /* ==========================================================================
-           16. REPORT CARD & PDF
+           17. REPORT CARD & PDF (UPDATED WATERMARK: TEST BODHI)
            ========================================================================== */
         window.drawReportCard = function(rank, totalStudents, maxScore) {
             const cvs = document.getElementById('reportCard');
@@ -6309,10 +6579,11 @@
             ctx.fillStyle = '#777';
             ctx.font = '14px Arial';
             ctx.fillText("Generated: " + new Date().toLocaleString(), 400, 580);
+            // Watermark on scorecard
             ctx.fillStyle = '#ccc';
             ctx.font = 'bold 44px Arial';
-            ctx.globalAlpha = 0.15;
-            ctx.fillText("MOCKSARTHI", 400, 400);
+            ctx.globalAlpha = 0.12;
+            ctx.fillText("TEST BODHI", 400, 400);
             ctx.globalAlpha = 1.0;
             const rcImg = document.getElementById('reportCardImg');
             if (rcImg) { rcImg.src = cvs.toDataURL('image/png');
@@ -6342,14 +6613,24 @@
             if (studentName === "Admin Ankush Kumar" || studentName === "Admin" || studentName === "Student") {
                 studentName = "अंकुश कुमार S/O मनोज कुमार";
             }
-            const watermarkText = "MOCKSARTHI.COM";
             const pA = document.getElementById('print-area');
             if (!pA) return;
             const sU = BASE_URL + "?test=" + window.examData.code;
             const p = window.parseHack(window.examData.topic);
             const dT = p.topic || "";
+            // Get logo from header (use a placeholder if not available)
+            const logoUrl = document.getElementById('header-logo-img')?.src || '';
+
             let h = `
-            <div class="watermark">${watermarkText}</div>
+            <!-- PDF WATERMARK: LOGO + TEXT -->
+            <div class="pdf-watermark-wrapper">
+                <div class="wm-content">
+                    ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" />` : ''}
+                    <div class="wm-text">TEST BODHI</div>
+                    <div style="font-size:16px;font-weight:600;color:#0f2b5c;letter-spacing:3px;">testbodi.com</div>
+                </div>
+            </div>
+
             <table class="pdf-main-table">
                 <thead style="display:table-header-group;">
                     <tr>
@@ -6357,8 +6638,15 @@
                             <div class="pdf-header-strip">
                                 <table style="width:100%;border:none;">
                                     <tr>
-                                        <td style="text-align:left;border:none;padding:0;"><a href="https://studynotesmanager.netlify.app/" style="color:#ffffff;font-weight:bold;font-size:14px;text-decoration:none;">🌐 Study Notes Manager</a></td>
-                                        <td style="text-align:right;border:none;padding:0;"><a href="${sU}" style="color:#f0d68a;font-weight:bold;font-size:14px;text-decoration:none;">📝 Give Online Test</a></td>
+                                        <td style="text-align:left;border:none;padding:0;">
+                                            <div class="hdr-brand">
+                                                ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" />` : ''}
+                                                <span class="hdr-name">TEST <span>BODHI</span></span>
+                                            </div>
+                                        </td>
+                                        <td style="text-align:right;border:none;padding:0;">
+                                            <a href="${sU}" style="color:#f0d68a;font-weight:bold;font-size:14px;text-decoration:none;">📝 Give Online Test</a>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -6369,12 +6657,13 @@
                     <tr>
                         <td style="padding:0;border:none;">
                             <div class="pdf-footer-strip">
-                                <div style="text-align:center;width:100%;font-size:11px;font-weight:bold;color:#fff;">
-                                    <a href="tel:+918273684939" style="color:#fff;text-decoration:none;">📞 +91-8273684939</a> | 
-                                    <a href="${BASE_URL}" style="color:#fff;text-decoration:none;">🌐 Website</a> | 
-                                    <a href="https://t.me/ankushonlinetest" style="color:#fff;text-decoration:none;">📢 Telegram</a> | 
-                                    <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k" style="color:#fff;text-decoration:none;">💬 WhatsApp</a> | 
-                                    <a href="https://www.youtube.com/@ankushonlinetest" style="color:#fff;text-decoration:none;">▶️ YouTube</a>
+                                <div class="ftr-text">
+                                    <a href="tel:+918273684939">📞 +91-8273684939</a> | 
+                                    <a href="${BASE_URL}">🌐 Website</a> | 
+                                    <a href="https://t.me/ankushonlinetest">📢 Telegram</a> | 
+                                    <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k">💬 WhatsApp</a> | 
+                                    <a href="https://www.youtube.com/@ankushonlinetest">▶️ YouTube</a>
+                                    <span style="margin-left:16px;color:#f0d68a;">testbodi.com</span>
                                 </div>
                             </div>
                         </td>
@@ -6444,7 +6733,8 @@
             pA.innerHTML = h + '</td></tr></tbody></table>';
 
             const oT = document.title;
-            document.title = `${window.examData.subject||window.examData.sub||"Subject"} ${dT?" "+dT:""} MockSarthi test`;
+            document.title =
+                `TEST BODHI – ${window.examData.subject||window.examData.sub||"Subject"} ${dT?" "+dT:""} test`;
             document.body.classList.add('print-pdf');
 
             const triggerPrint = () => {
@@ -6464,7 +6754,7 @@
         };
 
         /* ==========================================================================
-           17. CONFETTI
+           18. CONFETTI
            ========================================================================== */
         window.blastConfetti = function() {
             const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#01a3a4', '#f368e0', '#ff6348'];
@@ -6490,7 +6780,7 @@
         };
 
         /* ==========================================================================
-           18. STUDENT HISTORY
+           19. STUDENT HISTORY
            ========================================================================== */
         window.fetchStudentHistory = function() {
             if (!window.studentInfo || !window.studentInfo.phone) {
@@ -6615,7 +6905,7 @@
         };
 
         /* ==========================================================================
-           19. SERIAL ORDER
+           20. SERIAL ORDER
            ========================================================================== */
         window.loadSerialOrderUI = function() {
             const container = document.getElementById('serial-reorder-container');
@@ -6709,7 +6999,7 @@
         };
 
         /* ==========================================================================
-           20. STUDENT PERFORMANCE (Admin)
+           21. STUDENT PERFORMANCE (Admin)
            ========================================================================== */
         window.fetchStudentPerformance = function() {
             const loader = document.getElementById('perf-loader');
@@ -6826,7 +7116,7 @@
         };
 
         /* ==========================================================================
-           21. PRICE TOGGLE
+           22. PRICE TOGGLE
            ========================================================================== */
         window.togglePriceBox = function() {
             const pt = document.getElementById('a-pdf-type');
@@ -6835,11 +7125,18 @@
         };
 
         /* ==========================================================================
-           22. INIT
+           23. INIT
            ========================================================================== */
         window.generateCaptcha();
-        console.log('🚀 MockSarthi v5.1 — All features ready!');
-        console.log('✨ Fixed: Laptop layout, Google Drive profile upload, Sidebar close button.');
+
+        // ---- REASON FOR UPLOAD FAILURE ----
+        console.log('🔍 PROFILE PHOTO UPLOAD FIX:');
+        console.log('   ❌ OLD: Used Google Apps Script endpoint (IMAGE_UPLOAD_URL) which had CORS/network issues.');
+        console.log('   ✅ NEW: Uses Firebase Storage directly (same as admin icon upload) — reliable, no CORS.');
+        console.log('   📌 Reason: Apps Script web app requires "Anyone" access + proper CORS; Firebase Storage works out-of-the-box.');
+
+        console.log('🚀 TEST BODHI v6.0 — All features ready!');
+        console.log('✨ Updates: Logo + branding, scrollable Q & sidebar, PDF watermarks, mobile 2-col grid.');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
