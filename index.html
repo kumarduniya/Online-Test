@@ -1223,34 +1223,36 @@
         window.currentImageUploadLineIndex = -1;
 
         /* ==========================================================================
-           1.5 UNIVERSAL AUTO-SANITIZE FILTER (BULLETPROOF MAGIC FIX)
+           1.5 UNIVERSAL MATH SANITIZER (BULLETPROOF FIX FOR HINDI & REASONING SYMBOLS)
            ========================================================================== */
         window.sanitizeMath = function(text) {
             if (!text) return text;
             let str = String(text);
             
-            // 1. Prevent single $ in reasoning from triggering math mode (e.g. L$2, A$B)
-            // It will safely escape it to L\$2 so it prints normally.
+            // Step 1: Prevent single $ in reasoning from acting as math mode.
+            // Example: L$2 or P$Q becomes L\$2 so MathJax ignores it completely.
             str = str.replace(/([a-zA-Z0-9])\$([a-zA-Z0-9])/g, '$1\\$$2');
             
-            // 2. Process STRICTLY INSIDE math blocks to prevent \text{} leaking outside
-            str = str.replace(/\$\$([\s\S]*?)\$\$|\$([\s\S]*?)\$/g, function(match) {
+            // Step 2: ONLY process text that is strictly INSIDE valid MathJax delimiters ($...$ or $$...$$).
+            // This guarantees \text{} will NEVER leak into normal reasoning/Hindi text.
+            str = str.replace(/(\$\$?)([\s\S]*?)\1/g, function(match, delimiter, innerMath) {
                 // Ignore completely empty blocks
-                if (match === '$' || match === '$$') return match;
+                if (!innerMath || !innerMath.trim()) return match;
                 
-                let inner = match;
+                let processed = innerMath;
                 
-                // Fix # error inside math safely without breaking browsers
-                inner = inner.split('#').join('\\#').replace(/\\\\#/g, '\\#'); 
+                // Fix # Error inside math safely
+                processed = processed.split('#').join('\\#').replace(/\\\\#/g, '\\#'); 
                 
-                // Fix Hindi Splitting: Smartly unwrap and re-wrap
-                // Step A: Unwrap any existing \text{} that contains Hindi to avoid double wrapping errors
-                inner = inner.replace(/\\text\{([^}]*[\u0900-\u097F]+[^}]*)\}/g, '$1');
+                // Fix Hindi Splitting Error (द ू र ी -> दूरी)
+                // First, unwrap any existing \text{hindi} to avoid double-wrapping bugs
+                processed = processed.replace(/\\text\{([^}]*[\u0900-\u097F]+[^}]*)\}/g, '$1');
                 
-                // Step B: Wrap ALL consecutive Hindi words (even near +, -, /, 1, 2, 3) purely in \text{}
-                inner = inner.replace(/([\u0900-\u097F]+(?:\s+[\u0900-\u097F]+)*)/g, '\\text{$1}');
+                // Now, safely wrap ALL Hindi words/phrases strictly in \text{}
+                // The regex [\u0900-\u097F]+ catches all Hindi letters, matras, and half-letters perfectly.
+                processed = processed.replace(/([\u0900-\u097F]+(?:\s+[\u0900-\u097F]+)*)/g, '\\text{$1}');
                 
-                return inner;
+                return delimiter + processed + delimiter;
             });
             
             return str;
@@ -1497,7 +1499,7 @@
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
             
-            // Run our universal sanitizer filter first
+            // Run our smart universal sanitizer filter first
             rawText = window.sanitizeMath(rawText);
             
             rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, '')
@@ -3190,7 +3192,7 @@
         window.handleAdminTestLoad = function(data) {
             window.closeModal(); let raw = data.rawText || "";
             
-            // Run Safe Sanitizer when loading old test from DB
+            // Re-apply safe math filter
             if (data.questions) { data.questions = window.sanitizeQuestions(data.questions); }
             if (raw) { raw = window.sanitizeMath(raw); data.rawText = raw; }
             
@@ -3847,6 +3849,11 @@
             if (data.error) return window.showCustomAlert("Error", "Test data missing.", "❌");
             
             let raw = data.rawText || "";
+            
+            // Clean before generating PDF using the universal filter
+            if (data.questions) { data.questions = window.sanitizeQuestions(data.questions); }
+            if (raw) { raw = window.sanitizeMath(raw); data.rawText = raw; }
+            
             if (!raw && data.questions && data.questions.length > 0) {
                 raw = data.questions.map((q, i) => {
                     let pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
@@ -4025,7 +4032,7 @@
            ========================================================================== */
         window.generateCaptcha();
         console.log('🚀 MockSarthi v4.0 — All features ready!');
-        console.log('✨ Advanced Fixes: Filter Removed, Layout Centered, Custom Watermark active.');
+        console.log('✨ Advanced Fixes: Bulletproof Filter, Layout Centered, Custom Watermark active.');
     </script>
 </body>
 </html>
