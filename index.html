@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- MathJax for rendering Math & Fractions beautifully -->
+    <!-- MathJax -->
     <script>
         window.MathJax = {
             tex: {
@@ -29,10 +29,8 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
 
-    <!-- html2canvas & jsPDF for certificate download -->
+    <!-- html2canvas for certificate download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
     </script>
 
     <style>
@@ -73,7 +71,6 @@
             --header-logo-height: 38px;
         }
 
-        /* Dark Mode */
         body.dark-mode {
             --bg-body: #050a14;
             --bg-container: #13203a;
@@ -118,7 +115,7 @@
             overflow-x: hidden;
         }
 
-        /* FULL SCREEN LAPTOP LAYOUT – No extra space around */
+        /* FULL SCREEN LAPTOP LAYOUT */
         .container {
             max-width: 100%;
             width: 100%;
@@ -412,6 +409,7 @@
             }
         }
 
+        /* ---- SUB HEADER (Student Name + Exam + Code) ---- */
         .tcs-sub-header {
             background: var(--bg-subtle);
             padding: 6px 20px;
@@ -423,23 +421,40 @@
             flex-wrap: wrap;
             transition: background 0.3s;
         }
-        .tcs-sub-header .s-name {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 13px;
+        .tcs-sub-header .s-left {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        body.dark-mode .tcs-sub-header .s-name {
+        .tcs-sub-header .s-left .s-name {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 13px;
+        }
+        body.dark-mode .tcs-sub-header .s-left .s-name {
             color: var(--accent-light);
         }
-        .tcs-sub-header .s-exam {
+        .tcs-sub-header .s-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .tcs-sub-header .s-right .s-exam {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 700;
+            background: rgba(212, 168, 67, 0.10);
+            padding: 3px 14px;
+            border-radius: 50px;
+            border: 1px solid rgba(212, 168, 67, 0.30);
+        }
+        .tcs-sub-header .s-right .s-code {
             font-size: 11px;
             color: var(--danger);
             font-weight: 700;
-            background: rgba(220, 53, 69, 0.10);
-            padding: 3px 14px;
+            background: rgba(220, 53, 69, 0.08);
+            padding: 2px 12px;
             border-radius: 50px;
             border: 1px solid rgba(220, 53, 69, 0.20);
         }
@@ -497,7 +512,7 @@
         }
 
         /* ============================================================
-           EXAM LAYOUT – SIDEBAR + CONTENT
+           EXAM LAYOUT – SIDEBAR + CONTENT (with independent scrolling)
            ============================================================ */
         .exam-wrapper {
             display: flex;
@@ -508,13 +523,13 @@
             border-radius: 0;
             overflow: hidden;
             position: relative;
-            height: calc(100vh - 160px);
-            max-height: calc(100vh - 140px);
+            height: calc(100vh - 150px);
+            max-height: calc(100vh - 120px); /* increased scroll space */
         }
 
         .exam-left {
             flex: 1;
-            padding: 16px 24px 20px 24px;
+            padding: 16px 24px 40px 24px; /* more bottom padding for scroll */
             overflow-y: auto;
             min-width: 0;
             background: var(--bg-container);
@@ -1078,7 +1093,7 @@
         }
 
         /* ============================================================
-           RESPONSIVE – Mobile/Tablet adjustments
+           RESPONSIVE
            ============================================================ */
         @media (max-width: 820px) {
             .exam-sidebar {
@@ -1258,13 +1273,13 @@
                 overflow-y: auto;
             }
             .exam-wrapper {
-                height: calc(100vh - 160px);
-                max-height: calc(100vh - 140px);
+                height: calc(100vh - 150px);
+                max-height: calc(100vh - 120px);
             }
         }
 
         /* ============================================================
-           OTHER EXISTING STYLES (kept from original)
+           OTHER EXISTING STYLES
            ============================================================ */
         .exam-grid {
             display: grid;
@@ -1502,7 +1517,7 @@
             border: 1px solid rgba(220, 53, 69, 0.20);
         }
         .q-text {
-            font-size: 16px;
+            font-size: 15px; /* slightly reduced */
             line-height: 1.7;
             color: var(--text-main);
             margin-bottom: 14px;
@@ -2576,19 +2591,8 @@
         }
 
         /* ============================================================
-           RESULT / SCORE CARD – ATTRACTIVE PROFESSIONAL DESIGN
+           CERTIFICATE / SCORE CARD – with Test Name & Code
            ============================================================ */
-        #result-view .result-title {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            text-align: center;
-        }
-        #result-view .result-title .highlight {
-            color: var(--accent);
-        }
-
-        /* Score Card Container – Certificate Style */
         .score-card-certificate {
             max-width: 780px;
             margin: 16px auto;
@@ -2658,6 +2662,16 @@
             font-size: 13px;
             color: var(--text-muted);
             font-weight: 500;
+        }
+        /* Additional line for test code */
+        .score-card-certificate .cert-header .cert-title-group .cert-test-info {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+        .score-card-certificate .cert-header .cert-title-group .cert-test-info span {
+            color: var(--danger);
         }
         .score-card-certificate .cert-body {
             display: grid;
@@ -3238,7 +3252,7 @@
         <!-- TOP STICKY WRAPPER -->
         <div id="top-sticky-wrapper">
             <div class="tcs-header">
-                <!-- Brand: Logo + TEST BODHI – Click goes to Home -->
+                <!-- Brand: Logo + TEST BODHI – click goes to Home -->
                 <div class="brand-wrapper" onclick="window.goToHome()" title="Go to Home">
                     <img class="brand-logo" id="header-logo-img"
                     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 70'><rect width='280' height='70' rx='10' fill='%230f2b5c'/><text x='20' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23ffffff'>TEST</text><text x='150' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23d4a843'>BODHI</text><text x='20' y='62' font-family='Inter, sans-serif' font-size='12' font-weight='600' fill='%2390a8c0' letter-spacing='2'>PRACTICE · PREPARE · SUCCEED</text></svg>"
@@ -3258,13 +3272,19 @@
                     <div id="timer-box" class="timer" style="display:none;"><span>⏱</span><span id="main-time">00:00</span></div>
                 </div>
             </div>
+            <!-- SUB HEADER: Student Name + Exam Name + Code -->
             <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
-                <div class="s-name" id="top-sname">👤 Student</div>
-                <div class="s-exam" id="top-sexam">Exam</div>
-                <div class="s-profile-small" id="top-profile-small" style="display:none;">
-                    <div class="sp-avatar" id="sp-avatar">
-                        <span id="sp-avatar-text">👤</span>
-                        <img id="sp-avatar-img" style="display:none;" />
+                <div class="s-left">
+                    <span class="s-name" id="top-sname">👤 Student</span>
+                </div>
+                <div class="s-right">
+                    <span class="s-exam" id="top-sexam">Exam</span>
+                    <span class="s-code" id="top-scode">Code: ---</span>
+                    <div class="s-profile-small" id="top-profile-small" style="display:none;">
+                        <div class="sp-avatar" id="sp-avatar">
+                            <span id="sp-avatar-text">👤</span>
+                            <img id="sp-avatar-img" style="display:none;" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3525,6 +3545,7 @@
                         <div class="cert-title-group">
                             <div class="cert-main-title">TEST <span>BODHI</span></div>
                             <div class="cert-sub-title" id="cert-exam-title">Performance Certificate</div>
+                            <div class="cert-test-info" id="cert-test-info">📋 <span id="cert-exam-name">Exam</span>  •  Code: <span id="cert-test-code">---</span></div>
                         </div>
                     </div>
                     <div class="cert-body" id="cert-body">
@@ -3903,8 +3924,8 @@
     <script>
         /* ==========================================================================
            FULL SCRIPT – All features integrated
-           UPDATED: Full screen laptop layout, certificate style score card,
-           direct PDF download (no print preview), header click goes to home.
+           UPDATED: PDF generation via print (fast), sub-header shows exam+code,
+           certificate shows test name+code, scroll fixed.
            ========================================================================== */
 
         // ---- CONFIG ----
@@ -3982,14 +4003,11 @@
            GO TO HOME – Header click handler
            ========================================================================== */
         window.goToHome = function() {
-            // If already on dashboard, just refresh, else redirect
             const dashView = document.getElementById('student-dashboard-view');
             if (dashView && dashView.classList.contains('active-view')) {
-                // Already on home, do nothing or refresh active tests
                 window.switchStudentTab('active');
                 return;
             }
-            // Otherwise close and redirect to dashboard
             window.closeAndRedirect();
         };
 
@@ -6454,7 +6472,7 @@
         };
 
         /* ==========================================================================
-           PDF DOWNLOAD – DIRECT DOWNLOAD WITHOUT PRINT PREVIEW
+           PDF DOWNLOAD – Using Print Preview (fast, like index(7).html)
            ========================================================================== */
         window.adminDownloadPDF = function(code, mode) {
             const t = window.adminUnifiedTests.find(x => x.code === code);
@@ -6484,87 +6502,140 @@
             const customName = window.studentInfo.name || "अंकुश कुमार S/O मनोज कुमार";
             window.userAnswers = [];
             pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
-            // Direct PDF download without print preview
-            window.generateDirectPDF(customName, mode);
+            // Use print-based PDF generation
+            window.executePDFPrint(customName, mode);
         };
 
-        window.generateDirectPDF = function(studentName, mode) {
-            // Use html2canvas + jsPDF to generate PDF directly
-            const element = document.createElement('div');
-            element.innerHTML = window.buildPDFHTML(studentName, mode);
-            document.body.appendChild(element);
-
-            // Use html2canvas to capture the element and generate PDF
-            html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff'
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('TEST_BODHI_' + window.examData.code + '.pdf');
-                document.body.removeChild(element);
-                window.showCustomAlert("Success", "PDF downloaded successfully! 📄", "✅");
-            }).catch(err => {
-                document.body.removeChild(element);
-                window.showCustomAlert("Error", "Failed to generate PDF: " + err.message, "❌");
-            });
-        };
-
-        window.buildPDFHTML = function(studentName, mode) {
-            const logoUrl = window.portalLogoURL || '';
+        /* ==========================================================================
+           PDF Print Function – Uses window.print() with print styles
+           ========================================================================== */
+        window.executePDFPrint = function(studentName, mode) {
+            const pA = document.getElementById('print-area');
+            if (!pA) return;
+            const sU = BASE_URL + "?test=" + window.examData.code;
+            const p = window.parseHack(window.examData.topic);
+            const dT = p.topic || "";
+            const logoUrl = window.portalLogoURL || document.getElementById('header-logo-img')?.src || '';
             const logoShape = window.portalLogoShape || 'round';
             const logoStyle = logoShape === 'round' ? 'border-radius:50%;' : 'border-radius:8px;';
-            let html = `
-                <div style="font-family:Arial,sans-serif;padding:20px;max-width:1000px;margin:0 auto;background:#fff;">
-                    <div style="text-align:center;border-bottom:3px solid #0f2b5c;padding-bottom:12px;margin-bottom:16px;">
-                        ${logoUrl ? `<img src="${logoUrl}" style="height:50px;${logoStyle}margin-bottom:6px;" />` : ''}
-                        <h1 style="color:#0f2b5c;margin:4px 0 0 0;font-size:24px;">TEST <span style="color:#d4a843;">BODHI</span></h1>
-                        <h2 style="color:#333;margin:2px 0 0 0;font-size:18px;">${window.examData.exam.toUpperCase()} ${mode==='q_only'?"(Questions Only)":(mode==='q_ans'?"(Questions + Answer Key)":"(Full Solution)")}</h2>
-                        <p style="margin:4px 0 0 0;font-size:13px;color:#555;"><b>Student:</b> ${studentName} | <b>Code:</b> ${window.examData.code}</p>
-                    </div>
-                    <div style="column-count:2;column-gap:30px;column-rule:1px solid #ccc;">`;
+
+            let h = `
+            <div class="pdf-watermark-wrapper">
+                <div class="wm-content">
+                    ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" style="${logoStyle}" />` : ''}
+                    <div class="wm-text">TEST BODHI</div>
+                    <div style="font-size:16px;font-weight:600;color:#0f2b5c;letter-spacing:3px;">testbodi.com</div>
+                </div>
+            </div>
+            <table class="pdf-main-table">
+                <thead style="display:table-header-group;">
+                    <tr>
+                        <td style="padding:0;border:none;">
+                            <div class="pdf-header-strip">
+                                <table style="width:100%;border:none;">
+                                    <tr>
+                                        <td style="text-align:left;border:none;padding:0;">
+                                            <div class="hdr-brand">
+                                                ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" style="${logoStyle}" />` : ''}
+                                                <span class="hdr-name">TEST <span>BODHI</span></span>
+                                            </div>
+                                        </td>
+                                        <td style="text-align:right;border:none;padding:0;">
+                                            <a href="${sU}" style="color:#f0d68a;font-weight:bold;font-size:14px;text-decoration:none;">📝 Give Online Test</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tfoot style="display:table-footer-group;">
+                    <tr>
+                        <td style="padding:0;border:none;">
+                            <div class="pdf-footer-strip">
+                                <div class="ftr-text">
+                                    <a href="tel:+918273684939">📞 +91-8273684939</a> | 
+                                    <a href="${BASE_URL}">🌐 Website</a> | 
+                                    <a href="https://t.me/ankushonlinetest">📢 Telegram</a> | 
+                                    <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k">💬 WhatsApp</a> | 
+                                    <a href="https://www.youtube.com/@ankushonlinetest">▶️ YouTube</a>
+                                    <span style="margin-left:16px;color:#f0d68a;">testbodi.com</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr>
+                        <td style="padding:10px 20px;position:relative;z-index:10;">
+                            <div class="print-header" style="text-align:center; border-bottom:2px solid #1a56db; padding-bottom:8px; margin-bottom:16px;">
+                                <h2 style="color:#1a56db; margin:0 0 4px 0;font-size:18px;">${window.examData.exam.toUpperCase()} ${mode==='q_only'?"(Questions Only)":(mode==='q_ans'?"(Questions + Answer Key)":"(Full Solution)")}</h2>
+                                <h3 style="color:#333; margin:0 0 4px 0;font-size:15px;">${window.examData.subject||window.examData.sub||"Subject"} ${dT ? " - "+dT : ""}</h3>
+                                <p style="margin:0; font-size:13px; color:#555;"><b>Student Name:</b> ${studentName} | <b>Test Code:</b> ${window.examData.code}</p>
+                            </div>
+                            <div class="pdf-questions-container">`;
 
             window.examData.questions.forEach((q, i) => {
+                const uA = window.userAnswers[i] ? window.userAnswers[i] : "N/A";
                 const cA = window.getCleanAns(q.ans);
-                html += `
-                    <div style="margin-bottom:14px;border-bottom:1px dashed #ddd;padding-bottom:10px;break-inside:auto;page-break-inside:auto;">
-                        ${q.passage ? `<div style="font-style:italic;font-size:12px;color:#555;border-left:3px solid #d4a843;padding-left:8px;margin-bottom:4px;">${q.passage}</div>` : ''}
-                        <b>Q${i+1}. ${q.q}</b>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;margin:4px 0;">`;
+                const gA = window.getCleanAns(uA);
+                const isW = (window.userAnswers.length > 0 && uA !== "N/A" && gA !== cA && window.studentInfo
+                    .name !== "अंकुश कुमार S/O मनोज कुमार");
+                const wM = (isW && mode === 'full') ?
+                    '<span style="color:red;font-size:16px;margin-right:4px;">❌</span>' : "";
+
+                h +=
+                    `<div class="print-q" style="display:block !important; break-inside:auto !important; page-break-inside:auto !important;">`;
+                if (q.passage) h += `<div class="print-passage">${q.passage}</div>`;
+                h += `<b>${wM}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
+
                 (q.opts || []).forEach(o => {
+                    let inS = "padding:2px 0;color:#000;";
                     const oC = window.getCleanAns(o.id);
-                    let style = '';
                     if (mode !== 'q_only' && oC === cA) {
-                        style =
-                            'background-color:#065f46;color:#fff;font-weight:bold;padding:2px 6px;border-radius:3px;display:inline-block;';
+                        inS =
+                            "background-color:#065f46 !important; color:#fff !important; font-weight:bold; padding:4px 8px; border-radius:4px; display:inline-block; -webkit-print-color-adjust:exact; print-color-adjust:exact;";
                     }
-                    html += `<div style="font-size:13px;"><span style="${style}">${o.id}. ${o.text}</span></div>`;
+                    h += `<div class="opt-item"><span style="${inS}">${o.id}. ${o.text}</span></div>`;
                 });
-                html += `</div>`;
+                h += '</div>';
+
                 if (mode !== 'q_only') {
-                    html +=
-                        `<div style="font-size:12px;font-weight:700;margin-top:2px;">✅ Correct: ${cA||'N/A'}</div>`;
+                    const resView = document.getElementById('result-view');
+                    const isResActive = resView ? resView.classList.contains('active-view') : false;
+                    if (window.userAnswers.length > 0 && (isResActive || window.studentInfo.name ===
+                            "अंकुश कुमार S/O मनोज कुमार") && mode === 'full') {
+                        const aC = (gA === cA) ? "color:green;" : "color:red;";
+                        const uD = (gA && uA !== "N/A") ? gA : "Skipped";
+                        h +=
+                            `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span> <span style="margin-left:12px;font-weight:bold;font-size:14px;${aC}">Your Ans: ${uD}</span></div>`;
+                    } else {
+                        h +=
+                            `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span></div>`;
+                    }
                     if (mode === 'full' && q.exp) {
-                        html +=
-                            `<div style="font-size:11px;color:#333;margin-top:4px;padding:6px;background:#f5f5f5;border-left:3px solid #0f2b5c;"><b>Exp:</b> ${q.exp}</div>`;
+                        h += `<div class="print-exp"><b>Explanation:</b><br>${q.exp}</div>`;
                     }
                 }
-                html += `</div>`;
+                h += '</div>';
             });
 
-            html += `
-                    </div>
-                    <div style="text-align:center;border-top:2px solid #0f2b5c;padding-top:10px;margin-top:16px;font-size:11px;color:#777;">
-                        Generated by TEST BODHI Portal | ${new Date().toLocaleString()}
-                    </div>
-                </div>`;
-            return html;
+            h += `</div>`;
+            const summ = p.summary || window.examData.summary || "";
+            if (summ.trim() !== "") {
+                h +=
+                    `<div style="margin-top:16px; padding:12px 16px; border:2px solid #1a56db; border-radius:8px; background:#f0f4fa; page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;"><h3 style="color:#1a56db; margin-top:0; margin-bottom:6px;font-size:15px;">📑 Test Summary (Topics Covered)</h3><p style="font-size:14px; color:#333; line-height:1.5; margin-bottom:0;">${summ.replace(/\n/g,'<br>')}</p></div>`;
+            }
+            pA.innerHTML = h + '</td></tr></tbody></table>';
+
+            // Trigger print
+            document.body.classList.add('print-pdf');
+            setTimeout(() => {
+                window.print();
+                setTimeout(() => {
+                    document.body.classList.remove('print-pdf');
+                }, 1000);
+            }, 500);
         };
 
         window.handleResultPDFClick = function() {
@@ -6574,7 +6645,7 @@
                 .isPremium === true));
             if (isFreeStatus || isPremiumUser) {
                 const customName = window.studentInfo.name || "Student";
-                window.generateDirectPDF(customName, 'full');
+                window.executePDFPrint(customName, 'full');
             } else {
                 window.showPremiumModal();
             }
@@ -6609,11 +6680,14 @@
 
                 window.buildSidebarPalette();
 
+                // Update sub-header with student name, exam name, code
                 const topSname = document.getElementById('top-sname');
                 const topSexam = document.getElementById('top-sexam');
+                const topScode = document.getElementById('top-scode');
                 const topBar = document.getElementById('student-top-bar');
                 if (topSname) topSname.innerText = "👤 " + (window.studentInfo.name || "Student");
-                if (topSexam) topSexam.innerText = window.examData.exam + (isRe ? " (Reattempt)" : "");
+                if (topSexam) topSexam.innerText = window.examData.exam || "Exam";
+                if (topScode) topScode.innerText = "Code: " + (window.examData.code || "---");
                 if (topBar) topBar.style.display = 'flex';
                 window.updateProfileUI();
                 const topProfileSmall = document.getElementById('top-profile-small');
@@ -6751,9 +6825,11 @@
 
                 const topSname = document.getElementById('top-sname');
                 const topSexam = document.getElementById('top-sexam');
+                const topScode = document.getElementById('top-scode');
                 const topBar = document.getElementById('student-top-bar');
                 if (topSname) topSname.innerText = "👤 " + (window.studentInfo.name || "Student");
                 if (topSexam) topSexam.innerText = window.examData.exam + " (Resumed)";
+                if (topScode) topScode.innerText = "Code: " + window.examData.code;
                 if (topBar) topBar.style.display = 'flex';
                 window.updateProfileUI();
                 const topProfileSmall = document.getElementById('top-profile-small');
@@ -7078,7 +7154,9 @@
             document.getElementById('cert-score').innerText = window.studentInfo.score + ' / ' + mS;
             document.getElementById('cert-date').innerText = 'Generated: ' + new Date().toLocaleString();
             document.getElementById('cert-exam-title').innerText = window.examData.exam + ' - Performance Certificate';
-            // Load logo in certificate
+            // Set test name and code in certificate
+            document.getElementById('cert-exam-name').innerText = window.examData.exam || "Exam";
+            document.getElementById('cert-test-code').innerText = window.examData.code || "---";
             window.applyPortalLogo();
 
             const rankLoader = document.getElementById('rank-loader');
@@ -7462,7 +7540,7 @@
             window.userAnswers = [];
             pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
             const customName = window.studentInfo.name || "Student";
-            window.generateDirectPDF(customName, 'full');
+            window.executePDFPrint(customName, 'full');
         };
 
         /* ==========================================================================
@@ -7691,13 +7769,15 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v8.0 — Full Screen Laptop Layout + Certificate Style Score Card + Direct PDF Download');
+        console.log('🚀 TEST BODHI v8.0 — Full Screen Laptop Layout + Certificate Style Score Card + Print PDF');
         console.log('✅ Header click → Home page');
-        console.log('✅ Certificate style score card with logo');
-        console.log('✅ Direct PDF download without print preview using html2canvas + jsPDF');
+        console.log('✅ Certificate style score card with test name & code');
+        console.log('✅ Print-based PDF (fast) with watermark and header/footer');
+        console.log('✅ Sub-header shows Student, Exam Name and Code');
+        console.log('✅ Scroll fixed – increased bottom padding, reduced font size');
     </script>
 
-    <!-- ===== PRINT AREA (kept for legacy) ===== -->
+    <!-- ===== PRINT AREA ===== -->
     <div id="print-area"></div>
 </body>
 </html>
