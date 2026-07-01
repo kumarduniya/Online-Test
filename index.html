@@ -1458,10 +1458,8 @@
             opacity: 0;
             transform: translateY(30px) scale(0.96);
             animation: cardEntrance 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            /* Permanent color - no color change on hover */
             color: var(--text-main);
         }
-        /* Staggered entrance animation */
         .exam-card:nth-child(1) {
             animation-delay: 0.05s;
         }
@@ -1510,7 +1508,6 @@
             }
         }
 
-        /* Glow border animation - NO COLOR CHANGE */
         .exam-card::before {
             content: '';
             position: absolute;
@@ -1544,14 +1541,12 @@
             opacity: 1;
         }
 
-        /* Hover effects - NO COLOR CHANGE, only scale, shadow, glow */
         .exam-card:hover {
             transform: translateY(-8px) scale(1.01);
             box-shadow: var(--card-shadow), 0 0 30px var(--card-glow);
             border-color: var(--accent);
         }
 
-        /* Dark mode specific glow */
         body.dark-mode .exam-card:hover {
             box-shadow: var(--card-shadow), 0 0 40px rgba(100, 149, 237, 0.15);
             border-color: #4a7db5;
@@ -1604,78 +1599,9 @@
             margin: 0 0 8px 0;
         }
 
-        /* Progress stats on card - at exam level (inside board) */
-        .exam-card .exam-progress-stats {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 600;
-            background: var(--bg-subtle);
-            padding: 4px 10px;
-            border-radius: 50px;
-            border: 1px solid var(--border-color);
-        }
-        .exam-card .exam-progress-stats span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .exam-card .exam-progress-stats .stat-num {
-            font-weight: 700;
-            color: var(--text-main);
-        }
-        .exam-card .exam-progress-stats .stat-num.green {
-            color: var(--success);
-        }
-        .exam-card .exam-progress-stats .stat-num.orange {
-            color: var(--warning);
-        }
-        .exam-card .exam-progress-stats .stat-num.red {
-            color: var(--danger);
-        }
+        /* ---- progress bar REMOVED from home page ---- */
+        /* (exam-progress-stats, exam-progress-bar, exam-stats are no longer used on home page) */
 
-        /* Progress bar */
-        .exam-card .exam-progress-bar {
-            width: 100%;
-            height: 5px;
-            background: var(--bg-subtle);
-            border-radius: 50px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            border: 1px solid var(--border-color);
-        }
-        .exam-card .exam-progress-bar .progress-fill {
-            height: 100%;
-            border-radius: 50px;
-            transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            width: 0%;
-        }
-        .exam-card .exam-progress-bar .progress-fill.green {
-            background: linear-gradient(90deg, #0f9d58, #34a853);
-        }
-        .exam-card .exam-progress-bar .progress-fill.yellow {
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
-        }
-        .exam-card .exam-progress-bar .progress-fill.red {
-            background: linear-gradient(90deg, #dc3545, #ef4444);
-        }
-
-        .exam-card .exam-stats {
-            display: flex;
-            gap: 8px;
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-        .exam-card .exam-stats span {
-            background: var(--bg-subtle);
-            padding: 2px 10px;
-            border-radius: 50px;
-            font-weight: 600;
-        }
         .exam-card .btn {
             width: 100%;
             padding: 7px;
@@ -1683,6 +1609,121 @@
             border-radius: var(--radius);
             font-weight: 700;
             letter-spacing: 0.5px;
+        }
+
+        /* ============================================================
+           SUB-EXAM VIEW – Progress Bar at Exam Level
+           ============================================================ */
+        .sub-exam-card-with-progress {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 14px 12px 12px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+            position: relative;
+        }
+        .sub-exam-card-with-progress::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .sub-exam-card-with-progress:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+        }
+        .sub-exam-card-with-progress:hover::before {
+            opacity: 1;
+        }
+        .sub-exam-card-with-progress .sec-icon {
+            font-size: 26px;
+            margin-bottom: 2px;
+        }
+        .sub-exam-card-with-progress .sec-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .sub-exam-card-with-progress .sec-count {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Progress bar inside sub-exam card */
+        .sub-exam-progress-stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 600;
+            background: var(--bg-subtle);
+            padding: 3px 8px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+        .sub-exam-progress-stats span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .sub-exam-progress-stats .stat-num {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .sub-exam-progress-stats .stat-num.green {
+            color: var(--success);
+        }
+        .sub-exam-progress-stats .stat-num.orange {
+            color: var(--warning);
+        }
+        .sub-exam-progress-stats .stat-num.red {
+            color: var(--danger);
+        }
+
+        .sub-exam-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--bg-subtle);
+            border-radius: 50px;
+            overflow: hidden;
+            margin-top: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .sub-exam-progress-bar .progress-fill {
+            height: 100%;
+            border-radius: 50px;
+            transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 0%;
+        }
+        .sub-exam-progress-bar .progress-fill.green {
+            background: linear-gradient(90deg, #0f9d58, #34a853);
+        }
+        .sub-exam-progress-bar .progress-fill.yellow {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+        .sub-exam-progress-bar .progress-fill.red {
+            background: linear-gradient(90deg, #dc3545, #ef4444);
         }
 
         /* ============================================================
@@ -1780,16 +1821,9 @@
             .exam-card .exam-subtitle {
                 font-size: 9px !important;
             }
-            .exam-card .exam-stats {
-                font-size: 9px !important;
-            }
             .exam-card .btn {
                 font-size: 10px !important;
                 padding: 4px 6px !important;
-            }
-            .exam-card .exam-progress-stats {
-                font-size: 9px !important;
-                padding: 3px 8px !important;
             }
             .sub-exam-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
@@ -4238,7 +4272,7 @@
 
     <script>
         /* ==========================================================================
-           FULL SCRIPT – All 10 Tasks Fixed
+           FULL SCRIPT – All Tasks Fixed
            UPDATED SCRIPT_URL: https://script.google.com/macros/s/AKfycbxVePIuxQvKS8Gspm3ShW4WnoiLcsTHFx4SBUCGGa_qCmA-eoaTfeUTa84OFrjLgs3XRQ/exec
            ========================================================================== */
 
@@ -4949,7 +4983,7 @@
         };
 
         /* ==========================================================================
-           PROFILE PHOTO – USING APP SCRIPT WITH FIXED URL
+           PROFILE PHOTO – USING APP SCRIPT WITH FIXED URL + SYNC FIX
            ========================================================================== */
         window.updateProfileUI = function() {
             const user = window.studentInfo;
@@ -4972,14 +5006,16 @@
                 if (puaName) puaName.innerText = user.name;
                 const photo = user.photoURL || '';
                 if (photo && photo.startsWith('http')) {
-                    if (headerAvatarImg) { headerAvatarImg.src = photo;
+                    // Ensure URL is a valid image URL (Google Drive direct link)
+                    const fixedPhoto = window.fixGoogleDriveUrl(photo);
+                    if (headerAvatarImg) { headerAvatarImg.src = fixedPhoto;
                         headerAvatarImg.style.display = 'block';
                         headerAvatarText.style.display = 'none'; }
-                    if (spAvatarImg) { spAvatarImg.src = photo;
+                    if (spAvatarImg) { spAvatarImg.src = fixedPhoto;
                         spAvatarImg.style.display = 'block';
                         spAvatarText.style.display = 'none'; }
                     if (topProfileSmall) topProfileSmall.style.display = 'flex';
-                    if (puaPreviewImg) { puaPreviewImg.src = photo;
+                    if (puaPreviewImg) { puaPreviewImg.src = fixedPhoto;
                         puaPreviewImg.style.display = 'block';
                         puaPreviewText.style.display = 'none'; }
                 } else {
@@ -5004,6 +5040,34 @@
             window.loadPortalLogo();
         };
 
+        /* ---- Fix Google Drive URL to direct image URL ---- */
+        window.fixGoogleDriveUrl = function(url) {
+            if (!url) return url;
+            // If it's a Google Drive file URL, convert to direct image URL
+            if (url.includes('drive.google.com/file/d/')) {
+                const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    return 'https://drive.google.com/uc?export=view&id=' + match[1];
+                }
+            }
+            // If it's a Google Drive open URL
+            if (url.includes('drive.google.com/open?id=')) {
+                const match = url.match(/id=([a-zA-Z0-9_-]+)/);
+                if (match && match[1]) {
+                    return 'https://drive.google.com/uc?export=view&id=' + match[1];
+                }
+            }
+            // If it's already a direct download URL with export=view
+            if (url.includes('drive.google.com/uc?export=view')) {
+                return url;
+            }
+            // If it's a thumbnail URL, keep it
+            if (url.includes('drive.google.com/thumbnail')) {
+                return url;
+            }
+            return url;
+        };
+
         window.openProfileUpload = function() {
             const section = document.getElementById('profile-upload-section');
             if (section) {
@@ -5014,7 +5078,8 @@
                 const puaPreviewImg = document.getElementById('pua-preview-img');
                 if (puaName) puaName.innerText = user.name || 'Student';
                 if (user.photoURL && user.photoURL.startsWith('http')) {
-                    if (puaPreviewImg) { puaPreviewImg.src = user.photoURL;
+                    const fixedPhoto = window.fixGoogleDriveUrl(user.photoURL);
+                    if (puaPreviewImg) { puaPreviewImg.src = fixedPhoto;
                         puaPreviewImg.style.display = 'block';
                         puaPreviewText.style.display = 'none'; }
                 } else {
@@ -5025,7 +5090,7 @@
             }
         };
 
-        /* ---- Profile photo upload using App Script with FIXED URL (googleusercontent) ---- */
+        /* ---- Profile photo upload using App Script with robust sync ---- */
         window.uploadProfilePhoto = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -5050,33 +5115,22 @@
                     try {
                         const data = JSON.parse(text);
                         if (data.status === "success" && data.url) {
-                            const downloadURL = data.url;
+                            let downloadURL = data.url;
+                            // Fix Google Drive URL to direct image URL
+                            downloadURL = window.fixGoogleDriveUrl(downloadURL);
+
                             const user = firebase.auth().currentUser;
                             if (user) {
-                                db.collection("users").doc(user.uid).update({ photoURL: downloadURL })
-                                    .then(() => {
-                                        window.closeModal();
-                                        window.studentInfo.photoURL = downloadURL;
-                                        localStorage.setItem('mockSarthiUser', JSON.stringify(window
-                                            .studentInfo));
-                                        window.updateProfileUI();
-                                        window.showCustomAlert("Success",
-                                            "Profile photo updated successfully! 📸", "✅");
-                                    }).catch(() => {
-                                        window.closeModal();
-                                        window.studentInfo.photoURL = downloadURL;
-                                        localStorage.setItem('mockSarthiUser', JSON.stringify(window
-                                            .studentInfo));
-                                        window.updateProfileUI();
-                                        window.showCustomAlert("Success",
-                                            "Profile photo updated locally! 📸", "✅");
-                                    });
+                                // Update Firebase with retry
+                                window.updateUserPhotoWithRetry(user.uid, downloadURL, 3);
                             } else {
-                                window.closeModal();
+                                // Fallback: store locally
                                 window.studentInfo.photoURL = downloadURL;
                                 localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
                                 window.updateProfileUI();
-                                window.showCustomAlert("Success", "Profile photo updated! 📸", "✅");
+                                window.closeModal();
+                                window.showCustomAlert("Success",
+                                    "Profile photo updated locally! 📸", "✅");
                             }
                         } else {
                             window.closeModal();
@@ -5094,6 +5148,36 @@
                 });
             };
             reader.readAsDataURL(file);
+        };
+
+        /* ---- Retry mechanism for Firebase update ---- */
+        window.updateUserPhotoWithRetry = function(uid, photoURL, retries) {
+            db.collection("users").doc(uid).update({ photoURL: photoURL })
+                .then(() => {
+                    window.closeModal();
+                    window.studentInfo.photoURL = photoURL;
+                    localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                    window.updateProfileUI();
+                    window.showCustomAlert("Success",
+                        "Profile photo updated and synced to cloud! 📸", "✅");
+                })
+                .catch((err) => {
+                    if (retries > 0) {
+                        // Retry after 1 second
+                        setTimeout(() => {
+                            window.updateUserPhotoWithRetry(uid, photoURL, retries - 1);
+                        }, 1000);
+                    } else {
+                        // Fallback: store locally
+                        window.closeModal();
+                        window.studentInfo.photoURL = photoURL;
+                        localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                        window.updateProfileUI();
+                        window.showCustomAlert("Success",
+                            "Profile photo updated locally! (Cloud sync failed, will retry on next login)",
+                            "✅");
+                    }
+                });
         };
 
         window.removeProfilePhoto = function() {
@@ -5525,7 +5609,6 @@
             window.examData.totTime = data.totTime || 0;
             window.examData.qTime = data.qTime || 0;
             window.examData.isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
-            // Set category from data or parse from topic
             if (!window.examData.category) {
                 const parsed = window.parseHack(data.topic);
                 window.examData.category = parsed.cat || "Mock Tests";
@@ -5697,7 +5780,7 @@
         };
 
         /* ==========================================================================
-           EXAMS VIEW – WITH PROGRESS TRACKING AT EXAM LEVEL
+           EXAMS VIEW – WITHOUT PROGRESS BAR ON HOME PAGE
            ========================================================================== */
         window.showExamsView = function() {
             window.navStack = window.navStack.filter(item => item.type === 'exams');
@@ -5739,7 +5822,7 @@
                     if (sa === sb) return a.localeCompare(b);
                     return sa - sb;
                 });
-                window.renderExamCardsWithProgress(boards, allTests, examLogos, list);
+                window.renderExamCards(boards, allTests, examLogos, list);
             }).catch(() => {
                 window.getBoardOrder().then((savedOrder) => {
                     if (savedOrder && savedOrder.length > 0) {
@@ -5749,37 +5832,26 @@
                         boards.forEach(b => { if (!ordered.includes(b)) remaining.push(b); });
                         boards = [...ordered, ...remaining];
                     }
-                    window.renderExamCardsWithProgress(boards, allTests, examLogos, list);
+                    window.renderExamCards(boards, allTests, examLogos, list);
                 }).catch(() => {
-                    window.renderExamCardsWithProgress(boards, allTests, examLogos, list);
+                    window.renderExamCards(boards, allTests, examLogos, list);
                 });
             });
         };
 
-        window.renderExamCardsWithProgress = function(boards, allTests, examLogos, list) {
+        /* ---- Home page boards: NO progress bar, just clean cards ---- */
+        window.renderExamCards = function(boards, allTests, examLogos, list) {
             if (boards.length === 0) {
                 list.innerHTML =
                     "<p style='width:100%;text-align:center;color:var(--text-muted);padding:20px 0;font-size:13px;'>No tests available right now.</p>";
                 return;
             }
 
-            // Get attempted tests from cache
-            const attempted = window.attemptedTestsCache || JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
-            const attemptedCodes = Object.keys(attempted);
-
             let html = '<div class="exam-grid">';
             boards.forEach((bName, index) => {
                 const boardTests = allTests.filter(t => (window.parseHack(t.topic).board || t.exam || "General Exam") ===
                     bName);
                 const totalTests = boardTests.length;
-                const attemptedCount = boardTests.filter(t => attemptedCodes.includes(t.code)).length;
-                const remainingCount = totalTests - attemptedCount;
-                const progressPct = totalTests > 0 ? Math.round((attemptedCount / totalTests) * 100) : 0;
-
-                // Determine color for progress bar
-                let barClass = 'red';
-                if (progressPct >= 70) barClass = 'green';
-                else if (progressPct >= 35) barClass = 'yellow';
 
                 const iconHtml = examLogos[bName] ? `<img src="${examLogos[bName]}" alt="${bName}">` :
                     `<span class="fallback-icon">🏛️</span>`;
@@ -5789,17 +5861,6 @@
                         <div class="exam-logo">${iconHtml}</div>
                         <div class="exam-name">${bName}</div>
                         <div class="exam-subtitle">${totalTests} Test${totalTests>1?'s':''}</div>
-                        <div class="exam-progress-stats">
-                            <span>📚 Total: <span class="stat-num">${totalTests}</span></span>
-                            <span>✅ Attempted: <span class="stat-num green">${attemptedCount}</span></span>
-                            <span>⏳ Remaining: <span class="stat-num ${remainingCount > 0 ? 'orange' : 'green'}">${remainingCount}</span></span>
-                        </div>
-                        <div class="exam-progress-bar">
-                            <div class="progress-fill ${barClass}" style="width:${progressPct}%;"></div>
-                        </div>
-                        <div class="exam-stats">
-                            <span>📊 ${progressPct}% Complete</span>
-                        </div>
                         <button class="btn btn-primary btn-sm">View Tests →</button>
                     </div>
                 `;
@@ -5808,6 +5869,9 @@
             list.innerHTML = html;
         };
 
+        /* ==========================================================================
+           SUB-EXAMS VIEW – WITH PROGRESS BAR AT EXAM LEVEL
+           ========================================================================== */
         window.showSubExamsView = function(boardName) {
             window.navStack.push({ type: 'subExams', board: boardName });
             try { history.pushState({}, "", window.location.pathname); } catch (e) {}
@@ -5836,14 +5900,39 @@
                     "<p style='width:100%;text-align:center;color:var(--text-muted);padding:20px 0;font-size:13px;'>No exams found under this board.</p>";
                 return;
             }
+
+            // Get attempted tests from cache
+            const attempted = window.attemptedTestsCache || JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+            const attemptedCodes = Object.keys(attempted);
+
             let html = '<div class="sub-exam-grid">';
             subExams.forEach(subEx => {
-                const count = boardTests.filter(t => (t.exam || boardName) === subEx).length;
+                const examTests = boardTests.filter(t => (t.exam || boardName) === subEx);
+                const totalTests = examTests.length;
+                const attemptedCount = examTests.filter(t => attemptedCodes.includes(t.code)).length;
+                const remainingCount = totalTests - attemptedCount;
+                const progressPct = totalTests > 0 ? Math.round((attemptedCount / totalTests) * 100) : 0;
+
+                // Determine color for progress bar
+                let barClass = 'red';
+                if (progressPct >= 70) barClass = 'green';
+                else if (progressPct >= 35) barClass = 'yellow';
+
                 html += `
-                    <div class="exam-card-l2" onclick="window.showAppLayout('${boardName.replace(/'/g,"\\'")}','${subEx.replace(/'/g,"\\'")}')">
-                        <div class="exam-card-l2-icon">🎓</div>
-                        <div class="exam-card-l2-title">${subEx}</div>
-                        <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">${count} tests</div>
+                    <div class="sub-exam-card-with-progress" onclick="window.showAppLayout('${boardName.replace(/'/g,"\\'")}','${subEx.replace(/'/g,"\\'")}')">
+                        <div class="sec-icon">🎓</div>
+                        <div class="sec-title">${subEx}</div>
+                        <div class="sec-count">${totalTests} tests</div>
+                        <!-- Progress bar at exam level -->
+                        <div class="sub-exam-progress-stats">
+                            <span>📚 Total: <span class="stat-num">${totalTests}</span></span>
+                            <span>✅ Attempted: <span class="stat-num green">${attemptedCount}</span></span>
+                            <span>⏳ Remaining: <span class="stat-num ${remainingCount > 0 ? 'orange' : 'green'}">${remainingCount}</span></span>
+                        </div>
+                        <div class="sub-exam-progress-bar">
+                            <div class="progress-fill ${barClass}" style="width:${progressPct}%;"></div>
+                        </div>
+                        <div style="font-size:9px;color:var(--text-muted);margin-top:3px;">📊 ${progressPct}% Complete</div>
                     </div>
                 `;
             });
@@ -7102,7 +7191,6 @@
                 const topBar = document.getElementById('student-top-bar');
                 if (topSname) topSname.innerText = "👤 " + (window.studentInfo.name || "Student");
                 if (topSexam) topSexam.innerText = window.examData.exam || "Exam";
-                // Get category from examData
                 const categoryName = window.examData.category || window.currentCategory || "Mock Test";
                 if (topScategory) topScategory.innerText = categoryName;
                 if (topScode) topScode.innerText = "Code: " + (window.examData.code || "---");
@@ -7702,7 +7790,10 @@
                 const isCurrentUser = (item.phone === window.studentInfo.phone) || (item.name === window.studentInfo
                     .name);
 
-                const photoUrl = isCurrentUser ? currentUserPhoto : item.photoURL;
+                // Fix Google Drive URL for photo
+                let photoUrl = isCurrentUser ? currentUserPhoto : item.photoURL;
+                photoUrl = window.fixGoogleDriveUrl(photoUrl);
+
                 let avatarContent = '';
                 if (photoUrl && photoUrl.startsWith('http')) {
                     avatarContent = `<img src="${photoUrl}" alt="${item.name.charAt(0)}" crossorigin="anonymous" />`;
@@ -8221,17 +8312,17 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v11.0 — All 10 Tasks Fixed:');
-        console.log('✅ Profile photo sync fixed (googleusercontent.com)');
+        console.log('🚀 TEST BODHI v12.0 — All Tasks Fixed:');
+        console.log('✅ Progress bar REMOVED from home page boards');
+        console.log('✅ Progress bar ADDED to exam level (inside boards)');
+        console.log('✅ Profile photo sync fixed with Google Drive URL conversion');
+        console.log('✅ Leaderboard photos now display with fixed URLs');
         console.log('✅ Header: Exam | Category | Code');
-        console.log('✅ Progress bars at EXAM level (inside boards)');
-        console.log('✅ Card hover: no color change, only scale + glow');
         console.log('✅ Dark mode adaptive (CSS variables)');
         console.log('✅ PDF MathJax fix');
         console.log('✅ Question scroll fix');
         console.log('✅ Profile popup');
         console.log('✅ Premium entrance animation (staggered)');
-        console.log('✅ Leaderboard photos work across devices');
         console.log('📌 App Script URL updated');
     </script>
 
