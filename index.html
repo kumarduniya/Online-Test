@@ -367,7 +367,6 @@
             white-space: nowrap;
         }
 
-        /* Profile Button */
         .profile-btn-header {
             background: rgba(255, 255, 255, 0.12);
             border: 1px solid rgba(255, 255, 255, 0.20);
@@ -428,7 +427,7 @@
             }
         }
 
-        /* ---- SUB HEADER ---- */
+        /* ---- SUB HEADER – Exam | Category | Code ---- */
         .tcs-sub-header {
             background: var(--bg-subtle);
             padding: 6px 20px;
@@ -463,10 +462,19 @@
             font-size: 12px;
             color: var(--primary);
             font-weight: 700;
-            background: rgba(212, 168, 67, 0.10);
+            background: rgba(212, 168, 67, 0.12);
             padding: 3px 14px;
             border-radius: 50px;
-            border: 1px solid rgba(212, 168, 67, 0.30);
+            border: 1px solid rgba(212, 168, 67, 0.25);
+        }
+        .tcs-sub-header .s-right .s-category {
+            font-size: 11px;
+            color: var(--primary-light);
+            font-weight: 600;
+            background: rgba(26, 75, 140, 0.08);
+            padding: 2px 12px;
+            border-radius: 50px;
+            border: 1px solid rgba(26, 75, 140, 0.15);
         }
         .tcs-sub-header .s-right .s-code {
             font-size: 11px;
@@ -549,7 +557,6 @@
         .exam-left {
             flex: 1;
             padding: 16px 24px 90px 24px;
-            /* increased bottom padding */
             overflow-y: auto;
             min-width: 0;
             background: var(--bg-container);
@@ -577,7 +584,6 @@
             z-index: 1;
         }
 
-        /* Ensure options are fully visible */
         .options-div {
             display: flex;
             flex-direction: column;
@@ -998,78 +1004,8 @@
         }
 
         /* ============================================================
-           OTHER STYLES (kept from original)
+           BUTTONS
            ============================================================ */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.60);
-            z-index: 9999999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(6px);
-        }
-        .modal-box {
-            background: var(--bg-card);
-            padding: 28px 24px;
-            border-radius: var(--radius-xl);
-            width: 92%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: var(--shadow-xl);
-            animation: popIn 0.3s ease;
-        }
-        .modal-box .modal-icon {
-            font-size: 40px;
-            margin-bottom: 6px;
-        }
-        .modal-box .modal-title {
-            font-size: 18px;
-            font-weight: 800;
-            margin: 0 0 4px 0;
-            color: var(--primary);
-        }
-        .modal-box .modal-desc {
-            color: var(--text-muted);
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 16px;
-            font-weight: 500;
-        }
-        .modal-box .modal-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            letter-spacing: 2px;
-            background: var(--bg-input);
-            color: var(--text-main);
-            margin-bottom: 16px;
-            outline: none;
-        }
-        .modal-box .modal-input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.15);
-        }
-        .modal-box .modal-btns {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        .modal-box .modal-btns .btn {
-            flex: 1;
-            margin: 0;
-            border-radius: var(--radius);
-            padding: 8px;
-        }
-
         .btn {
             display: inline-flex;
             align-items: center;
@@ -1148,412 +1084,76 @@
         }
 
         /* ============================================================
-           LEADERBOARD – FIXED PHOTO VISIBILITY
+           MODAL
            ============================================================ */
-        .lb-item .lb-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            object-fit: cover;
-            background: var(--bg-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-main);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .lb-item .lb-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .lb-item .lb-avatar .lb-avatar-fallback {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 820px) {
-            .exam-sidebar {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 280px;
-                min-width: 280px;
-                max-height: 100vh;
-                height: 100%;
-                z-index: 9999;
-                border-left: 2px solid var(--border-color);
-                border-right: none;
-                transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-                background: var(--bg-container);
-                box-shadow: var(--shadow-xl);
-                padding: 16px 14px;
-                border-radius: 0;
-                max-height: 100vh;
-            }
-            .exam-sidebar.open {
-                right: 0;
-            }
-            .exam-sidebar .sb-close-btn {
-                display: block;
-            }
-            .sidebar-backdrop.active {
-                display: block;
-            }
-            .sidebar-toggle {
-                display: flex;
-            }
-            .exam-left {
-                padding: 12px 14px 140px 14px;
-            }
-            .sb-palette-grid {
-                grid-template-columns: repeat(6, 1fr);
-            }
-            .tcs-header {
-                padding: 6px 14px;
-            }
-            .brand-wrapper .brand-name {
-                font-size: 1.0rem;
-            }
-            .brand-wrapper .brand-logo {
-                height: 30px;
-            }
-            .header-profile .profile-name {
-                display: none;
-            }
-            .header-profile .profile-avatar {
-                width: 30px;
-                height: 30px;
-                font-size: 13px;
-            }
-            .tcs-sub-header {
-                padding: 4px 14px;
-            }
-            .tcs-sub-header .s-profile-small .sp-avatar {
-                width: 22px;
-                height: 22px;
-                font-size: 9px;
-            }
-            .view-section {
-                padding: 12px 10px;
-            }
-            .action-btn {
-                font-size: 9px;
-                padding: 8px 2px;
-            }
-            #exam-bottom-controls {
-                padding: 6px 10px;
-            }
-            .container {
-                border-radius: 0 !important;
-            }
-            .exam-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 10px !important;
-            }
-            .exam-card {
-                padding: 12px 8px !important;
-            }
-            .exam-card .exam-logo {
-                width: 48px !important;
-                height: 48px !important;
-            }
-            .exam-card .exam-name {
-                font-size: 12px !important;
-            }
-            .exam-card .exam-subtitle {
-                font-size: 9px !important;
-            }
-            .exam-card .exam-stats {
-                font-size: 9px !important;
-            }
-            .exam-card .btn {
-                font-size: 10px !important;
-                padding: 4px 6px !important;
-            }
-            .sub-exam-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-            .category-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-            .subject-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .sb-palette-grid {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 4px;
-            }
-            .sb-palette-btn {
-                font-size: 10px;
-                min-height: 26px;
-            }
-            .exam-sidebar {
-                width: 240px;
-                min-width: 240px;
-            }
-            .exam-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 8px !important;
-            }
-            .exam-card {
-                padding: 10px 6px !important;
-            }
-            .exam-card .exam-logo {
-                width: 40px !important;
-                height: 40px !important;
-            }
-            .exam-card .exam-name {
-                font-size: 10px !important;
-            }
-            .brand-wrapper .brand-name {
-                font-size: 0.85rem !important;
-            }
-            .brand-wrapper .brand-logo {
-                height: 26px !important;
-            }
-            #profile-modal .pm-box {
-                padding: 20px 18px;
-            }
-        }
-
-        @media (min-width: 821px) {
-            .exam-sidebar .sb-close-btn {
-                display: none !important;
-            }
-            .sidebar-backdrop {
-                display: none !important;
-            }
-            .exam-left {
-                height: 100%;
-                overflow-y: auto;
-            }
-            .exam-wrapper {
-                height: calc(100vh - 150px);
-                max-height: calc(100vh - 120px);
-            }
-        }
-
-        /* ============================================================
-           OTHER EXISTING STYLES (kept from original)
-           ============================================================ */
-        .exam-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 16px;
-            padding: 8px 0;
-            width: 100%;
-        }
-        .exam-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 16px 14px;
-            transition: var(--transition);
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .exam-card::before {
-            content: '';
-            position: absolute;
+        .modal-overlay {
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--accent-gradient);
-            opacity: 0;
-            transition: var(--transition);
-        }
-        .exam-card:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent);
-        }
-        .exam-card:hover::before {
-            opacity: 1;
-        }
-        .exam-card .exam-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--bg-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            border: 2px solid var(--border-color);
-            overflow: hidden;
-            transition: var(--transition);
-            flex-shrink: 0;
-        }
-        .exam-card:hover .exam-logo {
-            border-color: var(--accent);
-            transform: scale(1.04);
-        }
-        .exam-card .exam-logo img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            border-radius: 50%;
-        }
-        .exam-card .exam-logo .fallback-icon {
-            font-size: 28px;
-            color: var(--text-muted);
-        }
-        .exam-card .exam-name {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--primary);
-            margin: 0 0 2px 0;
-            line-height: 1.2;
-        }
-        body.dark-mode .exam-card .exam-name {
-            color: var(--accent-light);
-        }
-        .exam-card .exam-subtitle {
-            font-size: 10px;
-            color: var(--text-muted);
-            font-weight: 500;
-            margin: 0 0 6px 0;
-        }
-        .exam-card .exam-stats {
-            display: flex;
-            gap: 8px;
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-        .exam-card .exam-stats span {
-            background: var(--bg-subtle);
-            padding: 2px 10px;
-            border-radius: 50px;
-            font-weight: 600;
-        }
-        .exam-card .btn {
-            width: 100%;
-            padding: 6px;
-            font-size: 11px;
-            border-radius: var(--radius);
-        }
-
-        .q-header {
-            font-size: 16px;
-            font-weight: 700;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 14px;
-            color: var(--primary);
-            display: flex;
-            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.60);
+            z-index: 9999999;
+            display: none;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            width: 100%;
+            justify-content: center;
+            backdrop-filter: blur(6px);
         }
-        body.dark-mode .q-header {
-            color: var(--accent-light);
-        }
-        .q-header .q-number {
-            font-size: 14px;
-        }
-        .q-header .q-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .bookmark-btn {
-            background: transparent;
-            border: 2px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 3px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: var(--transition);
-        }
-        .bookmark-btn.bookmarked {
-            background: rgba(212, 168, 67, 0.15);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-        .q-timer-badge {
-            background: rgba(220, 53, 69, 0.10);
-            color: var(--danger);
-            padding: 3px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 700;
-            border: 1px solid rgba(220, 53, 69, 0.20);
-        }
-        .q-text {
-            font-size: 15px;
-            line-height: 1.7;
-            color: var(--text-main);
-            margin-bottom: 14px;
-            font-weight: 600;
-            width: 100%;
-            position: relative;
-        }
-        .q-text .q-watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.04;
-            pointer-events: none;
-            font-size: 60px;
-            font-weight: 900;
-            color: var(--primary);
-            white-space: nowrap;
-            z-index: 0;
-            font-family: 'Poppins', sans-serif;
-            max-width: 80%;
+        .modal-box {
+            background: var(--bg-card);
+            padding: 28px 24px;
+            border-radius: var(--radius-xl);
+            width: 92%;
+            max-width: 400px;
             text-align: center;
+            box-shadow: var(--shadow-xl);
+            animation: popIn 0.3s ease;
         }
-        .q-text .q-watermark img {
-            max-width: 150px;
-            height: auto;
-            margin: 0 auto;
-            border-radius: 8px;
+        .modal-box .modal-icon {
+            font-size: 40px;
+            margin-bottom: 6px;
         }
-        .q-text>* {
-            position: relative;
-            z-index: 1;
+        .modal-box .modal-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0 0 4px 0;
+            color: var(--primary);
         }
-        .q-passage-box {
-            background: var(--bg-subtle);
-            padding: 14px 18px;
-            margin-bottom: 14px;
-            border-left: 5px solid var(--accent);
+        .modal-box .modal-desc {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+        .modal-box .modal-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border-color);
             border-radius: var(--radius);
             font-size: 14px;
-            line-height: 1.6;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 2px;
+            background: var(--bg-input);
             color: var(--text-main);
-            position: relative;
-            z-index: 1;
+            margin-bottom: 16px;
+            outline: none;
+        }
+        .modal-box .modal-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.15);
+        }
+        .modal-box .modal-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .modal-box .modal-btns .btn {
+            flex: 1;
+            margin: 0;
+            border-radius: var(--radius);
+            padding: 8px;
         }
 
         .loader-mini {
@@ -1710,8 +1310,34 @@
         }
 
         /* ============================================================
-           LEADERBOARD
+           LEADERBOARD – FIXED PHOTO VISIBILITY
            ============================================================ */
+        .lb-item .lb-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            object-fit: cover;
+            background: var(--bg-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .lb-item .lb-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .lb-item .lb-avatar .lb-avatar-fallback {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
         .leaderboard-container {
             background: var(--bg-card);
             border: 2px solid var(--border-color);
@@ -1772,31 +1398,6 @@
         .lb-item .lb-rank.bronze {
             color: #d97706;
         }
-        .lb-item .lb-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            object-fit: cover;
-            background: var(--bg-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .lb-item .lb-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .lb-item .lb-avatar .lb-avatar-fallback {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1;
-        }
         .lb-item .lb-name {
             flex: 1;
             font-weight: 600;
@@ -1820,427 +1421,653 @@
         }
 
         /* ============================================================
-           CERTIFICATE / SCORE CARD
+           HOME PAGE – PREMIUM EXAM CARDS
            ============================================================ */
-        .score-card-certificate {
-            max-width: 780px;
-            margin: 16px auto;
-            background: linear-gradient(145deg, #ffffff, #f8faff);
+        .exam-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 12px 0;
+            width: 100%;
+            perspective: 1200px;
+        }
+        .exam-card {
+            background: var(--bg-card);
             border-radius: var(--radius-xl);
-            padding: 28px 32px 24px;
-            box-shadow: 0 20px 60px rgba(15, 43, 92, 0.15), 0 0 0 1px rgba(212, 168, 67, 0.2);
-            border: 2px solid var(--accent);
+            padding: 20px 16px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(15, 43, 92, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            transform: translateY(30px) scale(0.96);
+            animation: cardEntrance 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            backdrop-filter: blur(4px);
         }
-        .score-card-certificate::before {
+        .exam-card:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+        .exam-card:nth-child(2) {
+            animation-delay: 0.10s;
+        }
+        .exam-card:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+        .exam-card:nth-child(4) {
+            animation-delay: 0.20s;
+        }
+        .exam-card:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+        .exam-card:nth-child(6) {
+            animation-delay: 0.30s;
+        }
+        .exam-card:nth-child(7) {
+            animation-delay: 0.35s;
+        }
+        .exam-card:nth-child(8) {
+            animation-delay: 0.40s;
+        }
+        .exam-card:nth-child(9) {
+            animation-delay: 0.45s;
+        }
+        .exam-card:nth-child(10) {
+            animation-delay: 0.50s;
+        }
+        .exam-card:nth-child(11) {
+            animation-delay: 0.55s;
+        }
+        .exam-card:nth-child(12) {
+            animation-delay: 0.60s;
+        }
+
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Glow border animation */
+        .exam-card::before {
             content: '';
             position: absolute;
-            top: -60px;
-            right: -60px;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(212, 168, 67, 0.06) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--accent-gradient);
+            border-radius: inherit;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+            filter: blur(4px);
         }
-        .score-card-certificate::after {
+        .exam-card:hover::before {
+            opacity: 0.5;
+        }
+
+        .exam-card::after {
             content: '';
             position: absolute;
-            bottom: -40px;
-            left: -40px;
-            width: 160px;
-            height: 160px;
-            background: radial-gradient(circle, rgba(15, 43, 92, 0.04) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: var(--transition);
         }
-        .score-card-certificate .cert-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 14px;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
+        .exam-card:hover::after {
+            opacity: 1;
         }
-        .score-card-certificate .cert-header .cert-logo {
+
+        .exam-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 60px rgba(15, 43, 92, 0.18), 0 0 0 2px rgba(212, 168, 67, 0.15);
+            border-color: var(--accent);
+        }
+        .exam-card .exam-logo {
             width: 64px;
             height: 64px;
             border-radius: 50%;
-            object-fit: contain;
-            border: 2px solid var(--accent);
-            background: #fff;
-            padding: 4px;
+            background: var(--bg-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             flex-shrink: 0;
+            position: relative;
         }
-        .score-card-certificate .cert-header .cert-title-group {
-            flex: 1;
+        .exam-card:hover .exam-logo {
+            border-color: var(--accent);
+            transform: scale(1.08) rotate(-4deg);
+            box-shadow: 0 8px 25px rgba(212, 168, 67, 0.25);
         }
-        .score-card-certificate .cert-header .cert-title-group .cert-main-title {
-            font-size: 22px;
+        .exam-card .exam-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+        .exam-card .exam-logo .fallback-icon {
+            font-size: 30px;
+            color: var(--text-muted);
+        }
+        .exam-card .exam-name {
+            font-size: 16px;
             font-weight: 800;
             color: var(--primary);
-            letter-spacing: 1px;
+            margin: 0 0 2px 0;
+            line-height: 1.2;
         }
-        .score-card-certificate .cert-header .cert-title-group .cert-main-title span {
-            color: var(--accent);
+        body.dark-mode .exam-card .exam-name {
+            color: var(--accent-light);
         }
-        .score-card-certificate .cert-header .cert-title-group .cert-sub-title {
-            font-size: 13px;
+        .exam-card .exam-subtitle {
+            font-size: 11px;
             color: var(--text-muted);
             font-weight: 500;
+            margin: 0 0 8px 0;
         }
-        .score-card-certificate .cert-header .cert-title-group .cert-test-info {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-top: 2px;
-        }
-        .score-card-certificate .cert-header .cert-title-group .cert-test-info span {
-            color: var(--danger);
-        }
-        .score-card-certificate .cert-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px 24px;
-            margin: 16px 0;
-        }
-        .score-card-certificate .cert-body .cert-item {
-            background: var(--bg-subtle);
-            border-radius: var(--radius);
-            padding: 12px 16px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-        }
-        .score-card-certificate .cert-body .cert-item:hover {
-            border-color: var(--accent);
-            box-shadow: var(--shadow-sm);
-        }
-        .score-card-certificate .cert-body .cert-item .cert-label {
-            font-size: 11px;
-            font-weight: 600;
+
+        /* Progress stats on card */
+        .exam-card .exam-progress-stats {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 10px;
             color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            background: var(--bg-subtle);
+            padding: 4px 10px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
         }
-        .score-card-certificate .cert-body .cert-item .cert-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary);
-            margin-top: 4px;
+        .exam-card .exam-progress-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        .score-card-certificate .cert-body .cert-item .cert-value.gold {
-            color: #f59e0b;
+        .exam-card .exam-progress-stats .stat-num {
+            font-weight: 700;
+            color: var(--text-main);
         }
-        .score-card-certificate .cert-body .cert-item .cert-value.green {
+        .exam-card .exam-progress-stats .stat-num.green {
             color: var(--success);
         }
-        .score-card-certificate .cert-body .cert-item .cert-value.red {
+        .exam-card .exam-progress-stats .stat-num.orange {
+            color: var(--warning);
+        }
+        .exam-card .exam-progress-stats .stat-num.red {
             color: var(--danger);
         }
-        .score-card-certificate .cert-body .cert-item .cert-value.blue {
-            color: var(--primary-light);
+
+        /* Progress bar */
+        .exam-card .exam-progress-bar {
+            width: 100%;
+            height: 5px;
+            background: var(--bg-subtle);
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
         }
-        .score-card-certificate .cert-body .cert-item .cert-sub {
-            font-size: 12px;
+        .exam-card .exam-progress-bar .progress-fill {
+            height: 100%;
+            border-radius: 50px;
+            transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 0%;
+        }
+        .exam-card .exam-progress-bar .progress-fill.green {
+            background: linear-gradient(90deg, #0f9d58, #34a853);
+        }
+        .exam-card .exam-progress-bar .progress-fill.yellow {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+        .exam-card .exam-progress-bar .progress-fill.red {
+            background: linear-gradient(90deg, #dc3545, #ef4444);
+        }
+
+        .exam-card .exam-stats {
+            display: flex;
+            gap: 8px;
+            font-size: 10px;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-bottom: 10px;
         }
-        .score-card-certificate .cert-footer {
-            border-top: 2px solid var(--accent);
-            padding-top: 14px;
-            margin-top: 6px;
+        .exam-card .exam-stats span {
+            background: var(--bg-subtle);
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        .exam-card .btn {
+            width: 100%;
+            padding: 7px;
+            font-size: 11px;
+            border-radius: var(--radius);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 820px) {
+            .exam-sidebar {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                min-width: 280px;
+                max-height: 100vh;
+                height: 100%;
+                z-index: 9999;
+                border-left: 2px solid var(--border-color);
+                border-right: none;
+                transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+                background: var(--bg-container);
+                box-shadow: var(--shadow-xl);
+                padding: 16px 14px;
+                border-radius: 0;
+                max-height: 100vh;
+            }
+            .exam-sidebar.open {
+                right: 0;
+            }
+            .exam-sidebar .sb-close-btn {
+                display: block;
+            }
+            .sidebar-backdrop.active {
+                display: block;
+            }
+            .sidebar-toggle {
+                display: flex;
+            }
+            .exam-left {
+                padding: 12px 14px 140px 14px;
+            }
+            .sb-palette-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            .tcs-header {
+                padding: 6px 14px;
+            }
+            .brand-wrapper .brand-name {
+                font-size: 1.0rem;
+            }
+            .brand-wrapper .brand-logo {
+                height: 30px;
+            }
+            .header-profile .profile-name {
+                display: none;
+            }
+            .header-profile .profile-avatar {
+                width: 30px;
+                height: 30px;
+                font-size: 13px;
+            }
+            .tcs-sub-header {
+                padding: 4px 14px;
+            }
+            .tcs-sub-header .s-profile-small .sp-avatar {
+                width: 22px;
+                height: 22px;
+                font-size: 9px;
+            }
+            .view-section {
+                padding: 12px 10px;
+            }
+            .action-btn {
+                font-size: 9px;
+                padding: 8px 2px;
+            }
+            #exam-bottom-controls {
+                padding: 6px 10px;
+            }
+            .container {
+                border-radius: 0 !important;
+            }
+            .exam-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+            .exam-card {
+                padding: 14px 10px !important;
+            }
+            .exam-card .exam-logo {
+                width: 50px !important;
+                height: 50px !important;
+            }
+            .exam-card .exam-name {
+                font-size: 13px !important;
+            }
+            .exam-card .exam-subtitle {
+                font-size: 9px !important;
+            }
+            .exam-card .exam-stats {
+                font-size: 9px !important;
+            }
+            .exam-card .btn {
+                font-size: 10px !important;
+                padding: 4px 6px !important;
+            }
+            .exam-card .exam-progress-stats {
+                font-size: 9px !important;
+                padding: 3px 8px !important;
+            }
+            .sub-exam-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .subject-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sb-palette-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 4px;
+            }
+            .sb-palette-btn {
+                font-size: 10px;
+                min-height: 26px;
+            }
+            .exam-sidebar {
+                width: 240px;
+                min-width: 240px;
+            }
+            .exam-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+            }
+            .exam-card {
+                padding: 12px 8px !important;
+            }
+            .exam-card .exam-logo {
+                width: 44px !important;
+                height: 44px !important;
+            }
+            .exam-card .exam-name {
+                font-size: 11px !important;
+            }
+            .brand-wrapper .brand-name {
+                font-size: 0.85rem !important;
+            }
+            .brand-wrapper .brand-logo {
+                height: 26px !important;
+            }
+            #profile-modal .pm-box {
+                padding: 20px 18px;
+            }
+            .tcs-sub-header .s-right .s-exam {
+                font-size: 10px !important;
+                padding: 2px 10px !important;
+            }
+            .tcs-sub-header .s-right .s-category {
+                font-size: 9px !important;
+                padding: 2px 8px !important;
+            }
+            .tcs-sub-header .s-right .s-code {
+                font-size: 9px !important;
+                padding: 2px 8px !important;
+            }
+        }
+
+        @media (min-width: 821px) {
+            .exam-sidebar .sb-close-btn {
+                display: none !important;
+            }
+            .sidebar-backdrop {
+                display: none !important;
+            }
+            .exam-left {
+                height: 100%;
+                overflow-y: auto;
+            }
+            .exam-wrapper {
+                height: calc(100vh - 150px);
+                max-height: calc(100vh - 120px);
+            }
+        }
+
+        /* ============================================================
+           OTHER STYLES
+           ============================================================ */
+        .exam-card-l2 {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+            position: relative;
+        }
+        .exam-card-l2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .exam-card-l2:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+        }
+        .exam-card-l2:hover::before {
+            opacity: 1;
+        }
+        .exam-card-l2-icon {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+        .exam-card-l2-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .q-header {
+            font-size: 16px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+            color: var(--primary);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
+            width: 100%;
         }
-        .score-card-certificate .cert-footer .cert-student {
+        body.dark-mode .q-header {
+            color: var(--accent-light);
+        }
+        .q-header .q-number {
             font-size: 14px;
-            font-weight: 700;
-            color: var(--text-main);
         }
-        .score-card-certificate .cert-footer .cert-student span {
-            color: var(--accent);
+        .q-header .q-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .score-card-certificate .cert-footer .cert-date {
-            font-size: 12px;
+        .bookmark-btn {
+            background: transparent;
+            border: 2px solid var(--border-color);
             color: var(--text-muted);
-        }
-        .score-card-certificate .cert-footer .cert-badge {
-            background: var(--accent-gradient);
-            color: var(--primary-dark);
-            padding: 4px 16px;
+            padding: 3px 12px;
             border-radius: 50px;
             font-size: 11px;
             font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+        }
+        .bookmark-btn.bookmarked {
+            background: rgba(212, 168, 67, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .q-timer-badge {
+            background: rgba(220, 53, 69, 0.10);
+            color: var(--danger);
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid rgba(220, 53, 69, 0.20);
+        }
+        .q-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-main);
+            margin-bottom: 14px;
+            font-weight: 600;
+            width: 100%;
+            position: relative;
+        }
+        .q-text .q-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.04;
+            pointer-events: none;
+            font-size: 60px;
+            font-weight: 900;
+            color: var(--primary);
+            white-space: nowrap;
+            z-index: 0;
+            font-family: 'Poppins', sans-serif;
+            max-width: 80%;
+            text-align: center;
+        }
+        .q-text .q-watermark img {
+            max-width: 150px;
+            height: auto;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+        .q-text>* {
+            position: relative;
+            z-index: 1;
+        }
+        .q-passage-box {
+            background: var(--bg-subtle);
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            border-left: 5px solid var(--accent);
+            border-radius: var(--radius);
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-main);
+            position: relative;
+            z-index: 1;
         }
 
-        /* ============================================================
-           PRINT PDF – with MathJax fix
-           ============================================================ */
-        body.print-pdf {
-            background: #fff !important;
-            margin: 0 !important;
-            padding: 0 !important;
+        .breadcrumb-nav {
+            background: var(--bg-subtle);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            backdrop-filter: blur(8px);
+            background: rgba(240, 243, 248, 0.92);
         }
-        body.print-pdf #main-ui-container,
-        body.print-pdf #top-sticky-wrapper,
-        body.print-pdf .fullscreen-overlay,
-        body.print-pdf #exam-bottom-controls,
-        body.print-pdf .admin-lock,
-        body.print-pdf .sidebar-toggle,
-        body.print-pdf .sidebar-backdrop {
-            display: none !important;
+        body.dark-mode .breadcrumb-nav {
+            background: rgba(22, 42, 74, 0.92);
         }
-        #print-area {
-            display: none;
-            background: #fff;
-            color: #000;
-            padding: 20px;
+        .bc-link {
+            color: var(--primary);
+            cursor: pointer;
+            padding: 2px 10px;
+            border-radius: 50px;
+            transition: var(--transition);
+            font-weight: 600;
         }
-        body.print-pdf #print-area {
-            display: block !important;
-            width: 100% !important;
+        .bc-link:hover {
+            background: var(--primary);
+            color: #fff;
         }
-
-        @media print {
-            @page {
-                size: A4;
-                margin: 8mm;
-            }
-            html,
-            body {
-                background: #fff !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            .container {
-                box-shadow: none !important;
-            }
-            #main-ui-container,
-            #top-sticky-wrapper,
-            .fullscreen-overlay,
-            #exam-bottom-controls,
-            .admin-lock,
-            .sidebar-toggle,
-            .sidebar-backdrop {
-                display: none !important;
-            }
-            #print-area {
-                display: block !important;
-                position: static !important;
-                width: 100% !important;
-                font-family: Arial, sans-serif !important;
-            }
-            #print-area * {
-                visibility: visible !important;
-                position: relative;
-            }
-            .MathJax {
-                font-size: 1em !important;
-            }
-            .MathJax_Display {
-                font-size: 1.1em !important;
-            }
-
-            .pdf-watermark-wrapper {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                pointer-events: none !important;
-                z-index: 99999 !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                opacity: 0.06 !important;
-            }
-            .pdf-watermark-wrapper .wm-content {
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                gap: 8px !important;
-                transform: rotate(-30deg) !important;
-            }
-            .pdf-watermark-wrapper .wm-content img {
-                max-width: 180px !important;
-                height: auto !important;
-                opacity: 0.8 !important;
-                border-radius: 12px !important;
-            }
-            .pdf-watermark-wrapper .wm-content .wm-text {
-                font-size: 32px !important;
-                font-weight: 900 !important;
-                color: #0f2b5c !important;
-                letter-spacing: 4px !important;
-                font-family: 'Poppins', sans-serif !important;
-            }
-
-            table.pdf-main-table {
-                width: 100%;
-                border-collapse: collapse;
-                background: transparent !important;
-                border: none !important;
-            }
-            table.pdf-main-table th,
-            table.pdf-main-table td {
-                padding: 0 !important;
-                border: none !important;
-            }
-
-            .pdf-header-strip {
-                background: #0f2b5c !important;
-                padding: 6px 12px !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                border-bottom: 2px solid #0f2b5c;
-                border-radius: 4px 4px 0 0;
-                margin-bottom: 6px;
-            }
-            .pdf-header-strip .hdr-brand {
-                display: flex !important;
-                align-items: center !important;
-                gap: 10px !important;
-            }
-            .pdf-header-strip .hdr-brand img {
-                height: 26px !important;
-                width: auto !important;
-                border-radius: 50% !important;
-                background: rgba(255, 255, 255, 0.05) !important;
-                padding: 2px !important;
-                border: 1px solid rgba(255, 255, 255, 0.10) !important;
-            }
-            .pdf-header-strip .hdr-brand .hdr-name {
-                color: #fff !important;
-                font-size: 18px !important;
-                font-weight: 800 !important;
-                font-family: 'Poppins', sans-serif !important;
-            }
-            .pdf-header-strip .hdr-brand .hdr-name span {
-                color: #d4a843 !important;
-            }
-
-            .pdf-footer-strip {
-                background: #0f2b5c !important;
-                padding: 6px 12px !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                border-top: 2px solid #0f2b5c;
-                border-radius: 0 0 4px 4px;
-                margin-top: 6px;
-            }
-            .pdf-footer-strip a,
-            .pdf-header-strip a {
-                color: #fff !important;
-                text-decoration: none !important;
-            }
-            .pdf-footer-strip .ftr-text {
-                text-align: center;
-                width: 100%;
-                font-size: 10px;
-                font-weight: 600;
-                color: #fff;
-            }
-            .pdf-footer-strip .ftr-text a {
-                color: #f0d68a !important;
-            }
-
-            .pdf-questions-container {
-                column-count: 2 !important;
-                -webkit-column-count: 2 !important;
-                -moz-column-count: 2 !important;
-                column-gap: 24px !important;
-                column-rule: 1px solid #ccc !important;
-                width: 100% !important;
-                margin-top: 6px !important;
-                display: block !important;
-            }
-            .print-q {
-                margin-bottom: 10px !important;
-                border-bottom: 1px dashed #ccc !important;
-                padding-bottom: 8px !important;
-                font-size: 12.5px !important;
-                line-height: 1.5 !important;
-                color: #000 !important;
-                display: block !important;
-                width: 100% !important;
-                page-break-inside: auto !important;
-                break-inside: auto !important;
-                text-align: justify !important;
-                position: relative !important;
-            }
-            .opt-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 4px 8px !important;
-                margin: 4px 0 !important;
-                page-break-inside: auto !important;
-                break-inside: auto !important;
-            }
-            .opt-item {
-                font-size: 12px !important;
-                color: #000 !important;
-                padding: 2px 0 !important;
-                text-align: left !important;
-            }
-            .print-ans {
-                font-weight: 700 !important;
-                font-size: 11.5px !important;
-                color: #000 !important;
-                margin-top: 3px !important;
-                display: block !important;
-            }
-            .print-exp {
-                color: #222 !important;
-                font-size: 11.5px !important;
-                margin-top: 4px !important;
-                padding: 5px 8px !important;
-                background: #f5f5f5 !important;
-                border-left: 3px solid #0f2b5c !important;
-                line-height: 1.4 !important;
-                page-break-inside: auto !important;
-                break-inside: auto !important;
-                text-align: justify !important;
-            }
-            .print-passage {
-                padding: 4px !important;
-                margin-bottom: 4px !important;
-                font-style: italic;
-                border-left: 4px solid #333;
-                font-size: 12px !important;
-                background: transparent !important;
-                page-break-inside: auto !important;
-                break-inside: auto !important;
-                text-align: justify !important;
-            }
-            .print-q img,
-            .print-exp img,
-            .print-passage img,
-            .print-q svg,
-            .print-exp svg,
-            .print-passage svg {
-                max-width: 100% !important;
-                max-height: 100px !important;
-                object-fit: contain !important;
-                page-break-inside: avoid !important;
-                display: block !important;
-                margin: 3px 0 !important;
-            }
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
+        body.dark-mode .bc-link:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+        }
+        .bc-back-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 3px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font-sans);
+            box-shadow: var(--shadow-sm);
+        }
+        .bc-back-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        body.dark-mode .bc-back-btn:hover {
+            background: var(--accent);
+            color: var(--primary-dark);
+            border-color: var(--accent);
         }
 
-        /* ============================================================
-           REST OF EXISTING STYLES (kept from original)
-           ============================================================ */
         .fullscreen-overlay {
             display: none;
             position: fixed;
@@ -2550,149 +2377,14 @@
             background: var(--border-color);
             color: var(--text-main);
         }
-        #admin-view .admin-section {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 18px 20px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-        #admin-view .admin-section-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 8px;
-        }
-        .admin-grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        @media (max-width:768px) {
-            .admin-grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-        .test-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-left: 5px solid var(--accent);
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .test-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-        .test-card .test-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 2px;
-        }
-        .test-card .test-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 0;
-        }
-        .test-card .test-subtitle {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin: 0 0 6px 0;
-        }
-        .test-card .test-meta {
-            font-size: 10px;
-            color: var(--text-muted);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-bottom: 6px;
-        }
-        .badge {
-            background: var(--bg-subtle);
-            padding: 2px 10px;
-            border-radius: 50px;
-            font-size: 9px;
-            font-weight: 600;
-            color: var(--text-muted);
-            display: inline-block;
-            border: 1px solid var(--border-color);
-        }
-        .badge-primary {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-        }
+
         .sub-exam-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 10px;
             width: 100%;
         }
-        .exam-card-l2 {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 14px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 80px;
-            position: relative;
-        }
-        .exam-card-l2::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--accent-gradient);
-            opacity: 0;
-            transition: var(--transition);
-        }
-        .exam-card-l2:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-            box-shadow: var(--shadow-md);
-        }
-        .exam-card-l2:hover::before {
-            opacity: 1;
-        }
-        .exam-card-l2-icon {
-            font-size: 28px;
-            margin-bottom: 4px;
-        }
-        .exam-card-l2-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1.2;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
+
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -2741,6 +2433,7 @@
             font-weight: 600;
             margin-top: 2px;
         }
+
         .subject-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -2802,6 +2495,68 @@
             color: var(--text-muted);
             margin-top: 2px;
         }
+
+        .test-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--accent);
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .test-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .test-card .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+        .test-card .test-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+        }
+        .test-card .test-subtitle {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 0 0 6px 0;
+        }
+        .test-card .test-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            background: var(--bg-subtle);
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: inline-block;
+            border: 1px solid var(--border-color);
+        }
+        .badge-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+        }
+
         .hist-card-layout {
             display: flex;
             justify-content: space-between;
@@ -2819,6 +2574,428 @@
             gap: 8px;
         }
 
+        /* ============================================================
+           CERTIFICATE / SCORE CARD
+           ============================================================ */
+        .score-card-certificate {
+            max-width: 780px;
+            margin: 16px auto;
+            background: linear-gradient(145deg, #ffffff, #f8faff);
+            border-radius: var(--radius-xl);
+            padding: 28px 32px 24px;
+            box-shadow: 0 20px 60px rgba(15, 43, 92, 0.15), 0 0 0 1px rgba(212, 168, 67, 0.2);
+            border: 2px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .score-card-certificate::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .score-card-certificate::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            left: -40px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(15, 43, 92, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .score-card-certificate .cert-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .score-card-certificate .cert-header .cert-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: contain;
+            border: 2px solid var(--accent);
+            background: #fff;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+        .score-card-certificate .cert-header .cert-title-group {
+            flex: 1;
+        }
+        .score-card-certificate .cert-header .cert-title-group .cert-main-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+        .score-card-certificate .cert-header .cert-title-group .cert-main-title span {
+            color: var(--accent);
+        }
+        .score-card-certificate .cert-header .cert-title-group .cert-sub-title {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .score-card-certificate .cert-header .cert-title-group .cert-test-info {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+        .score-card-certificate .cert-header .cert-title-group .cert-test-info span {
+            color: var(--danger);
+        }
+        .score-card-certificate .cert-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 24px;
+            margin: 16px 0;
+        }
+        .score-card-certificate .cert-body .cert-item {
+            background: var(--bg-subtle);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        .score-card-certificate .cert-body .cert-item:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+        .score-card-certificate .cert-body .cert-item .cert-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .score-card-certificate .cert-body .cert-item .cert-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 4px;
+        }
+        .score-card-certificate .cert-body .cert-item .cert-value.gold {
+            color: #f59e0b;
+        }
+        .score-card-certificate .cert-body .cert-item .cert-value.green {
+            color: var(--success);
+        }
+        .score-card-certificate .cert-body .cert-item .cert-value.red {
+            color: var(--danger);
+        }
+        .score-card-certificate .cert-body .cert-item .cert-value.blue {
+            color: var(--primary-light);
+        }
+        .score-card-certificate .cert-body .cert-item .cert-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .score-card-certificate .cert-footer {
+            border-top: 2px solid var(--accent);
+            padding-top: 14px;
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .score-card-certificate .cert-footer .cert-student {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .score-card-certificate .cert-footer .cert-student span {
+            color: var(--accent);
+        }
+        .score-card-certificate .cert-footer .cert-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .score-card-certificate .cert-footer .cert-badge {
+            background: var(--accent-gradient);
+            color: var(--primary-dark);
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           PRINT PDF
+           ============================================================ */
+        body.print-pdf {
+            background: #fff !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        body.print-pdf #main-ui-container,
+        body.print-pdf #top-sticky-wrapper,
+        body.print-pdf .fullscreen-overlay,
+        body.print-pdf #exam-bottom-controls,
+        body.print-pdf .admin-lock,
+        body.print-pdf .sidebar-toggle,
+        body.print-pdf .sidebar-backdrop {
+            display: none !important;
+        }
+        #print-area {
+            display: none;
+            background: #fff;
+            color: #000;
+            padding: 20px;
+        }
+        body.print-pdf #print-area {
+            display: block !important;
+            width: 100% !important;
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 8mm;
+            }
+            html,
+            body {
+                background: #fff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .container {
+                box-shadow: none !important;
+            }
+            #main-ui-container,
+            #top-sticky-wrapper,
+            .fullscreen-overlay,
+            #exam-bottom-controls,
+            .admin-lock,
+            .sidebar-toggle,
+            .sidebar-backdrop {
+                display: none !important;
+            }
+            #print-area {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                font-family: Arial, sans-serif !important;
+            }
+            #print-area * {
+                visibility: visible !important;
+                position: relative;
+            }
+            .MathJax {
+                font-size: 1em !important;
+            }
+            .MathJax_Display {
+                font-size: 1.1em !important;
+            }
+
+            .pdf-watermark-wrapper {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                pointer-events: none !important;
+                z-index: 99999 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                opacity: 0.06 !important;
+            }
+            .pdf-watermark-wrapper .wm-content {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 8px !important;
+                transform: rotate(-30deg) !important;
+            }
+            .pdf-watermark-wrapper .wm-content img {
+                max-width: 180px !important;
+                height: auto !important;
+                opacity: 0.8 !important;
+                border-radius: 12px !important;
+            }
+            .pdf-watermark-wrapper .wm-content .wm-text {
+                font-size: 32px !important;
+                font-weight: 900 !important;
+                color: #0f2b5c !important;
+                letter-spacing: 4px !important;
+                font-family: 'Poppins', sans-serif !important;
+            }
+
+            table.pdf-main-table {
+                width: 100%;
+                border-collapse: collapse;
+                background: transparent !important;
+                border: none !important;
+            }
+            table.pdf-main-table th,
+            table.pdf-main-table td {
+                padding: 0 !important;
+                border: none !important;
+            }
+
+            .pdf-header-strip {
+                background: #0f2b5c !important;
+                padding: 6px 12px !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border-bottom: 2px solid #0f2b5c;
+                border-radius: 4px 4px 0 0;
+                margin-bottom: 6px;
+            }
+            .pdf-header-strip .hdr-brand {
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+            }
+            .pdf-header-strip .hdr-brand img {
+                height: 26px !important;
+                width: auto !important;
+                border-radius: 50% !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                padding: 2px !important;
+                border: 1px solid rgba(255, 255, 255, 0.10) !important;
+            }
+            .pdf-header-strip .hdr-brand .hdr-name {
+                color: #fff !important;
+                font-size: 18px !important;
+                font-weight: 800 !important;
+                font-family: 'Poppins', sans-serif !important;
+            }
+            .pdf-header-strip .hdr-brand .hdr-name span {
+                color: #d4a843 !important;
+            }
+
+            .pdf-footer-strip {
+                background: #0f2b5c !important;
+                padding: 6px 12px !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border-top: 2px solid #0f2b5c;
+                border-radius: 0 0 4px 4px;
+                margin-top: 6px;
+            }
+            .pdf-footer-strip a,
+            .pdf-header-strip a {
+                color: #fff !important;
+                text-decoration: none !important;
+            }
+            .pdf-footer-strip .ftr-text {
+                text-align: center;
+                width: 100%;
+                font-size: 10px;
+                font-weight: 600;
+                color: #fff;
+            }
+            .pdf-footer-strip .ftr-text a {
+                color: #f0d68a !important;
+            }
+
+            .pdf-questions-container {
+                column-count: 2 !important;
+                -webkit-column-count: 2 !important;
+                -moz-column-count: 2 !important;
+                column-gap: 24px !important;
+                column-rule: 1px solid #ccc !important;
+                width: 100% !important;
+                margin-top: 6px !important;
+                display: block !important;
+            }
+            .print-q {
+                margin-bottom: 10px !important;
+                border-bottom: 1px dashed #ccc !important;
+                padding-bottom: 8px !important;
+                font-size: 12.5px !important;
+                line-height: 1.5 !important;
+                color: #000 !important;
+                display: block !important;
+                width: 100% !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+                text-align: justify !important;
+                position: relative !important;
+            }
+            .opt-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4px 8px !important;
+                margin: 4px 0 !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+            }
+            .opt-item {
+                font-size: 12px !important;
+                color: #000 !important;
+                padding: 2px 0 !important;
+                text-align: left !important;
+            }
+            .print-ans {
+                font-weight: 700 !important;
+                font-size: 11.5px !important;
+                color: #000 !important;
+                margin-top: 3px !important;
+                display: block !important;
+            }
+            .print-exp {
+                color: #222 !important;
+                font-size: 11.5px !important;
+                margin-top: 4px !important;
+                padding: 5px 8px !important;
+                background: #f5f5f5 !important;
+                border-left: 3px solid #0f2b5c !important;
+                line-height: 1.4 !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+                text-align: justify !important;
+            }
+            .print-passage {
+                padding: 4px !important;
+                margin-bottom: 4px !important;
+                font-style: italic;
+                border-left: 4px solid #333;
+                font-size: 12px !important;
+                background: transparent !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+                text-align: justify !important;
+            }
+            .print-q img,
+            .print-exp img,
+            .print-passage img,
+            .print-q svg,
+            .print-exp svg,
+            .print-passage svg {
+                max-width: 100% !important;
+                max-height: 100px !important;
+                object-fit: contain !important;
+                page-break-inside: avoid !important;
+                display: block !important;
+                margin: 3px 0 !important;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* ============================================================
+           VISUAL EDITOR
+           ============================================================ */
         .visual-preview-box {
             background: var(--bg-subtle);
             padding: 0 12px 12px 12px;
@@ -2931,6 +3108,9 @@
             pointer-events: none;
         }
 
+        /* ============================================================
+           ANALYSIS
+           ============================================================ */
         .analysis-box {
             display: none;
             background: var(--bg-card);
@@ -3073,72 +3253,9 @@
             margin: 0;
         }
 
-        /* Breadcrumb */
-        .breadcrumb-nav {
-            background: var(--bg-subtle);
-            padding: 8px 16px;
-            border-radius: var(--radius);
-            margin-bottom: 16px;
-            font-weight: 600;
-            font-size: 12px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 99;
-            backdrop-filter: blur(8px);
-            background: rgba(240, 243, 248, 0.92);
-        }
-        body.dark-mode .breadcrumb-nav {
-            background: rgba(22, 42, 74, 0.92);
-        }
-        .bc-link {
-            color: var(--primary);
-            cursor: pointer;
-            padding: 2px 10px;
-            border-radius: 50px;
-            transition: var(--transition);
-            font-weight: 600;
-        }
-        .bc-link:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-        body.dark-mode .bc-link:hover {
-            background: var(--accent);
-            color: var(--primary-dark);
-        }
-        .bc-back-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            padding: 3px 12px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            color: var(--text-main);
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-family: var(--font-sans);
-            box-shadow: var(--shadow-sm);
-        }
-        .bc-back-btn:hover {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-        body.dark-mode .bc-back-btn:hover {
-            background: var(--accent);
-            color: var(--primary-dark);
-            border-color: var(--accent);
-        }
+        /* ============================================================
+           PROFILE UPLOAD
+           ============================================================ */
         .profile-upload-area {
             display: flex;
             align-items: center;
@@ -3196,7 +3313,40 @@
             margin: 0;
         }
 
-        /* Serial Reorder */
+        /* ============================================================
+           ADMIN
+           ============================================================ */
+        #admin-view .admin-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        #admin-view .admin-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .admin-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width:768px) {
+            .admin-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .serial-reorder-container {
             display: flex;
             flex-direction: column;
@@ -3395,7 +3545,7 @@
         <!-- TOP STICKY WRAPPER -->
         <div id="top-sticky-wrapper">
             <div class="tcs-header">
-                <!-- Brand: Logo + TEST BODHI – click goes to Home -->
+                <!-- Brand: Logo + TEST BODHI -->
                 <div class="brand-wrapper" onclick="window.goToHome()" title="Go to Home">
                     <img class="brand-logo" id="header-logo-img"
                     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 70'><rect width='280' height='70' rx='10' fill='%230f2b5c'/><text x='20' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23ffffff'>TEST</text><text x='150' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23d4a843'>BODHI</text><text x='20' y='62' font-family='Inter, sans-serif' font-size='12' font-weight='600' fill='%2390a8c0' letter-spacing='2'>PRACTICE · PREPARE · SUCCEED</text></svg>"
@@ -3416,13 +3566,14 @@
                     <div id="timer-box" class="timer" style="display:none;"><span>⏱</span><span id="main-time">00:00</span></div>
                 </div>
             </div>
-            <!-- SUB HEADER: Student Name + Exam Name + Code -->
+            <!-- SUB HEADER: Student Name | Exam Name | Category | Code -->
             <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
                 <div class="s-left">
                     <span class="s-name" id="top-sname">👤 Student</span>
                 </div>
                 <div class="s-right">
                     <span class="s-exam" id="top-sexam">Exam</span>
+                    <span class="s-category" id="top-scategory">Category</span>
                     <span class="s-code" id="top-scode">Code: ---</span>
                     <div class="s-profile-small" id="top-profile-small" style="display:none;">
                         <div class="sp-avatar" id="sp-avatar">
@@ -4068,7 +4219,7 @@
     <script>
         /* ==========================================================================
            FULL SCRIPT – All features integrated
-           FIXES: Scroll issue, PDF MathJax, Profile Button, Leaderboard Photos
+           FIXES: Leaderboard photos (cloud), Header category, Board progress bars, Premium UI
            ========================================================================== */
 
         // ---- CONFIG ----
@@ -4141,6 +4292,7 @@
         window.sidebarOpen = false;
         window.portalLogoURL = "";
         window.portalLogoShape = "round";
+        window.attemptedTestsCache = {};
 
         /* ==========================================================================
            PROFILE MODAL
@@ -4184,13 +4336,12 @@
             }
         };
 
-        // Close modal on backdrop click
         document.getElementById('profile-modal')?.addEventListener('click', function(e) {
             if (e.target === this) window.closeProfileModal();
         });
 
         /* ==========================================================================
-           GO TO HOME – Header click handler
+           GO TO HOME
            ========================================================================== */
         window.goToHome = function() {
             const dashView = document.getElementById('student-dashboard-view');
@@ -4202,7 +4353,7 @@
         };
 
         /* ==========================================================================
-           0. DEVICE DETECTION
+           DEVICE DETECTION
            ========================================================================== */
         window.getDeviceInfo = function() {
             const ua = navigator.userAgent;
@@ -4238,7 +4389,7 @@
         window.addEventListener('resize', window.applyDeviceAdjustments);
 
         /* ==========================================================================
-           1. CAPTCHA, DARK MODE, MODALS
+           CAPTCHA, DARK MODE, MODALS
            ========================================================================== */
         window.generateCaptcha = function() {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -4369,7 +4520,7 @@
         };
 
         /* ==========================================================================
-           2. PARSE & SHUFFLE
+           PARSE & SHUFFLE
            ========================================================================== */
         window.shuffleArray = function(array) {
             let curId = array.length,
@@ -4511,7 +4662,7 @@
         };
 
         /* ==========================================================================
-           3. AUTH, OTP, LOGIN
+           AUTH, OTP, LOGIN
            ========================================================================== */
         window.showPremiumModal = function() {
             const msg =
@@ -4777,7 +4928,7 @@
         };
 
         /* ==========================================================================
-           4. PROFILE PHOTO – USING APP SCRIPT (GOOGLE DRIVE)
+           PROFILE PHOTO – USING APP SCRIPT (GOOGLE DRIVE)
            ========================================================================== */
         window.updateProfileUI = function() {
             const user = window.studentInfo;
@@ -4853,7 +5004,6 @@
             }
         };
 
-        /* ---- Profile photo upload using App Script ---- */
         window.uploadProfilePhoto = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -4949,7 +5099,7 @@
         };
 
         /* ==========================================================================
-           5. PORTAL LOGO MANAGER
+           PORTAL LOGO MANAGER
            ========================================================================== */
         window.loadPortalLogo = function() {
             db.collection("settings").doc("portalLogo").get().then((doc) => {
@@ -5178,7 +5328,7 @@
         };
 
         /* ==========================================================================
-           6. LOGO LIGHTBOX
+           LOGO LIGHTBOX
            ========================================================================== */
         window.openLogoLightbox = function() {
             const lightbox = document.getElementById('logo-lightbox');
@@ -5200,7 +5350,7 @@
         };
 
         /* ==========================================================================
-           7. ONLOAD & POPSTATE
+           ONLOAD & POPSTATE
            ========================================================================== */
         window.onload = function() {
             if (localStorage.getItem('mockSarthiTheme') === 'dark') {
@@ -5228,6 +5378,9 @@
                     window.studentInfo = JSON.parse(savedUser);
                     isLoggedIn = true;
                     window.updateProfileUI();
+                    // Load attempted tests cache
+                    const attempted = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+                    window.attemptedTestsCache = attempted;
                 } catch (e) {}
             }
 
@@ -5328,7 +5481,7 @@
         };
 
         /* ==========================================================================
-           8. TEST ENTRY
+           TEST ENTRY
            ========================================================================== */
         window.handleTestLoad = function(data) {
             if (data.error) return window.showErrorView("❌ Test not found!");
@@ -5409,7 +5562,7 @@
         };
 
         /* ==========================================================================
-           9. SIDEBAR TOGGLE & CLOSE
+           SIDEBAR TOGGLE & CLOSE
            ========================================================================== */
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('exam-sidebar');
@@ -5436,7 +5589,7 @@
         };
 
         /* ==========================================================================
-           10. DASHBOARD & ACTIVE TESTS
+           DASHBOARD & ACTIVE TESTS
            ========================================================================== */
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
@@ -5516,6 +5669,9 @@
             return db.collection("settings").doc("serialOrder").set({ map: mapObj });
         };
 
+        /* ==========================================================================
+           EXAMS VIEW – WITH PROGRESS TRACKING
+           ========================================================================== */
         window.showExamsView = function() {
             window.navStack = window.navStack.filter(item => item.type === 'exams');
             if (window.navStack.length === 0) {
@@ -5538,6 +5694,7 @@
             if (!list) return;
             list.style.display = 'flex';
             list.style.justifyContent = 'center';
+
             const allTests = window.getAllMergedTests();
             const boardsSet = new Set();
             const examLogos = {};
@@ -5555,7 +5712,7 @@
                     if (sa === sb) return a.localeCompare(b);
                     return sa - sb;
                 });
-                window.renderExamCards(boards, allTests, examLogos, list);
+                window.renderExamCardsWithProgress(boards, allTests, examLogos, list);
             }).catch(() => {
                 window.getBoardOrder().then((savedOrder) => {
                     if (savedOrder && savedOrder.length > 0) {
@@ -5565,31 +5722,57 @@
                         boards.forEach(b => { if (!ordered.includes(b)) remaining.push(b); });
                         boards = [...ordered, ...remaining];
                     }
-                    window.renderExamCards(boards, allTests, examLogos, list);
+                    window.renderExamCardsWithProgress(boards, allTests, examLogos, list);
                 }).catch(() => {
-                    window.renderExamCards(boards, allTests, examLogos, list);
+                    window.renderExamCardsWithProgress(boards, allTests, examLogos, list);
                 });
             });
         };
 
-        window.renderExamCards = function(boards, allTests, examLogos, list) {
+        window.renderExamCardsWithProgress = function(boards, allTests, examLogos, list) {
             if (boards.length === 0) {
                 list.innerHTML =
                     "<p style='width:100%;text-align:center;color:var(--text-muted);padding:20px 0;font-size:13px;'>No tests available right now.</p>";
                 return;
             }
+
+            // Get attempted tests from cache
+            const attempted = window.attemptedTestsCache || JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+            const attemptedCodes = Object.keys(attempted);
+
             let html = '<div class="exam-grid">';
-            boards.forEach(bName => {
-                const count = allTests.filter(t => (window.parseHack(t.topic).board || t.exam || "General Exam") ===
-                    bName).length;
+            boards.forEach((bName, index) => {
+                const boardTests = allTests.filter(t => (window.parseHack(t.topic).board || t.exam || "General Exam") ===
+                    bName);
+                const totalTests = boardTests.length;
+                const attemptedCount = boardTests.filter(t => attemptedCodes.includes(t.code)).length;
+                const remainingCount = totalTests - attemptedCount;
+                const progressPct = totalTests > 0 ? Math.round((attemptedCount / totalTests) * 100) : 0;
+
+                // Determine color for progress bar
+                let barClass = 'red';
+                if (progressPct >= 70) barClass = 'green';
+                else if (progressPct >= 35) barClass = 'yellow';
+
                 const iconHtml = examLogos[bName] ? `<img src="${examLogos[bName]}" alt="${bName}">` :
                     `<span class="fallback-icon">🏛️</span>`;
+
                 html += `
-                    <div class="exam-card" onclick="window.showSubExamsView('${bName.replace(/'/g,"\\'")}')">
+                    <div class="exam-card" onclick="window.showSubExamsView('${bName.replace(/'/g,"\\'")}')" style="animation-delay:${(index % 12) * 0.05}s">
                         <div class="exam-logo">${iconHtml}</div>
                         <div class="exam-name">${bName}</div>
-                        <div class="exam-subtitle">${count} Test${count>1?'s':''}</div>
-                        <div class="exam-stats"><span>📚 ${count} Tests</span></div>
+                        <div class="exam-subtitle">${totalTests} Test${totalTests>1?'s':''}</div>
+                        <div class="exam-progress-stats">
+                            <span>📚 Total: <span class="stat-num">${totalTests}</span></span>
+                            <span>✅ Attempted: <span class="stat-num green">${attemptedCount}</span></span>
+                            <span>⏳ Remaining: <span class="stat-num ${remainingCount > 0 ? 'orange' : 'green'}">${remainingCount}</span></span>
+                        </div>
+                        <div class="exam-progress-bar">
+                            <div class="progress-fill ${barClass}" style="width:${progressPct}%;"></div>
+                        </div>
+                        <div class="exam-stats">
+                            <span>📊 ${progressPct}% Complete</span>
+                        </div>
                         <button class="btn btn-primary btn-sm">View Tests →</button>
                     </div>
                 `;
@@ -5882,8 +6065,28 @@
             window.showExamsView();
         };
 
+        window.showTestSummary = function(btn) {
+            const encodedSummaryText = btn.getAttribute('data-summary');
+            const modal = document.getElementById('summary-modal');
+            const content = document.getElementById('summary-content');
+            if (modal && content) {
+                const summaryText = decodeURIComponent(encodedSummaryText);
+                content.innerHTML = summaryText.replace(/\n/g, '<br>');
+                modal.style.display = 'flex';
+                try { history.pushState({ summaryOpen: true }, ""); } catch (e) {}
+            }
+        };
+
+        window.closeTestSummary = function() {
+            const modal = document.getElementById('summary-modal');
+            if (modal && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                if (history.state && history.state.summaryOpen) history.back();
+            }
+        };
+
         /* ==========================================================================
-           11. ADMIN DASHBOARD
+           ADMIN DASHBOARD
            ========================================================================== */
         window.switchAdminTab = function(tab) {
             const createSec = document.getElementById('admin-create-section');
@@ -6062,192 +6265,6 @@
                 window.showCustomAlert("Success", "Image uploaded successfully!", "✅");
             }).catch((error) => { window.closeModal();
                 window.showCustomAlert("Upload Failed", error.message, "❌"); });
-        };
-
-        /* ==========================================================================
-           12. VISUAL EDITOR
-           ========================================================================== */
-        window.openVisualEditor = function() {
-            const rawData = document.getElementById('a-rawdata').value;
-            if (!rawData.trim()) {
-                return window.showCustomAlert("Empty Box",
-                    "Bhai, pehle 'Paste Questions Here' wale box mein apna text paste karo, uske baad is editor ko open karna.",
-                    "⚠️");
-            }
-            const container = document.getElementById('visual-editor-container');
-            if (container) {
-                container.style.display = 'block';
-                container.innerHTML = `
-                    <div class="vp-sticky-header">
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                            <h4 style="color:var(--primary); margin:0;font-size:15px;">🖼️ Visual Image & SVG Editor</h4>
-                            <button class="btn btn-danger btn-sm" onclick="window.closeVisualEditor()" style="font-size:11px;">✕ Close</button>
-                        </div>
-                        <p style="font-size:10px; color:var(--text-muted); margin-top:4px; margin-bottom:8px;">Search question number to quickly add SVG/Images without scrolling.</p>
-                        <div class="vp-search-bar">
-                            <input type="number" id="vp-search-input" placeholder="🔍 Search Q. No. (e.g. 111)" onkeyup="window.renderVisualEditorContent()" oninput="window.renderVisualEditorContent()" style="font-size:12px;padding:6px 10px;" />
-                            <button id="btn-vp-update" class="btn btn-success btn-sm" onclick="window.generateAndSaveLink()" style="font-size:11px;">🚀 Update Test</button>
-                        </div>
-                    </div>
-                    <div id="visual-editor-content"></div>
-                    <input type="file" id="hidden-drive-file" accept="image/*" style="display:none;" onchange="window.handleVisualImageSelect(event)" />
-                `;
-                window.renderVisualEditorContent();
-            }
-        };
-
-        window.closeVisualEditor = function() {
-            const container = document.getElementById('visual-editor-container');
-            if (container) container.style.display = 'none';
-            window.updateQsCount();
-        };
-
-        window.renderVisualEditorContent = function() {
-            const rawDataElem = document.getElementById('a-rawdata');
-            if (!rawDataElem) return;
-            const rawData = rawDataElem.value;
-            const lines = rawData.split('\n');
-            let html = '';
-            const searchInput = document.getElementById('vp-search-input');
-            const searchQ = searchInput ? searchInput.value.trim() : "";
-            let currentQNum = 0;
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (!line) continue;
-                if (line.match(/^!!\s*\d+\s*!/)) {
-                    const match = line.match(/^!!\s*(\d+)\s*!/);
-                    if (match) { currentQNum = parseInt(match[1]); } else { currentQNum++; }
-                }
-                let associatedQ = currentQNum;
-                if (line.match(/^!P/i)) { associatedQ = currentQNum + 1; }
-                if (searchQ !== "" && associatedQ.toString() !== searchQ) { continue; }
-                let type = "";
-                if (line.match(/^!!\s*\d+\s*!/)) { type = "📝 Q" + associatedQ; } else if (line.match(/^![A-D]/i)) { type =
-                        "🔘 Option " + line.charAt(1).toUpperCase(); } else if (line.match(/^!!!!/)) { type =
-                        "💡 Explanation"; } else if (line.match(/^!P/i)) { type = "📜 Passage"; }
-                if (type) {
-                    let cleanText = line;
-                    let hasMedia = false;
-                    if (line.includes('<img') || line.includes('<svg')) {
-                        hasMedia = true;
-                        cleanText = line.replace(/<img[^>]*>/g,
-                                '<br><span style="color:var(--success);font-weight:bold;">[🖼️ IMAGE ADDED]</span>')
-                            .replace(/<svg[\s\S]*?<\/svg>/g,
-                                '<br><span style="color:var(--primary);font-weight:bold;">[🖋️ SVG ADDED]</span>');
-                    }
-                    let btnsHTML = `
-                        <button class="vp-btn" id="vp-btn-${i}" onclick="window.triggerVisualUpload(${i})">🖼️ Add Image</button>
-                        <button class="vp-btn svg-btn" onclick="window.triggerVisualSvg(${i})">🖋️ Add SVG</button>
-                    `;
-                    if (hasMedia) {
-                        btnsHTML += `<button class="vp-btn del-btn" onclick="window.deleteVisualMedia(${i})">🗑️ Delete Media</button>`;
-                    }
-                    html += `
-                    <div class="vp-q-block">
-                        <div class="vp-row">
-                            <div class="vp-text"><b>${type}:</b> <br> <span style="font-family:monospace; color:#333;font-size:12px;">${cleanText}</span></div>
-                            <div class="vp-btn-group">${btnsHTML}</div>
-                        </div>
-                    </div>`;
-                }
-            }
-            const contentDiv = document.getElementById('visual-editor-content');
-            if (contentDiv) {
-                if (html === '') {
-                    contentDiv.innerHTML =
-                        `<p style='color:var(--danger); font-weight:bold; padding:8px;font-size:13px;'>No data found for Question No. ${searchQ}</p>`;
-                } else {
-                    contentDiv.innerHTML = html;
-                }
-            }
-        };
-
-        window.triggerVisualUpload = function(lineIdx) {
-            window.currentImageUploadLineIndex = lineIdx;
-            const fileInput = document.getElementById('hidden-drive-file');
-            if (fileInput) { fileInput.value = "";
-                fileInput.click(); }
-        };
-
-        window.triggerVisualSvg = function(lineIdx) {
-            window.showCustomPrompt("Add SVG Code", "Please paste your exact raw SVG code here:", (svgCode) => {
-                if (svgCode && svgCode.trim().toLowerCase().startsWith("<svg")) {
-                    const rawDataElem = document.getElementById('a-rawdata');
-                    const lines = rawDataElem.value.split('\n');
-                    lines[lineIdx] = lines[lineIdx] + ` <br>` + svgCode.trim();
-                    rawDataElem.value = lines.join('\n');
-                    window.showCustomAlert("Success", "SVG Code added successfully! 🎉", "✅");
-                    window.renderVisualEditorContent();
-                } else if (svgCode) {
-                    window.showCustomAlert("Error", "Invalid SVG code. It must start with '<svg...'", "❌");
-                }
-            }, "🖋️");
-        };
-
-        window.deleteVisualMedia = function(lineIdx) {
-            window.showCustomConfirm("Delete Media", "Are you sure you want to delete the image/SVG from this line?", () => {
-                const rawDataElem = document.getElementById('a-rawdata');
-                const lines = rawDataElem.value.split('\n');
-                lines[lineIdx] = lines[lineIdx].replace(/<br>\s*<img[^>]*>/g, '')
-                    .replace(/<img[^>]*>/g, '')
-                    .replace(/<br>\s*<svg[\s\S]*?<\/svg>/g, '')
-                    .replace(/<svg[\s\S]*?<\/svg>/g, '');
-                rawDataElem.value = lines.join('\n');
-                window.renderVisualEditorContent();
-            }, "🗑️");
-        };
-
-        window.handleVisualImageSelect = function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const lineIdx = window.currentImageUploadLineIndex;
-            const btn = document.getElementById('vp-btn-' + lineIdx);
-            if (btn) { btn.innerText = "⏳ Uploading...";
-                btn.classList.add('uploading'); }
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const base64Data = evt.target.result.split(',')[1];
-                const formData = new URLSearchParams();
-                formData.append('action', 'upload');
-                formData.append('type', 'question');
-                formData.append('name', file.name);
-                formData.append('mimeType', file.type);
-                formData.append('image', base64Data);
-                fetch(SCRIPT_URL, {
-                    method: "POST",
-                    body: formData,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                }).then(res => res.text()).then(text => {
-                    try {
-                        const data = JSON.parse(text);
-                        if (data.status === "success" && data.url) {
-                            const rawDataElem = document.getElementById('a-rawdata');
-                            const lines = rawDataElem.value.split('\n');
-                            lines[lineIdx] = lines[lineIdx] + ` <br><img src="${data.url}">`;
-                            rawDataElem.value = lines.join('\n');
-                            window.showCustomAlert("Success", "Image directly added to your question! 🎉",
-                                "✅");
-                            window.renderVisualEditorContent();
-                        } else {
-                            window.showCustomAlert("Error", "Upload failed: " + (data.message ||
-                                "Unknown error"), "❌");
-                            if (btn) { btn.innerText = "🖼️ Add Image";
-                                btn.classList.remove('uploading'); }
-                        }
-                    } catch (jsonErr) {
-                        window.showCustomAlert("Error",
-                            "Failed to parse Google Script response. Check your App Script deployment.",
-                            "❌");
-                        if (btn) { btn.innerText = "🖼️ Add Image";
-                            btn.classList.remove('uploading'); }
-                    }
-                }).catch(err => {
-                    window.showCustomAlert("Error", "Network error. Please try again.", "❌");
-                    if (btn) { btn.innerText = "🖼️ Add Image";
-                        btn.classList.remove('uploading'); }
-                });
-            };
-            reader.readAsDataURL(file);
         };
 
         window.updateAdminIcon = async function() {
@@ -6641,7 +6658,7 @@
         };
 
         /* ==========================================================================
-           PDF DOWNLOAD – Using Print Preview with MathJax Fix
+           PDF DOWNLOAD – with MathJax fix
            ========================================================================== */
         window.adminDownloadPDF = function(code, mode) {
             const t = window.adminUnifiedTests.find(x => x.code === code);
@@ -6671,18 +6688,13 @@
             const customName = window.studentInfo.name || "अंकुश कुमार S/O मनोज कुमार";
             window.userAnswers = [];
             pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
-            // Use print-based PDF generation with MathJax fix
             window.executePDFPrintWithMathFix(customName, mode);
         };
 
-        /* ==========================================================================
-           PDF Print Function – with MathJax rendering fix
-           ========================================================================== */
         window.executePDFPrintWithMathFix = function(studentName, mode) {
             const pA = document.getElementById('print-area');
             if (!pA) return;
 
-            // Build the HTML content
             const sU = BASE_URL + "?test=" + window.examData.code;
             const p = window.parseHack(window.examData.topic);
             const dT = p.topic || "";
@@ -6799,10 +6811,8 @@
             }
             pA.innerHTML = h + '</td></tr></tbody></table>';
 
-            // First render MathJax, then print
             document.body.classList.add('print-pdf');
 
-            // Wait for MathJax to render
             if (window.MathJax) {
                 window.MathJax.typesetPromise([pA]).then(() => {
                     setTimeout(() => {
@@ -6812,7 +6822,6 @@
                         }, 1000);
                     }, 500);
                 }).catch(() => {
-                    // If MathJax fails, still print
                     setTimeout(() => {
                         window.print();
                         setTimeout(() => {
@@ -6844,7 +6853,193 @@
         };
 
         /* ==========================================================================
-           13. EXAM ENGINE
+           VISUAL EDITOR
+           ========================================================================== */
+        window.openVisualEditor = function() {
+            const rawData = document.getElementById('a-rawdata').value;
+            if (!rawData.trim()) {
+                return window.showCustomAlert("Empty Box",
+                    "Bhai, pehle 'Paste Questions Here' wale box mein apna text paste karo, uske baad is editor ko open karna.",
+                    "⚠️");
+            }
+            const container = document.getElementById('visual-editor-container');
+            if (container) {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <div class="vp-sticky-header">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                            <h4 style="color:var(--primary); margin:0;font-size:15px;">🖼️ Visual Image & SVG Editor</h4>
+                            <button class="btn btn-danger btn-sm" onclick="window.closeVisualEditor()" style="font-size:11px;">✕ Close</button>
+                        </div>
+                        <p style="font-size:10px; color:var(--text-muted); margin-top:4px; margin-bottom:8px;">Search question number to quickly add SVG/Images without scrolling.</p>
+                        <div class="vp-search-bar">
+                            <input type="number" id="vp-search-input" placeholder="🔍 Search Q. No. (e.g. 111)" onkeyup="window.renderVisualEditorContent()" oninput="window.renderVisualEditorContent()" style="font-size:12px;padding:6px 10px;" />
+                            <button id="btn-vp-update" class="btn btn-success btn-sm" onclick="window.generateAndSaveLink()" style="font-size:11px;">🚀 Update Test</button>
+                        </div>
+                    </div>
+                    <div id="visual-editor-content"></div>
+                    <input type="file" id="hidden-drive-file" accept="image/*" style="display:none;" onchange="window.handleVisualImageSelect(event)" />
+                `;
+                window.renderVisualEditorContent();
+            }
+        };
+
+        window.closeVisualEditor = function() {
+            const container = document.getElementById('visual-editor-container');
+            if (container) container.style.display = 'none';
+            window.updateQsCount();
+        };
+
+        window.renderVisualEditorContent = function() {
+            const rawDataElem = document.getElementById('a-rawdata');
+            if (!rawDataElem) return;
+            const rawData = rawDataElem.value;
+            const lines = rawData.split('\n');
+            let html = '';
+            const searchInput = document.getElementById('vp-search-input');
+            const searchQ = searchInput ? searchInput.value.trim() : "";
+            let currentQNum = 0;
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (!line) continue;
+                if (line.match(/^!!\s*\d+\s*!/)) {
+                    const match = line.match(/^!!\s*(\d+)\s*!/);
+                    if (match) { currentQNum = parseInt(match[1]); } else { currentQNum++; }
+                }
+                let associatedQ = currentQNum;
+                if (line.match(/^!P/i)) { associatedQ = currentQNum + 1; }
+                if (searchQ !== "" && associatedQ.toString() !== searchQ) { continue; }
+                let type = "";
+                if (line.match(/^!!\s*\d+\s*!/)) { type = "📝 Q" + associatedQ; } else if (line.match(/^![A-D]/i)) { type =
+                        "🔘 Option " + line.charAt(1).toUpperCase(); } else if (line.match(/^!!!!/)) { type =
+                        "💡 Explanation"; } else if (line.match(/^!P/i)) { type = "📜 Passage"; }
+                if (type) {
+                    let cleanText = line;
+                    let hasMedia = false;
+                    if (line.includes('<img') || line.includes('<svg')) {
+                        hasMedia = true;
+                        cleanText = line.replace(/<img[^>]*>/g,
+                                '<br><span style="color:var(--success);font-weight:bold;">[🖼️ IMAGE ADDED]</span>')
+                            .replace(/<svg[\s\S]*?<\/svg>/g,
+                                '<br><span style="color:var(--primary);font-weight:bold;">[🖋️ SVG ADDED]</span>');
+                    }
+                    let btnsHTML = `
+                        <button class="vp-btn" id="vp-btn-${i}" onclick="window.triggerVisualUpload(${i})">🖼️ Add Image</button>
+                        <button class="vp-btn svg-btn" onclick="window.triggerVisualSvg(${i})">🖋️ Add SVG</button>
+                    `;
+                    if (hasMedia) {
+                        btnsHTML += `<button class="vp-btn del-btn" onclick="window.deleteVisualMedia(${i})">🗑️ Delete Media</button>`;
+                    }
+                    html += `
+                    <div class="vp-q-block">
+                        <div class="vp-row">
+                            <div class="vp-text"><b>${type}:</b> <br> <span style="font-family:monospace; color:#333;font-size:12px;">${cleanText}</span></div>
+                            <div class="vp-btn-group">${btnsHTML}</div>
+                        </div>
+                    </div>`;
+                }
+            }
+            const contentDiv = document.getElementById('visual-editor-content');
+            if (contentDiv) {
+                if (html === '') {
+                    contentDiv.innerHTML =
+                        `<p style='color:var(--danger); font-weight:bold; padding:8px;font-size:13px;'>No data found for Question No. ${searchQ}</p>`;
+                } else {
+                    contentDiv.innerHTML = html;
+                }
+            }
+        };
+
+        window.triggerVisualUpload = function(lineIdx) {
+            window.currentImageUploadLineIndex = lineIdx;
+            const fileInput = document.getElementById('hidden-drive-file');
+            if (fileInput) { fileInput.value = "";
+                fileInput.click(); }
+        };
+
+        window.triggerVisualSvg = function(lineIdx) {
+            window.showCustomPrompt("Add SVG Code", "Please paste your exact raw SVG code here:", (svgCode) => {
+                if (svgCode && svgCode.trim().toLowerCase().startsWith("<svg")) {
+                    const rawDataElem = document.getElementById('a-rawdata');
+                    const lines = rawDataElem.value.split('\n');
+                    lines[lineIdx] = lines[lineIdx] + ` <br>` + svgCode.trim();
+                    rawDataElem.value = lines.join('\n');
+                    window.showCustomAlert("Success", "SVG Code added successfully! 🎉", "✅");
+                    window.renderVisualEditorContent();
+                } else if (svgCode) {
+                    window.showCustomAlert("Error", "Invalid SVG code. It must start with '<svg...'", "❌");
+                }
+            }, "🖋️");
+        };
+
+        window.deleteVisualMedia = function(lineIdx) {
+            window.showCustomConfirm("Delete Media", "Are you sure you want to delete the image/SVG from this line?", () => {
+                const rawDataElem = document.getElementById('a-rawdata');
+                const lines = rawDataElem.value.split('\n');
+                lines[lineIdx] = lines[lineIdx].replace(/<br>\s*<img[^>]*>/g, '')
+                    .replace(/<img[^>]*>/g, '')
+                    .replace(/<br>\s*<svg[\s\S]*?<\/svg>/g, '')
+                    .replace(/<svg[\s\S]*?<\/svg>/g, '');
+                rawDataElem.value = lines.join('\n');
+                window.renderVisualEditorContent();
+            }, "🗑️");
+        };
+
+        window.handleVisualImageSelect = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const lineIdx = window.currentImageUploadLineIndex;
+            const btn = document.getElementById('vp-btn-' + lineIdx);
+            if (btn) { btn.innerText = "⏳ Uploading...";
+                btn.classList.add('uploading'); }
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Data = evt.target.result.split(',')[1];
+                const formData = new URLSearchParams();
+                formData.append('action', 'upload');
+                formData.append('type', 'question');
+                formData.append('name', file.name);
+                formData.append('mimeType', file.type);
+                formData.append('image', base64Data);
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: formData,
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }).then(res => res.text()).then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        if (data.status === "success" && data.url) {
+                            const rawDataElem = document.getElementById('a-rawdata');
+                            const lines = rawDataElem.value.split('\n');
+                            lines[lineIdx] = lines[lineIdx] + ` <br><img src="${data.url}">`;
+                            rawDataElem.value = lines.join('\n');
+                            window.showCustomAlert("Success", "Image directly added to your question! 🎉",
+                                "✅");
+                            window.renderVisualEditorContent();
+                        } else {
+                            window.showCustomAlert("Error", "Upload failed: " + (data.message ||
+                                "Unknown error"), "❌");
+                            if (btn) { btn.innerText = "🖼️ Add Image";
+                                btn.classList.remove('uploading'); }
+                        }
+                    } catch (jsonErr) {
+                        window.showCustomAlert("Error",
+                            "Failed to parse Google Script response. Check your App Script deployment.",
+                            "❌");
+                        if (btn) { btn.innerText = "🖼️ Add Image";
+                            btn.classList.remove('uploading'); }
+                    }
+                }).catch(err => {
+                    window.showCustomAlert("Error", "Network error. Please try again.", "❌");
+                    if (btn) { btn.innerText = "🖼️ Add Image";
+                        btn.classList.remove('uploading'); }
+                });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        /* ==========================================================================
+           EXAM ENGINE
            ========================================================================== */
         window.startExam = function(isRe) {
             try {
@@ -6872,13 +7067,17 @@
 
                 window.buildSidebarPalette();
 
-                // Update sub-header
+                // Update sub-header with Exam | Category | Code
                 const topSname = document.getElementById('top-sname');
                 const topSexam = document.getElementById('top-sexam');
+                const topScategory = document.getElementById('top-scategory');
                 const topScode = document.getElementById('top-scode');
                 const topBar = document.getElementById('student-top-bar');
                 if (topSname) topSname.innerText = "👤 " + (window.studentInfo.name || "Student");
                 if (topSexam) topSexam.innerText = window.examData.exam || "Exam";
+                // Get category from examData
+                const categoryName = window.examData.category || window.currentCategory || "Mock Test";
+                if (topScategory) topScategory.innerText = categoryName;
                 if (topScode) topScode.innerText = "Code: " + (window.examData.code || "---");
                 if (topBar) topBar.style.display = 'flex';
                 window.updateProfileUI();
@@ -7017,10 +7216,13 @@
 
                 const topSname = document.getElementById('top-sname');
                 const topSexam = document.getElementById('top-sexam');
+                const topScategory = document.getElementById('top-scategory');
                 const topScode = document.getElementById('top-scode');
                 const topBar = document.getElementById('student-top-bar');
                 if (topSname) topSname.innerText = "👤 " + (window.studentInfo.name || "Student");
                 if (topSexam) topSexam.innerText = window.examData.exam + " (Resumed)";
+                const categoryName = window.examData.category || window.currentCategory || "Mock Test";
+                if (topScategory) topScategory.innerText = categoryName;
                 if (topScode) topScode.innerText = "Code: " + window.examData.code;
                 if (topBar) topBar.style.display = 'flex';
                 window.updateProfileUI();
@@ -7141,9 +7343,6 @@
             window.updateSidebarStats();
         };
 
-        /* ==========================================================================
-           14. RENDER QUESTION – with dynamic logo watermark
-           ========================================================================== */
         window.renderQuestion = function(idx) {
             window.currentQ = idx;
             const q = window.examData.questions[idx];
@@ -7245,9 +7444,6 @@
             if (window.currentQ > 0) window.renderQuestion(window.currentQ - 1);
         };
 
-        /* ==========================================================================
-           15. SUBMISSION SUMMARY POPUP
-           ========================================================================== */
         window.openSubmitSummary = function() {
             const totalQ = window.examData.questions.length;
             let answered = 0,
@@ -7285,9 +7481,6 @@
             window.calculateScoreAndSubmit();
         };
 
-        /* ==========================================================================
-           16. SCORE CALCULATION & RESULT
-           ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
             clearInterval(window.qTimer);
@@ -7339,7 +7532,6 @@
                     rH.style.color = "var(--danger)"; }
             }
 
-            // Update Certificate
             document.getElementById('cert-right-wrong').innerText = window.studentInfo.right + ' / ' + window.studentInfo
                 .wrong;
             document.getElementById('cert-student-name').innerText = window.studentInfo.name || "Student";
@@ -7370,7 +7562,8 @@
                 const attemptedRecords = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
                 attemptedRecords[window.examData.code] = window.studentInfo.score;
                 localStorage.setItem('mockSarthiAttempted', JSON.stringify(attemptedRecords));
-                window.fetchLeaderboard(window.examData.code);
+                window.attemptedTestsCache = attemptedRecords;
+                window.fetchLeaderboardWithPhotos(window.examData.code);
                 db.collection("results").where("testCode", "==", sC).get().then(snap => {
                     const scores = [];
                     snap.forEach(d => scores.push(d.data().score));
@@ -7382,14 +7575,14 @@
             }).catch(() => {
                 if (rankLoader) rankLoader.style.display = 'none';
                 document.getElementById('cert-rank').innerText = '#N/A / N/A';
-                window.fetchLeaderboard(window.examData.code);
+                window.fetchLeaderboardWithPhotos(window.examData.code);
             });
         };
 
         /* ==========================================================================
-           17. LEADERBOARD – with photo visibility fix
+           LEADERBOARD – WITH PHOTO FIX (CLOUD BASED)
            ========================================================================== */
-        window.fetchLeaderboard = function(testCode) {
+        window.fetchLeaderboardWithPhotos = function(testCode) {
             const container = document.getElementById('leaderboard-container');
             const list = document.getElementById('lb-list');
             if (!container || !list) return;
@@ -7401,10 +7594,9 @@
                 snapshot.forEach(doc => results.push(doc.data()));
                 db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
                     snap2.forEach(doc => results.push(doc.data()));
-                    // Fetch user photos from users collection
-                    window.fetchLeaderboardPhotos(results, list);
+                    window.fetchLeaderboardUserPhotos(results, list);
                 }).catch(() => {
-                    window.fetchLeaderboardPhotos(results, list);
+                    window.fetchLeaderboardUserPhotos(results, list);
                 });
             }).catch(() => {
                 const attempted = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
@@ -7419,14 +7611,12 @@
             });
         };
 
-        window.fetchLeaderboardPhotos = function(results, list) {
-            // Get all unique phone numbers
+        window.fetchLeaderboardUserPhotos = function(results, list) {
             const phones = [...new Set(results.map(r => r.phone).filter(p => p))];
             if (phones.length === 0) {
                 window.renderLeaderboardWithPhotos(results, list);
                 return;
             }
-            // Fetch user data for each phone
             const promises = phones.map(phone =>
                 db.collection("users").where("phone", "==", phone).get().then(snap => {
                     if (!snap.empty) {
@@ -7439,7 +7629,6 @@
             Promise.all(promises).then(photoData => {
                 const photoMap = {};
                 photoData.forEach(pd => { photoMap[pd.phone] = pd.photoURL; });
-                // Merge photos into results
                 const merged = results.map(r => ({
                     ...r,
                     photoURL: photoMap[r.phone] || '',
@@ -7486,7 +7675,6 @@
                 const isCurrentUser = (item.phone === window.studentInfo.phone) || (item.name === window.studentInfo
                     .name);
 
-                // Determine avatar content
                 const photoUrl = isCurrentUser ? currentUserPhoto : item.photoURL;
                 let avatarContent = '';
                 if (photoUrl && photoUrl.startsWith('http')) {
@@ -7511,7 +7699,7 @@
         };
 
         /* ==========================================================================
-           18. ANALYSIS
+           ANALYSIS
            ========================================================================== */
         window.showAnalysis = function(t) {
             window.currentAnalysisArray = [];
@@ -7604,7 +7792,7 @@
                 window.renderAnalysisSlide(); } };
 
         /* ==========================================================================
-           19. CERTIFICATE DOWNLOAD
+           CERTIFICATE DOWNLOAD
            ========================================================================== */
         window.downloadCertificateImage = function() {
             const certElement = document.getElementById('score-card-cert');
@@ -7629,7 +7817,7 @@
         };
 
         /* ==========================================================================
-           20. CONFETTI
+           CONFETTI
            ========================================================================== */
         window.blastConfetti = function() {
             const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#01a3a4', '#f368e0', '#ff6348'];
@@ -7655,7 +7843,7 @@
         };
 
         /* ==========================================================================
-           21. STUDENT HISTORY
+           STUDENT HISTORY
            ========================================================================== */
         window.fetchStudentHistory = function() {
             if (!window.studentInfo || !window.studentInfo.phone) {
@@ -7688,6 +7876,7 @@
             records.forEach(r => { if (r.testCode) { const code = r.testCode.replace('-RE', '');
                     attemptedRecords[code] = r.score; } });
             localStorage.setItem('mockSarthiAttempted', JSON.stringify(attemptedRecords));
+            window.attemptedTestsCache = attemptedRecords;
             if (records.length === 0) {
                 list.innerHTML =
                     "<p style='text-align:center;color:var(--text-muted);padding:16px;font-size:13px;'>No test history found for this number.</p>";
@@ -7780,7 +7969,7 @@
         };
 
         /* ==========================================================================
-           22. SERIAL ORDER
+           SERIAL ORDER
            ========================================================================== */
         window.loadSerialOrderUI = function() {
             const container = document.getElementById('serial-reorder-container');
@@ -7874,7 +8063,7 @@
         };
 
         /* ==========================================================================
-           23. STUDENT PERFORMANCE (Admin)
+           STUDENT PERFORMANCE (Admin)
            ========================================================================== */
         window.fetchStudentPerformance = function() {
             const loader = document.getElementById('perf-loader');
@@ -7991,7 +8180,7 @@
         };
 
         /* ==========================================================================
-           24. PRICE TOGGLE
+           PRICE TOGGLE
            ========================================================================== */
         window.togglePriceBox = function() {
             const pt = document.getElementById('a-pdf-type');
@@ -8000,17 +8189,18 @@
         };
 
         /* ==========================================================================
-           25. INIT
+           INIT
            ========================================================================== */
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v9.0 — All fixes applied:');
-        console.log('✅ Scroll fix: Option D fully visible');
-        console.log('✅ PDF MathJax fix: math renders properly in PDF');
-        console.log('✅ Profile button added in header');
-        console.log('✅ Leaderboard photos visible across devices');
-        console.log('✅ Certificate shows test name and code');
+        console.log('🚀 TEST BODHI v10.0 — Premium Update:');
+        console.log('✅ Leaderboard photos fixed (cloud-based)');
+        console.log('✅ Header shows: Exam | Category | Code');
+        console.log('✅ Board cards show Total | Attempted | Remaining');
+        console.log('✅ Progress bars with color coding');
+        console.log('✅ Premium glassmorphism & animations');
+        console.log('✅ Card entrance animation with stagger');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
