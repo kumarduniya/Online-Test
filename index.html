@@ -8,6 +8,10 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+
     <!-- MathJax -->
     <script>
         window.MathJax = {
@@ -1598,9 +1602,6 @@
             font-weight: 500;
             margin: 0 0 8px 0;
         }
-
-        /* ---- progress bar REMOVED from home page ---- */
-        /* (exam-progress-stats, exam-progress-bar, exam-stats are no longer used on home page) */
 
         .exam-card .btn {
             width: 100%;
@@ -3528,6 +3529,173 @@
             background: rgba(220, 53, 69, 0.12);
             color: var(--danger);
         }
+
+        /* ============================================================
+           AI TOGGLE & ANALYTICS STYLES
+           ============================================================ */
+        .ai-toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: var(--bg-subtle);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+        .ai-toggle-wrap .ai-label {
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-toggle-wrap .ai-label .ai-badge {
+            background: var(--accent-gradient);
+            color: var(--primary-dark);
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 50px;
+            letter-spacing: 0.5px;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border-color);
+            transition: 0.3s;
+            border-radius: 34px;
+        }
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+        .toggle-switch input:checked+.toggle-slider {
+            background: var(--success);
+        }
+        .toggle-switch input:checked+.toggle-slider::before {
+            transform: translateX(22px);
+        }
+
+        /* Analytics Chart & Mentor Message */
+        .analytics-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px 20px 20px;
+            margin: 16px auto;
+            max-width: 780px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+        .analytics-container .analytics-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .analytics-container .analytics-title .analytics-badge {
+            background: var(--accent-gradient);
+            color: var(--primary-dark);
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+        .chart-wrapper {
+            position: relative;
+            height: 220px;
+            max-height: 260px;
+            width: 100%;
+            margin: 6px auto 12px auto;
+        }
+        .analytics-container .mentor-msg-box {
+            background: var(--bg-subtle);
+            border-left: 5px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            margin-top: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-main);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .analytics-container .mentor-msg-box .mentor-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        .analytics-container .mentor-msg-box .mentor-text {
+            flex: 1;
+        }
+        .analytics-container .mentor-msg-box .mentor-text .mentor-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .analytics-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 16px 0;
+            font-size: 13px;
+        }
+
+        /* PDF Tag Badge */
+        .pdf-tag-badge {
+            display: inline-block;
+            background: #0f2b5c;
+            color: #f0d68a;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 50px;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+            border: 1px solid #d4a843;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .pdf-tag-badge.light {
+            background: #f0f4fa;
+            color: #0f2b5c;
+            border: 1px solid #d4a843;
+        }
+        .print-q .pdf-tag-badge {
+            display: inline-block;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
@@ -3921,6 +4089,23 @@
                     </div>
                 </div>
 
+                <!-- ===== NEW: ANALYTICS CHART + AI MENTOR MESSAGE ===== -->
+                <div id="analytics-container" class="analytics-container" style="display:none;">
+                    <div class="analytics-title">
+                        📊 Topic-wise Performance
+                        <span class="analytics-badge">AI Insights</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="topicChart"></canvas>
+                    </div>
+                    <div id="mentor-msg-box" class="mentor-msg-box">
+                        <div class="mentor-icon">🤖</div>
+                        <div class="mentor-text">
+                            <span class="mentor-name">AI Mentor</span>: <span id="mentor-message">Analyzing your performance...</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Buttons -->
                 <div style="display:flex;gap:8px;max-width:600px;margin:10px auto;flex-wrap:wrap;justify-content:center;">
                     <button id="btn-img-down" class="btn btn-primary" style="flex:1;min-width:100px;font-size:12px;padding:8px;" onclick="window.downloadCertificateImage()">🖼️ Download Certificate</button>
@@ -4103,6 +4288,21 @@
                         </div>
                     </div>
 
+                    <!-- ===== NEW: AI AUTO-TAGGER TOGGLE ===== -->
+                    <div class="ai-toggle-wrap">
+                        <label class="ai-label">
+                            🤖 Enable AI Auto-Tagging
+                            <span class="ai-badge">Gemini 1.5 Flash</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ai-toggle" checked />
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span style="font-size:10px;color:var(--text-muted);flex:1;min-width:120px;">
+                            Auto-detects Subject/Chapter for each question
+                        </span>
+                    </div>
+
                     <div class="form-group">
                         <label style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                             <span style="color:var(--danger);font-size:13px;"><b>📄 Paste Questions Here <span style="font-weight:normal; font-size:10px; color:var(--text-muted);">(Use $$ for Math)</span></b></span>
@@ -4272,14 +4472,17 @@
 
     <script>
         /* ==========================================================================
-           FULL SCRIPT – All Tasks Fixed
-           UPDATED SCRIPT_URL: https://script.google.com/macros/s/AKfycbxVePIuxQvKS8Gspm3ShW4WnoiLcsTHFx4SBUCGGa_qCmA-eoaTfeUTa84OFrjLgs3XRQ/exec
+           FULL SCRIPT – AI Auto-Tagger, Analytics & Smart PDF
+           GEMINI API KEY: AQ.Ab8RN6KdgswiMA9nBWoO5wA7GyM61xw9z61XjdPeB-9k1Js9TQ
            ========================================================================== */
 
         // ---- CONFIG ----
         const SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbxVePIuxQvKS8Gspm3ShW4WnoiLcsTHFx4SBUCGGa_qCmA-eoaTfeUTa84OFrjLgs3XRQ/exec";
         const BASE_URL = "https://setupportal.netlify.app/";
+        const GEMINI_API_KEY = "AQ.Ab8RN6KdgswiMA9nBWoO5wA7GyM61xw9z61XjdPeB-9k1Js9TQ";
+        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
+            GEMINI_API_KEY;
 
         const firebaseConfig = {
             apiKey: "AIzaSyA1ePcM8xYUOvYw8uLwiMI87_uv9xoPDyc",
@@ -4348,6 +4551,7 @@
         window.portalLogoURL = "";
         window.portalLogoShape = "round";
         window.attemptedTestsCache = {};
+        window.topicChartInstance = null;
 
         /* ==========================================================================
            PROFILE MODAL
@@ -5006,7 +5210,6 @@
                 if (puaName) puaName.innerText = user.name;
                 const photo = user.photoURL || '';
                 if (photo && photo.startsWith('http')) {
-                    // Ensure URL is a valid image URL (Google Drive direct link)
                     const fixedPhoto = window.fixGoogleDriveUrl(photo);
                     if (headerAvatarImg) { headerAvatarImg.src = fixedPhoto;
                         headerAvatarImg.style.display = 'block';
@@ -5040,28 +5243,23 @@
             window.loadPortalLogo();
         };
 
-        /* ---- Fix Google Drive URL to direct image URL ---- */
         window.fixGoogleDriveUrl = function(url) {
             if (!url) return url;
-            // If it's a Google Drive file URL, convert to direct image URL
             if (url.includes('drive.google.com/file/d/')) {
                 const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
                     return 'https://drive.google.com/uc?export=view&id=' + match[1];
                 }
             }
-            // If it's a Google Drive open URL
             if (url.includes('drive.google.com/open?id=')) {
                 const match = url.match(/id=([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
                     return 'https://drive.google.com/uc?export=view&id=' + match[1];
                 }
             }
-            // If it's already a direct download URL with export=view
             if (url.includes('drive.google.com/uc?export=view')) {
                 return url;
             }
-            // If it's a thumbnail URL, keep it
             if (url.includes('drive.google.com/thumbnail')) {
                 return url;
             }
@@ -5090,7 +5288,6 @@
             }
         };
 
-        /* ---- Profile photo upload using App Script with robust sync ---- */
         window.uploadProfilePhoto = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -5116,15 +5313,12 @@
                         const data = JSON.parse(text);
                         if (data.status === "success" && data.url) {
                             let downloadURL = data.url;
-                            // Fix Google Drive URL to direct image URL
                             downloadURL = window.fixGoogleDriveUrl(downloadURL);
 
                             const user = firebase.auth().currentUser;
                             if (user) {
-                                // Update Firebase with retry
                                 window.updateUserPhotoWithRetry(user.uid, downloadURL, 3);
                             } else {
-                                // Fallback: store locally
                                 window.studentInfo.photoURL = downloadURL;
                                 localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
                                 window.updateProfileUI();
@@ -5150,7 +5344,6 @@
             reader.readAsDataURL(file);
         };
 
-        /* ---- Retry mechanism for Firebase update ---- */
         window.updateUserPhotoWithRetry = function(uid, photoURL, retries) {
             db.collection("users").doc(uid).update({ photoURL: photoURL })
                 .then(() => {
@@ -5163,12 +5356,10 @@
                 })
                 .catch((err) => {
                     if (retries > 0) {
-                        // Retry after 1 second
                         setTimeout(() => {
                             window.updateUserPhotoWithRetry(uid, photoURL, retries - 1);
                         }, 1000);
                     } else {
-                        // Fallback: store locally
                         window.closeModal();
                         window.studentInfo.photoURL = photoURL;
                         localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
@@ -5484,7 +5675,6 @@
                     window.studentInfo = JSON.parse(savedUser);
                     isLoggedIn = true;
                     window.updateProfileUI();
-                    // Load attempted tests cache
                     const attempted = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
                     window.attemptedTestsCache = attempted;
                 } catch (e) {}
@@ -5839,7 +6029,6 @@
             });
         };
 
-        /* ---- Home page boards: NO progress bar, just clean cards ---- */
         window.renderExamCards = function(boards, allTests, examLogos, list) {
             if (boards.length === 0) {
                 list.innerHTML =
@@ -5901,7 +6090,6 @@
                 return;
             }
 
-            // Get attempted tests from cache
             const attempted = window.attemptedTestsCache || JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
             const attemptedCodes = Object.keys(attempted);
 
@@ -5913,7 +6101,6 @@
                 const remainingCount = totalTests - attemptedCount;
                 const progressPct = totalTests > 0 ? Math.round((attemptedCount / totalTests) * 100) : 0;
 
-                // Determine color for progress bar
                 let barClass = 'red';
                 if (progressPct >= 70) barClass = 'green';
                 else if (progressPct >= 35) barClass = 'yellow';
@@ -5923,7 +6110,6 @@
                         <div class="sec-icon">🎓</div>
                         <div class="sec-title">${subEx}</div>
                         <div class="sec-count">${totalTests} tests</div>
-                        <!-- Progress bar at exam level -->
                         <div class="sub-exam-progress-stats">
                             <span>📚 Total: <span class="stat-num">${totalTests}</span></span>
                             <span>✅ Attempted: <span class="stat-num green">${attemptedCount}</span></span>
@@ -6676,6 +6862,71 @@
             }, "🗑️");
         };
 
+        /* ==========================================================================
+           AI AUTO-TAGGER: Gemini API Integration
+           ========================================================================== */
+        window.callGeminiForTags = async function(questions) {
+            if (!questions || questions.length === 0) return [];
+
+            const qTexts = questions.map((q, i) => {
+                const qStr = q.q || `Question ${i+1}`;
+                return `${i+1}. ${qStr}`;
+            }).join('\n');
+
+            const prompt =
+                `You are an expert educational content tagger. Analyze each question and identify the subject/chapter topic it belongs to. Return ONLY a JSON array of topic names (as strings) for each question in the same order. Do not include any other text, explanation, or formatting. Just the JSON array.\n\nQuestions:\n${qTexts}`;
+
+            try {
+                const response = await fetch(GEMINI_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: prompt }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    console.error('Gemini API error:', errText);
+                    return [];
+                }
+
+                const data = await response.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+                // Try to parse JSON from the response
+                try {
+                    const jsonMatch = text.match(/\[[\s\S]*\]/);
+                    if (jsonMatch) {
+                        const tags = JSON.parse(jsonMatch[0]);
+                        if (Array.isArray(tags) && tags.length === questions.length) {
+                            return tags.map(t => String(t).trim() || 'General');
+                        }
+                    }
+                    // Fallback: try parsing the entire text
+                    const parsed = JSON.parse(text);
+                    if (Array.isArray(parsed) && parsed.length === questions.length) {
+                        return parsed.map(t => String(t).trim() || 'General');
+                    }
+                } catch (parseErr) {
+                    console.warn('Failed to parse Gemini response:', parseErr);
+                }
+
+                // If all else fails, return empty array
+                return [];
+            } catch (err) {
+                console.error('Gemini API call failed:', err);
+                return [];
+            }
+        };
+
+        /* ==========================================================================
+           GENERATE / UPDATE TEST – with AI Auto-Tagging
+           ========================================================================== */
         window.generateAndSaveLink = function() {
             const aBoard = document.getElementById('a-board');
             const aExam = document.getElementById('a-exam');
@@ -6695,6 +6946,11 @@
             const aRawDataElem = document.getElementById('a-rawdata');
             const btn = document.getElementById('btn-generate');
             const btnVp = document.getElementById('btn-vp-update');
+
+            // --- Check AI toggle ---
+            const aiToggle = document.getElementById('ai-toggle');
+            const isAiEnabled = aiToggle ? aiToggle.checked : false;
+
             const eBoard = aBoard ? aBoard.value : "General Exam";
             const eName = aExam ? aExam.value : "Mock Test";
             const eLogo = aLogo ? aLogo.value : "";
@@ -6720,28 +6976,146 @@
             const parsedQs = window.parseRawQuestions(rawText);
             if (parsedQs.length === 0) return window.showCustomAlert("Format Error", "❌ Incorrect format.", "⚠️");
             const fQs = window.updateQsCount() || parsedQs.length;
+
+            // --- AI Tagging Logic (ONLY when AI toggle is enabled) ---
+            const processQuestionsWithTags = async () => {
+                let finalQs = parsedQs.map(q => ({ ...q }));
+
+                if (isAiEnabled) {
+                    // Show loading state
+                    if (btn) { btn.innerText = "🤖 AI Tagging...";
+                        btn.disabled = true; }
+                    window.showLoadingModal("🧠 AI is analyzing questions...<br>Please wait (10-20 seconds).");
+
+                    try {
+                        const tags = await window.callGeminiForTags(parsedQs);
+                        window.closeModal();
+
+                        if (tags && tags.length === parsedQs.length) {
+                            finalQs = parsedQs.map((q, idx) => ({
+                                ...q,
+                                tag: tags[idx] || eTopicRaw || eSub || "General"
+                            }));
+                            window.showCustomAlert("AI Tagging Complete",
+                                `✅ ${tags.length} questions tagged successfully!`, "🤖");
+                        } else {
+                            // Fallback: use manual topic
+                            const fallbackTag = eTopicRaw || eSub || "General";
+                            finalQs = parsedQs.map(q => ({ ...q, tag: fallbackTag }));
+                            window.showCustomAlert("AI Tagging Partial",
+                                "⚠️ AI could not tag all questions. Using manual topic as fallback.", "⚠️");
+                        }
+                    } catch (err) {
+                        window.closeModal();
+                        const fallbackTag = eTopicRaw || eSub || "General";
+                        finalQs = parsedQs.map(q => ({ ...q, tag: fallbackTag }));
+                        window.showCustomAlert("AI Tagging Failed",
+                            "❌ Gemini API error. Using manual topic as fallback.", "❌");
+                    }
+                } else {
+                    // AI OFF: use manual topic from input
+                    const manualTag = eTopicRaw || eSub || "General";
+                    finalQs = parsedQs.map(q => ({ ...q, tag: manualTag }));
+                }
+
+                // Continue with save
+                window.saveTestToFirebase(finalQs, rawText, {
+                    eBoard,
+                    eName,
+                    eLogo,
+                    eSub,
+                    eTopicRaw,
+                    eCode,
+                    eSummary,
+                    eMarks,
+                    eNeg,
+                    tTime,
+                    qTime,
+                    isFree,
+                    ePrice,
+                    eKey,
+                    eCategory,
+                    fQs
+                }, btn, btnVp);
+            };
+
+            // Start the async process
+            processQuestionsWithTags();
+        };
+
+        /* ---- Save test to Firebase (extracted from generateAndSaveLink) ---- */
+        window.saveTestToFirebase = function(finalQs, rawText, params, btn, btnVp) {
+            const {
+                eBoard,
+                eName,
+                eLogo,
+                eSub,
+                eTopicRaw,
+                eCode,
+                eSummary,
+                eMarks,
+                eNeg,
+                tTime,
+                qTime,
+                isFree,
+                ePrice,
+                eKey,
+                eCategory,
+                fQs
+            } = params;
+
             const finalTopicRaw = eTopicRaw || eSub || "Test";
             const eTopic = finalTopicRaw + "|||QS:" + fQs + "|||CAT:" + eCategory + "|||LOGO:" + eLogo + "|||BOARD:" +
                 eBoard + "|||EXAM:" + eName + "|||SUBCAT:" + eSub + "|||SUMMARY:" + eSummary;
-            const fObj = { exam: eName, category: eCategory, logo: eLogo, subject: eSub, sub: eSub, topic: eTopic,
-                code: eCode, marks: eMarks, neg: eNeg, totTime: tTime, qTime: qTime, isFree: isFree, price: ePrice,
-                key: eKey, questions: parsedQs, qs: fQs, rawText: rawText, isActive: true };
+
+            const fObj = {
+                exam: eName,
+                category: eCategory,
+                logo: eLogo,
+                subject: eSub,
+                sub: eSub,
+                topic: eTopic,
+                code: eCode,
+                marks: eMarks,
+                neg: eNeg,
+                totTime: tTime,
+                qTime: qTime,
+                isFree: isFree,
+                price: ePrice,
+                key: eKey,
+                questions: finalQs,
+                qs: fQs,
+                rawText: rawText,
+                isActive: true,
+                // Store tags separately for analytics
+                tags: finalQs.map(q => q.tag || "General")
+            };
+
             if (btn) { btn.innerText = "⏳ Saving...";
                 btn.disabled = true; }
             if (btnVp) { btnVp.innerText = "⏳ Saving...";
                 btnVp.disabled = true; }
+
             db.collection("tests").doc(eCode).set(fObj).then(() => {
                 if (btn) { btn.innerText = "🚀 Generate / Update Test";
                     btn.disabled = false;
                     btn.style.background = "var(--primary)"; }
                 if (btnVp) { btnVp.innerText = "🚀 Update Test";
                     btnVp.disabled = false; }
+
+                // Clear fields
+                const aSub = document.getElementById('a-sub');
+                const aTopicElem = document.getElementById('a-topic');
+                const aCodeElem = document.getElementById('a-code');
+                const aRawDataElem = document.getElementById('a-rawdata');
+                const aSummaryElem = document.getElementById('a-summary');
                 if (aSub) aSub.value = "";
                 if (aTopicElem) aTopicElem.value = "";
                 if (aCodeElem) aCodeElem.value = "";
                 if (aRawDataElem) aRawDataElem.value = "";
                 if (document.getElementById('a-qs-count')) document.getElementById('a-qs-count').value = "";
                 if (aSummaryElem) aSummaryElem.value = "";
+
                 const tLink = BASE_URL + "?test=" + eCode;
                 const sTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
                 const eIdx = sTests.findIndex(t => t.code === eCode);
@@ -6749,17 +7123,23 @@
                 if (eIdx >= 0) sTests[eIdx] = tObj;
                 else sTests.push(tObj);
                 localStorage.setItem('myMockTests', JSON.stringify(sTests));
+
                 const uIdx = window.adminUnifiedTests.findIndex(t => t.code === eCode);
                 if (uIdx >= 0) window.adminUnifiedTests[uIdx] = tObj;
                 else window.adminUnifiedTests.push(tObj);
+
                 const gIdx = window.globalActiveTests.findIndex(t => t.code === eCode);
                 if (gIdx >= 0) window.globalActiveTests[gIdx] = tObj;
                 else window.globalActiveTests.push(tObj);
+
                 const generatedLink = document.getElementById('generatedLink');
                 const linkContainer = document.getElementById('linkContainer');
                 if (generatedLink) generatedLink.value = tLink;
                 if (linkContainer) linkContainer.style.display = 'block';
-                window.showCustomAlert("Success", `✅ Saved directly to Firebase! (${fQs} Qs)`, "🎉");
+
+                const tagCount = fObj.tags ? fObj.tags.length : 0;
+                window.showCustomAlert("Success",
+                    `✅ Saved to Firebase! (${fQs} Qs${tagCount > 0 ? ', ' + tagCount + ' tagged' : ''})`, "🎉");
                 window.initQuickFill();
                 const adminManage = document.getElementById('admin-manage-section');
                 if (adminManage && adminManage.style.display === 'block') window.renderDashboard();
@@ -6774,7 +7154,7 @@
         };
 
         /* ==========================================================================
-           PDF DOWNLOAD – with MathJax fix
+           PDF DOWNLOAD – with Smart Tags as Badges
            ========================================================================== */
         window.adminDownloadPDF = function(code, mode) {
             const t = window.adminUnifiedTests.find(x => x.code === code);
@@ -6799,14 +7179,32 @@
             if (!raw) return window.showCustomAlert("Empty Test", "No questions to print!", "❌");
             const pQs = window.parseRawQuestions(raw);
             if (!pQs || pQs.length === 0) return window.showCustomAlert("Parse Error", "No valid questions.", "❌");
-            window.examData = { exam: t.exam, subject: t.subject || t.sub || "Subject", topic: t.topic, code: t.code,
-                questions: pQs };
+
+            // Preserve tags from the stored questions
+            const storedQs = t.questions || [];
+            const taggedQs = pQs.map((q, idx) => {
+                const stored = storedQs[idx] || {};
+                return {
+                    ...q,
+                    tag: stored.tag || q.tag || t.tags?.[idx] || "General"
+                };
+            });
+
+            window.examData = {
+                exam: t.exam,
+                subject: t.subject || t.sub || "Subject",
+                topic: t.topic,
+                code: t.code,
+                questions: taggedQs,
+                tags: taggedQs.map(q => q.tag || "General")
+            };
             const customName = window.studentInfo.name || "अंकुश कुमार S/O मनोज कुमार";
             window.userAnswers = [];
-            pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
+            taggedQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
             window.executePDFPrintWithMathFix(customName, mode);
         };
 
+        /* ---- Modified PDF printer with tag badges ---- */
         window.executePDFPrintWithMathFix = function(studentName, mode) {
             const pA = document.getElementById('print-area');
             if (!pA) return;
@@ -6853,10 +7251,10 @@
                         <td style="padding:0;border:none;">
                             <div class="pdf-footer-strip">
                                 <div class="ftr-text">
-                                    <a href="tel:+918273684939">📞 +91-8273684939</a> | 
-                                    <a href="${BASE_URL}">🌐 Website</a> | 
-                                    <a href="https://t.me/ankushonlinetest">📢 Telegram</a> | 
-                                    <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k">💬 WhatsApp</a> | 
+                                    <a href="tel:+918273684939">📞 +91-8273684939</a> |
+                                    <a href="${BASE_URL}">🌐 Website</a> |
+                                    <a href="https://t.me/ankushonlinetest">📢 Telegram</a> |
+                                    <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k">💬 WhatsApp</a> |
                                     <a href="https://www.youtube.com/@ankushonlinetest">▶️ YouTube</a>
                                     <span style="margin-left:16px;color:#f0d68a;">testbodi.com</span>
                                 </div>
@@ -6883,9 +7281,16 @@
                 const wM = (isW && mode === 'full') ?
                     '<span style="color:red;font-size:16px;margin-right:4px;">❌</span>' : "";
 
+                // --- TAG BADGE ---
+                const tagName = q.tag || window.examData.tags?.[i] || "General";
+                const tagBadge =
+                    `<span class="pdf-tag-badge">📌 ${tagName}</span>`;
+
                 h +=
                     `<div class="print-q" style="display:block !important; break-inside:auto !important; page-break-inside:auto !important;">`;
                 if (q.passage) h += `<div class="print-passage">${q.passage}</div>`;
+                // Tag badge displayed before question
+                h += `${tagBadge}<br>`;
                 h += `<b>${wM}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
 
                 (q.opts || []).forEach(o => {
@@ -7183,7 +7588,6 @@
 
                 window.buildSidebarPalette();
 
-                // Update sub-header with Exam | Category | Code
                 const topSname = document.getElementById('top-sname');
                 const topSexam = document.getElementById('top-sexam');
                 const topScategory = document.getElementById('top-scategory');
@@ -7596,6 +8000,9 @@
             window.calculateScoreAndSubmit();
         };
 
+        /* ==========================================================================
+           CALCULATE SCORE & SUBMIT – with Analytics & AI Mentor Message
+           ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
             clearInterval(window.qTimer);
@@ -7619,12 +8026,31 @@
             window.studentInfo.right = 0;
             window.studentInfo.wrong = 0;
             window.studentInfo.blank = 0;
+
+            // --- Collect tag-wise performance ---
+            const tagPerformance = {};
+            const allTags = [];
+
             for (let i = 0; i < window.examData.questions.length; i++) {
-                const cA = window.getCleanAns(window.examData.questions[i].ans);
+                const q = window.examData.questions[i];
+                const tag = q.tag || window.examData.tags?.[i] || "General";
+                if (!tagPerformance[tag]) {
+                    tagPerformance[tag] = { correct: 0, wrong: 0, blank: 0, total: 0 };
+                    allTags.push(tag);
+                }
+                const cA = window.getCleanAns(q.ans);
                 const gA = window.getCleanAns(window.userAnswers[i]);
-                if (!window.userAnswers[i]) window.studentInfo.blank++;
-                else if (gA === cA) window.studentInfo.right++;
-                else window.studentInfo.wrong++;
+                if (!window.userAnswers[i]) {
+                    window.studentInfo.blank++;
+                    tagPerformance[tag].blank++;
+                } else if (gA === cA) {
+                    window.studentInfo.right++;
+                    tagPerformance[tag].correct++;
+                } else {
+                    window.studentInfo.wrong++;
+                    tagPerformance[tag].wrong++;
+                }
+                tagPerformance[tag].total++;
             }
 
             const btnRight = document.getElementById('btn-cnt-right');
@@ -7656,6 +8082,9 @@
             document.getElementById('cert-exam-name').innerText = window.examData.exam || "Exam";
             document.getElementById('cert-test-code').innerText = window.examData.code || "---";
             window.applyPortalLogo();
+
+            // --- Render Analytics Chart & AI Mentor Message ---
+            window.renderAnalyticsChart(tagPerformance, allTags);
 
             const rankLoader = document.getElementById('rank-loader');
             if (rankLoader) rankLoader.style.display = 'block';
@@ -7695,7 +8124,160 @@
         };
 
         /* ==========================================================================
-           LEADERBOARD – WITH PHOTO FIX (CLOUD BASED)
+           ANALYTICS CHART & AI MENTOR MESSAGE
+           ========================================================================== */
+        window.renderAnalyticsChart = function(tagPerformance, allTags) {
+            const container = document.getElementById('analytics-container');
+            if (!container) return;
+
+            // Show the container
+            container.style.display = 'block';
+
+            const tagNames = allTags.length > 0 ? allTags : ['General'];
+            const labels = tagNames;
+            const correctData = tagNames.map(t => tagPerformance[t]?.correct || 0);
+            const wrongData = tagNames.map(t => tagPerformance[t]?.wrong || 0);
+            const blankData = tagNames.map(t => tagPerformance[t]?.blank || 0);
+            const totalData = tagNames.map(t => tagPerformance[t]?.total || 0);
+
+            // Calculate accuracy for each tag
+            const accData = tagNames.map((t, idx) => {
+                const total = totalData[idx] || 1;
+                return Math.round((correctData[idx] / total) * 100);
+            });
+
+            // Destroy existing chart if any
+            if (window.topicChartInstance) {
+                window.topicChartInstance.destroy();
+                window.topicChartInstance = null;
+            }
+
+            const ctx = document.getElementById('topicChart').getContext('2d');
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const textColor = isDark ? '#e8edf5' : '#1a2332';
+            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+
+            window.topicChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Accuracy %',
+                        data: accData,
+                        backgroundColor: accData.map(v => {
+                            if (v >= 70) return 'rgba(15,157,88,0.7)';
+                            if (v >= 40) return 'rgba(245,158,11,0.7)';
+                            return 'rgba(220,53,69,0.7)';
+                        }),
+                        borderColor: accData.map(v => {
+                            if (v >= 70) return '#0f9d58';
+                            if (v >= 40) return '#f59e0b';
+                            return '#dc3545';
+                        }),
+                        borderWidth: 2,
+                        borderRadius: 4,
+                        maxBarThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const idx = context.dataIndex;
+                                    const total = totalData[idx] || 0;
+                                    const correct = correctData[idx] || 0;
+                                    const wrong = wrongData[idx] || 0;
+                                    const blank = blankData[idx] || 0;
+                                    return `Accuracy: ${context.raw}% | ✅ ${correct} ❌ ${wrong} ⬜ ${blank} (Total: ${total})`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: textColor,
+                                font: { size: 11, weight: '600' },
+                                callback: function(v) { return v + '%'; }
+                            },
+                            grid: { color: gridColor }
+                        },
+                        x: {
+                            ticks: {
+                                color: textColor,
+                                font: { size: 10, weight: '600' },
+                                maxRotation: 30,
+                                minRotation: 20
+                            },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // --- Generate AI Mentor Message ---
+            let mentorMsg = '';
+            if (tagNames.length === 1 && tagNames[0] === 'General') {
+                // Generic message when no specific tags
+                const acc = accData[0] || 0;
+                if (acc >= 80) {
+                    mentorMsg = '🎯 शानदार प्रदर्शन! आप इस विषय में पारंगत हैं। इसे जारी रखें और और अधिक अभ्यास करें। 💪';
+                } else if (acc >= 50) {
+                    mentorMsg = '📈 अच्छा प्रयास! आपकी बुनियाद मजबूत है। कुछ और अभ्यास से आप और बेहतर कर सकते हैं। ⚡';
+                } else {
+                    mentorMsg = '📚 आपको इस विषय पर और ध्यान देने की जरूरत है। बुनियादी अवधारणाओं को दोहराएं और अधिक प्रश्न हल करें। 🧠';
+                }
+            } else {
+                // Find strongest and weakest topics
+                const perf = tagNames.map((t, idx) => ({
+                    tag: t,
+                    acc: accData[idx] || 0,
+                    correct: correctData[idx] || 0,
+                    total: totalData[idx] || 1
+                }));
+                perf.sort((a, b) => b.acc - a.acc);
+                const strongest = perf[0];
+                const weakest = perf[perf.length - 1];
+
+                let strongMsg = '';
+                let weakMsg = '';
+                if (strongest.acc >= 70) {
+                    strongMsg = `आपकी <b>${strongest.tag}</b> बहुत स्ट्रॉन्ग है (${strongest.acc}% accuracy)! 🌟`;
+                } else if (strongest.acc >= 50) {
+                    strongMsg = `आपकी <b>${strongest.tag}</b> में अच्छी पकड़ है (${strongest.acc}% accuracy)। 💡`;
+                } else {
+                    strongMsg = `आपकी <b>${strongest.tag}</b> में और सुधार की गुंजाइश है (${strongest.acc}% accuracy)। 📖`;
+                }
+
+                if (weakest.acc < 40 && weakest.acc < strongest.acc) {
+                    weakMsg =
+                        `तुम्हें <b>${weakest.tag}</b> के रूल्स और कॉन्सेप्ट्स रिवाइज़ करने की ज़रूरत है (${weakest.acc}% accuracy)। 🎯`;
+                } else if (weakest.acc < 60) {
+                    weakMsg = `<b>${weakest.tag}</b> में थोड़ा और अभ्यास करें (${weakest.acc}% accuracy)। 📝`;
+                } else {
+                    weakMsg = `सभी विषयों में आपका प्रदर्शन संतोषजनक है। इसे जारी रखें! 🚀`;
+                }
+
+                mentorMsg = strongMsg + '<br>' + weakMsg;
+            }
+
+            const mentorBox = document.getElementById('mentor-msg-box');
+            const mentorText = document.getElementById('mentor-message');
+            if (mentorBox) mentorBox.style.display = 'flex';
+            if (mentorText) mentorText.innerHTML = mentorMsg;
+        };
+
+        /* ==========================================================================
+           LEADERBOARD – WITH PHOTO FIX
            ========================================================================== */
         window.fetchLeaderboardWithPhotos = function(testCode) {
             const container = document.getElementById('leaderboard-container');
@@ -7790,7 +8372,6 @@
                 const isCurrentUser = (item.phone === window.studentInfo.phone) || (item.name === window.studentInfo
                     .name);
 
-                // Fix Google Drive URL for photo
                 let photoUrl = isCurrentUser ? currentUserPhoto : item.photoURL;
                 photoUrl = window.fixGoogleDriveUrl(photoUrl);
 
@@ -8073,15 +8654,32 @@
             }
             const pQs = window.parseRawQuestions(raw);
             const oldExam = window.examData;
-            window.examData = { exam: data.exam, subject: data.subject || data.sub || "Subject", topic: data.topic,
-                code: data.code, questions: pQs, isFree: data.isFree, summary: window.parseHack(data.topic)
-                    .summary || "" };
+            // Preserve tags from stored data
+            const storedQs = data.questions || [];
+            const taggedQs = pQs.map((q, idx) => {
+                const stored = storedQs[idx] || {};
+                return {
+                    ...q,
+                    tag: stored.tag || q.tag || data.tags?.[idx] || "General"
+                };
+            });
+
+            window.examData = {
+                exam: data.exam,
+                subject: data.subject || data.sub || "Subject",
+                topic: data.topic,
+                code: data.code,
+                questions: taggedQs,
+                isFree: data.isFree,
+                summary: window.parseHack(data.topic).summary || "",
+                tags: taggedQs.map(q => q.tag || "General")
+            };
             const isFree = (data.isFree === true || String(data.isFree).toLowerCase() === "true");
             const isPrem = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo
                 .isPremium === true));
             if (!isFree && !isPrem) { window.examData = oldExam; return window.showPremiumModal(); }
             window.userAnswers = [];
-            pQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
+            taggedQs.forEach((q, i) => { window.userAnswers[i] = window.getCleanAns(q.ans); });
             const customName = window.studentInfo.name || "Student";
             window.executePDFPrintWithMathFix(customName, 'full');
         };
@@ -8312,18 +8910,15 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v12.0 — All Tasks Fixed:');
-        console.log('✅ Progress bar REMOVED from home page boards');
-        console.log('✅ Progress bar ADDED to exam level (inside boards)');
-        console.log('✅ Profile photo sync fixed with Google Drive URL conversion');
-        console.log('✅ Leaderboard photos now display with fixed URLs');
-        console.log('✅ Header: Exam | Category | Code');
-        console.log('✅ Dark mode adaptive (CSS variables)');
-        console.log('✅ PDF MathJax fix');
-        console.log('✅ Question scroll fix');
-        console.log('✅ Profile popup');
-        console.log('✅ Premium entrance animation (staggered)');
-        console.log('📌 App Script URL updated');
+        console.log('🚀 TEST BODHI v13.0 — AI Auto-Tagger + Analytics + Smart PDF');
+        console.log('✅ AI Toggle added in Admin Panel');
+        console.log('✅ Gemini API integration for auto-tagging (Create & Update)');
+        console.log('✅ Smart PDF with tag badges');
+        console.log('✅ Topic-wise performance chart (Chart.js)');
+        console.log('✅ AI Mentor Message based on topic performance');
+        console.log('✅ Progress bar at exam level');
+        console.log('✅ Profile photo sync fixed');
+        console.log('📌 Gemini API Key: ' + GEMINI_API_KEY.substring(0, 10) + '...');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
