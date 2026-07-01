@@ -3531,78 +3531,100 @@
         }
 
         /* ============================================================
-           AI TOGGLE & ANALYTICS STYLES
+           STUDENT REPORT – SUBJECT WISE FILTER
            ============================================================ */
-        .ai-toggle-wrap {
+        .subject-filter-container {
+            margin: 16px 0 12px 0;
             display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 12px;
-            background: var(--bg-subtle);
-            border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            margin-bottom: 6px;
             flex-wrap: wrap;
-        }
-        .ai-toggle-wrap .ai-label {
-            font-weight: 700;
-            font-size: 12px;
-            color: var(--text-main);
-            display: flex;
+            gap: 8px;
             align-items: center;
-            gap: 6px;
         }
-        .ai-toggle-wrap .ai-label .ai-badge {
-            background: var(--accent-gradient);
-            color: var(--primary-dark);
-            font-size: 8px;
+        .subject-filter-container .filter-label {
             font-weight: 700;
-            padding: 2px 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-right: 4px;
+        }
+        .subject-filter-btn {
+            padding: 4px 14px;
             border-radius: 50px;
-            letter-spacing: 0.5px;
-        }
-        .toggle-switch {
-            position: relative;
-            width: 48px;
-            height: 26px;
-            flex-shrink: 0;
-        }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .toggle-slider {
-            position: absolute;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 12px;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--border-color);
-            transition: 0.3s;
-            border-radius: 34px;
+            transition: var(--transition);
+            font-family: var(--font-sans);
         }
-        .toggle-slider::before {
-            content: "";
-            position: absolute;
-            height: 20px;
-            width: 20px;
-            left: 3px;
-            bottom: 3px;
-            background: #fff;
-            transition: 0.3s;
-            border-radius: 50%;
+        .subject-filter-btn:hover {
+            border-color: var(--accent);
+            background: var(--bg-subtle);
+        }
+        .subject-filter-btn.active {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: #fff;
+        }
+        .subject-questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .subject-question-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent);
+            padding: 12px 14px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow-sm);
+            font-size: 13px;
+            line-height: 1.5;
         }
-        .toggle-switch input:checked+.toggle-slider {
-            background: var(--success);
+        .subject-question-item .sq-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+            font-weight: 700;
+            color: var(--primary);
         }
-        .toggle-switch input:checked+.toggle-slider::before {
-            transform: translateX(22px);
+        .subject-question-item .sq-tag {
+            background: var(--bg-subtle);
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+        .subject-question-item .sq-question {
+            margin: 4px 0;
+        }
+        .subject-question-item .sq-answer {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .subject-question-item .sq-answer .correct {
+            color: var(--success);
+            font-weight: 700;
+        }
+        .subject-question-item .sq-answer .wrong {
+            color: var(--danger);
+            font-weight: 700;
+        }
+        .subject-question-item .sq-answer .blank {
+            color: var(--text-muted);
+            font-weight: 700;
         }
 
-        /* Analytics Chart & Mentor Message */
+        /* ============================================================
+           ANALYTICS & CHART
+           ============================================================ */
         .analytics-container {
             background: var(--bg-card);
             border: 2px solid var(--border-color);
@@ -3665,12 +3687,6 @@
             font-weight: 700;
             color: var(--primary);
         }
-        .analytics-empty {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 16px 0;
-            font-size: 13px;
-        }
 
         /* PDF Tag Badge */
         .pdf-tag-badge {
@@ -3686,11 +3702,6 @@
             border: 1px solid #d4a843;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
-        }
-        .pdf-tag-badge.light {
-            background: #f0f4fa;
-            color: #0f2b5c;
-            border: 1px solid #d4a843;
         }
         .print-q .pdf-tag-badge {
             display: inline-block;
@@ -3951,6 +3962,15 @@
                         <span style="color:var(--text-muted); margin-top:8px; display:inline-block; font-size:13px;">Loading report history...</span>
                     </div>
                     <div id="st-hist-list" style="display:flex;flex-direction:column;gap:12px;margin-top:12px;"></div>
+
+                    <!-- ===== NEW: Subject-wise Filter Section ===== -->
+                    <div id="subject-filter-section" style="margin-top:20px; border-top:2px solid var(--border-color); padding-top:14px;">
+                        <h3 style="color:var(--primary); font-size:15px; margin-bottom:6px;">📂 Subject-wise Questions</h3>
+                        <div class="subject-filter-container" id="subject-filter-buttons"></div>
+                        <div id="subject-questions-container" class="subject-questions-list">
+                            <p style="color:var(--text-muted); font-size:13px; padding:8px 0;">Select a subject above to see all questions.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4089,7 +4109,7 @@
                     </div>
                 </div>
 
-                <!-- ===== NEW: ANALYTICS CHART + AI MENTOR MESSAGE ===== -->
+                <!-- ===== ANALYTICS CHART + AI MENTOR MESSAGE (using manual tags) ===== -->
                 <div id="analytics-container" class="analytics-container" style="display:none;">
                     <div class="analytics-title">
                         📊 Topic-wise Performance
@@ -4288,27 +4308,14 @@
                         </div>
                     </div>
 
-                    <!-- ===== AI AUTO-TAGGER TOGGLE ===== -->
-                    <div class="ai-toggle-wrap">
-                        <label class="ai-label">
-                            🤖 Enable AI Auto-Tagging
-                            <span class="ai-badge">Gemini 1.5 Flash</span>
-                        </label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="ai-toggle" checked />
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <span style="font-size:10px;color:var(--text-muted);flex:1;min-width:120px;">
-                            Auto-detects Subject/Chapter for each question
-                        </span>
-                    </div>
+                    <!-- AI TOGGLE REMOVED – now manual tagging only -->
 
                     <div class="form-group">
                         <label style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                            <span style="color:var(--danger);font-size:13px;"><b>📄 Paste Questions Here <span style="font-weight:normal; font-size:10px; color:var(--text-muted);">(Use $$ for Math)</span></b></span>
+                            <span style="color:var(--danger);font-size:13px;"><b>📄 Paste Questions Here <span style="font-weight:normal; font-size:10px; color:var(--text-muted);">(Use $$ for Math, !tag(Subject:Topic) for manual tagging)</span></b></span>
                             <button type="button" class="btn btn-sm btn-outline" style="border-color:var(--success); color:var(--success);font-size:10px;padding:3px 12px;" onclick="window.openVisualEditor()">👁️ Open Visual Editor</button>
                         </label>
-                        <textarea id="a-rawdata" onkeyup="window.updateQsCount()" onchange="window.updateQsCount()" placeholder="!P Passage...&#10;!!1! Question...&#10;!A Option...&#10;!!! Ans&#10;!!!! Exp..." style="min-height:100px;font-size:12px;"></textarea>
+                        <textarea id="a-rawdata" onkeyup="window.updateQsCount()" onchange="window.updateQsCount()" placeholder="!P Passage...&#10;!!1! What is 2+2? !tag(Math:Arithmetic)&#10;!A Option...&#10;!!! Ans&#10;!!!! Exp..." style="min-height:100px;font-size:12px;"></textarea>
                     </div>
 
                     <div id="visual-editor-container" class="visual-preview-box"></div>
@@ -4472,17 +4479,13 @@
 
     <script>
         /* ==========================================================================
-           FULL SCRIPT – AI Auto-Tagger, Analytics & Smart PDF
-           GEMINI API KEY: AQ.Ab8RN6KdgswiMA9nBWoO5wA7GyM61xw9z61XjdPeB-9k1Js9TQ
+           FULL SCRIPT – Manual Tagging System (No AI)
            ========================================================================== */
 
         // ---- CONFIG ----
         const SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbxVePIuxQvKS8Gspm3ShW4WnoiLcsTHFx4SBUCGGa_qCmA-eoaTfeUTa84OFrjLgs3XRQ/exec";
         const BASE_URL = "https://setupportal.netlify.app/";
-        const GEMINI_API_KEY = "AQ.Ab8RN6KdgswiMA9nBWoO5wA7GyM61xw9z61XjdPeB-9k1Js9TQ";
-        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
-            GEMINI_API_KEY;
 
         const firebaseConfig = {
             apiKey: "AIzaSyA1ePcM8xYUOvYw8uLwiMI87_uv9xoPDyc",
@@ -4866,6 +4869,7 @@
             });
         };
 
+        // ---- New parse function that extracts !tag(Subject:Topic) from question line ----
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
             rawText = window.sanitizeMath(rawText);
@@ -4891,7 +4895,15 @@
                     cMode = "P";
                 } else if (line.match(/^!!\s*\d+\s*!/)) {
                     if (tempQ && tempQ.q) parsedQs.push(tempQ);
-                    tempQ = { q: line.replace(/^!!\s*\d+\s*!\s*/, '').trim(), opts: [], ans: "", exp: "", passage: cPass };
+                    // Extract tag from question line
+                    let qLine = line.replace(/^!!\s*\d+\s*!\s*/, '').trim();
+                    let tag = '';
+                    const tagMatch = qLine.match(/!tag\(([^)]+)\)/);
+                    if (tagMatch) {
+                        tag = tagMatch[1].trim();
+                        qLine = qLine.replace(/!tag\([^)]+\)/, '').trim();
+                    }
+                    tempQ = { q: qLine, opts: [], ans: "", exp: "", passage: cPass, tag: tag || "" };
                     cMode = "q";
                 } else if (line.match(/^![A-D]/i)) {
                     if (tempQ) tempQ.opts.push({ id: line.charAt(1).toUpperCase(), text: line.substring(2).trim() });
@@ -6752,8 +6764,12 @@
             if (!raw && data.questions && data.questions.length > 0) {
                 raw = data.questions.map((q, i) => {
                     const pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
-                    const qs =
-                        `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;
+                    let qLine =
+                        `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}`;
+                    if (q.tag && q.tag.trim() !== "") {
+                        qLine += ` !tag(${q.tag})`;
+                    }
+                    const qs = qLine + '\n';
                     const op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
                     const an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;
                     const ex = q.exp ?
@@ -6784,8 +6800,12 @@
             if (!raw && t.questions && t.questions.length > 0) {
                 raw = t.questions.map((q, i) => {
                     const pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
-                    const qs =
-                        `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;
+                    let qLine =
+                        `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}`;
+                    if (q.tag && q.tag.trim() !== "") {
+                        qLine += ` !tag(${q.tag})`;
+                    }
+                    const qs = qLine + '\n';
                     const op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
                     const an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;
                     const ex = q.exp ?
@@ -6863,83 +6883,7 @@
         };
 
         /* ==========================================================================
-           AI AUTO-TAGGER: Gemini API Integration with STRICT PROMPT
-           ========================================================================== */
-        window.callGeminiForTags = async function(questions) {
-            if (!questions || questions.length === 0) return [];
-
-            const qTexts = questions.map((q, i) => {
-                const qStr = q.q || `Question ${i+1}`;
-                // Clean up the question text for better API understanding
-                const cleanQ = qStr.replace(/<[^>]*>/g, '').trim();
-                return `${i+1}. ${cleanQ}`;
-            }).join('\n');
-
-            // ---- STRICT PROMPT as per user's requirement ----
-            const prompt =
-                `You are an expert teacher for Indian competitive exams. I am providing you with exactly ${questions.length} questions. 
-Your task is to identify the 'Subject/Chapter Topic' for EACH question.
-
-STRICT RULES:
-1. COUNT MATCH: You MUST return exactly ${questions.length} topics. Not one less, not one more. If I give ${questions.length} questions, I need ${questions.length} topics.
-2. STANDARD TOPICS ONLY: Do NOT use weird tags like 'exam date', 'coding', or 'general'. Use only standard competitive exam topics (e.g., Mathematics, Percentage, Hindi Vyakaran, Indian Polity, Basic Law, Reasoning, Science, History, etc.).
-3. FORMAT: Return ONLY a valid flat JSON Array of strings. Do not write any markdown, explanations, or extra text. Example: ['Profit & Loss', 'Indian Polity', 'Samas', 'Percentage']
-
-Here are the questions:
-${qTexts}`;
-
-            try {
-                const response = await fetch(GEMINI_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: prompt }]
-                        }]
-                    })
-                });
-
-                if (!response.ok) {
-                    const errText = await response.text();
-                    console.error('Gemini API error:', errText);
-                    return [];
-                }
-
-                const data = await response.json();
-                const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-                // Try to parse JSON from the response
-                try {
-                    // First try to match a JSON array pattern
-                    const jsonMatch = text.match(/\[[\s\S]*\]/);
-                    if (jsonMatch) {
-                        const tags = JSON.parse(jsonMatch[0]);
-                        if (Array.isArray(tags) && tags.length === questions.length) {
-                            return tags.map(t => String(t).trim() || 'General');
-                        }
-                    }
-                    // Fallback: try parsing the entire text
-                    const parsed = JSON.parse(text);
-                    if (Array.isArray(parsed) && parsed.length === questions.length) {
-                        return parsed.map(t => String(t).trim() || 'General');
-                    }
-                } catch (parseErr) {
-                    console.warn('Failed to parse Gemini response:', parseErr);
-                    console.warn('Raw response text:', text);
-                }
-
-                // If all else fails, return empty array
-                return [];
-            } catch (err) {
-                console.error('Gemini API call failed:', err);
-                return [];
-            }
-        };
-
-        /* ==========================================================================
-           GENERATE / UPDATE TEST – with AI Auto-Tagging
+           GENERATE / UPDATE TEST – Manual Tagging (No AI)
            ========================================================================== */
         window.generateAndSaveLink = function() {
             const aBoard = document.getElementById('a-board');
@@ -6960,10 +6904,6 @@ ${qTexts}`;
             const aRawDataElem = document.getElementById('a-rawdata');
             const btn = document.getElementById('btn-generate');
             const btnVp = document.getElementById('btn-vp-update');
-
-            // --- Check AI toggle ---
-            const aiToggle = document.getElementById('ai-toggle');
-            const isAiEnabled = aiToggle ? aiToggle.checked : false;
 
             const eBoard = aBoard ? aBoard.value : "General Exam";
             const eName = aExam ? aExam.value : "Mock Test";
@@ -6991,93 +6931,19 @@ ${qTexts}`;
             if (parsedQs.length === 0) return window.showCustomAlert("Format Error", "❌ Incorrect format.", "⚠️");
             const fQs = window.updateQsCount() || parsedQs.length;
 
-            // --- AI Tagging Logic (ONLY when AI toggle is enabled) ---
-            const processQuestionsWithTags = async () => {
-                let finalQs = parsedQs.map(q => ({ ...q }));
-
-                if (isAiEnabled) {
-                    // Show loading state
-                    if (btn) { btn.innerText = "🤖 AI Tagging...";
-                        btn.disabled = true; }
-                    window.showLoadingModal("🧠 AI is analyzing questions...<br>Please wait (10-20 seconds).");
-
-                    try {
-                        const tags = await window.callGeminiForTags(parsedQs);
-                        window.closeModal();
-
-                        if (tags && tags.length === parsedQs.length) {
-                            finalQs = parsedQs.map((q, idx) => ({
-                                ...q,
-                                tag: tags[idx] || eTopicRaw || eSub || "General"
-                            }));
-                            window.showCustomAlert("AI Tagging Complete",
-                                `✅ ${tags.length} questions tagged successfully!`, "🤖");
-                        } else {
-                            // Fallback: use manual topic
-                            const fallbackTag = eTopicRaw || eSub || "General";
-                            finalQs = parsedQs.map(q => ({ ...q, tag: fallbackTag }));
-                            window.showCustomAlert("AI Tagging Partial",
-                                "⚠️ AI could not tag all questions. Using manual topic as fallback.", "⚠️");
-                        }
-                    } catch (err) {
-                        window.closeModal();
-                        const fallbackTag = eTopicRaw || eSub || "General";
-                        finalQs = parsedQs.map(q => ({ ...q, tag: fallbackTag }));
-                        window.showCustomAlert("AI Tagging Failed",
-                            "❌ Gemini API error. Using manual topic as fallback.", "❌");
-                    }
+            // Manual tagging: tags are already parsed from the raw data.
+            // But we also want to ensure that if no tag is found, we fallback to manual topic.
+            const finalQs = parsedQs.map(q => {
+                if (q.tag && q.tag.trim() !== "") {
+                    return q;
                 } else {
-                    // AI OFF: use manual topic from input
-                    const manualTag = eTopicRaw || eSub || "General";
-                    finalQs = parsedQs.map(q => ({ ...q, tag: manualTag }));
+                    // Use the chapter/topic field or subject as fallback
+                    const fallback = eTopicRaw || eSub || "General";
+                    return { ...q, tag: fallback };
                 }
+            });
 
-                // Continue with save
-                window.saveTestToFirebase(finalQs, rawText, {
-                    eBoard,
-                    eName,
-                    eLogo,
-                    eSub,
-                    eTopicRaw,
-                    eCode,
-                    eSummary,
-                    eMarks,
-                    eNeg,
-                    tTime,
-                    qTime,
-                    isFree,
-                    ePrice,
-                    eKey,
-                    eCategory,
-                    fQs
-                }, btn, btnVp);
-            };
-
-            // Start the async process
-            processQuestionsWithTags();
-        };
-
-        /* ---- Save test to Firebase (extracted from generateAndSaveLink) ---- */
-        window.saveTestToFirebase = function(finalQs, rawText, params, btn, btnVp) {
-            const {
-                eBoard,
-                eName,
-                eLogo,
-                eSub,
-                eTopicRaw,
-                eCode,
-                eSummary,
-                eMarks,
-                eNeg,
-                tTime,
-                qTime,
-                isFree,
-                ePrice,
-                eKey,
-                eCategory,
-                fQs
-            } = params;
-
+            // Continue with save
             const finalTopicRaw = eTopicRaw || eSub || "Test";
             const eTopic = finalTopicRaw + "|||QS:" + fQs + "|||CAT:" + eCategory + "|||LOGO:" + eLogo + "|||BOARD:" +
                 eBoard + "|||EXAM:" + eName + "|||SUBCAT:" + eSub + "|||SUMMARY:" + eSummary;
@@ -7101,7 +6967,6 @@ ${qTexts}`;
                 qs: fQs,
                 rawText: rawText,
                 isActive: true,
-                // Store tags separately for analytics
                 tags: finalQs.map(q => q.tag || "General")
             };
 
@@ -7180,8 +7045,12 @@ ${qTexts}`;
             if (!raw && t.questions && t.questions.length > 0) {
                 raw = t.questions.map((q, i) => {
                     const pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
-                    const qs =
-                        `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;
+                    let qLine =
+                        `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}`;
+                    if (q.tag && q.tag.trim() !== "") {
+                        qLine += ` !tag(${q.tag})`;
+                    }
+                    const qs = qLine + '\n';
                     const op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
                     const an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;
                     const ex = q.exp ?
@@ -7362,7 +7231,6 @@ ${qTexts}`;
                 window.MathJax.typesetPromise([pA])
                     .then(triggerPrint)
                     .catch(() => {
-                        // Fallback: try again after a short delay
                         setTimeout(() => {
                             window.MathJax.typesetPromise([pA])
                                 .then(triggerPrint)
@@ -7877,7 +7745,7 @@ ${qTexts}`;
         };
 
         /* ==========================================================================
-           RENDER QUESTION – with MathJax fix (as per index 7)
+           RENDER QUESTION – with MathJax fix
            ========================================================================== */
         window.renderQuestion = function(idx) {
             window.currentQ = idx;
@@ -8020,7 +7888,7 @@ ${qTexts}`;
         };
 
         /* ==========================================================================
-           CALCULATE SCORE & SUBMIT – with Analytics & AI Mentor Message
+           CALCULATE SCORE & SUBMIT – with Analytics & AI Mentor Message (manual tags)
            ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
@@ -8046,7 +7914,7 @@ ${qTexts}`;
             window.studentInfo.wrong = 0;
             window.studentInfo.blank = 0;
 
-            // --- Collect tag-wise performance ---
+            // --- Collect tag-wise performance (manual tags) ---
             const tagPerformance = {};
             const allTags = [];
 
@@ -8143,7 +8011,7 @@ ${qTexts}`;
         };
 
         /* ==========================================================================
-           ANALYTICS CHART & AI MENTOR MESSAGE
+           ANALYTICS CHART & AI MENTOR MESSAGE (manual tags)
            ========================================================================== */
         window.renderAnalyticsChart = function(tagPerformance, allTags) {
             const container = document.getElementById('analytics-container');
@@ -8243,10 +8111,9 @@ ${qTexts}`;
                 }
             });
 
-            // --- Generate AI Mentor Message ---
+            // --- Generate AI Mentor Message (based on manual tags) ---
             let mentorMsg = '';
             if (tagNames.length === 1 && tagNames[0] === 'General') {
-                // Generic message when no specific tags
                 const acc = accData[0] || 0;
                 if (acc >= 80) {
                     mentorMsg = '🎯 शानदार प्रदर्शन! आप इस विषय में पारंगत हैं। इसे जारी रखें और और अधिक अभ्यास करें। 💪';
@@ -8256,7 +8123,6 @@ ${qTexts}`;
                     mentorMsg = '📚 आपको इस विषय पर और ध्यान देने की जरूरत है। बुनियादी अवधारणाओं को दोहराएं और अधिक प्रश्न हल करें। 🧠';
                 }
             } else {
-                // Find strongest and weakest topics
                 const perf = tagNames.map((t, idx) => ({
                     tag: t,
                     acc: accData[idx] || 0,
@@ -8502,7 +8368,6 @@ ${qTexts}`;
             const ansBox = document.getElementById('analysis-box');
             if (ansBox) {
                 ansBox.innerHTML = h;
-                // ---- MathJax fix for analysis box ----
                 if (window.MathJax) {
                     window.MathJax.typesetPromise([ansBox]).catch(e => console.log('MathJax analysis error:', e));
                 }
@@ -8567,7 +8432,7 @@ ${qTexts}`;
         };
 
         /* ==========================================================================
-           STUDENT HISTORY
+           STUDENT HISTORY – with Subject-wise Filter (manual tags)
            ========================================================================== */
         window.fetchStudentHistory = function() {
             if (!window.studentInfo || !window.studentInfo.phone) {
@@ -8632,6 +8497,8 @@ ${qTexts}`;
                 bar.innerHTML =
                     `<div class="progress-segment" style="width:${rPct}%;background:var(--success);">${rPct}%</div><div class="progress-segment" style="width:${wPct}%;background:var(--danger);">${wPct}%</div><div class="progress-segment" style="flex:1;background:var(--bg-subtle);"></div>`;
             }
+
+            // ---- Build individual test records ----
             const allSavedTests = window.getAllMergedTests();
             let h = '';
             records.forEach(r => {
@@ -8646,8 +8513,159 @@ ${qTexts}`;
                 h += `<div class="test-card hist-card-layout"><div class="hist-left"><h4 style="margin:0;color:var(--primary);font-size:14px;">📝 ${tBoard} - ${tExam} (${r.testCode||'Test'})</h4><div style="font-size:11px;color:var(--text-muted);margin:2px 0 6px 0;font-weight:600;">📂 ${tCat} | 📚 ${tSub} ${tChap ? ' | 📖 ' + tChap : ''}</div><div style="font-size:11px;color:var(--text-main);background:var(--bg-subtle);padding:6px 10px;border-radius:var(--radius-sm);border:1px solid var(--border-color); display:inline-block;">Attempt: <b>${r.attempt||1}</b> | Score: <b style="color:var(--success);font-size:13px;">${r.score||0}</b><br><span style="color:var(--success);margin-top:2px;display:inline-block;">✅ Right: ${r.right||0}</span> | <span style="color:var(--danger);">❌ Wrong: ${r.wrong||0}</span> | <span style="color:var(--text-muted);">⬜ Blank: ${r.blank||0}</span><br><div style="margin-top:2px;">⏱ Time Taken: ${Math.floor((r.timeSpent||0)/60)}m ${(r.timeSpent||0)%60}s</div></div></div><div class="hist-right"><button class="btn btn-danger btn-sm" style="margin:0; padding:6px 14px; font-size:11px;" onclick="window.downloadHistoryPDF('${pdfCode}')">📥 Download PDF</button></div></div>`;
             });
             list.innerHTML = h;
+
+            // ---- Populate subject-wise filter buttons ----
+            window.renderSubjectFilterButtons(allSavedTests, records);
         };
 
+        /* ---- Render subject filter buttons and handle filtering ---- */
+        window.renderSubjectFilterButtons = function(allTests, records) {
+            const container = document.getElementById('subject-filter-buttons');
+            const questionsContainer = document.getElementById('subject-questions-container');
+            if (!container || !questionsContainer) return;
+
+            // Collect all unique subjects from tags of all attempted test questions
+            const subjectSet = new Set();
+            const attemptedCodes = records.map(r => r.testCode ? r.testCode.replace('-RE', '') : '').filter(Boolean);
+
+            // For each attempted test, fetch its questions and extract tags
+            const allQuestionsWithTags = [];
+
+            attemptedCodes.forEach(code => {
+                const test = allTests.find(t => t.code === code);
+                if (test && test.questions) {
+                    test.questions.forEach(q => {
+                        const tag = q.tag || test.tags?.[test.questions.indexOf(q)] || "General";
+                        if (tag && tag !== "General") {
+                            const parts = tag.split(':');
+                            if (parts.length >= 1) {
+                                const subject = parts[0].trim();
+                                if (subject) subjectSet.add(subject);
+                                allQuestionsWithTags.push({
+                                    testCode: code,
+                                    testName: test.exam || code,
+                                    question: q,
+                                    tag: tag,
+                                    subject: subject,
+                                    // We'll need the user's answer for this question from results
+                                    // We'll match by testCode and question index? We'll need to fetch from records.
+                                    // Instead, we'll store the question index.
+                                    index: test.questions.indexOf(q)
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Also include questions without tags but with fallback "General" - we can treat as a subject "General"
+            // But we'll skip those for now.
+
+            if (subjectSet.size === 0) {
+                container.innerHTML = '<span style="color:var(--text-muted); font-size:13px;">No subjects found. Start taking tests with manual tags!</span>';
+                questionsContainer.innerHTML = '';
+                return;
+            }
+
+            // Create buttons
+            let buttonsHtml =
+                '<span class="filter-label">📂 Filter by Subject:</span>';
+            const sortedSubjects = Array.from(subjectSet).sort();
+            sortedSubjects.forEach(sub => {
+                buttonsHtml += `<button class="subject-filter-btn" data-subject="${sub}" onclick="window.filterSubjectQuestions('${sub}')">${sub}</button>`;
+            });
+            // Add a "All" button
+            buttonsHtml +=
+                `<button class="subject-filter-btn active" data-subject="all" onclick="window.filterSubjectQuestions('all')">📋 All</button>`;
+            container.innerHTML = buttonsHtml;
+
+            // Store data for later use
+            window._subjectQuestionData = {
+                allQuestionsWithTags,
+                sortedSubjects,
+                // We'll store records for answer lookup
+                records: records
+            };
+
+            // Initially show all
+            window.filterSubjectQuestions('all');
+        };
+
+        window.filterSubjectQuestions = function(subject) {
+            const container = document.getElementById('subject-questions-container');
+            const buttons = document.querySelectorAll('.subject-filter-btn');
+            if (!container) return;
+
+            // Update active button
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.subject === subject) btn.classList.add('active');
+            });
+
+            const data = window._subjectQuestionData;
+            if (!data) {
+                container.innerHTML = '<p style="color:var(--text-muted);">No data available.</p>';
+                return;
+            }
+
+            let filtered = data.allQuestionsWithTags;
+            if (subject !== 'all') {
+                filtered = filtered.filter(item => item.subject === subject);
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML =
+                    `<p style="color:var(--text-muted); font-size:13px;">No questions found for ${subject === 'all' ? 'any subject' : subject}.</p>`;
+                return;
+            }
+
+            // Group by test code
+            const grouped = {};
+            filtered.forEach(item => {
+                if (!grouped[item.testCode]) grouped[item.testCode] = [];
+                grouped[item.testCode].push(item);
+            });
+
+            let html = '';
+            for (const code in grouped) {
+                const items = grouped[code];
+                const testName = items[0].testName || code;
+                html +=
+                    `<div style="margin-bottom:12px; border-bottom:1px solid var(--border-color); padding-bottom:8px;">`;
+                html += `<h5 style="margin:0 0 4px 0; color:var(--primary); font-size:13px;">📝 ${testName} (${code})</h5>`;
+                items.forEach(item => {
+                    const q = item.question;
+                    const idx = item.index;
+                    // Get user's answer from records
+                    const record = data.records.find(r => (r.testCode === code || r.testCode === code + '-RE'));
+                    let userAns = null;
+                    if (record) {
+                        // We need to match answer by question index. Since we don't store individual answers per question in results, we can't.
+                        // So we will skip showing correct/wrong for now, just show the question and tag.
+                        // For a better experience, we would need to store answers in a separate collection.
+                        // We'll just show the question with tag.
+                    }
+                    html += `
+                        <div class="subject-question-item">
+                            <div class="sq-header">
+                                <span>Q${idx+1}</span>
+                                <span class="sq-tag">${item.tag}</span>
+                            </div>
+                            <div class="sq-question">${q.q}</div>
+                            <div class="sq-answer">
+                                <span style="color:var(--text-muted);">Correct: ${q.ans || 'N/A'}</span>
+                                ${userAns !== null ? `<span style="margin-left:12px;">Your: ${userAns}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            container.innerHTML = html;
+        };
+
+        /* ---- Download History PDF (uses same PDF engine) ---- */
         window.downloadHistoryPDF = function(code) {
             if (!code) return window.showCustomAlert("Error", "Invalid test code", "❌");
             window.showLoadingModal("Fetching PDF data securely...<br><i>Please wait...</i>");
@@ -8668,8 +8686,12 @@ ${qTexts}`;
             if (!raw && data.questions && data.questions.length > 0) {
                 raw = data.questions.map((q, i) => {
                     const pa = q.passage ? `!P ${String(q.passage).replace(/<br>/g,'\n')}\n` : "";
-                    const qs =
-                        `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}\n`;
+                    let qLine =
+                        `!!${i+1}! ${String(q.q||"").replace(/<br>/g,'\n').replace(/<b>(.*?)<\/b>/g,'**$1**')}`;
+                    if (q.tag && q.tag.trim() !== "") {
+                        qLine += ` !tag(${q.tag})`;
+                    }
+                    const qs = qLine + '\n';
                     const op = (q.opts || []).map(o => `!${o.id} ${o.text}`).join('\n') + '\n';
                     const an = `!!! ${q.ans?window.getCleanAns(q.ans):""}\n`;
                     const ex = q.exp ?
@@ -8935,15 +8957,14 @@ ${qTexts}`;
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v14.0 — STRICT AI PROMPT + MathJax FIX');
-        console.log('✅ Gemini prompt updated with STRICT COUNT MATCH rule');
-        console.log('✅ MathJax fixed in: PDF, Analysis, Question rendering');
-        console.log('✅ AI Auto-Tagger: Create & Update both work');
-        console.log('✅ Smart PDF with tag badges');
-        console.log('✅ Topic-wise performance chart (Chart.js)');
-        console.log('✅ AI Mentor Message based on topic performance');
-        console.log('✅ Progress bar at exam level');
-        console.log('📌 Gemini API Key: ' + GEMINI_API_KEY.substring(0, 10) + '...');
+        console.log('🚀 TEST BODHI v15.0 — Manual Tagging System (No AI)');
+        console.log('✅ AI removed completely. Manual tagging via !tag(Subject:Topic)');
+        console.log('✅ PDF shows tag badges.');
+        console.log('✅ Analytics chart uses manual tags.');
+        console.log('✅ Student Report: Subject-wise filter buttons.');
+        console.log('✅ MathJax fixed in PDF, Analysis, Question views.');
+        console.log('✅ Profile photo sync via App Script.');
+        console.log('📌 Tag format: !tag(Subject:Topic) placed after question text.');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
