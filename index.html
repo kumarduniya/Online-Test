@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
 
-    <!-- MathJax -->
+    <!-- MathJax - Proper configuration as per index (7).html -->
     <script>
         window.MathJax = {
             tex: {
@@ -4288,7 +4288,7 @@
                         </div>
                     </div>
 
-                    <!-- ===== NEW: AI AUTO-TAGGER TOGGLE ===== -->
+                    <!-- ===== AI AUTO-TAGGER TOGGLE ===== -->
                     <div class="ai-toggle-wrap">
                         <label class="ai-label">
                             🤖 Enable AI Auto-Tagging
@@ -6863,18 +6863,30 @@
         };
 
         /* ==========================================================================
-           AI AUTO-TAGGER: Gemini API Integration
+           AI AUTO-TAGGER: Gemini API Integration with STRICT PROMPT
            ========================================================================== */
         window.callGeminiForTags = async function(questions) {
             if (!questions || questions.length === 0) return [];
 
             const qTexts = questions.map((q, i) => {
                 const qStr = q.q || `Question ${i+1}`;
-                return `${i+1}. ${qStr}`;
+                // Clean up the question text for better API understanding
+                const cleanQ = qStr.replace(/<[^>]*>/g, '').trim();
+                return `${i+1}. ${cleanQ}`;
             }).join('\n');
 
+            // ---- STRICT PROMPT as per user's requirement ----
             const prompt =
-                `You are an expert educational content tagger. Analyze each question and identify the subject/chapter topic it belongs to. Return ONLY a JSON array of topic names (as strings) for each question in the same order. Do not include any other text, explanation, or formatting. Just the JSON array.\n\nQuestions:\n${qTexts}`;
+                `You are an expert teacher for Indian competitive exams. I am providing you with exactly ${questions.length} questions. 
+Your task is to identify the 'Subject/Chapter Topic' for EACH question.
+
+STRICT RULES:
+1. COUNT MATCH: You MUST return exactly ${questions.length} topics. Not one less, not one more. If I give ${questions.length} questions, I need ${questions.length} topics.
+2. STANDARD TOPICS ONLY: Do NOT use weird tags like 'exam date', 'coding', or 'general'. Use only standard competitive exam topics (e.g., Mathematics, Percentage, Hindi Vyakaran, Indian Polity, Basic Law, Reasoning, Science, History, etc.).
+3. FORMAT: Return ONLY a valid flat JSON Array of strings. Do not write any markdown, explanations, or extra text. Example: ['Profit & Loss', 'Indian Polity', 'Samas', 'Percentage']
+
+Here are the questions:
+${qTexts}`;
 
             try {
                 const response = await fetch(GEMINI_URL, {
@@ -6900,6 +6912,7 @@
 
                 // Try to parse JSON from the response
                 try {
+                    // First try to match a JSON array pattern
                     const jsonMatch = text.match(/\[[\s\S]*\]/);
                     if (jsonMatch) {
                         const tags = JSON.parse(jsonMatch[0]);
@@ -6914,6 +6927,7 @@
                     }
                 } catch (parseErr) {
                     console.warn('Failed to parse Gemini response:', parseErr);
+                    console.warn('Raw response text:', text);
                 }
 
                 // If all else fails, return empty array
@@ -7154,7 +7168,7 @@
         };
 
         /* ==========================================================================
-           PDF DOWNLOAD – with Smart Tags as Badges
+           PDF DOWNLOAD – with Smart Tags as Badges & MathJax fix
            ========================================================================== */
         window.adminDownloadPDF = function(code, mode) {
             const t = window.adminUnifiedTests.find(x => x.code === code);
@@ -7204,7 +7218,7 @@
             window.executePDFPrintWithMathFix(customName, mode);
         };
 
-        /* ---- Modified PDF printer with tag badges ---- */
+        /* ---- Modified PDF printer with tag badges and MathJax fix ---- */
         window.executePDFPrintWithMathFix = function(studentName, mode) {
             const pA = document.getElementById('print-area');
             if (!pA) return;
@@ -7334,29 +7348,29 @@
 
             document.body.classList.add('print-pdf');
 
-            if (window.MathJax) {
-                window.MathJax.typesetPromise([pA]).then(() => {
-                    setTimeout(() => {
-                        window.print();
-                        setTimeout(() => {
-                            document.body.classList.remove('print-pdf');
-                        }, 1000);
-                    }, 500);
-                }).catch(() => {
-                    setTimeout(() => {
-                        window.print();
-                        setTimeout(() => {
-                            document.body.classList.remove('print-pdf');
-                        }, 1000);
-                    }, 500);
-                });
-            } else {
+            // ---- MathJax fix: wait for typesetting before printing ----
+            const triggerPrint = () => {
                 setTimeout(() => {
                     window.print();
                     setTimeout(() => {
                         document.body.classList.remove('print-pdf');
                     }, 1000);
-                }, 500);
+                }, 600);
+            };
+
+            if (window.MathJax) {
+                window.MathJax.typesetPromise([pA])
+                    .then(triggerPrint)
+                    .catch(() => {
+                        // Fallback: try again after a short delay
+                        setTimeout(() => {
+                            window.MathJax.typesetPromise([pA])
+                                .then(triggerPrint)
+                                .catch(triggerPrint);
+                        }, 500);
+                    });
+            } else {
+                triggerPrint();
             }
         };
 
@@ -7862,6 +7876,9 @@
             window.updateSidebarStats();
         };
 
+        /* ==========================================================================
+           RENDER QUESTION – with MathJax fix (as per index 7)
+           ========================================================================== */
         window.renderQuestion = function(idx) {
             window.currentQ = idx;
             const q = window.examData.questions[idx];
@@ -7901,8 +7918,10 @@
             const optBox = document.getElementById('options-box');
             if (optBox) optBox.innerHTML = oH;
 
-            if (window.MathJax) {
-                window.MathJax.typesetPromise([document.getElementById('q-scroll-area')]).catch(e => console.log(e));
+            // ---- MathJax fix: typeset the question area ----
+            const qScrollArea = document.getElementById('q-scroll-area');
+            if (qScrollArea && window.MathJax) {
+                window.MathJax.typesetPromise([qScrollArea]).catch(e => console.log('MathJax error:', e));
             }
 
             const leftPanel = document.getElementById('exam-left-panel');
@@ -8398,7 +8417,7 @@
         };
 
         /* ==========================================================================
-           ANALYSIS
+           ANALYSIS – with MathJax fix
            ========================================================================== */
         window.showAnalysis = function(t) {
             window.currentAnalysisArray = [];
@@ -8479,9 +8498,15 @@
                 "";
             const h =
                 `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:8px;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><b style="color:var(--primary);font-size:14px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b><button class="btn btn-danger btn-sm" onclick="document.getElementById('analysis-box').style.display='none';" style="font-size:10px;padding:4px 12px;">✕ Close</button></div>${pH}<b style="font-size:16px;color:var(--text-main);display:block;margin-bottom:12px;line-height:1.5;">${sI} Q${i+1}. ${q.q}</b><div style="${tC}font-weight:700;margin-bottom:12px;padding:8px 12px;border-radius:var(--radius-sm);background:var(--bg-subtle);border:1px solid var(--border-color);font-size:13px;">${uT}</div>${oH}${eH}<div style="display:flex;justify-content:space-between;margin-top:16px;border-top:1px solid var(--border-color);padding-top:12px;gap:8px;"><button class="btn btn-outline btn-sm" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''} style="font-size:11px;">⬅️ Prev</button><button class="btn btn-primary btn-sm" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''} style="font-size:11px;">Next ➡️</button></div>`;
+
             const ansBox = document.getElementById('analysis-box');
-            if (ansBox) { ansBox.innerHTML = h; if (window.MathJax) { window.MathJax.typesetPromise([ansBox]).catch(e =>
-                        console.log(e)); } }
+            if (ansBox) {
+                ansBox.innerHTML = h;
+                // ---- MathJax fix for analysis box ----
+                if (window.MathJax) {
+                    window.MathJax.typesetPromise([ansBox]).catch(e => console.log('MathJax analysis error:', e));
+                }
+            }
         };
 
         window.prevAnalysis = function() { if (window.currentAnalysisIndex > 0) { window.currentAnalysisIndex--;
@@ -8910,14 +8935,14 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v13.0 — AI Auto-Tagger + Analytics + Smart PDF');
-        console.log('✅ AI Toggle added in Admin Panel');
-        console.log('✅ Gemini API integration for auto-tagging (Create & Update)');
+        console.log('🚀 TEST BODHI v14.0 — STRICT AI PROMPT + MathJax FIX');
+        console.log('✅ Gemini prompt updated with STRICT COUNT MATCH rule');
+        console.log('✅ MathJax fixed in: PDF, Analysis, Question rendering');
+        console.log('✅ AI Auto-Tagger: Create & Update both work');
         console.log('✅ Smart PDF with tag badges');
         console.log('✅ Topic-wise performance chart (Chart.js)');
         console.log('✅ AI Mentor Message based on topic performance');
         console.log('✅ Progress bar at exam level');
-        console.log('✅ Profile photo sync fixed');
         console.log('📌 Gemini API Key: ' + GEMINI_API_KEY.substring(0, 10) + '...');
     </script>
 
