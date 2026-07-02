@@ -7390,7 +7390,7 @@
                 const wM = (isW && mode === 'full') ?
                     '<span style="color:red;font-size:16px;margin-right:4px;">❌</span>' : "";
 
-                // ---- Clean tag display: Subject → Topic ----
+                // ---- Clean tag display: Subject → Topic (no raw syntax) ----
                 let tagDisplay = '';
                 const rawTag = q.tag || window.examData.tags?.[i] || "General";
                 if (rawTag && rawTag !== "General") {
@@ -8807,9 +8807,6 @@
                                 tag: tag,
                                 subject: subject,
                                 index: idx,
-                                // We don't have per-question user answers in records, so we can't compute correct/wrong here
-                                // But we can compute from records if we had per-question data — for now, we'll show
-                                // only the questions with tags and the topic table will show overall stats from records
                             });
                             if (!tagPerformance[tag]) {
                                 tagPerformance[tag] = { correct: 0, wrong: 0, blank: 0, total: 0 };
