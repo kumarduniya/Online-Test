@@ -3688,6 +3688,7 @@
             max-height: 260px;
             width: 100%;
             margin: 6px auto 12px auto;
+            overflow-x: auto;
         }
         .analytics-container .mentor-msg-box {
             background: var(--bg-subtle);
@@ -4995,6 +4996,13 @@
             if (topBar) topBar.style.display = 'none';
             const timerBox = document.getElementById('timer-box');
             if (timerBox) timerBox.style.display = 'none';
+            // Clear exam content to prevent lingering questions
+            const qText = document.getElementById('q-text');
+            const optionsBox = document.getElementById('options-box');
+            const passageBox = document.getElementById('q-passage');
+            if (qText) qText.innerHTML = '';
+            if (optionsBox) optionsBox.innerHTML = '';
+            if (passageBox) passageBox.innerHTML = '';
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
             const dashView = document.getElementById('student-dashboard-view');
             if (dashView) {
@@ -9008,6 +9016,11 @@
                 html += `</div></div></div>`;
             }
             container.innerHTML = html;
+
+            // --- Render MathJax and SVG in the container ---
+            if (window.MathJax) {
+                window.MathJax.typesetPromise([container]).catch(e => console.log('MathJax error:', e));
+            }
         };
 
         /* ---- Toggle subject group (expand/collapse) ---- */
@@ -9339,6 +9352,8 @@
         console.log('✅ TASK 7: Manual tags now correctly show in report and PDF.');
         console.log('✅ TASK 8: Solutions (explanations) are included in PDF.');
         console.log('✅ TASK 9: Only attempted tests\' questions show in report.');
+        console.log('✅ TASK 10: MathJax and SVG images render correctly in report questions.');
+        console.log('✅ TASK 11: Horizontal scroll added to chart for small devices.');
         console.log('📌 Tag format: !tag(Subject:Topic)');
         console.log('📌 PDF shows clean tags as badges.');
         console.log('📌 Analytics chart uses manual tags only (no AI).');
