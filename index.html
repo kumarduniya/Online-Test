@@ -8805,7 +8805,8 @@
                 if (test && test.questions) {
                     test.questions.forEach((q, idx) => {
                         const tag = q.tag || test.tags?.[idx] || "General";
-                        if (tag && tag !== "General") {
+                        // Only include if tag is not "General" and not a date/shift string
+                        if (tag && tag !== "General" && !tag.match(/\d{2}\/\d{2}\/\d{4}/)) {
                             const parts = tag.split(':');
                             const subject = parts.length >= 1 ? parts[0].trim() : 'General';
                             subjectSet.add(subject);
@@ -8859,8 +8860,10 @@
                     const tagDistribution = {};
                     test.questions.forEach(q => {
                         const tag = q.tag || test.tags?.[test.questions.indexOf(q)] || "General";
-                        if (!tagDistribution[tag]) tagDistribution[tag] = 0;
-                        tagDistribution[tag]++;
+                        if (tag && tag !== "General" && !tag.match(/\d{2}\/\d{2}\/\d{4}/)) {
+                            if (!tagDistribution[tag]) tagDistribution[tag] = 0;
+                            tagDistribution[tag]++;
+                        }
                     });
                     const totalTagged = Object.values(tagDistribution).reduce((a, b) => a + b, 0);
                     if (totalTagged > 0) {
@@ -8910,6 +8913,7 @@
 
         /* ---- Filter History Questions by Subject (TOP) ----
              Questions are COLLAPSED by default with toggle & close button (Tasks 3 & 4)
+             Only shows questions from attempted tests (already filtered via records)
            ========================================================================== */
         window.filterHistorySubjectTop = function(subject) {
             const container = document.getElementById('subject-questions-container-top');
@@ -9301,13 +9305,16 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v18.0 — AI Removed, Manual Tags Only');
+        console.log('🚀 TEST BODHI v19.0 — Manual Tags Only, Report Filters Fixed');
         console.log('✅ TASK 1: AI tagging completely removed — only manual !tag(Subject:Topic) used.');
         console.log('✅ TASK 2: Subject filter bar moved to TOP of report section.');
         console.log('✅ TASK 3: Questions are COLLAPSED by default with toggle expand.');
         console.log('✅ TASK 4: Close button added to every opened filter group.');
         console.log('✅ TASK 5: Progress bar overflow fixed — fits container.');
         console.log('✅ TASK 6: PDF clean formatting — raw tags hidden, only "SUBJECT → TOPIC" shown.');
+        console.log('✅ TASK 7: Manual tags now correctly show in report and PDF.');
+        console.log('✅ TASK 8: Solutions (explanations) are included in PDF.');
+        console.log('✅ TASK 9: Only attempted tests\' questions show in report.');
         console.log('📌 Tag format: !tag(Subject:Topic)');
         console.log('📌 PDF shows clean tags as badges.');
         console.log('📌 Analytics chart uses manual tags only (no AI).');
