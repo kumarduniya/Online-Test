@@ -5110,6 +5110,7 @@
 
         /* ==========================================================================
            CORE PARSER – FIXED: Tag detection + Passage reset (!P none)
+           Now supports tags on separate lines and in same line.
            ========================================================================== */
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
@@ -5125,11 +5126,21 @@
             let tempQ = null;
             let cPass = "";
             let cMode = "";
+            let pendingTag = ""; // new variable to hold tag from a separate line
             const lines = rawText.split('\n');
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (!line) continue;
                 line = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+                // ---- CHECK FOR STANDALONE TAG LINE ----
+                const tagLineMatch = line.match(/^!tag\(([^)]+)\)/i);
+                if (tagLineMatch) {
+                    // This line is only a tag, store it for the next question
+                    pendingTag = tagLineMatch[1].trim();
+                    // Do not add this line to any question
+                    continue;
+                }
 
                 // ---- PASSAGE HANDLING ----
                 if (line.match(/^!P/i)) {
@@ -5149,11 +5160,21 @@
                     if (tempQ && tempQ.q) parsedQs.push(tempQ);
                     let qLine = line.replace(/^!!\s*\d+\s*!\s*/, '').trim();
                     let tag = '';
+                    // Extract !tag(Subject:Topic) from within the question line
                     const tagMatch = qLine.match(/!tag\(([^)]+)\)/);
                     if (tagMatch) {
                         tag = tagMatch[1].trim();
                         qLine = qLine.replace(/!tag\([^)]+\)/, '').trim();
                     }
+                    // If a tag was pending from a separate line, use it (override if also in-line)
+                    if (pendingTag && !tag) {
+                        tag = pendingTag;
+                        pendingTag = ''; // clear after use
+                    } else if (pendingTag) {
+                        // If both exist, inline tag takes precedence, but clear pending
+                        pendingTag = '';
+                    }
+                    // Clean any leftover tag syntax
                     qLine = qLine.replace(/!tag\([^)]*\)/g, '').trim();
                     tempQ = { q: qLine, opts: [], ans: "", exp: "", passage: cPass || "", tag: tag || "" };
                     cMode = "q";
@@ -5195,10 +5216,13 @@
                             cPass = (cPass || "") + (cPass ? "<br>" : "") + line;
                             if (tempQ) tempQ.passage = cPass;
                         }
+                        // If cMode === "P_NONE", ignore (passage reset)
                     }
                 }
             }
+            // Push the last question if any
             if (tempQ && tempQ.q) parsedQs.push(tempQ);
+            // If a pending tag remains (e.g., tag at end of file without a question), ignore it
             return parsedQs;
         };
 
