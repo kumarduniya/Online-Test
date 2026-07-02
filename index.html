@@ -3857,6 +3857,59 @@
             color: var(--warning);
             font-weight: 700;
         }
+
+        /* ============================================================
+           COLLAPSIBLE SECTION
+           ============================================================ */
+        .sq-group-toggle {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            background: var(--bg-subtle);
+            border-radius: var(--radius-sm);
+            margin: 4px 0 8px 0;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        .sq-group-toggle:hover {
+            background: var(--bg-card);
+            border-color: var(--accent);
+        }
+        .sq-group-toggle .sq-toggle-icon {
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+        .sq-group-toggle .sq-toggle-icon.open {
+            transform: rotate(90deg);
+        }
+        .sq-group-content {
+            display: none;
+            padding-left: 8px;
+            border-left: 3px solid var(--accent);
+            margin-left: 4px;
+        }
+        .sq-group-content.open {
+            display: block;
+        }
+        .sq-close-btn {
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 50px;
+            transition: var(--transition);
+            margin-left: 8px;
+        }
+        .sq-close-btn:hover {
+            background: var(--danger);
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -4091,6 +4144,16 @@
                     <button class="btn btn-primary btn-sm" onclick="window.fetchStudentHistory()" style="margin:0;width:auto;">🔄 Refresh Report</button>
                     <input type="hidden" id="hist-phone" />
                 </div>
+
+                <!-- ===== SUBJECT FILTER BAR – MOVED TO TOP (TASK 2) ===== -->
+                <div id="subject-filter-section-top" style="margin:0 0 16px 0; border:2px solid var(--accent); border-radius:var(--radius); padding:12px 14px; background:var(--bg-subtle);">
+                    <h3 style="color:var(--primary); font-size:14px; margin:0 0 8px 0;">📂 Filter by Subject</h3>
+                    <div class="subject-filter-bar" id="subject-filter-bar-top" style="margin:0; border:none; padding:0; background:transparent;"></div>
+                    <div id="subject-questions-container-top" class="subject-questions-container" style="margin-top:8px;">
+                        <p style="color:var(--text-muted); font-size:13px; padding:8px 0;">Select a subject above to see all questions.</p>
+                    </div>
+                </div>
+
                 <div id="st-hist-content">
                     <div style="background:rgba(15,157,88,0.08);border:2px solid var(--success);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;">
                         <h3 style="margin:0 0 12px 0;color:var(--success);text-align:center;font-size:17px;">📊 Overall Report Card</h3>
@@ -4113,33 +4176,25 @@
                     </div>
                     <div id="st-hist-list" style="display:flex;flex-direction:column;gap:12px;margin-top:12px;"></div>
 
-                    <!-- ===== SUBJECT FILTER BAR (horizontal) – Individual Test Records ===== -->
-                    <div id="subject-filter-section" style="margin-top:16px; border-top:2px solid var(--border-color); padding-top:10px;">
-                        <h3 style="color:var(--primary); font-size:14px; margin-bottom:4px;">📂 Subject-wise Questions</h3>
-                        <div class="subject-filter-bar" id="subject-filter-bar"></div>
-                        <div id="subject-questions-container" class="subject-questions-container">
-                            <p style="color:var(--text-muted); font-size:13px; padding:8px 0;">Select a subject above to see all questions.</p>
-                        </div>
-                        <!-- Topic-wise performance table -->
-                        <div id="topic-performance-table" style="margin-top:16px; border-top:2px solid var(--border-color); padding-top:12px;">
-                            <h3 style="color:var(--primary); font-size:14px; margin-bottom:6px;">📊 Topic-wise Performance (Strong / Weak)</h3>
-                            <div id="topic-table-container" class="topic-perf-table-wrap">
-                                <table class="topic-perf-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Subject</th>
-                                            <th>Topic</th>
-                                            <th>Total</th>
-                                            <th>Correct</th>
-                                            <th>Wrong</th>
-                                            <th>Blank</th>
-                                            <th>Accuracy</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="topic-table-body"></tbody>
-                                </table>
-                            </div>
+                    <!-- Topic-wise performance table (kept below records as secondary) -->
+                    <div id="topic-performance-table" style="margin-top:16px; border-top:2px solid var(--border-color); padding-top:12px;">
+                        <h3 style="color:var(--primary); font-size:14px; margin-bottom:6px;">📊 Topic-wise Performance (Strong / Weak)</h3>
+                        <div id="topic-table-container" class="topic-perf-table-wrap">
+                            <table class="topic-perf-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Topic</th>
+                                        <th>Total</th>
+                                        <th>Correct</th>
+                                        <th>Wrong</th>
+                                        <th>Blank</th>
+                                        <th>Accuracy</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topic-table-body"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -4280,21 +4335,16 @@
                     </div>
                 </div>
 
-                <!-- ===== ANALYTICS CHART + AI MENTOR MESSAGE ===== -->
+                <!-- ===== ANALYTICS CHART (AI MENTOR REMOVED – TASK 1) ===== -->
                 <div id="analytics-container" class="analytics-container" style="display:none;">
                     <div class="analytics-title">
                         📊 Topic-wise Performance
-                        <span class="analytics-badge">AI Insights</span>
+                        <span class="analytics-badge">Manual Tags</span>
                     </div>
                     <div class="chart-wrapper">
                         <canvas id="topicChart"></canvas>
                     </div>
-                    <div id="mentor-msg-box" class="mentor-msg-box">
-                        <div class="mentor-icon">🤖</div>
-                        <div class="mentor-text">
-                            <span class="mentor-name">AI Mentor</span>: <span id="mentor-message">Analyzing your performance...</span>
-                        </div>
-                    </div>
+                    <!-- AI Mentor completely removed -->
                     <!-- Topic-wise performance table (10 rows, 15 columns) -->
                     <div id="result-topic-table" style="margin-top:16px; border-top:1px solid var(--border-color); padding-top:12px; overflow-x:auto;">
                         <h4 style="margin:0 0 8px 0; color:var(--primary); font-size:14px;">📋 Detailed Topic Performance</h4>
@@ -4667,7 +4717,7 @@
 
     <script>
         /* ==========================================================================
-           FULL SCRIPT – Manual Tagging System (No AI)
+           FULL SCRIPT – Manual Tagging Only (No AI)
            ========================================================================== */
 
         // ---- CONFIG ----
@@ -5085,7 +5135,7 @@
                 if (line.match(/^!P/i)) {
                     let passageText = line.replace(/^!P\s*/i, '').trim();
                     if (passageText.toLowerCase() === "none") {
-                        cPass = ""; // RESET passage immediately
+                        cPass = "";
                         cMode = "P_NONE";
                     } else {
                         cPass = passageText;
@@ -5099,13 +5149,11 @@
                     if (tempQ && tempQ.q) parsedQs.push(tempQ);
                     let qLine = line.replace(/^!!\s*\d+\s*!\s*/, '').trim();
                     let tag = '';
-                    // Extract !tag(Subject:Topic)
                     const tagMatch = qLine.match(/!tag\(([^)]+)\)/);
                     if (tagMatch) {
                         tag = tagMatch[1].trim();
                         qLine = qLine.replace(/!tag\([^)]+\)/, '').trim();
                     }
-                    // Additional cleanup: remove any leftover raw tag syntax
                     qLine = qLine.replace(/!tag\([^)]*\)/g, '').trim();
                     tempQ = { q: qLine, opts: [], ans: "", exp: "", passage: cPass || "", tag: tag || "" };
                     cMode = "q";
@@ -5145,10 +5193,8 @@
                             tempQ.q = (tempQ.q || "") + (tempQ.q ? "<br>" : "") + line;
                         } else if (cMode === "P" && cPass) {
                             cPass = (cPass || "") + (cPass ? "<br>" : "") + line;
-                            // Update passage for current question if it's still being built
                             if (tempQ) tempQ.passage = cPass;
                         }
-                        // If cMode === "P_NONE", ignore (passage reset)
                     }
                 }
             }
@@ -7113,7 +7159,7 @@
         };
 
         /* ==========================================================================
-           GENERATE / UPDATE TEST – Manual Tagging (No AI)
+           GENERATE / UPDATE TEST – Manual Tagging Only (No AI)
            ========================================================================== */
         window.generateAndSaveLink = function() {
             const aBoard = document.getElementById('a-board');
@@ -7161,11 +7207,12 @@
             if (parsedQs.length === 0) return window.showCustomAlert("Format Error", "❌ Incorrect format.", "⚠️");
             const fQs = window.updateQsCount() || parsedQs.length;
 
-            // Manual tagging: tags already parsed, fallback to topic/subject
+            // Manual tagging only – no AI fallback
             const finalQs = parsedQs.map(q => {
                 if (q.tag && q.tag.trim() !== "") {
                     return q;
                 } else {
+                    // No AI fallback – use raw topic/subject as fallback only
                     const fallback = eTopicRaw || eSub || "General";
                     return { ...q, tag: fallback };
                 }
@@ -7194,7 +7241,12 @@
                 qs: fQs,
                 rawText: rawText,
                 isActive: true,
-                tags: finalQs.map(q => q.tag || "General")
+                tags: finalQs.map(q => q.tag || "General"),
+                // Explicitly remove any AI fields
+                aiTags: null,
+                aiTopics: null,
+                aiSubject: null,
+                aiAnalysis: null
             };
 
             if (btn) { btn.innerText = "⏳ Saving...";
@@ -7202,6 +7254,7 @@
             if (btnVp) { btnVp.innerText = "⏳ Saving...";
                 btnVp.disabled = true; }
 
+            // Full overwrite – no merge
             db.collection("tests").doc(eCode).set(fObj).then(() => {
                 if (btn) { btn.innerText = "🚀 Generate / Update Test";
                     btn.disabled = false;
@@ -8123,7 +8176,7 @@
         };
 
         /* ==========================================================================
-           CALCULATE SCORE & SUBMIT – with Analytics & AI Mentor Message (manual tags)
+           CALCULATE SCORE & SUBMIT – with Analytics (Manual Tags Only, No AI)
            ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
@@ -8149,7 +8202,7 @@
             window.studentInfo.wrong = 0;
             window.studentInfo.blank = 0;
 
-            // --- Collect tag-wise performance (manual tags) ---
+            // --- Collect tag-wise performance (manual tags only) ---
             const tagPerformance = {};
             const allTags = [];
 
@@ -8205,7 +8258,7 @@
             document.getElementById('cert-test-code').innerText = window.examData.code || "---";
             window.applyPortalLogo();
 
-            // --- Render Analytics Chart & AI Mentor Message ---
+            // --- Render Analytics Chart (No AI Mentor) ---
             window.renderAnalyticsChart(tagPerformance, allTags);
 
             const rankLoader = document.getElementById('rank-loader');
@@ -8246,7 +8299,7 @@
         };
 
         /* ==========================================================================
-           ANALYTICS CHART & AI MENTOR MESSAGE (manual tags) + Topic Table
+           ANALYTICS CHART – Manual Tags Only, No AI Mentor
            ========================================================================== */
         window.renderAnalyticsChart = function(tagPerformance, allTags) {
             const container = document.getElementById('analytics-container');
@@ -8340,55 +8393,6 @@
                     }
                 }
             });
-
-            // --- AI Mentor Message ---
-            let mentorMsg = '';
-            if (tagNames.length === 1 && tagNames[0] === 'General') {
-                const acc = accData[0] || 0;
-                if (acc >= 80) {
-                    mentorMsg = '🎯 शानदार प्रदर्शन! आप इस विषय में पारंगत हैं। इसे जारी रखें और और अधिक अभ्यास करें। 💪';
-                } else if (acc >= 50) {
-                    mentorMsg = '📈 अच्छा प्रयास! आपकी बुनियाद मजबूत है। कुछ और अभ्यास से आप और बेहतर कर सकते हैं। ⚡';
-                } else {
-                    mentorMsg = '📚 आपको इस विषय पर और ध्यान देने की जरूरत है। बुनियादी अवधारणाओं को दोहराएं और अधिक प्रश्न हल करें। 🧠';
-                }
-            } else {
-                const perf = tagNames.map((t, idx) => ({
-                    tag: t,
-                    acc: accData[idx] || 0,
-                    correct: correctData[idx] || 0,
-                    total: totalData[idx] || 1
-                }));
-                perf.sort((a, b) => b.acc - a.acc);
-                const strongest = perf[0];
-                const weakest = perf[perf.length - 1];
-
-                let strongMsg = '';
-                let weakMsg = '';
-                if (strongest.acc >= 70) {
-                    strongMsg = `आपकी <b>${strongest.tag}</b> बहुत स्ट्रॉन्ग है (${strongest.acc}% accuracy)! 🌟`;
-                } else if (strongest.acc >= 50) {
-                    strongMsg = `आपकी <b>${strongest.tag}</b> में अच्छी पकड़ है (${strongest.acc}% accuracy)। 💡`;
-                } else {
-                    strongMsg = `आपकी <b>${strongest.tag}</b> में और सुधार की गुंजाइश है (${strongest.acc}% accuracy)। 📖`;
-                }
-
-                if (weakest.acc < 40 && weakest.acc < strongest.acc) {
-                    weakMsg =
-                        `तुम्हें <b>${weakest.tag}</b> के रूल्स और कॉन्सेप्ट्स रिवाइज़ करने की ज़रूरत है (${weakest.acc}% accuracy)। 🎯`;
-                } else if (weakest.acc < 60) {
-                    weakMsg = `<b>${weakest.tag}</b> में थोड़ा और अभ्यास करें (${weakest.acc}% accuracy)। 📝`;
-                } else {
-                    weakMsg = `सभी विषयों में आपका प्रदर्शन संतोषजनक है। इसे जारी रखें! 🚀`;
-                }
-
-                mentorMsg = strongMsg + '<br>' + weakMsg;
-            }
-
-            const mentorBox = document.getElementById('mentor-msg-box');
-            const mentorText = document.getElementById('mentor-message');
-            if (mentorBox) mentorBox.style.display = 'flex';
-            if (mentorText) mentorText.innerHTML = mentorMsg;
 
             // ---- Topic-wise performance table (10 rows) ----
             const tbody = document.getElementById('result-topic-table-body');
@@ -8692,6 +8696,8 @@
 
         /* ==========================================================================
            STUDENT HISTORY – with Subject Filter Bar + Topic Performance Table (Strong/Weak)
+           Filter moved to TOP (Task 2)
+           Questions collapsed by default with close button (Tasks 3 & 4)
            ========================================================================== */
         window.fetchStudentHistory = function() {
             if (!window.studentInfo || !window.studentInfo.phone) {
@@ -8773,14 +8779,17 @@
             });
             list.innerHTML = h;
 
-            // ---- Subject Filter Bar + Topic Performance Table ----
+            // ---- Subject Filter Bar + Topic Performance Table (Filter at TOP) ----
             window.renderSubjectFilterAndTopicPerformance(allSavedTests, records);
         };
 
-        /* ---- Subject Filter Bar (horizontal) + Topic Performance (Strong/Weak) ---- */
+        /* ---- Subject Filter Bar (horizontal) + Topic Performance (Strong/Weak) ----
+             Now rendered at the TOP of the history section (Task 2)
+             Questions are COLLAPSED by default with toggle & close button (Tasks 3 & 4)
+           ========================================================================== */
         window.renderSubjectFilterAndTopicPerformance = function(allTests, records) {
-            const filterBar = document.getElementById('subject-filter-bar');
-            const questionsContainer = document.getElementById('subject-questions-container');
+            const filterBar = document.getElementById('subject-filter-bar-top');
+            const questionsContainer = document.getElementById('subject-questions-container-top');
             const topicBody = document.getElementById('topic-table-body');
             if (!filterBar || !questionsContainer || !topicBody) return;
 
@@ -8816,56 +8825,30 @@
                 }
             });
 
-            // For topic table, we'll use the records data (overall stats per test)
-            // But we need to map tag performance — we'll use the total counts from records
-            // Since we don't have per-question answers in records, we'll show overall accuracy per test with tags
-            // For a proper topic table, we need per-question data. We'll approximate by showing aggregate.
-            // Actually, for the topic table we'll compute from all attempted questions across tests using the records.
-            // But records only have aggregate right/wrong per test, not per tag.
-            // We'll build a more useful view: for each tag, we'll aggregate from all tests that have that tag.
-
-            // Since we don't have per-question answers in records, we'll use a different approach:
-            // For each question, we don't know the user's answer. So we'll just show the question list per subject.
-            // For the topic table, we'll use the aggregate data from records and show overall stats per tag.
-
-            // For the topic table, we'll compute from all tests and tags, but we'll use the record aggregate
-            // to compute accuracy per test, not per tag. This is a limitation of the current data model.
-
-            // We'll compute topic-wise performance from the questions and records:
-            // For each tag, we'll find all questions with that tag across all attempted tests,
-            // then we need to know if the user answered correctly. Since we don't have per-question answers,
-            // we'll show the aggregate from records as best effort.
-
-            // Better approach: For each record, we know right/wrong/blank counts. We'll map these to tags
-            // by looking at the test's questions and using the tag distribution.
-
-            // For the subject filter bar, we'll use the subjects from tags.
+            // For subject filter bar
             let buttonsHtml = '<span class="filter-label">📂 Filter by Subject:</span>';
             const sortedSubjects = Array.from(subjectSet).sort();
             sortedSubjects.forEach(sub => {
                 buttonsHtml +=
-                    `<button class="filter-btn" data-subject="${sub}" onclick="window.filterHistorySubject('${sub}')">${sub}</button>`;
+                    `<button class="filter-btn" data-subject="${sub}" onclick="window.filterHistorySubjectTop('${sub}')">${sub}</button>`;
             });
             buttonsHtml +=
-                `<button class="filter-btn active" data-subject="all" onclick="window.filterHistorySubject('all')">📋 All</button>`;
+                `<button class="filter-btn active" data-subject="all" onclick="window.filterHistorySubjectTop('all')">📋 All</button>`;
             filterBar.innerHTML = buttonsHtml;
 
             // Store data for filtering
-            window._historySubjectData = {
+            window._historySubjectDataTop = {
                 allQuestionsWithTags,
                 sortedSubjects,
                 records: records,
                 allTests: allTests
             };
 
-            // Initially show all
-            window.filterHistorySubject('all');
+            // Initially show all (collapsed by default)
+            window.filterHistorySubjectTop('all');
 
             // ---- Topic Performance Table (Strong/Weak) ----
-            // Compute topic-wise performance from records and tags
-            // For each tag, calculate total correct/wrong/blank across all tests
             const topicPerf = {};
-
             records.forEach(record => {
                 const code = record.testCode ? record.testCode.replace('-RE', '') : '';
                 const test = allTests.find(t => t.code === code);
@@ -8873,18 +8856,12 @@
                     const rightCount = record.right || 0;
                     const wrongCount = record.wrong || 0;
                     const blankCount = record.blank || 0;
-                    const totalQs = test.questions.length;
-
-                    // Distribute the record's counts across tags based on the tag distribution
-                    // This is an approximation since we don't have per-question answers
                     const tagDistribution = {};
                     test.questions.forEach(q => {
                         const tag = q.tag || test.tags?.[test.questions.indexOf(q)] || "General";
                         if (!tagDistribution[tag]) tagDistribution[tag] = 0;
                         tagDistribution[tag]++;
                     });
-
-                    // For each tag, calculate proportion
                     const totalTagged = Object.values(tagDistribution).reduce((a, b) => a + b, 0);
                     if (totalTagged > 0) {
                         for (const tag in tagDistribution) {
@@ -8899,10 +8876,9 @@
                 }
             });
 
-            // Build table rows
             const sortedTags = Object.keys(topicPerf).sort();
             let tableHtml = '';
-            const displayTags = sortedTags.slice(0, 10); // Max 10 rows
+            const displayTags = sortedTags.slice(0, 10);
             displayTags.forEach(tag => {
                 const perf = topicPerf[tag] || { correct: 0, wrong: 0, blank: 0, total: 0 };
                 const total = perf.total || 0;
@@ -8932,10 +8908,12 @@
             topicBody.innerHTML = tableHtml;
         };
 
-        /* ---- Filter History Questions by Subject ---- */
-        window.filterHistorySubject = function(subject) {
-            const container = document.getElementById('subject-questions-container');
-            const buttons = document.querySelectorAll('.filter-btn');
+        /* ---- Filter History Questions by Subject (TOP) ----
+             Questions are COLLAPSED by default with toggle & close button (Tasks 3 & 4)
+           ========================================================================== */
+        window.filterHistorySubjectTop = function(subject) {
+            const container = document.getElementById('subject-questions-container-top');
+            const buttons = document.querySelectorAll('#subject-filter-bar-top .filter-btn');
             if (!container) return;
 
             buttons.forEach(btn => {
@@ -8943,7 +8921,7 @@
                 if (btn.dataset.subject === subject) btn.classList.add('active');
             });
 
-            const data = window._historySubjectData;
+            const data = window._historySubjectDataTop;
             if (!data) {
                 container.innerHTML = '<p style="color:var(--text-muted);">No data available.</p>';
                 return;
@@ -8971,12 +8949,23 @@
             for (const code in grouped) {
                 const items = grouped[code];
                 const testName = items[0].testName || code;
-                html += `<div class="sq-group-title">📝 ${testName} (${code})</div>`;
+                // Each group is a collapsible section (closed by default)
+                const groupId = 'sq-group-' + code.replace(/[^a-zA-Z0-9]/g, '');
+                html += `
+                    <div class="sq-group-wrapper" style="margin-bottom:10px;">
+                        <div class="sq-group-toggle" onclick="window.toggleSubjectGroup('${groupId}')">
+                            <span><b>📝 ${testName}</b> (${items.length} questions)</span>
+                            <span class="sq-toggle-icon" id="${groupId}-icon">▶</span>
+                        </div>
+                        <div class="sq-group-content" id="${groupId}">
+                            <button class="sq-close-btn" onclick="window.closeSubjectGroup('${groupId}')">✕ Close</button>
+                            <div style="margin-top:6px;">
+                `;
                 items.forEach(item => {
                     const q = item.question;
                     const idx = item.index;
                     html += `
-                        <div class="subject-question-item">
+                        <div class="subject-question-item" style="margin-bottom:8px;">
                             <div class="sq-header">
                                 <span>Q${idx+1}</span>
                                 <span class="sq-tag">${item.tag}</span>
@@ -8988,8 +8977,37 @@
                         </div>
                     `;
                 });
+                html += `</div></div></div>`;
             }
             container.innerHTML = html;
+        };
+
+        /* ---- Toggle subject group (expand/collapse) ---- */
+        window.toggleSubjectGroup = function(groupId) {
+            const content = document.getElementById(groupId);
+            const icon = document.getElementById(groupId + '-icon');
+            if (!content || !icon) return;
+            const isOpen = content.classList.contains('open');
+            if (isOpen) {
+                content.classList.remove('open');
+                icon.classList.remove('open');
+                icon.innerText = '▶';
+            } else {
+                content.classList.add('open');
+                icon.classList.add('open');
+                icon.innerText = '▼';
+            }
+        };
+
+        /* ---- Close subject group (collapse) ---- */
+        window.closeSubjectGroup = function(groupId) {
+            const content = document.getElementById(groupId);
+            const icon = document.getElementById(groupId + '-icon');
+            if (content) content.classList.remove('open');
+            if (icon) {
+                icon.classList.remove('open');
+                icon.innerText = '▶';
+            }
         };
 
         /* ---- Download History PDF ---- */
@@ -9283,19 +9301,18 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v17.0 — All Issues Fixed');
-        console.log('✅ TASK 1: Tag detection fixed — !tag(Subject:Topic) now works correctly.');
-        console.log('✅ TASK 2: Subject filter bar added above "Individual Test Records".');
-        console.log('✅ TASK 3: Weak/Strong topic analysis table (10 rows × 15 cols) working.');
-        console.log('✅ TASK 4: Passage logic fixed — !P starts, !P none resets immediately.');
+        console.log('🚀 TEST BODHI v18.0 — AI Removed, Manual Tags Only');
+        console.log('✅ TASK 1: AI tagging completely removed — only manual !tag(Subject:Topic) used.');
+        console.log('✅ TASK 2: Subject filter bar moved to TOP of report section.');
+        console.log('✅ TASK 3: Questions are COLLAPSED by default with toggle expand.');
+        console.log('✅ TASK 4: Close button added to every opened filter group.');
         console.log('✅ TASK 5: Progress bar overflow fixed — fits container.');
         console.log('✅ TASK 6: PDF clean formatting — raw tags hidden, only "SUBJECT → TOPIC" shown.');
         console.log('📌 Tag format: !tag(Subject:Topic)');
         console.log('📌 PDF shows clean tags as badges.');
-        console.log('📌 Analytics chart uses manual tags with topic table.');
-        console.log('📌 Student Report: Subject filter bar with question list.');
+        console.log('📌 Analytics chart uses manual tags only (no AI).');
+        console.log('📌 Student Report: Subject filter at top, questions collapsed by default.');
         console.log('📌 Topic-wise performance table (Strong/Weak) in report.');
-        console.log('📌 MathJax fixed in PDF, Analysis, Question views.');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
