@@ -1673,7 +1673,6 @@
             margin-top: 2px;
         }
 
-        /* FIXED: Progress bar fits inside container */
         .sub-exam-progress-stats {
             display: flex;
             justify-content: space-between;
@@ -1844,7 +1843,6 @@
             .subject-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
             }
-            /* Fix progress stats on mobile */
             .sub-exam-progress-stats {
                 font-size: 7px !important;
                 padding: 2px 6px !important;
@@ -3647,6 +3645,36 @@
             color: var(--text-muted);
             font-weight: 700;
         }
+        .subject-question-item .sq-solution-btn {
+            background: var(--accent-gradient);
+            color: var(--primary-dark);
+            border: none;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 4px;
+        }
+        .subject-question-item .sq-solution-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-sm);
+        }
+        .subject-question-item .sq-solution-content {
+            display: none;
+            margin-top: 6px;
+            padding: 10px 12px;
+            background: var(--bg-subtle);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+        .subject-question-item .sq-solution-content.open {
+            display: block;
+        }
 
         /* ============================================================
            ANALYTICS & CHART
@@ -3730,15 +3758,6 @@
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
-        .print-q .pdf-tag-badge {
-            display: inline-block;
-            margin-bottom: 4px;
-        }
-
-        /* Hide raw tag syntax in PDF */
-        .print-q .raw-tag-hidden {
-            display: none !important;
-        }
 
         /* ============================================================
            SUBJECT FILTER BAR (horizontal) – Individual Test Records
@@ -3793,7 +3812,6 @@
             background: rgba(255, 255, 255, 0.25);
         }
 
-        /* Subject questions container in history */
         .subject-questions-container {
             margin-top: 8px;
         }
@@ -3859,6 +3877,25 @@
             font-weight: 700;
         }
 
+        /* More button for topic table */
+        .topic-table-more-btn {
+            background: var(--accent-gradient);
+            color: var(--primary-dark);
+            border: none;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .topic-table-more-btn:hover {
+            transform: scale(1.04);
+            box-shadow: var(--shadow-sm);
+        }
+
         /* ============================================================
            COLLAPSIBLE SECTION
            ============================================================ */
@@ -3911,7 +3948,6 @@
             background: var(--danger);
             color: #fff;
         }
-        /* Solution toggle button styles */
         .sq-solution-btn {
             background: var(--accent-gradient);
             color: var(--primary-dark);
@@ -3954,6 +3990,51 @@
         }
         .sq-solution-content .sq-solution-close:hover {
             text-decoration: underline;
+        }
+
+        /* ============================================================
+           NEW: SUB-GRAPH CONTAINERS
+           ============================================================ */
+        .sub-graph-container {
+            margin-top: 20px;
+            border-top: 2px solid var(--border-color);
+            padding-top: 16px;
+        }
+        .sub-graph-container .sub-graph-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .sub-graph-wrapper {
+            position: relative;
+            height: 160px;
+            max-height: 200px;
+            width: 100%;
+            margin: 4px auto 12px auto;
+        }
+        .sub-graph-container .sub-graph-detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-top: 6px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        .sub-graph-container .sub-graph-detail-table th {
+            background: var(--primary);
+            color: #fff;
+            padding: 4px 6px;
+            font-size: 10px;
+            text-align: center;
+        }
+        .sub-graph-container .sub-graph-detail-table td {
+            padding: 3px 6px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 10px;
         }
     </style>
 </head>
@@ -4026,7 +4107,6 @@
         <!-- TOP STICKY WRAPPER -->
         <div id="top-sticky-wrapper">
             <div class="tcs-header">
-                <!-- Brand: Logo + TEST BODHI -->
                 <div class="brand-wrapper" onclick="window.goToHome()" title="Go to Home">
                     <img class="brand-logo" id="header-logo-img"
                     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 70'><rect width='280' height='70' rx='10' fill='%230f2b5c'/><text x='20' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23ffffff'>TEST</text><text x='150' y='44' font-family='Poppins, sans-serif' font-size='32' font-weight='900' fill='%23d4a843'>BODHI</text><text x='20' y='62' font-family='Inter, sans-serif' font-size='12' font-weight='600' fill='%2390a8c0' letter-spacing='2'>PRACTICE · PREPARE · SUCCEED</text></svg>"
@@ -4047,7 +4127,6 @@
                     <div id="timer-box" class="timer" style="display:none;"><span>⏱</span><span id="main-time">00:00</span></div>
                 </div>
             </div>
-            <!-- SUB HEADER: Student Name | Exam Name | Category | Code -->
             <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
                 <div class="s-left">
                     <span class="s-name" id="top-sname">👤 Student</span>
@@ -4190,7 +4269,6 @@
                     <input type="hidden" id="hist-phone" />
                 </div>
 
-                <!-- ===== SUBJECT FILTER BAR – MOVED TO TOP (TASK 2) ===== -->
                 <div id="subject-filter-section-top" style="margin:0 0 16px 0; border:2px solid var(--accent); border-radius:var(--radius); padding:12px 14px; background:var(--bg-subtle);">
                     <h3 style="color:var(--primary); font-size:14px; margin:0 0 8px 0;">📂 Filter by Subject</h3>
                     <div class="subject-filter-bar" id="subject-filter-bar-top" style="margin:0; border:none; padding:0; background:transparent;"></div>
@@ -4221,7 +4299,6 @@
                     </div>
                     <div id="st-hist-list" style="display:flex;flex-direction:column;gap:12px;margin-top:12px;"></div>
 
-                    <!-- Topic-wise performance table (kept below records as secondary) -->
                     <div id="topic-performance-table" style="margin-top:16px; border-top:2px solid var(--border-color); padding-top:12px;">
                         <h3 style="color:var(--primary); font-size:14px; margin-bottom:6px;">📊 Topic-wise Performance (Strong / Weak)</h3>
                         <div id="topic-table-container" class="topic-perf-table-wrap">
@@ -4271,7 +4348,7 @@
             </div>
         </div>
 
-        <!-- ===== EXAM VIEW (with Sidebar) ===== -->
+        <!-- ===== EXAM VIEW ===== -->
         <div id="exam-view" class="view-section" style="padding:0;display:none;" oncontextmenu="return false;">
             <div class="exam-wrapper">
                 <div class="exam-left" id="exam-left-panel">
@@ -4346,7 +4423,6 @@
             <div id="rank-loader" style="margin:6px 0 10px 0;color:var(--primary);font-weight:700;display:none;"><div class="loader-mini"></div> Calculating rank...</div>
 
             <div id="report-section" style="text-align:center;">
-                <!-- Certificate Style Score Card -->
                 <div class="score-card-certificate" id="score-card-cert">
                     <div class="cert-header">
                         <img class="cert-logo" id="cert-logo-img" src="" alt="Logo" />
@@ -4380,17 +4456,21 @@
                     </div>
                 </div>
 
-                <!-- ===== ANALYTICS CHART (AI MENTOR REMOVED – TASK 1) ===== -->
+                <!-- NEW: Enhanced Analytics with Main Graph + Sub-Graphs + Detailed Table -->
                 <div id="analytics-container" class="analytics-container" style="display:none;">
                     <div class="analytics-title">
-                        📊 Topic-wise Performance
+                        📊 Subject-wise Performance
                         <span class="analytics-badge">Manual Tags</span>
                     </div>
-                    <div class="chart-wrapper">
-                        <canvas id="topicChart"></canvas>
+                    <!-- MAIN GRAPH: Subject-wise scores -->
+                    <div class="chart-wrapper" style="height:200px;">
+                        <canvas id="mainSubjectChart"></canvas>
                     </div>
-                    <!-- AI Mentor completely removed -->
-                    <!-- Topic-wise performance table (10 rows, 15 columns) -->
+
+                    <!-- SUB-GRAPHS: Topic-wise per subject -->
+                    <div id="sub-graphs-container" style="margin-top:16px;"></div>
+
+                    <!-- DETAILED PERFORMANCE TABLE -->
                     <div id="result-topic-table" style="margin-top:16px; border-top:1px solid var(--border-color); padding-top:12px; overflow-x:auto;">
                         <h4 style="margin:0 0 8px 0; color:var(--primary); font-size:14px;">📋 Detailed Topic Performance</h4>
                         <table class="topic-perf-table">
@@ -4408,17 +4488,18 @@
                             </thead>
                             <tbody id="result-topic-table-body"></tbody>
                         </table>
+                        <div style="text-align:center;margin-top:8px;">
+                            <button class="topic-table-more-btn" id="result-topic-more-btn" onclick="window.toggleResultTopicTable()">📋 Show More Topics</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Buttons -->
                 <div style="display:flex;gap:8px;max-width:600px;margin:10px auto;flex-wrap:wrap;justify-content:center;">
                     <button id="btn-img-down" class="btn btn-primary" style="flex:1;min-width:100px;font-size:12px;padding:8px;" onclick="window.downloadCertificateImage()">🖼️ Download Certificate</button>
                     <button id="btn-pdf-down-res" class="btn btn-danger" style="flex:1;min-width:100px;font-size:12px;padding:8px;" onclick="window.handleResultPDFClick()">📄 Q&A PDF</button>
                     <button id="btn-reattempt" class="btn btn-warning" style="flex:1;min-width:100px;font-size:12px;padding:8px;" onclick="window.startReattempt()">🔄 Reattempt</button>
                 </div>
 
-                <!-- Analysis -->
                 <div id="analysis-btn-container" style="display:flex;gap:4px;max-width:600px;margin:10px auto;justify-content:center;flex-wrap:wrap;position:sticky;top:65px;z-index:900;background:var(--bg-container);padding:8px;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid var(--border-color);">
                     <button class="btn btn-success btn-sm" onclick="window.showAnalysis('right')">✅ Correct (<span id="btn-cnt-right">0</span>)</button>
                     <button class="btn btn-danger btn-sm" onclick="window.showAnalysis('wrong')">❌ Wrong (<span id="btn-cnt-wrong">0</span>)</button>
@@ -4426,7 +4507,6 @@
                 </div>
                 <div id="analysis-box" class="analysis-box"></div>
 
-                <!-- Leaderboard -->
                 <div id="leaderboard-container" class="leaderboard-container" style="display:none;">
                     <div class="lb-title">🏆 Leaderboard <span class="lb-badge">Top Performers</span></div>
                     <div id="lb-list"></div>
@@ -4480,7 +4560,6 @@
                 <button class="tab-btn" id="tab-logo" onclick="window.switchAdminTab('logo')">🖼️ Logo Manager</button>
             </div>
 
-            <!-- CREATE / EDIT -->
             <div id="admin-create-section">
                 <div class="admin-section" style="background:rgba(212,168,67,0.06);border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);font-size:14px;">⚡ Quick Auto-Fill <span class="badge-admin" style="background:var(--accent);color:var(--primary-dark);padding:1px 10px;border-radius:50px;font-size:10px;font-weight:700;">Smart</span></div>
@@ -4612,7 +4691,6 @@
                 </div>
             </div>
 
-            <!-- MANAGE TESTS -->
             <div id="admin-manage-section" style="display:none;">
                 <div id="leaderboard-view" style="display:none;background:var(--bg-card);padding:14px;border:2px solid var(--primary);border-radius:var(--radius-lg);margin-bottom:16px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:8px;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
@@ -4632,7 +4710,6 @@
                 <div id="dashboard-list"></div>
             </div>
 
-            <!-- MANAGE ICONS -->
             <div id="admin-icons-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);font-size:14px;">🏛️ Manage Main Icons</div>
@@ -4662,7 +4739,6 @@
                 </div>
             </div>
 
-            <!-- REORDER ICONS -->
             <div id="admin-reorder-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);font-size:14px;">🔢 Reorder Icons by Serial Number</div>
@@ -4679,7 +4755,6 @@
                 </div>
             </div>
 
-            <!-- STUDENT PERFORMANCE -->
             <div id="admin-students-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--primary);">
                     <div class="admin-section-title" style="color:var(--primary);font-size:14px;">👨‍🎓 Student Performance Dashboard</div>
@@ -4697,7 +4772,6 @@
                 </div>
             </div>
 
-            <!-- ===== LOGO MANAGER ===== -->
             <div id="admin-logo-section" style="display:none;">
                 <div class="admin-section" style="border:2px solid var(--accent);">
                     <div class="admin-section-title" style="color:var(--accent);font-size:14px;">🖼️ Portal Logo Manager</div>
@@ -4762,7 +4836,7 @@
 
     <script>
         /* ==========================================================================
-           FULL SCRIPT – Manual Tagging Only (No AI)
+           FULL SCRIPT – All fixes applied
            ========================================================================== */
 
         // ---- CONFIG ----
@@ -4839,6 +4913,11 @@
         window.portalLogoShape = "round";
         window.attemptedTestsCache = {};
         window.topicChartInstance = null;
+        window._resultTopicShowAll = false;
+        window._resultAllTags = [];
+        window._resultTopicData = {};
+        window.mainChartInstance = null;
+        window.subChartInstances = [];
 
         /* ==========================================================================
            PROFILE MODAL
@@ -4862,7 +4941,7 @@
             const avatarText = document.getElementById('pm-avatar-text');
             const avatarImg = document.getElementById('pm-avatar-img');
             if (user.photoURL && user.photoURL.startsWith('http')) {
-                avatarImg.src = user.photoURL;
+                avatarImg.src = window.fixGoogleDriveUrl(user.photoURL);
                 avatarImg.style.display = 'block';
                 avatarText.style.display = 'none';
             } else {
@@ -5040,7 +5119,6 @@
             if (topBar) topBar.style.display = 'none';
             const timerBox = document.getElementById('timer-box');
             if (timerBox) timerBox.style.display = 'none';
-            // Clear exam content to prevent lingering questions
             const qText = document.getElementById('q-text');
             const optionsBox = document.getElementById('options-box');
             const passageBox = document.getElementById('q-passage');
@@ -5161,9 +5239,7 @@
         };
 
         /* ==========================================================================
-           CORE PARSER – FIXED: Tag detection + Passage reset (!P none)
-           Now supports tags on separate lines and in same line.
-           FIX: pendingTag persists across multiple questions until a new standalone tag is encountered.
+           CORE PARSER – FIXED: preserves explanation even with tags
            ========================================================================== */
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
@@ -5179,29 +5255,24 @@
             let tempQ = null;
             let cPass = "";
             let cMode = "";
-            let pendingTag = ""; // holds tag from a separate line, persists across questions
+            let pendingTag = "";
             const lines = rawText.split('\n');
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (!line) continue;
                 line = line.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
-                // ---- CHECK FOR STANDALONE TAG LINE ----
                 const tagLineMatch = line.match(/^!tag\(([^)]+)\)/i);
                 if (tagLineMatch) {
-                    // New standalone tag -> update pendingTag (overwrites previous)
                     pendingTag = tagLineMatch[1].trim();
-                    // Do not add this line to any question
                     continue;
                 }
 
-                // ---- PASSAGE HANDLING ----
                 if (line.match(/^!P/i)) {
                     let passageText = line.replace(/^!P\s*/i, '').trim();
                     if (passageText.toLowerCase() === "none") {
                         cPass = "";
                         cMode = "P_NONE";
-                        // Do NOT clear pendingTag here — tag continues to next questions
                     } else {
                         cPass = passageText;
                         cMode = "P";
@@ -5209,55 +5280,42 @@
                     continue;
                 }
 
-                // ---- QUESTION LINE ----
                 if (line.match(/^!!\s*\d+\s*!/)) {
                     if (tempQ && tempQ.q) parsedQs.push(tempQ);
                     let qLine = line.replace(/^!!\s*\d+\s*!\s*/, '').trim();
                     let tag = '';
-                    // Extract !tag(Subject:Topic) from within the question line
                     const tagMatch = qLine.match(/!tag\(([^)]+)\)/);
                     if (tagMatch) {
                         tag = tagMatch[1].trim();
                         qLine = qLine.replace(/!tag\([^)]+\)/, '').trim();
                     }
-                    // If no inline tag but we have a pending tag, use it
                     if (!tag && pendingTag) {
                         tag = pendingTag;
-                        // DO NOT clear pendingTag — it persists for subsequent questions
                     }
-                    // Clean any leftover tag syntax
                     qLine = qLine.replace(/!tag\([^)]*\)/g, '').trim();
                     tempQ = { q: qLine, opts: [], ans: "", exp: "", passage: cPass || "", tag: tag || "" };
                     cMode = "q";
-                }
-                // ---- OPTIONS ----
-                else if (line.match(/^![A-D]/i)) {
+                } else if (line.match(/^![A-D]/i)) {
                     if (tempQ) {
                         const optId = line.charAt(1).toUpperCase();
                         const optText = line.substring(2).trim();
                         tempQ.opts.push({ id: optId, text: optText });
                     }
                     cMode = "opt";
-                }
-                // ---- ANSWER ----
-                else if (line.match(/^!!!/)) {
+                } else if (line.match(/^!!!/)) {
                     if (tempQ) {
                         let ansVal = line.replace(/^!!!\s*/i, '').trim();
                         ansVal = window.getCleanAns(ansVal);
                         tempQ.ans = ansVal;
                     }
                     cMode = "ans";
-                }
-                // ---- EXPLANATION ----
-                else if (line.match(/^!!!!/)) {
+                } else if (line.match(/^!!!!/)) {
                     if (tempQ) {
                         let expText = line.replace(/^!!!!\s*/, '').trim();
                         tempQ.exp = (tempQ.exp || "") + (tempQ.exp ? "<br>" : "") + expText;
                     }
                     cMode = "exp";
-                }
-                // ---- CONTINUATION LINES ----
-                else {
+                } else {
                     if (tempQ) {
                         if (cMode === "exp") {
                             tempQ.exp = (tempQ.exp || "") + (tempQ.exp ? "<br>" : "") + line;
@@ -5267,11 +5325,9 @@
                             cPass = (cPass || "") + (cPass ? "<br>" : "") + line;
                             if (tempQ) tempQ.passage = cPass;
                         }
-                        // If cMode === "P_NONE", ignore (passage reset)
                     }
                 }
             }
-            // Push the last question if any
             if (tempQ && tempQ.q) parsedQs.push(tempQ);
             return parsedQs;
         };
@@ -5283,7 +5339,7 @@
         };
 
         /* ==========================================================================
-           AUTH, OTP, LOGIN
+           AUTH, OTP, LOGIN (same as before)
            ========================================================================== */
         window.showPremiumModal = function() {
             const msg =
@@ -5619,12 +5675,6 @@
                     return 'https://drive.google.com/uc?export=view&id=' + match[1];
                 }
             }
-            if (url.includes('drive.google.com/uc?export=view')) {
-                return url;
-            }
-            if (url.includes('drive.google.com/thumbnail')) {
-                return url;
-            }
             return url;
         };
 
@@ -5676,7 +5726,6 @@
                         if (data.status === "success" && data.url) {
                             let downloadURL = data.url;
                             downloadURL = window.fixGoogleDriveUrl(downloadURL);
-
                             const user = firebase.auth().currentUser;
                             if (user) {
                                 window.updateUserPhotoWithRetry(user.uid, downloadURL, 3);
@@ -7233,7 +7282,7 @@
         };
 
         /* ==========================================================================
-           GENERATE / UPDATE TEST – Manual Tagging Only (No AI)
+           GENERATE / UPDATE TEST – Manual Tagging Only
            ========================================================================== */
         window.generateAndSaveLink = function() {
             const aBoard = document.getElementById('a-board');
@@ -7281,12 +7330,10 @@
             if (parsedQs.length === 0) return window.showCustomAlert("Format Error", "❌ Incorrect format.", "⚠️");
             const fQs = window.updateQsCount() || parsedQs.length;
 
-            // Manual tagging only – no AI fallback
             const finalQs = parsedQs.map(q => {
                 if (q.tag && q.tag.trim() !== "") {
                     return q;
                 } else {
-                    // No AI fallback – use raw topic/subject as fallback only
                     const fallback = eTopicRaw || eSub || "General";
                     return { ...q, tag: fallback };
                 }
@@ -7315,12 +7362,7 @@
                 qs: fQs,
                 rawText: rawText,
                 isActive: true,
-                tags: finalQs.map(q => q.tag || "General"),
-                // Explicitly remove any AI fields
-                aiTags: null,
-                aiTopics: null,
-                aiSubject: null,
-                aiAnalysis: null
+                tags: finalQs.map(q => q.tag || "General")
             };
 
             if (btn) { btn.innerText = "⏳ Saving...";
@@ -7328,7 +7370,6 @@
             if (btnVp) { btnVp.innerText = "⏳ Saving...";
                 btnVp.disabled = true; }
 
-            // Full overwrite – no merge
             db.collection("tests").doc(eCode).set(fObj).then(() => {
                 if (btn) { btn.innerText = "🚀 Generate / Update Test";
                     btn.disabled = false;
@@ -7336,11 +7377,6 @@
                 if (btnVp) { btnVp.innerText = "🚀 Update Test";
                     btnVp.disabled = false; }
 
-                const aSub = document.getElementById('a-sub');
-                const aTopicElem = document.getElementById('a-topic');
-                const aCodeElem = document.getElementById('a-code');
-                const aRawDataElem = document.getElementById('a-rawdata');
-                const aSummaryElem = document.getElementById('a-summary');
                 if (aSub) aSub.value = "";
                 if (aTopicElem) aTopicElem.value = "";
                 if (aCodeElem) aCodeElem.value = "";
@@ -7387,7 +7423,7 @@
 
         /* ==========================================================================
            PDF DOWNLOAD – Clean tags, no raw syntax, proper Subject:Topic display
-           INCLUDES EXPLANATIONS
+           INCLUDES EXPLANATIONS (FIXED)
            ========================================================================== */
         window.adminDownloadPDF = function(code, mode) {
             const t = window.adminUnifiedTests.find(x => x.code === code);
@@ -7423,7 +7459,7 @@
                 return {
                     ...q,
                     tag: stored.tag || q.tag || t.tags?.[idx] || "General",
-                    exp: q.exp || stored.exp || "" // ensure explanation is preserved
+                    exp: q.exp || stored.exp || ""
                 };
             });
 
@@ -7442,7 +7478,7 @@
             window.executePDFPrintWithMathFix(customName, mode);
         };
 
-        /* ---- PDF printer with clean tag display (Subject → Topic) + Explanations ---- */
+        /* ---- PDF printer with clean tag display + Explanations (FIXED) ---- */
         window.executePDFPrintWithMathFix = function(studentName, mode) {
             const pA = document.getElementById('print-area');
             if (!pA) return;
@@ -7519,7 +7555,6 @@
                 const wM = (isW && mode === 'full') ?
                     '<span style="color:red;font-size:16px;margin-right:4px;">❌</span>' : "";
 
-                // ---- Clean tag display: Subject → Topic (no raw syntax) ----
                 let tagDisplay = '';
                 const rawTag = q.tag || window.examData.tags?.[i] || "General";
                 if (rawTag && rawTag !== "General") {
@@ -7538,7 +7573,6 @@
                 h +=
                     `<div class="print-q" style="display:block !important; break-inside:auto !important; page-break-inside:auto !important;">`;
                 if (q.passage) h += `<div class="print-passage">${q.passage}</div>`;
-                // Clean tag badge (no raw syntax)
                 h += `${tagDisplay}<br>`;
                 h += `<b>${wM}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
 
@@ -7566,7 +7600,6 @@
                         h +=
                             `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span></div>`;
                     }
-                    // ---- ALWAYS SHOW EXPLANATION IN PDF if mode is 'full' or 'q_ans' ----
                     if (mode === 'full' && q.exp && q.exp.trim() !== "") {
                         h += `<div class="print-exp"><b>Explanation:</b><br>${q.exp}</div>`;
                     } else if (mode === 'q_ans' && q.exp && q.exp.trim() !== "") {
@@ -8113,7 +8146,7 @@
         };
 
         /* ==========================================================================
-           RENDER QUESTION – with MathJax fix
+           RENDER QUESTION
            ========================================================================== */
         window.renderQuestion = function(idx) {
             window.currentQ = idx;
@@ -8255,7 +8288,7 @@
         };
 
         /* ==========================================================================
-           CALCULATE SCORE & SUBMIT – with Analytics (Manual Tags Only, No AI)
+           CALCULATE SCORE & SUBMIT – with Enhanced Analytics (Main Graph + Sub-Graphs)
            ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
@@ -8281,14 +8314,13 @@
             window.studentInfo.wrong = 0;
             window.studentInfo.blank = 0;
 
-            // --- Collect tag-wise performance (manual tags only) ---
+            // Collect tag-wise performance (Subject:Topic)
             const tagPerformance = {};
             const allTags = [];
 
             for (let i = 0; i < window.examData.questions.length; i++) {
                 const q = window.examData.questions[i];
                 const tag = q.tag || window.examData.tags?.[i] || "General";
-                // Skip "General" tags that are actually exam names
                 if (tag === "General" || tag.match(/\d{2}\/\d{2}\/\d{4}/)) continue;
                 if (!tagPerformance[tag]) {
                     tagPerformance[tag] = { correct: 0, wrong: 0, blank: 0, total: 0 };
@@ -8339,8 +8371,13 @@
             document.getElementById('cert-test-code').innerText = window.examData.code || "---";
             window.applyPortalLogo();
 
-            // --- Render Analytics Chart (No AI Mentor) ---
-            window.renderAnalyticsChart(tagPerformance, allTags);
+            // Store data for table and chart pagination
+            window._resultAllTags = allTags;
+            window._resultTopicData = tagPerformance;
+            window._resultTopicShowAll = false;
+
+            // RENDER ENHANCED ANALYTICS
+            window.renderEnhancedAnalytics(tagPerformance, allTags);
 
             const rankLoader = document.getElementById('rank-loader');
             if (rankLoader) rankLoader.style.display = 'block';
@@ -8380,60 +8417,77 @@
         };
 
         /* ==========================================================================
-           ANALYTICS CHART – Manual Tags Only, No AI Mentor
+           ENHANCED ANALYTICS: Main Graph + Sub-Graphs + Detailed Table
            ========================================================================== */
-        window.renderAnalyticsChart = function(tagPerformance, allTags) {
+        window.renderEnhancedAnalytics = function(tagPerformance, allTags) {
             const container = document.getElementById('analytics-container');
             if (!container) return;
-
             container.style.display = 'block';
 
-            // Filter out any tags that are just dates or "General"
             const filteredTags = allTags.filter(t => t && t !== "General" && !t.match(/\d{2}\/\d{2}\/\d{4}/));
-
             const tagNames = filteredTags.length > 0 ? filteredTags : ['General'];
-            const labels = tagNames;
-            const correctData = tagNames.map(t => tagPerformance[t]?.correct || 0);
-            const wrongData = tagNames.map(t => tagPerformance[t]?.wrong || 0);
-            const blankData = tagNames.map(t => tagPerformance[t]?.blank || 0);
-            const totalData = tagNames.map(t => tagPerformance[t]?.total || 0);
 
-            const accData = tagNames.map((t, idx) => {
-                const total = totalData[idx] || 1;
-                return Math.round((correctData[idx] / total) * 100);
+            // --- Group by Subject (main graph) ---
+            const subjectMap = {};
+            tagNames.forEach(tag => {
+                const parts = tag.split(':');
+                const subject = parts.length > 1 ? parts[0].trim() : 'General';
+                const topic = parts.length > 1 ? parts.slice(1).join(':').trim() : tag;
+                if (!subjectMap[subject]) subjectMap[subject] = {};
+                subjectMap[subject][topic] = tagPerformance[tag] || { correct: 0, wrong: 0, blank: 0, total: 0 };
             });
 
-            if (window.topicChartInstance) {
-                window.topicChartInstance.destroy();
-                window.topicChartInstance = null;
-            }
+            const subjects = Object.keys(subjectMap);
+            const subjectScores = subjects.map(sub => {
+                const topics = subjectMap[sub];
+                let totalCorrect = 0,
+                    totalTotal = 0;
+                for (const t in topics) {
+                    totalCorrect += topics[t].correct || 0;
+                    totalTotal += topics[t].total || 0;
+                }
+                return { subject: sub, correct: totalCorrect, total: totalTotal };
+            });
 
-            const ctx = document.getElementById('topicChart').getContext('2d');
+            // ---- MAIN GRAPH: Subject-wise score (Correct out of Total) ----
+            const mainCtx = document.getElementById('mainSubjectChart').getContext('2d');
+            if (window.mainChartInstance) {
+                window.mainChartInstance.destroy();
+                window.mainChartInstance = null;
+            }
 
             const isDark = document.body.classList.contains('dark-mode');
             const textColor = isDark ? '#e8edf5' : '#1a2332';
             const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
 
-            window.topicChartInstance = new Chart(ctx, {
+            const mainLabels = subjectScores.map(s => s.subject);
+            const mainCorrect = subjectScores.map(s => s.correct);
+            const mainTotal = subjectScores.map(s => s.total);
+
+            window.mainChartInstance = new Chart(mainCtx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: mainLabels,
                     datasets: [{
-                        label: 'Accuracy %',
-                        data: accData,
-                        backgroundColor: accData.map(v => {
-                            if (v >= 70) return 'rgba(15,157,88,0.7)';
-                            if (v >= 40) return 'rgba(245,158,11,0.7)';
+                        label: 'Correct Answers',
+                        data: mainCorrect,
+                        backgroundColor: mainCorrect.map((v, idx) => {
+                            const total = mainTotal[idx] || 1;
+                            const pct = (v / total) * 100;
+                            if (pct >= 70) return 'rgba(15,157,88,0.7)';
+                            if (pct >= 40) return 'rgba(245,158,11,0.7)';
                             return 'rgba(220,53,69,0.7)';
                         }),
-                        borderColor: accData.map(v => {
-                            if (v >= 70) return '#0f9d58';
-                            if (v >= 40) return '#f59e0b';
+                        borderColor: mainCorrect.map((v, idx) => {
+                            const total = mainTotal[idx] || 1;
+                            const pct = (v / total) * 100;
+                            if (pct >= 70) return '#0f9d58';
+                            if (pct >= 40) return '#f59e0b';
                             return '#dc3545';
                         }),
                         borderWidth: 2,
                         borderRadius: 4,
-                        maxBarThickness: 40
+                        maxBarThickness: 50
                     }]
                 },
                 options: {
@@ -8445,11 +8499,10 @@
                             callbacks: {
                                 label: function(context) {
                                     const idx = context.dataIndex;
-                                    const total = totalData[idx] || 0;
-                                    const correct = correctData[idx] || 0;
-                                    const wrong = wrongData[idx] || 0;
-                                    const blank = blankData[idx] || 0;
-                                    return `Accuracy: ${context.raw}% | ✅ ${correct} ❌ ${wrong} ⬜ ${blank} (Total: ${total})`;
+                                    const total = mainTotal[idx] || 0;
+                                    const correct = mainCorrect[idx] || 0;
+                                    const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+                                    return `${correct} / ${total} (${pct}%)`;
                                 }
                             }
                         }
@@ -8457,11 +8510,10 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 100,
                             ticks: {
                                 color: textColor,
                                 font: { size: 11, weight: '600' },
-                                callback: function(v) { return v + '%'; }
+                                stepSize: 1
                             },
                             grid: { color: gridColor }
                         },
@@ -8478,20 +8530,134 @@
                 }
             });
 
-            // ---- Topic-wise performance table (10 rows) ----
-            const tbody = document.getElementById('result-topic-table-body');
-            if (tbody) {
+            // ---- SUB-GRAPHS: Topic-wise per subject ----
+            const subGraphsContainer = document.getElementById('sub-graphs-container');
+            subGraphsContainer.innerHTML = '';
+            window.subChartInstances = [];
+
+            subjects.forEach(sub => {
+                const topics = subjectMap[sub];
+                const topicNames = Object.keys(topics);
+                if (topicNames.length === 0) return;
+
+                const topicCorrect = topicNames.map(t => topics[t].correct || 0);
+                const topicTotal = topicNames.map(t => topics[t].total || 0);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'sub-graph-container';
+                wrapper.innerHTML = `
+                    <div class="sub-graph-title">📊 ${sub} — Topic-wise Performance</div>
+                    <div class="sub-graph-wrapper"><canvas id="subChart-${sub.replace(/\s/g,'')}"></canvas></div>
+                    <table class="sub-graph-detail-table">
+                        <thead><tr><th>Topic</th><th>Total</th><th>Correct</th><th>Wrong</th><th>Blank</th><th>Accuracy</th></tr></thead>
+                        <tbody id="subTable-${sub.replace(/\s/g,'')}"></tbody>
+                    </table>
+                `;
+                subGraphsContainer.appendChild(wrapper);
+
+                // Table rows
+                const tbody = wrapper.querySelector('tbody');
                 let tableHtml = '';
-                const displayTags = tagNames.slice(0, 15); // show up to 15 tags
-                displayTags.forEach(tag => {
-                    const perf = tagPerformance[tag] || { correct: 0, wrong: 0, blank: 0, total: 0 };
+                topicNames.forEach((t, idx) => {
+                    const perf = topics[t] || { correct: 0, wrong: 0, blank: 0, total: 0 };
                     const acc = perf.total > 0 ? Math.round((perf.correct / perf.total) * 100) : 0;
-                    const parts = tag.split(':');
-                    const subject = parts.length > 1 ? parts[0] : 'General';
-                    const topic = parts.length > 1 ? parts.slice(1).join(':') : tag;
-                    const status = acc >= 70 ? '✅ Strong' : (acc >= 40 ? '⚠️ Average' : '❌ Weak');
-                    const statusColor = acc >= 70 ? 'var(--success)' : (acc >= 40 ? 'var(--warning)' : 'var(--danger)');
                     tableHtml += `
+                        <tr>
+                            <td>${t}</td>
+                            <td>${perf.total}</td>
+                            <td style="color:var(--success);">${perf.correct}</td>
+                            <td style="color:var(--danger);">${perf.wrong}</td>
+                            <td style="color:var(--text-muted);">${perf.blank}</td>
+                            <td style="font-weight:bold;">${acc}%</td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = tableHtml;
+
+                // Chart
+                const canvas = wrapper.querySelector('canvas');
+                const ctx = canvas.getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: topicNames,
+                        datasets: [{
+                            label: 'Correct',
+                            data: topicCorrect,
+                            backgroundColor: 'rgba(15,157,88,0.6)',
+                            borderColor: '#0f9d58',
+                            borderWidth: 1,
+                            borderRadius: 3,
+                            maxBarThickness: 30
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const idx = context.dataIndex;
+                                        const total = topicTotal[idx] || 0;
+                                        const correct = topicCorrect[idx] || 0;
+                                        const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+                                        return `${correct} / ${total} (${pct}%)`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: textColor,
+                                    font: { size: 10 },
+                                    stepSize: 1
+                                },
+                                grid: { color: gridColor }
+                            },
+                            x: {
+                                ticks: {
+                                    color: textColor,
+                                    font: { size: 9 },
+                                    maxRotation: 25,
+                                    minRotation: 15
+                                },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+                window.subChartInstances.push(chart);
+            });
+
+            // ---- DETAILED PERFORMANCE TABLE (all topics) ----
+            window._resultAllTags = tagNames;
+            window._resultTopicData = tagPerformance;
+            window._resultTopicShowAll = false;
+            window.renderResultTopicTable(tagNames, tagPerformance);
+        };
+
+        window.renderResultTopicTable = function(tagNames, tagPerformance) {
+            const tbody = document.getElementById('result-topic-table-body');
+            if (!tbody) return;
+
+            const showAll = window._resultTopicShowAll || false;
+            const displayTags = showAll ? tagNames : tagNames.slice(0, 10);
+            const totalTags = tagNames.length;
+
+            let tableHtml = '';
+            displayTags.forEach(tag => {
+                const perf = tagPerformance[tag] || { correct: 0, wrong: 0, blank: 0, total: 0 };
+                const acc = perf.total > 0 ? Math.round((perf.correct / perf.total) * 100) : 0;
+                const parts = tag.split(':');
+                const subject = parts.length > 1 ? parts[0] : 'General';
+                const topic = parts.length > 1 ? parts.slice(1).join(':') : tag;
+                const status = acc >= 70 ? '✅ Strong' : (acc >= 40 ? '⚠️ Average' : '❌ Weak');
+                const statusColor = acc >= 70 ? 'var(--success)' : (acc >= 40 ? 'var(--warning)' : 'var(--danger)');
+                tableHtml += `
                         <tr style="border-bottom:1px solid var(--border-color);">
                             <td style="padding:4px 6px;">${subject}</td>
                             <td style="padding:4px 6px;">${topic}</td>
@@ -8503,13 +8669,29 @@
                             <td style="padding:4px 6px; color:${statusColor}; font-weight:bold;">${status}</td>
                         </tr>
                     `;
-                });
-                if (!tableHtml) {
-                    tableHtml =
-                        `<tr><td colspan="8" style="text-align:center;padding:12px;color:var(--text-muted);">No topic performance data available.</td></tr>`;
-                }
-                tbody.innerHTML = tableHtml;
+            });
+            if (!tableHtml) {
+                tableHtml =
+                    `<tr><td colspan="8" style="text-align:center;padding:12px;color:var(--text-muted);">No topic performance data available.</td></tr>`;
             }
+            tbody.innerHTML = tableHtml;
+
+            const moreBtn = document.getElementById('result-topic-more-btn');
+            if (moreBtn) {
+                if (totalTags > 10) {
+                    moreBtn.style.display = 'inline-block';
+                    moreBtn.innerText = showAll ? '📋 Show Less' : '📋 Show More Topics (' + (totalTags - 10) + ' more)';
+                } else {
+                    moreBtn.style.display = 'none';
+                }
+            }
+        };
+
+        window.toggleResultTopicTable = function() {
+            window._resultTopicShowAll = !window._resultTopicShowAll;
+            const tagNames = window._resultAllTags || [];
+            const tagPerformance = window._resultTopicData || {};
+            window.renderResultTopicTable(tagNames, tagPerformance);
         };
 
         /* ==========================================================================
@@ -8621,20 +8803,20 @@
                 const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
 
                 html += `
-                    <div class="lb-item" style="${isCurrentUser ? 'background:rgba(212,168,67,0.08);border-radius:var(--radius-sm);' : ''}">
-                        <div class="lb-rank ${rankClass}">${medal}</div>
-                        <div class="lb-avatar">${avatarContent}</div>
-                        <div class="lb-name">${item.name} ${isCurrentUser ? '⭐' : ''}</div>
-                        <div class="lb-score">${item.score}</div>
-                        <div class="lb-detail">R${item.right} W${item.wrong} B${item.blank}</div>
-                    </div>
-                `;
+                        <div class="lb-item" style="${isCurrentUser ? 'background:rgba(212,168,67,0.08);border-radius:var(--radius-sm);' : ''}">
+                            <div class="lb-rank ${rankClass}">${medal}</div>
+                            <div class="lb-avatar">${avatarContent}</div>
+                            <div class="lb-name">${item.name} ${isCurrentUser ? '⭐' : ''}</div>
+                            <div class="lb-score">${item.score}</div>
+                            <div class="lb-detail">R${item.right} W${item.wrong} B${item.blank}</div>
+                        </div>
+                    `;
             });
             list.innerHTML = html;
         };
 
         /* ==========================================================================
-           ANALYSIS – with MathJax fix
+           ANALYSIS – with Solution Toggle Button (FIXED)
            ========================================================================== */
         window.showAnalysis = function(t) {
             window.currentAnalysisArray = [];
@@ -8710,11 +8892,24 @@
                     `<div style="padding:8px 12px;border:${br};border-radius:var(--radius-sm);background:${b};color:${c};font-weight:${f};font-size:13px;display:flex;align-items:flex-start;gap:4px;">${ic}<div><b>${o.id}.</b> ${o.text}</div></div>`;
             });
             oH += '</div>';
-            const eH = q.exp ?
-                `<div style="font-size:12px;color:var(--text-main);margin-top:8px;line-height:1.5;background:var(--bg-subtle);padding:10px 14px;border-radius:var(--radius-sm);border-left:4px solid var(--primary);max-height:140px;overflow-y:auto;"><b>Explanation:</b><br>${q.exp}</div>` :
-                "";
+
+            const hasExp = q.exp && q.exp.trim() !== "";
+            const solId = 'analysis-sol-' + window.currentAnalysisIndex;
+            let solHtml = '';
+            if (hasExp) {
+                solHtml = `
+                        <div style="margin-top:8px;">
+                            <button class="sq-solution-btn" onclick="window.toggleAnalysisSolution('${solId}')">💡 View Solution</button>
+                            <div class="sq-solution-content" id="${solId}" style="margin-top:6px;padding:10px 12px;background:var(--bg-subtle);border-left:3px solid var(--accent);border-radius:var(--radius-sm);font-size:13px;line-height:1.6;color:var(--text-main);display:none;">
+                                <button class="sq-solution-close" onclick="window.closeAnalysisSolution('${solId}')">✕ Close</button>
+                                <br>${q.exp}
+                            </div>
+                        </div>
+                    `;
+            }
+
             const h =
-                `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:8px;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><b style="color:var(--primary);font-size:14px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b><button class="btn btn-danger btn-sm" onclick="document.getElementById('analysis-box').style.display='none';" style="font-size:10px;padding:4px 12px;">✕ Close</button></div>${pH}<b style="font-size:16px;color:var(--text-main);display:block;margin-bottom:12px;line-height:1.5;">${sI} Q${i+1}. ${q.q}</b><div style="${tC}font-weight:700;margin-bottom:12px;padding:8px 12px;border-radius:var(--radius-sm);background:var(--bg-subtle);border:1px solid var(--border-color);font-size:13px;">${uT}</div>${oH}${eH}<div style="display:flex;justify-content:space-between;margin-top:16px;border-top:1px solid var(--border-color);padding-top:12px;gap:8px;"><button class="btn btn-outline btn-sm" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''} style="font-size:11px;">⬅️ Prev</button><button class="btn btn-primary btn-sm" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''} style="font-size:11px;">Next ➡️</button></div>`;
+                `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:8px;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><b style="color:var(--primary);font-size:14px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b><button class="btn btn-danger btn-sm" onclick="document.getElementById('analysis-box').style.display='none';" style="font-size:10px;padding:4px 12px;">✕ Close</button></div>${pH}<b style="font-size:16px;color:var(--text-main);display:block;margin-bottom:12px;line-height:1.5;">${sI} Q${i+1}. ${q.q}</b><div style="${tC}font-weight:700;margin-bottom:12px;padding:8px 12px;border-radius:var(--radius-sm);background:var(--bg-subtle);border:1px solid var(--border-color);font-size:13px;">${uT}</div>${oH}${solHtml}<div style="display:flex;justify-content:space-between;margin-top:16px;border-top:1px solid var(--border-color);padding-top:12px;gap:8px;"><button class="btn btn-outline btn-sm" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''} style="font-size:11px;">⬅️ Prev</button><button class="btn btn-primary btn-sm" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''} style="font-size:11px;">Next ➡️</button></div>`;
 
             const ansBox = document.getElementById('analysis-box');
             if (ansBox) {
@@ -8723,6 +8918,22 @@
                     window.MathJax.typesetPromise([ansBox]).catch(e => console.log('MathJax analysis error:', e));
                 }
             }
+        };
+
+        window.toggleAnalysisSolution = function(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                const isOpen = el.style.display === 'block';
+                document.querySelectorAll('.sq-solution-content').forEach(e => {
+                    if (e.id !== id) e.style.display = 'none';
+                });
+                el.style.display = isOpen ? 'none' : 'block';
+            }
+        };
+
+        window.closeAnalysisSolution = function(id) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
         };
 
         window.prevAnalysis = function() { if (window.currentAnalysisIndex > 0) { window.currentAnalysisIndex--;
@@ -8783,10 +8994,9 @@
         };
 
         /* ==========================================================================
-           STUDENT HISTORY – with Subject Filter Bar + Topic Performance Table (Strong/Weak)
-           Filter moved to TOP (Task 2)
-           Questions collapsed by default with close button (Tasks 3 & 4)
+           STUDENT HISTORY – with Subject Filter Bar + Topic Performance Table
            DEDUPLICATED by test code – each test appears only once.
+           SOLUTION button included, answer shows full option text (FIXED)
            ========================================================================== */
         window.fetchStudentHistory = function() {
             if (!window.studentInfo || !window.studentInfo.phone) {
@@ -8852,15 +9062,12 @@
                     `<div class="progress-segment" style="width:${rPct}%;background:var(--success);">${rPct}%</div><div class="progress-segment" style="width:${wPct}%;background:var(--danger);">${wPct}%</div><div class="progress-segment" style="flex:1;background:var(--bg-subtle);"></div>`;
             }
 
-            // ---- Individual test records ----
             const allSavedTests = window.getAllMergedTests();
-            // DEDUPLICATE: Use a Set to track which test codes we've already shown
             const shownTestCodes = new Set();
 
             let h = '';
             records.forEach(r => {
                 const pdfCode = r.testCode ? String(r.testCode).replace('-RE', '') : '';
-                // Skip if this test code has already been shown (deduplicate)
                 if (shownTestCodes.has(pdfCode)) return;
                 shownTestCodes.add(pdfCode);
 
@@ -8875,14 +9082,11 @@
             });
             list.innerHTML = h;
 
-            // ---- Subject Filter Bar + Topic Performance Table (Filter at TOP) ----
             window.renderSubjectFilterAndTopicPerformance(allSavedTests, records);
         };
 
-        /* ---- Subject Filter Bar (horizontal) + Topic Performance (Strong/Weak) ----
-             Now rendered at the TOP of the history section (Task 2)
-             Questions are COLLAPSED by default with toggle & close button (Tasks 3 & 4)
-             Each question has a "Solution" button that toggles the explanation (Task 3)
+        /* ---- Subject Filter Bar + Topic Performance ----
+             Each question has a SOLUTION button and full answer text (FIXED)
            ========================================================================== */
         window.renderSubjectFilterAndTopicPerformance = function(allTests, records) {
             const filterBar = document.getElementById('subject-filter-bar-top');
@@ -8890,11 +9094,8 @@
             const topicBody = document.getElementById('topic-table-body');
             if (!filterBar || !questionsContainer || !topicBody) return;
 
-            // Collect all unique subjects from tags of all attempted test questions
             const subjectSet = new Set();
             const attemptedCodes = records.map(r => r.testCode ? r.testCode.replace('-RE', '') : '').filter(Boolean);
-
-            // Deduplicate: only collect questions from unique test codes
             const uniqueTestCodes = new Set(attemptedCodes);
             const allQuestionsWithTags = [];
             const tagPerformance = {};
@@ -8904,7 +9105,6 @@
                 if (test && test.questions) {
                     test.questions.forEach((q, idx) => {
                         const tag = q.tag || test.tags?.[idx] || "General";
-                        // Only include if tag is not "General" and not a date/shift string
                         if (tag && tag !== "General" && !tag.match(/\d{2}\/\d{2}\/\d{4}/)) {
                             const parts = tag.split(':');
                             const subject = parts.length >= 1 ? parts[0].trim() : 'General';
@@ -8925,7 +9125,6 @@
                 }
             });
 
-            // For subject filter bar
             let buttonsHtml = '<span class="filter-label">📂 Filter by Subject:</span>';
             const sortedSubjects = Array.from(subjectSet).sort();
             sortedSubjects.forEach(sub => {
@@ -8936,7 +9135,6 @@
                 `<button class="filter-btn active" data-subject="all" onclick="window.filterHistorySubjectTop('all')">📋 All</button>`;
             filterBar.innerHTML = buttonsHtml;
 
-            // Store data for filtering
             window._historySubjectDataTop = {
                 allQuestionsWithTags,
                 sortedSubjects,
@@ -8944,17 +9142,13 @@
                 allTests: allTests
             };
 
-            // Initially show all (collapsed by default)
             window.filterHistorySubjectTop('all');
 
-            // ---- Topic Performance Table (Strong/Weak) ----
             const topicPerf = {};
-            // Only process unique test codes
             const uniqueCodes = new Set(records.map(r => r.testCode ? r.testCode.replace('-RE', '') : '').filter(Boolean));
             uniqueCodes.forEach(code => {
                 const test = allTests.find(t => t.code === code);
                 if (test && test.questions) {
-                    // Find the record for this test (use the first one)
                     const record = records.find(r => (r.testCode || '').replace('-RE', '') === code);
                     if (!record) return;
                     const rightCount = record.right || 0;
@@ -8995,17 +9189,17 @@
                 const status = acc >= 70 ? 'Strong' : (acc >= 40 ? 'Average' : 'Weak');
                 const statusClass = acc >= 70 ? 'status-strong' : (acc >= 40 ? 'status-average' : 'status-weak');
                 tableHtml += `
-                    <tr>
-                        <td>${subject}</td>
-                        <td>${topic}</td>
-                        <td>${total}</td>
-                        <td style="color:var(--success);">${perf.correct}</td>
-                        <td style="color:var(--danger);">${perf.wrong}</td>
-                        <td style="color:var(--text-muted);">${perf.blank}</td>
-                        <td>${acc}%</td>
-                        <td class="${statusClass}">${status}</td>
-                    </tr>
-                `;
+                            <tr>
+                                <td>${subject}</td>
+                                <td>${topic}</td>
+                                <td>${total}</td>
+                                <td style="color:var(--success);">${perf.correct}</td>
+                                <td style="color:var(--danger);">${perf.wrong}</td>
+                                <td style="color:var(--text-muted);">${perf.blank}</td>
+                                <td>${acc}%</td>
+                                <td class="${statusClass}">${status}</td>
+                            </tr>
+                        `;
             });
             if (!tableHtml) {
                 tableHtml =
@@ -9014,10 +9208,8 @@
             topicBody.innerHTML = tableHtml;
         };
 
-        /* ---- Filter History Questions by Subject (TOP) ----
-             Questions are COLLAPSED by default with toggle & close button (Tasks 3 & 4)
-             Only shows questions from attempted tests (already filtered via records)
-             Each question has a "Solution" button that toggles the explanation (Task 3)
+        /* ---- Filter History Questions by Subject ----
+             Each question has a SOLUTION button and full answer text (FIXED)
            ========================================================================== */
         window.filterHistorySubjectTop = function(subject) {
             const container = document.getElementById('subject-questions-container-top');
@@ -9046,7 +9238,6 @@
                 return;
             }
 
-            // Group by test code
             const grouped = {};
             filtered.forEach(item => {
                 if (!grouped[item.testCode]) grouped[item.testCode] = [];
@@ -9057,72 +9248,76 @@
             for (const code in grouped) {
                 const items = grouped[code];
                 const testName = items[0].testName || code;
-                // Each group is a collapsible section (closed by default)
                 const groupId = 'sq-group-' + code.replace(/[^a-zA-Z0-9]/g, '');
                 html += `
-                    <div class="sq-group-wrapper" style="margin-bottom:10px;">
-                        <div class="sq-group-toggle" onclick="window.toggleSubjectGroup('${groupId}')">
-                            <span><b>📝 ${testName}</b> (${items.length} questions)</span>
-                            <span class="sq-toggle-icon" id="${groupId}-icon">▶</span>
-                        </div>
-                        <div class="sq-group-content" id="${groupId}">
-                            <button class="sq-close-btn" onclick="window.closeSubjectGroup('${groupId}')">✕ Close</button>
-                            <div style="margin-top:6px;">
-                `;
+                            <div class="sq-group-wrapper" style="margin-bottom:10px;">
+                                <div class="sq-group-toggle" onclick="window.toggleSubjectGroup('${groupId}')">
+                                    <span><b>📝 ${testName}</b> (${items.length} questions)</span>
+                                    <span class="sq-toggle-icon" id="${groupId}-icon">▶</span>
+                                </div>
+                                <div class="sq-group-content" id="${groupId}">
+                                    <button class="sq-close-btn" onclick="window.closeSubjectGroup('${groupId}')">✕ Close</button>
+                                    <div style="margin-top:6px;">
+                        `;
                 items.forEach((item, idx) => {
                     const q = item.question;
                     const idxNum = item.index + 1;
                     const solutionId = 'sol-' + groupId + '-' + idx;
-                    // Use a unique ID for each solution toggle
+                    const hasExp = q.exp && q.exp.trim() !== "";
+
+                    // Find the correct option text
+                    let correctOptionText = q.ans || 'N/A';
+                    if (q.ans && q.opts && Array.isArray(q.opts)) {
+                        const found = q.opts.find(o => o.id === q.ans);
+                        if (found) {
+                            correctOptionText = q.ans + '. ' + found.text;
+                        }
+                    }
+
                     html += `
-                        <div class="subject-question-item" style="margin-bottom:8px;">
-                            <div class="sq-header">
-                                <span>Q${idxNum}</span>
-                                <span class="sq-tag">${item.tag}</span>
-                            </div>
-                            <div class="sq-question">${q.q}</div>
-                            <div class="sq-answer">
-                                <span style="color:var(--text-muted);">Correct: ${q.ans || 'N/A'}</span>
-                                ${q.exp && q.exp.trim() !== "" ? `<button class="sq-solution-btn" data-solution="${solutionId}" onclick="window.toggleSolution('${solutionId}')">💡 Solution</button>` : ''}
-                            </div>
-                            ${q.exp && q.exp.trim() !== "" ? `<div class="sq-solution-content" id="${solutionId}"><button class="sq-solution-close" onclick="window.closeSolution('${solutionId}')">✕ Close</button><br>${q.exp}</div>` : ''}
-                        </div>
-                    `;
+                                <div class="subject-question-item" style="margin-bottom:8px;">
+                                    <div class="sq-header">
+                                        <span>Q${idxNum}</span>
+                                        <span class="sq-tag">${item.tag}</span>
+                                    </div>
+                                    <div class="sq-question">${q.q}</div>
+                                    <div class="sq-answer">
+                                        <span style="color:var(--text-muted);">Correct: ${correctOptionText}</span>
+                                        ${hasExp ? `<button class="sq-solution-btn" onclick="window.toggleHistorySolution('${solutionId}')">💡 Solution</button>` : ''}
+                                    </div>
+                                    ${hasExp ? `<div class="sq-solution-content" id="${solutionId}"><button class="sq-solution-close" onclick="window.closeHistorySolution('${solutionId}')">✕ Close</button><br>${q.exp}</div>` : ''}
+                                </div>
+                            `;
                 });
                 html += `</div></div></div>`;
             }
             container.innerHTML = html;
 
-            // --- Render MathJax and SVG in the container ---
             if (window.MathJax) {
                 window.MathJax.typesetPromise([container]).catch(e => console.log('MathJax error:', e));
             }
         };
 
-        /* ---- Toggle solution (close others, open this one) ---- */
-        window.toggleSolution = function(solutionId) {
-            // Close all other open solutions
+        /* ---- Toggle history solution (close others, open this one) ---- */
+        window.toggleHistorySolution = function(solutionId) {
             document.querySelectorAll('.sq-solution-content.open').forEach(el => {
                 if (el.id !== solutionId) {
                     el.classList.remove('open');
                 }
             });
-            // Toggle this one
             const el = document.getElementById(solutionId);
             if (el) {
                 el.classList.toggle('open');
             }
         };
 
-        /* ---- Close a specific solution ---- */
-        window.closeSolution = function(solutionId) {
+        window.closeHistorySolution = function(solutionId) {
             const el = document.getElementById(solutionId);
             if (el) {
                 el.classList.remove('open');
             }
         };
 
-        /* ---- Toggle subject group (expand/collapse) ---- */
         window.toggleSubjectGroup = function(groupId) {
             const content = document.getElementById(groupId);
             const icon = document.getElementById(groupId + '-icon');
@@ -9139,7 +9334,6 @@
             }
         };
 
-        /* ---- Close subject group (collapse) ---- */
         window.closeSubjectGroup = function(groupId) {
             const content = document.getElementById(groupId);
             const icon = document.getElementById(groupId + '-icon');
@@ -9148,7 +9342,6 @@
                 icon.classList.remove('open');
                 icon.innerText = '▶';
             }
-            // Also close any open solutions inside this group
             const groupWrapper = document.getElementById(groupId);
             if (groupWrapper) {
                 groupWrapper.querySelectorAll('.sq-solution-content.open').forEach(el => {
@@ -9449,22 +9642,14 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v20.0 — ALL ISSUES FIXED');
-        console.log('✅ TASK 1: Tag persistence fixed — standalone tags apply to ALL subsequent questions until new tag.');
-        console.log('✅ TASK 2: Subject filter bar moved to TOP of report section.');
-        console.log('✅ TASK 3: Questions COLLAPSED by default with toggle & CLOSE button.');
-        console.log('✅ TASK 4: SOLUTION button added to each question — only one open at a time.');
-        console.log('✅ TASK 5: Progress bar overflow fixed — fits container.');
-        console.log('✅ TASK 6: PDF now INCLUDES EXPLANATIONS (solutions) properly.');
-        console.log('✅ TASK 7: Manual tags show correctly in ALL graphs and tables.');
-        console.log('✅ TASK 8: Report DEDUPLICATED — each test appears only once.');
-        console.log('✅ TASK 9: MathJax and SVG render correctly in report questions.');
-        console.log('✅ TASK 10: Horizontal scroll added to chart for small devices.');
+        console.log('🚀 TEST BODHI v22.0 — ALL ISSUES FIXED');
+        console.log('✅ Tagged questions now preserve explanation in all contexts');
+        console.log('✅ My Report answer shows full option text (not just letter)');
+        console.log('✅ Enhanced Analytics: Main graph (subject-wise) + Sub-graphs (topic-wise per subject) + Detailed table');
+        console.log('✅ All tags appear in graph and table with More button');
         console.log('📌 Tag format: !tag(Subject:Topic)');
-        console.log('📌 Standalone tags persist across multiple questions.');
-        console.log('📌 Solution button toggles explanation in report.');
-        console.log('📌 PDF includes full explanations.');
-        console.log('📌 All tags (Math, GS, Hindi, Reasoning) now appear in graph and table.');
+        console.log('📌 Solution button toggles explanation in report & analysis');
+        console.log('📌 PDF includes full explanations for all questions');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
