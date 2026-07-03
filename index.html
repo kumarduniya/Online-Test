@@ -3911,6 +3911,50 @@
             background: var(--danger);
             color: #fff;
         }
+        /* Solution toggle button styles */
+        .sq-solution-btn {
+            background: var(--accent-gradient);
+            color: var(--primary-dark);
+            border: none;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 4px;
+        }
+        .sq-solution-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-sm);
+        }
+        .sq-solution-content {
+            display: none;
+            margin-top: 6px;
+            padding: 10px 12px;
+            background: var(--bg-subtle);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-main);
+        }
+        .sq-solution-content.open {
+            display: block;
+        }
+        .sq-solution-content .sq-solution-close {
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+            float: right;
+            padding: 0 4px;
+        }
+        .sq-solution-content .sq-solution-close:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -5119,6 +5163,7 @@
         /* ==========================================================================
            CORE PARSER – FIXED: Tag detection + Passage reset (!P none)
            Now supports tags on separate lines and in same line.
+           FIX: pendingTag persists across multiple questions until a new standalone tag is encountered.
            ========================================================================== */
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
@@ -5134,7 +5179,7 @@
             let tempQ = null;
             let cPass = "";
             let cMode = "";
-            let pendingTag = ""; // new variable to hold tag from a separate line
+            let pendingTag = ""; // holds tag from a separate line, persists across questions
             const lines = rawText.split('\n');
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
@@ -5144,7 +5189,7 @@
                 // ---- CHECK FOR STANDALONE TAG LINE ----
                 const tagLineMatch = line.match(/^!tag\(([^)]+)\)/i);
                 if (tagLineMatch) {
-                    // This line is only a tag, store it for the next question
+                    // New standalone tag -> update pendingTag (overwrites previous)
                     pendingTag = tagLineMatch[1].trim();
                     // Do not add this line to any question
                     continue;
@@ -5156,6 +5201,7 @@
                     if (passageText.toLowerCase() === "none") {
                         cPass = "";
                         cMode = "P_NONE";
+                        // Do NOT clear pendingTag here — tag continues to next questions
                     } else {
                         cPass = passageText;
                         cMode = "P";
@@ -5174,13 +5220,10 @@
                         tag = tagMatch[1].trim();
                         qLine = qLine.replace(/!tag\([^)]+\)/, '').trim();
                     }
-                    // If a tag was pending from a separate line, use it (override if also in-line)
-                    if (pendingTag && !tag) {
+                    // If no inline tag but we have a pending tag, use it
+                    if (!tag && pendingTag) {
                         tag = pendingTag;
-                        pendingTag = ''; // clear after use
-                    } else if (pendingTag) {
-                        // If both exist, inline tag takes precedence, but clear pending
-                        pendingTag = '';
+                        // DO NOT clear pendingTag — it persists for subsequent questions
                     }
                     // Clean any leftover tag syntax
                     qLine = qLine.replace(/!tag\([^)]*\)/g, '').trim();
@@ -5230,7 +5273,6 @@
             }
             // Push the last question if any
             if (tempQ && tempQ.q) parsedQs.push(tempQ);
-            // If a pending tag remains (e.g., tag at end of file without a question), ignore it
             return parsedQs;
         };
 
@@ -7345,6 +7387,7 @@
 
         /* ==========================================================================
            PDF DOWNLOAD – Clean tags, no raw syntax, proper Subject:Topic display
+           INCLUDES EXPLANATIONS
            ========================================================================== */
         window.adminDownloadPDF = function(code, mode) {
             const t = window.adminUnifiedTests.find(x => x.code === code);
@@ -7379,7 +7422,8 @@
                 const stored = storedQs[idx] || {};
                 return {
                     ...q,
-                    tag: stored.tag || q.tag || t.tags?.[idx] || "General"
+                    tag: stored.tag || q.tag || t.tags?.[idx] || "General",
+                    exp: q.exp || stored.exp || "" // ensure explanation is preserved
                 };
             });
 
@@ -7398,7 +7442,7 @@
             window.executePDFPrintWithMathFix(customName, mode);
         };
 
-        /* ---- PDF printer with clean tag display (Subject → Topic) ---- */
+        /* ---- PDF printer with clean tag display (Subject → Topic) + Explanations ---- */
         window.executePDFPrintWithMathFix = function(studentName, mode) {
             const pA = document.getElementById('print-area');
             if (!pA) return;
@@ -7522,8 +7566,11 @@
                         h +=
                             `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span></div>`;
                     }
-                    if (mode === 'full' && q.exp) {
+                    // ---- ALWAYS SHOW EXPLANATION IN PDF if mode is 'full' or 'q_ans' ----
+                    if (mode === 'full' && q.exp && q.exp.trim() !== "") {
                         h += `<div class="print-exp"><b>Explanation:</b><br>${q.exp}</div>`;
+                    } else if (mode === 'q_ans' && q.exp && q.exp.trim() !== "") {
+                        h += `<div class="print-exp" style="background:#f9f9f9;border-left-color:#888;"><b>Solution:</b><br>${q.exp}</div>`;
                     }
                 }
                 h += '</div>';
@@ -8241,6 +8288,8 @@
             for (let i = 0; i < window.examData.questions.length; i++) {
                 const q = window.examData.questions[i];
                 const tag = q.tag || window.examData.tags?.[i] || "General";
+                // Skip "General" tags that are actually exam names
+                if (tag === "General" || tag.match(/\d{2}\/\d{2}\/\d{4}/)) continue;
                 if (!tagPerformance[tag]) {
                     tagPerformance[tag] = { correct: 0, wrong: 0, blank: 0, total: 0 };
                     allTags.push(tag);
@@ -8339,7 +8388,10 @@
 
             container.style.display = 'block';
 
-            const tagNames = allTags.length > 0 ? allTags : ['General'];
+            // Filter out any tags that are just dates or "General"
+            const filteredTags = allTags.filter(t => t && t !== "General" && !t.match(/\d{2}\/\d{2}\/\d{4}/));
+
+            const tagNames = filteredTags.length > 0 ? filteredTags : ['General'];
             const labels = tagNames;
             const correctData = tagNames.map(t => tagPerformance[t]?.correct || 0);
             const wrongData = tagNames.map(t => tagPerformance[t]?.wrong || 0);
@@ -8430,7 +8482,7 @@
             const tbody = document.getElementById('result-topic-table-body');
             if (tbody) {
                 let tableHtml = '';
-                const displayTags = tagNames.slice(0, 10);
+                const displayTags = tagNames.slice(0, 15); // show up to 15 tags
                 displayTags.forEach(tag => {
                     const perf = tagPerformance[tag] || { correct: 0, wrong: 0, blank: 0, total: 0 };
                     const acc = perf.total > 0 ? Math.round((perf.correct / perf.total) * 100) : 0;
@@ -8452,6 +8504,10 @@
                         </tr>
                     `;
                 });
+                if (!tableHtml) {
+                    tableHtml =
+                        `<tr><td colspan="8" style="text-align:center;padding:12px;color:var(--text-muted);">No topic performance data available.</td></tr>`;
+                }
                 tbody.innerHTML = tableHtml;
             }
         };
@@ -8730,6 +8786,7 @@
            STUDENT HISTORY – with Subject Filter Bar + Topic Performance Table (Strong/Weak)
            Filter moved to TOP (Task 2)
            Questions collapsed by default with close button (Tasks 3 & 4)
+           DEDUPLICATED by test code – each test appears only once.
            ========================================================================== */
         window.fetchStudentHistory = function() {
             if (!window.studentInfo || !window.studentInfo.phone) {
@@ -8797,9 +8854,16 @@
 
             // ---- Individual test records ----
             const allSavedTests = window.getAllMergedTests();
+            // DEDUPLICATE: Use a Set to track which test codes we've already shown
+            const shownTestCodes = new Set();
+
             let h = '';
             records.forEach(r => {
                 const pdfCode = r.testCode ? String(r.testCode).replace('-RE', '') : '';
+                // Skip if this test code has already been shown (deduplicate)
+                if (shownTestCodes.has(pdfCode)) return;
+                shownTestCodes.add(pdfCode);
+
                 const tData = allSavedTests.find(t => t.code === pdfCode) || {};
                 const p = window.parseHack(tData.topic || "");
                 const tBoard = p.board || tData.exam || "Unknown Board";
@@ -8818,6 +8882,7 @@
         /* ---- Subject Filter Bar (horizontal) + Topic Performance (Strong/Weak) ----
              Now rendered at the TOP of the history section (Task 2)
              Questions are COLLAPSED by default with toggle & close button (Tasks 3 & 4)
+             Each question has a "Solution" button that toggles the explanation (Task 3)
            ========================================================================== */
         window.renderSubjectFilterAndTopicPerformance = function(allTests, records) {
             const filterBar = document.getElementById('subject-filter-bar-top');
@@ -8829,10 +8894,12 @@
             const subjectSet = new Set();
             const attemptedCodes = records.map(r => r.testCode ? r.testCode.replace('-RE', '') : '').filter(Boolean);
 
+            // Deduplicate: only collect questions from unique test codes
+            const uniqueTestCodes = new Set(attemptedCodes);
             const allQuestionsWithTags = [];
             const tagPerformance = {};
 
-            attemptedCodes.forEach(code => {
+            uniqueTestCodes.forEach(code => {
                 const test = allTests.find(t => t.code === code);
                 if (test && test.questions) {
                     test.questions.forEach((q, idx) => {
@@ -8882,10 +8949,14 @@
 
             // ---- Topic Performance Table (Strong/Weak) ----
             const topicPerf = {};
-            records.forEach(record => {
-                const code = record.testCode ? record.testCode.replace('-RE', '') : '';
+            // Only process unique test codes
+            const uniqueCodes = new Set(records.map(r => r.testCode ? r.testCode.replace('-RE', '') : '').filter(Boolean));
+            uniqueCodes.forEach(code => {
                 const test = allTests.find(t => t.code === code);
                 if (test && test.questions) {
+                    // Find the record for this test (use the first one)
+                    const record = records.find(r => (r.testCode || '').replace('-RE', '') === code);
+                    if (!record) return;
                     const rightCount = record.right || 0;
                     const wrongCount = record.wrong || 0;
                     const blankCount = record.blank || 0;
@@ -8946,6 +9017,7 @@
         /* ---- Filter History Questions by Subject (TOP) ----
              Questions are COLLAPSED by default with toggle & close button (Tasks 3 & 4)
              Only shows questions from attempted tests (already filtered via records)
+             Each question has a "Solution" button that toggles the explanation (Task 3)
            ========================================================================== */
         window.filterHistorySubjectTop = function(subject) {
             const container = document.getElementById('subject-questions-container-top');
@@ -8997,19 +9069,23 @@
                             <button class="sq-close-btn" onclick="window.closeSubjectGroup('${groupId}')">✕ Close</button>
                             <div style="margin-top:6px;">
                 `;
-                items.forEach(item => {
+                items.forEach((item, idx) => {
                     const q = item.question;
-                    const idx = item.index;
+                    const idxNum = item.index + 1;
+                    const solutionId = 'sol-' + groupId + '-' + idx;
+                    // Use a unique ID for each solution toggle
                     html += `
                         <div class="subject-question-item" style="margin-bottom:8px;">
                             <div class="sq-header">
-                                <span>Q${idx+1}</span>
+                                <span>Q${idxNum}</span>
                                 <span class="sq-tag">${item.tag}</span>
                             </div>
                             <div class="sq-question">${q.q}</div>
                             <div class="sq-answer">
                                 <span style="color:var(--text-muted);">Correct: ${q.ans || 'N/A'}</span>
+                                ${q.exp && q.exp.trim() !== "" ? `<button class="sq-solution-btn" data-solution="${solutionId}" onclick="window.toggleSolution('${solutionId}')">💡 Solution</button>` : ''}
                             </div>
+                            ${q.exp && q.exp.trim() !== "" ? `<div class="sq-solution-content" id="${solutionId}"><button class="sq-solution-close" onclick="window.closeSolution('${solutionId}')">✕ Close</button><br>${q.exp}</div>` : ''}
                         </div>
                     `;
                 });
@@ -9020,6 +9096,29 @@
             // --- Render MathJax and SVG in the container ---
             if (window.MathJax) {
                 window.MathJax.typesetPromise([container]).catch(e => console.log('MathJax error:', e));
+            }
+        };
+
+        /* ---- Toggle solution (close others, open this one) ---- */
+        window.toggleSolution = function(solutionId) {
+            // Close all other open solutions
+            document.querySelectorAll('.sq-solution-content.open').forEach(el => {
+                if (el.id !== solutionId) {
+                    el.classList.remove('open');
+                }
+            });
+            // Toggle this one
+            const el = document.getElementById(solutionId);
+            if (el) {
+                el.classList.toggle('open');
+            }
+        };
+
+        /* ---- Close a specific solution ---- */
+        window.closeSolution = function(solutionId) {
+            const el = document.getElementById(solutionId);
+            if (el) {
+                el.classList.remove('open');
             }
         };
 
@@ -9048,6 +9147,13 @@
             if (icon) {
                 icon.classList.remove('open');
                 icon.innerText = '▶';
+            }
+            // Also close any open solutions inside this group
+            const groupWrapper = document.getElementById(groupId);
+            if (groupWrapper) {
+                groupWrapper.querySelectorAll('.sq-solution-content.open').forEach(el => {
+                    el.classList.remove('open');
+                });
             }
         };
 
@@ -9092,7 +9198,8 @@
                 const stored = storedQs[idx] || {};
                 return {
                     ...q,
-                    tag: stored.tag || q.tag || data.tags?.[idx] || "General"
+                    tag: stored.tag || q.tag || data.tags?.[idx] || "General",
+                    exp: q.exp || stored.exp || ""
                 };
             });
 
@@ -9342,23 +9449,22 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v19.0 — Manual Tags Only, Report Filters Fixed');
-        console.log('✅ TASK 1: AI tagging completely removed — only manual !tag(Subject:Topic) used.');
+        console.log('🚀 TEST BODHI v20.0 — ALL ISSUES FIXED');
+        console.log('✅ TASK 1: Tag persistence fixed — standalone tags apply to ALL subsequent questions until new tag.');
         console.log('✅ TASK 2: Subject filter bar moved to TOP of report section.');
-        console.log('✅ TASK 3: Questions are COLLAPSED by default with toggle expand.');
-        console.log('✅ TASK 4: Close button added to every opened filter group.');
+        console.log('✅ TASK 3: Questions COLLAPSED by default with toggle & CLOSE button.');
+        console.log('✅ TASK 4: SOLUTION button added to each question — only one open at a time.');
         console.log('✅ TASK 5: Progress bar overflow fixed — fits container.');
-        console.log('✅ TASK 6: PDF clean formatting — raw tags hidden, only "SUBJECT → TOPIC" shown.');
-        console.log('✅ TASK 7: Manual tags now correctly show in report and PDF.');
-        console.log('✅ TASK 8: Solutions (explanations) are included in PDF.');
-        console.log('✅ TASK 9: Only attempted tests\' questions show in report.');
-        console.log('✅ TASK 10: MathJax and SVG images render correctly in report questions.');
-        console.log('✅ TASK 11: Horizontal scroll added to chart for small devices.');
+        console.log('✅ TASK 6: PDF now INCLUDES EXPLANATIONS (solutions) properly.');
+        console.log('✅ TASK 7: Manual tags show correctly in ALL graphs and tables.');
+        console.log('✅ TASK 8: Report DEDUPLICATED — each test appears only once.');
+        console.log('✅ TASK 9: MathJax and SVG render correctly in report questions.');
+        console.log('✅ TASK 10: Horizontal scroll added to chart for small devices.');
         console.log('📌 Tag format: !tag(Subject:Topic)');
-        console.log('📌 PDF shows clean tags as badges.');
-        console.log('📌 Analytics chart uses manual tags only (no AI).');
-        console.log('📌 Student Report: Subject filter at top, questions collapsed by default.');
-        console.log('📌 Topic-wise performance table (Strong/Weak) in report.');
+        console.log('📌 Standalone tags persist across multiple questions.');
+        console.log('📌 Solution button toggles explanation in report.');
+        console.log('📌 PDF includes full explanations.');
+        console.log('📌 All tags (Math, GS, Hindi, Reasoning) now appear in graph and table.');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
