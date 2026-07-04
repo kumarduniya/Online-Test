@@ -5302,19 +5302,19 @@
                         tempQ.opts.push({ id: optId, text: optText });
                     }
                     cMode = "opt";
-                } else if (line.match(/^!!!/)) {
-                    if (tempQ) {
-                        let ansVal = line.replace(/^!!!\s*/i, '').trim();
-                        ansVal = window.getCleanAns(ansVal);
-                        tempQ.ans = ansVal;
-                    }
-                    cMode = "ans";
                 } else if (line.match(/^!!!!/)) {
                     if (tempQ) {
                         let expText = line.replace(/^!!!!\s*/, '').trim();
                         tempQ.exp = (tempQ.exp || "") + (tempQ.exp ? "<br>" : "") + expText;
                     }
                     cMode = "exp";
+                } else if (line.match(/^!!!(?!!)/)) {
+                    if (tempQ) {
+                        let ansVal = line.replace(/^!!!\s*/i, '').trim();
+                        ansVal = window.getCleanAns(ansVal);
+                        tempQ.ans = ansVal;
+                    }
+                    cMode = "ans";
                 } else {
                     if (tempQ) {
                         if (cMode === "exp") {
@@ -8469,6 +8469,8 @@
             const mainCorrect = subjectScores.map(s => s.correct);
             const mainWrong = subjectScores.map(s => s.wrong);
             const mainBlank = subjectScores.map(s => s.blank);
+            const mainAvgVal = mainCorrect.length > 0 ? (mainCorrect.reduce((a, b) => a + b, 0) / mainCorrect.length) : 0;
+            const mainAverage = mainLabels.map(() => mainAvgVal);
 
             window.mainChartInstance = new Chart(mainCtx, {
                 type: 'bar',
@@ -8493,11 +8495,23 @@
                     }, {
                         label: '⬜ Blank',
                         data: mainBlank,
-                        backgroundColor: 'rgba(245,158,11,0.7)',
-                        borderColor: '#f59e0b',
-                        borderWidth: 1,
+                        backgroundColor: '#ffffff',
+                        borderColor: isDark ? '#ffffff' : '#94a3b8',
+                        borderWidth: 1.5,
                         borderRadius: 3,
                         maxBarThickness: 40
+                    }, {
+                        type: 'line',
+                        label: '🟡 Average',
+                        data: mainAverage,
+                        borderColor: '#eab308',
+                        backgroundColor: '#eab308',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#eab308',
+                        fill: false,
+                        tension: 0,
+                        order: 0
                     }]
                 },
                 options: {
@@ -8563,6 +8577,8 @@
                 const topicWrong = topicNames.map(t => topics[t].wrong || 0);
                 const topicBlank = topicNames.map(t => topics[t].blank || 0);
                 const topicTotal = topicNames.map(t => topics[t].total || 0);
+                const topicAvgVal = topicCorrect.length > 0 ? (topicCorrect.reduce((a, b) => a + b, 0) / topicCorrect.length) : 0;
+                const topicAverage = topicNames.map(() => topicAvgVal);
 
                 const wrapper = document.createElement('div');
                 wrapper.className = 'sub-graph-container';
@@ -8621,11 +8637,23 @@
                         }, {
                             label: '⬜ Blank',
                             data: topicBlank,
-                            backgroundColor: 'rgba(245,158,11,0.6)',
-                            borderColor: '#f59e0b',
-                            borderWidth: 1,
+                            backgroundColor: '#ffffff',
+                            borderColor: isDark ? '#ffffff' : '#94a3b8',
+                            borderWidth: 1.5,
                             borderRadius: 3,
                             maxBarThickness: 30
+                        }, {
+                            type: 'line',
+                            label: '🟡 Average',
+                            data: topicAverage,
+                            borderColor: '#eab308',
+                            backgroundColor: '#eab308',
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#eab308',
+                            fill: false,
+                            tension: 0,
+                            order: 0
                         }]
                     },
                     options: {
