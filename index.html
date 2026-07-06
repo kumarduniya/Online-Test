@@ -4036,6 +4036,25 @@
             text-align: center;
             font-size: 10px;
         }
+        /* Plain-HTML fraction used for Hindi-labeled math (e.g. दूरी/चाल).
+           Rendered by the browser directly (not MathJax) so Devanagari
+           conjuncts/matras shape correctly instead of getting mangled. */
+        .hindi-frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 3px;
+            line-height: 1.3;
+            font-size: 0.95em;
+        }
+        .hindi-frac .hf-num {
+            padding: 0 4px 2px;
+            border-bottom: 1.4px solid currentColor;
+        }
+        .hindi-frac .hf-den {
+            padding: 2px 4px 0;
+        }
     </style>
 </head>
 <body>
@@ -5201,6 +5220,37 @@
             const PLACEHOLDER = "__RS_DOLLAR__";
             str = str.replace(/([a-zA-Z0-9])\$([a-zA-Z0-9])/g, `$1${PLACEHOLDER}$2`);
 
+            const HINDI_RE = /[\u0900-\u097F]/;
+
+            // Builds a plain-HTML fraction (numerator over denominator, browser
+            // rendered) instead of a TeX \frac — used only when the fraction
+            // contains Hindi labels, since MathJax cannot shape Devanagari
+            // conjuncts/matras correctly inside its own \text{} rendering.
+            function htmlFrac(numer, denom) {
+                return `<span class="hindi-frac"><span class="hf-num">${numer.trim()}</span><span class="hf-den">${denom.trim()}</span></span>`;
+            }
+
+            // Converts a whole math span to plain HTML (dropping TeX delimiters
+            // entirely) when it's really just numbers + Hindi labels — no
+            // actual algebra — so the browser's native font shaping handles
+            // the Devanagari instead of MathJax mangling it.
+            function bypassToHTML(innerMath) {
+                let out = innerMath;
+                out = out.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, (m, a, b) => htmlFrac(a, b));
+                out = out.replace(/\\times/g, '×').replace(/\\Rightarrow/g, '⇒').replace(/\\div/g, '÷').replace(/\\cdot/g, '×');
+                out = out.replace(/\\,/g, ' ').replace(/\\;/g, ' ').replace(/\\ /g, ' ');
+                out = out.replace(/ {2,}/g, ' ');
+                return out;
+            }
+
+            // True only if the span has genuine Latin math variables (e.g. x, y)
+            // once TeX command names (\frac, \times, ...) are stripped out first,
+            // so a command name never gets mistaken for a variable.
+            function hasLatinMathVar(innerMath) {
+                const stripped = innerMath.replace(/\\[a-zA-Z]+/g, ' ');
+                return /[a-zA-Z]/.test(stripped);
+            }
+
             function processMath(math) {
                 if (!math || !math.trim()) return math;
                 let processed = math;
@@ -5220,18 +5270,20 @@
                 processed = processed.replace(/\\text\{([^{}]*)\}([ \t]+)/g, '\\text{$1$2}');
                 return processed;
             }
-            str = str.replace(/\$\$([\s\S]*?)\$\$/g, function(fullMatch, innerMath) {
-                return '$$' + processMath(innerMath) + '$$';
-            });
-            str = str.replace(/\$(?!\$)([\s\S]*?)(?<!\$)\$/g, function(fullMatch, innerMath) {
-                return '$' + processMath(innerMath) + '$';
-            });
-            str = str.replace(/\\\[([\s\S]*?)\\\]/g, function(fullMatch, innerMath) {
-                return '\\[' + processMath(innerMath) + '\\]';
-            });
-            str = str.replace(/\\\(([\s\S]*?)\\\)/g, function(fullMatch, innerMath) {
-                return '\\(' + processMath(innerMath) + '\\)';
-            });
+
+            // Decides, per math span, whether to keep it as real TeX (for MathJax)
+            // or bypass entirely to plain HTML (for Hindi-only content).
+            function handleSpan(innerMath, open, close) {
+                if (HINDI_RE.test(innerMath) && !hasLatinMathVar(innerMath)) {
+                    return bypassToHTML(innerMath.replace(/\\text\{([^{}]*)\}/g, '$1'));
+                }
+                return open + processMath(innerMath) + close;
+            }
+
+            str = str.replace(/\$\$([\s\S]*?)\$\$/g, (m, inner) => handleSpan(inner, '$$', '$$'));
+            str = str.replace(/\$(?!\$)([\s\S]*?)(?<!\$)\$/g, (m, inner) => handleSpan(inner, '$', '$'));
+            str = str.replace(/\\\[([\s\S]*?)\\\]/g, (m, inner) => handleSpan(inner, '\\[', '\\]'));
+            str = str.replace(/\\\(([\s\S]*?)\\\)/g, (m, inner) => handleSpan(inner, '\\(', '\\)'));
             str = str.replace(new RegExp(PLACEHOLDER, 'g'), '\\$');
             return str;
         };
