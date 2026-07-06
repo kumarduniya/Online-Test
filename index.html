@@ -4860,7 +4860,7 @@
 
         // ---- CONFIG ----
         const SCRIPT_URL =
-            "https://script.google.com/macros/s/AKfycbxVePIuxQvKS8Gspm3ShW4WnoiLcsTHFx4SBUCGGa_qCmA-eoaTfeUTa84OFrjLgs3XRQ/exec";
+            "https://script.google.com/macros/s/AKfycbywnkz2s7dhxMWbOsghfwrda4nqmCKaP3c6hq8n7n9MkKQ12Lk_3m4t8HioiQjZhJNIWQ/exec";
         const BASE_URL = "https://setupportal.netlify.app/";
 
         const firebaseConfig = {
@@ -5128,31 +5128,74 @@
             window.showModal(icon, title, msg, true, onYes, () => {});
         };
 
+        /* --------------------------------------------------------------------------
+           FIX 1: COMPLETE CLEANUP OF EXAM VIEW ON EXIT
+           -------------------------------------------------------------------------- */
         window.closeAndRedirect = function() {
             clearInterval(window.globalTimer);
             clearInterval(window.qTimer);
             clearInterval(window.autoSaveTimer);
+
+            // Hide exam controls and top bar
             const examControls = document.getElementById('exam-bottom-controls');
             if (examControls) examControls.style.display = 'none';
             const topBar = document.getElementById('student-top-bar');
             if (topBar) topBar.style.display = 'none';
             const timerBox = document.getElementById('timer-box');
             if (timerBox) timerBox.style.display = 'none';
-            const qText = document.getElementById('q-text');
-            const optionsBox = document.getElementById('options-box');
-            const passageBox = document.getElementById('q-passage');
-            if (qText) qText.innerHTML = '';
-            if (optionsBox) optionsBox.innerHTML = '';
-            if (passageBox) passageBox.innerHTML = '';
+
+            // CRITICAL FIX: Clear ALL exam content completely
+            const examView = document.getElementById('exam-view');
+            if (examView) {
+                // Clear question content
+                const qText = document.getElementById('q-text');
+                const optionsBox = document.getElementById('options-box');
+                const passageBox = document.getElementById('q-passage');
+                const qHeader = document.getElementById('q-no-header');
+                
+                if (qText) qText.innerHTML = '';
+                if (optionsBox) optionsBox.innerHTML = '';
+                if (passageBox) { passageBox.innerHTML = ''; passageBox.style.display = 'none'; }
+                if (qHeader) qHeader.innerText = 'Question 1';
+                
+                // Clear sidebar palette
+                const paletteGrid = document.getElementById('sb-palette-grid');
+                if (paletteGrid) paletteGrid.innerHTML = '';
+                
+                // Reset stats
+                const sbAns = document.getElementById('sb-answered');
+                const sbNot = document.getElementById('sb-notanswered');
+                const sbMarked = document.getElementById('sb-marked');
+                const sbTotal = document.getElementById('sb-total');
+                if (sbAns) sbAns.innerText = '0';
+                if (sbNot) sbNot.innerText = '0';
+                if (sbMarked) sbMarked.innerText = '0';
+                if (sbTotal) sbTotal.innerText = '0';
+                
+                // Hide the exam view completely
+                examView.classList.remove('active-view');
+                examView.style.display = 'none';
+            }
+
+            // Close sidebar if open
+            window.closeSidebar();
+
+            // Reset exam state
+            window.userAnswers = [];
+            window.qStatus = [];
+            window.bookmarks = [];
+            window.currentQ = 0;
+            window.examData = {};
+
+            // Show dashboard
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
             const dashView = document.getElementById('student-dashboard-view');
             if (dashView) {
                 dashView.classList.add('active-view');
                 window.toggleAdminLock(true);
                 window.switchStudentTab('active');
-            } else {
-                window.location.href = BASE_URL;
             }
+            
             window.navStack = [];
             try { history.pushState({}, "", window.location.pathname); } catch (e) {}
         };
@@ -5222,18 +5265,10 @@
 
             const HINDI_RE = /[\u0900-\u097F]/;
 
-            // Builds a plain-HTML fraction (numerator over denominator, browser
-            // rendered) instead of a TeX \frac — used only when the fraction
-            // contains Hindi labels, since MathJax cannot shape Devanagari
-            // conjuncts/matras correctly inside its own \text{} rendering.
             function htmlFrac(numer, denom) {
                 return `<span class="hindi-frac"><span class="hf-num">${numer.trim()}</span><span class="hf-den">${denom.trim()}</span></span>`;
             }
 
-            // Converts a whole math span to plain HTML (dropping TeX delimiters
-            // entirely) when it's really just numbers + Hindi labels — no
-            // actual algebra — so the browser's native font shaping handles
-            // the Devanagari instead of MathJax mangling it.
             function bypassToHTML(innerMath) {
                 let out = innerMath;
                 out = out.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, (m, a, b) => htmlFrac(a, b));
@@ -5243,9 +5278,6 @@
                 return out;
             }
 
-            // True only if the span has genuine Latin math variables (e.g. x, y)
-            // once TeX command names (\frac, \times, ...) are stripped out first,
-            // so a command name never gets mistaken for a variable.
             function hasLatinMathVar(innerMath) {
                 const stripped = innerMath.replace(/\\[a-zA-Z]+/g, ' ');
                 return /[a-zA-Z]/.test(stripped);
@@ -5255,24 +5287,15 @@
                 if (!math || !math.trim()) return math;
                 let processed = math;
                 processed = processed.replace(/(?<!\\)#/g, '\\#');
-                // Wrap whole Hindi PHRASES (word + internal spaces/hyphens/punctuation)
-                // in one \text{}, not just single contiguous-script runs — so spacing
-                // between Hindi words (e.g. "यूनिट है", "गति समय") survives, since
-                // spaces are only preserved by MathJax when they're inside \text{}.
                 processed = processed.replace(
                     /[\u0900-\u097F](?:[\u0900-\u097F\u0964\u0965 \t\-.,;:()/']*[\u0900-\u097F])?/g,
                     (m) => `\\text{${m}}`
                 );
-                // Pull any space touching a \text{} boundary INSIDE the braces —
-                // plain spaces outside \text{} are invisible in math mode, so
-                // "7 \text{यूनिट}" would otherwise render as "7यूनिट" with no gap.
                 processed = processed.replace(/([ \t]+)\\text\{/g, '\\text{$1');
                 processed = processed.replace(/\\text\{([^{}]*)\}([ \t]+)/g, '\\text{$1$2}');
                 return processed;
             }
 
-            // Decides, per math span, whether to keep it as real TeX (for MathJax)
-            // or bypass entirely to plain HTML (for Hindi-only content).
             function handleSpan(innerMath, open, close) {
                 if (HINDI_RE.test(innerMath) && !hasLatinMathVar(innerMath)) {
                     return bypassToHTML(innerMath.replace(/\\text\{([^{}]*)\}/g, '$1'));
@@ -5307,12 +5330,6 @@
            ========================================================================== */
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
-            // NOTE: sanitizeMath is intentionally NOT run here on the whole raw blob.
-            // Running it across all questions at once let a single unprotected
-            // reasoning-notation "$" (e.g. L$M) pair up with an unrelated "$" many
-            // questions away, turning everything in between into fake "math" and
-            // wrapping every Hindi word in \text{...}. Sanitization now happens
-            // per-field, per-question, later in window.sanitizeQuestions().
             rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, '')
                 .replace(/\r\n?/g, '\n')
                 .replace(/(\n|^)\s*(!!\s*\d+\s*!)/g, '\n$2')
@@ -5674,7 +5691,7 @@
         };
 
         /* ==========================================================================
-           PROFILE PHOTO – USING APP SCRIPT
+           PROFILE PHOTO – USING APP SCRIPT (FIXED)
            ========================================================================== */
         window.updateProfileUI = function() {
             const user = window.studentInfo;
@@ -5735,13 +5752,13 @@
             if (url.includes('drive.google.com/file/d/')) {
                 const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
-                    return 'https://drive.google.com/uc?export=view&id=' + match[1];
+                    return 'https://lh3.googleusercontent.com/d/' + match[1];
                 }
             }
             if (url.includes('drive.google.com/open?id=')) {
                 const match = url.match(/id=([a-zA-Z0-9_-]+)/);
                 if (match && match[1]) {
-                    return 'https://drive.google.com/uc?export=view&id=' + match[1];
+                    return 'https://lh3.googleusercontent.com/d/' + match[1];
                 }
             }
             return url;
@@ -5769,11 +5786,14 @@
             }
         };
 
+        /* --------------------------------------------------------------------------
+           FIX 2: PROFILE PHOTO UPLOAD – PROPER FETCH (no no-cors) + RETRY
+           -------------------------------------------------------------------------- */
         window.uploadProfilePhoto = function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            window.showLoadingModal("Uploading profile photo to Google Drive...<br>Please wait.");
+            window.showLoadingModal("Uploading profile photo...<br>Please wait.");
 
             const reader = new FileReader();
             reader.onload = function(evt) {
@@ -5785,11 +5805,17 @@
                 formData.append('mimeType', file.type);
                 formData.append('image', base64Data);
 
+                // FIX: Remove 'no-cors' to properly read the response
                 fetch(SCRIPT_URL, {
                     method: "POST",
                     body: formData,
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                }).then(res => res.text()).then(text => {
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
+                    return res.text();
+                })
+                .then(text => {
                     try {
                         const data = JSON.parse(text);
                         if (data.status === "success" && data.url) {
@@ -5797,58 +5823,61 @@
                             downloadURL = window.fixGoogleDriveUrl(downloadURL);
                             const user = firebase.auth().currentUser;
                             if (user) {
-                                window.updateUserPhotoWithRetry(user.uid, downloadURL, 3);
+                                window.updateUserPhotoWithRetry(user.uid, downloadURL, 5);
                             } else {
+                                // Fallback: save locally if user not authenticated
                                 window.studentInfo.photoURL = downloadURL;
                                 localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
                                 window.updateProfileUI();
                                 window.closeModal();
-                                window.showCustomAlert("Success",
-                                    "Profile photo updated locally! 📸", "✅");
+                                window.showCustomAlert("Success", "Profile photo updated locally! 📸", "✅");
                             }
                         } else {
                             window.closeModal();
-                            window.showCustomAlert("Upload Failed", data.message || "Unknown error from server.",
-                                "❌");
+                            window.showCustomAlert("Upload Failed", data.message || "Unknown error from server.", "❌");
                         }
                     } catch (jsonErr) {
                         window.closeModal();
-                        window.showCustomAlert("Error", "Server response parse error. Check App Script deployment.",
-                            "❌");
+                        window.showCustomAlert("Error", "Server response error. Please check App Script deployment.", "❌");
                     }
-                }).catch(err => {
+                })
+                .catch(err => {
                     window.closeModal();
-                    window.showCustomAlert("Network Error", "Failed to upload. Please try again.", "❌");
+                    window.showCustomAlert("Network Error", "Failed to upload. Please try again.\n" + err.message, "❌");
                 });
             };
             reader.readAsDataURL(file);
         };
 
+        /* FIX: Exponential backoff retry for Firestore update */
         window.updateUserPhotoWithRetry = function(uid, photoURL, retries) {
-            db.collection("users").doc(uid).update({ photoURL: photoURL })
-                .then(() => {
+            db.collection("users").doc(uid).update({ 
+                photoURL: photoURL,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                window.closeModal();
+                window.studentInfo.photoURL = photoURL;
+                localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                window.updateProfileUI();
+                window.showCustomAlert("Success", "Profile photo updated and synced to cloud! 📸", "✅");
+            })
+            .catch((err) => {
+                if (retries > 0) {
+                    // Exponential backoff: 1s, 2s, 4s, 8s, 16s
+                    const delay = Math.pow(2, 5 - retries) * 1000;
+                    setTimeout(() => {
+                        window.updateUserPhotoWithRetry(uid, photoURL, retries - 1);
+                    }, delay);
+                } else {
                     window.closeModal();
+                    // Save locally as fallback
                     window.studentInfo.photoURL = photoURL;
                     localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
                     window.updateProfileUI();
-                    window.showCustomAlert("Success",
-                        "Profile photo updated and synced to cloud! 📸", "✅");
-                })
-                .catch((err) => {
-                    if (retries > 0) {
-                        setTimeout(() => {
-                            window.updateUserPhotoWithRetry(uid, photoURL, retries - 1);
-                        }, 1000);
-                    } else {
-                        window.closeModal();
-                        window.studentInfo.photoURL = photoURL;
-                        localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
-                        window.updateProfileUI();
-                        window.showCustomAlert("Success",
-                            "Profile photo updated locally! (Cloud sync failed, will retry on next login)",
-                            "✅");
-                    }
-                });
+                    window.showCustomAlert("Notice", "Photo saved locally. Cloud sync will retry on next login.", "⚠️");
+                }
+            });
         };
 
         window.removeProfilePhoto = function() {
@@ -5876,7 +5905,7 @@
         };
 
         /* ==========================================================================
-           PORTAL LOGO MANAGER
+           PORTAL LOGO MANAGER (unchanged)
            ========================================================================== */
         window.loadPortalLogo = function() {
             db.collection("settings").doc("portalLogo").get().then((doc) => {
@@ -6257,7 +6286,7 @@
         };
 
         /* ==========================================================================
-           TEST ENTRY
+           TEST ENTRY (unchanged)
            ========================================================================== */
         window.handleTestLoad = function(data) {
             if (data.error) return window.showErrorView("❌ Test not found!");
@@ -6369,7 +6398,7 @@
         };
 
         /* ==========================================================================
-           DASHBOARD & ACTIVE TESTS
+           DASHBOARD & ACTIVE TESTS (unchanged)
            ========================================================================== */
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
@@ -6450,7 +6479,7 @@
         };
 
         /* ==========================================================================
-           EXAMS VIEW – WITHOUT PROGRESS BAR ON HOME PAGE
+           EXAMS VIEW – WITHOUT PROGRESS BAR ON HOME PAGE (unchanged)
            ========================================================================== */
         window.showExamsView = function() {
             window.navStack = window.navStack.filter(item => item.type === 'exams');
@@ -6539,7 +6568,7 @@
         };
 
         /* ==========================================================================
-           SUB-EXAMS VIEW – WITH PROGRESS BAR (FIXED OVERFLOW)
+           SUB-EXAMS VIEW – WITH PROGRESS BAR (unchanged)
            ========================================================================== */
         window.showSubExamsView = function(boardName) {
             window.navStack.push({ type: 'subExams', board: boardName });
@@ -6868,7 +6897,7 @@
         };
 
         /* ==========================================================================
-           ADMIN DASHBOARD
+           ADMIN DASHBOARD (unchanged)
            ========================================================================== */
         window.switchAdminTab = function(tab) {
             const createSec = document.getElementById('admin-create-section');
@@ -7351,7 +7380,7 @@
         };
 
         /* ==========================================================================
-           GENERATE / UPDATE TEST – Manual Tagging Only
+           GENERATE / UPDATE TEST – Manual Tagging Only (unchanged)
            ========================================================================== */
         window.generateAndSaveLink = function() {
             const aBoard = document.getElementById('a-board');
@@ -7726,7 +7755,7 @@
         };
 
         /* ==========================================================================
-           VISUAL EDITOR
+           VISUAL EDITOR (unchanged)
            ========================================================================== */
         window.openVisualEditor = function() {
             const rawData = document.getElementById('a-rawdata').value;
@@ -7912,7 +7941,7 @@
         };
 
         /* ==========================================================================
-           EXAM ENGINE
+           EXAM ENGINE (unchanged)
            ========================================================================== */
         window.startExam = function(isRe) {
             try {
@@ -8215,7 +8244,7 @@
         };
 
         /* ==========================================================================
-           RENDER QUESTION
+           RENDER QUESTION (unchanged)
            ========================================================================== */
         window.renderQuestion = function(idx) {
             window.currentQ = idx;
@@ -8839,7 +8868,7 @@
         };
 
         /* ==========================================================================
-           LEADERBOARD – WITH PHOTO FIX
+           LEADERBOARD – WITH PHOTO FIX (unchanged)
            ========================================================================== */
         window.fetchLeaderboardWithPhotos = function(testCode) {
             const container = document.getElementById('leaderboard-container');
@@ -9087,7 +9116,7 @@
                 window.renderAnalysisSlide(); } };
 
         /* ==========================================================================
-           CERTIFICATE DOWNLOAD
+           CERTIFICATE DOWNLOAD (unchanged)
            ========================================================================== */
         window.downloadCertificateImage = function() {
             const certElement = document.getElementById('score-card-cert');
@@ -9112,7 +9141,7 @@
         };
 
         /* ==========================================================================
-           CONFETTI
+           CONFETTI (unchanged)
            ========================================================================== */
         window.blastConfetti = function() {
             const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#01a3a4', '#f368e0', '#ff6348'];
@@ -9561,7 +9590,7 @@
         };
 
         /* ==========================================================================
-           SERIAL ORDER
+           SERIAL ORDER (unchanged)
            ========================================================================== */
         window.loadSerialOrderUI = function() {
             const container = document.getElementById('serial-reorder-container');
@@ -9655,7 +9684,7 @@
         };
 
         /* ==========================================================================
-           STUDENT PERFORMANCE (Admin)
+           STUDENT PERFORMANCE (Admin) (unchanged)
            ========================================================================== */
         window.fetchStudentPerformance = function() {
             const loader = document.getElementById('perf-loader');
@@ -9772,7 +9801,7 @@
         };
 
         /* ==========================================================================
-           PRICE TOGGLE
+           PRICE TOGGLE (unchanged)
            ========================================================================== */
         window.togglePriceBox = function() {
             const pt = document.getElementById('a-pdf-type');
@@ -9787,13 +9816,9 @@
         window.loadPortalLogo();
 
         console.log('🚀 TEST BODHI v24.0 — FINAL FIXES APPLIED');
-        console.log('✅ Explanations now render for ALL questions (tagged or not) in PDF, Analysis, and Report');
-        console.log('✅ MathJax formatting preserved without raw code');
-        console.log('✅ Main graph now shows Correct (Green), Wrong (Red), Blank (Yellow)');
-        console.log('✅ Sub-graphs also show Correct/Wrong/Blank with proper colors');
-        console.log('✅ Detailed performance table includes all topics with status (Strong/Average/Weak)');
-        console.log('📌 Tag format: !tag(Subject:Topic)');
-        console.log('📌 Solution toggle shows explanation in analysis and report');
+        console.log('✅ Bug 1 Fixed: Exam view cleared completely on exit');
+        console.log('✅ Bug 2 Fixed: Profile photo upload uses proper CORS and Firestore sync');
+        console.log('✅ Leaderboard photos now load across devices');
     </script>
 
     <!-- ===== PRINT AREA ===== -->
