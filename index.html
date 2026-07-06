@@ -5205,7 +5205,19 @@
                 if (!math || !math.trim()) return math;
                 let processed = math;
                 processed = processed.replace(/(?<!\\)#/g, '\\#');
-                processed = processed.replace(/([\u0900-\u097F]+)/g, '\\text{$1}');
+                // Wrap whole Hindi PHRASES (word + internal spaces/hyphens/punctuation)
+                // in one \text{}, not just single contiguous-script runs — so spacing
+                // between Hindi words (e.g. "यूनिट है", "गति समय") survives, since
+                // spaces are only preserved by MathJax when they're inside \text{}.
+                processed = processed.replace(
+                    /[\u0900-\u097F](?:[\u0900-\u097F\u0964\u0965 \t\-.,;:()/']*[\u0900-\u097F])?/g,
+                    (m) => `\\text{${m}}`
+                );
+                // Pull any space touching a \text{} boundary INSIDE the braces —
+                // plain spaces outside \text{} are invisible in math mode, so
+                // "7 \text{यूनिट}" would otherwise render as "7यूनिट" with no gap.
+                processed = processed.replace(/([ \t]+)\\text\{/g, '\\text{$1');
+                processed = processed.replace(/\\text\{([^{}]*)\}([ \t]+)/g, '\\text{$1$2}');
                 return processed;
             }
             str = str.replace(/\$\$([\s\S]*?)\$\$/g, function(fullMatch, innerMath) {
@@ -5243,7 +5255,12 @@
            ========================================================================== */
         window.parseRawQuestions = function(rawText) {
             if (!rawText) return [];
-            rawText = window.sanitizeMath(rawText);
+            // NOTE: sanitizeMath is intentionally NOT run here on the whole raw blob.
+            // Running it across all questions at once let a single unprotected
+            // reasoning-notation "$" (e.g. L$M) pair up with an unrelated "$" many
+            // questions away, turning everything in between into fake "math" and
+            // wrapping every Hindi word in \text{...}. Sanitization now happens
+            // per-field, per-question, later in window.sanitizeQuestions().
             rawText = rawText.replace(/[\u200B-\u200D\uFEFF]/g, '')
                 .replace(/\r\n?/g, '\n')
                 .replace(/(\n|^)\s*(!!\s*\d+\s*!)/g, '\n$2')
