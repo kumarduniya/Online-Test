@@ -4861,6 +4861,10 @@
         // ---- CONFIG ----
         const SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbxVePIuxQvKS8Gspm3ShW4WnoiLcsTHFx4SBUCGGa_qCmA-eoaTfeUTa84OFrjLgs3XRQ/exec";
+
+        // Alag Google account ka Apps Script - sirf OTP/mail bhejne ke liye (Brevo wala)
+        const MAIL_SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycby_qNQhtbqVwqU5iTOPKVTXJCklWQpZvCdk79gUSOflo_3QrKQQWjjbiRLrAiAAIcPc_w/exec";
         const BASE_URL = "https://setupportal.netlify.app/";
 
         const firebaseConfig = {
@@ -5533,7 +5537,7 @@
                     "📩");
                 window.startOtpTimer();
             }
-            fetch(SCRIPT_URL, {
+            fetch(MAIL_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: formData,
@@ -5557,7 +5561,7 @@
                 '<div style="font-family:Arial;padding:20px;border:1px solid #ccc;border-radius:10px;"><h2>MockSarthi Verification</h2><p>Hello <b>' +
                 name + '</b>,</p><p>Your OTP for registration is:</p><h1 style="color:#0f2b5c;letter-spacing:5px;background:#f0f4fa;padding:10px;text-align:center;border-radius:5px;">' +
                 otp + '</h1><p>Do not share this code.</p></div>');
-            fetch(SCRIPT_URL, {
+            fetch(MAIL_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: formData,
