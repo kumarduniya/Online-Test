@@ -4055,6 +4055,181 @@
         .hindi-frac .hf-den {
             padding: 2px 4px 0;
         }
+
+        /* ============================================================
+           PREMIUM UPGRADE — SMOOTHNESS, PERFORMANCE & 3D VISUAL LAYER
+           (Purely additive — no existing rule is removed, only enhanced)
+           ============================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        * { -webkit-tap-highlight-color: transparent; }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        img, svg { -webkit-user-drag: none; }
+
+        /* Smoother gradient scrollbar */
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent), var(--primary-light));
+        }
+
+        /* ---------- Buttons: layered 3D depth + shine sweep ---------- */
+        .btn {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, background 0.25s ease;
+            backface-visibility: hidden;
+        }
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.35) 48%, rgba(255,255,255,0) 66%);
+            transform: translateX(-130%);
+            transition: transform 0.65s ease;
+            pointer-events: none;
+        }
+        .btn:hover::after { transform: translateX(130%); }
+        .btn:hover { transform: translateY(-3px) scale(1.015); }
+        .btn:active { transform: translateY(-1px) scale(0.98); transition-duration: 0.08s; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary) 60%, var(--primary-dark));
+            box-shadow: 0 6px 16px rgba(15,43,92,0.30), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark) 75%, var(--primary-dark));
+            box-shadow: 0 10px 26px rgba(15,43,92,0.42), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .btn-accent:hover, .btn-success:hover, .btn-danger:hover, .btn-warning:hover {
+            filter: brightness(1.06);
+        }
+
+        /* ---------- Inputs: gentle 3D lift on focus ---------- */
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.25s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           LOGIN / REGISTER — 3D ANIMATED SCENE
+           ============================================================ */
+        #student-auth-view.active-view {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 70vh;
+            perspective: 1600px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        #student-auth-view.active-view::before,
+        #student-auth-view.active-view::after {
+            content: '';
+            position: absolute;
+            inset: -25%;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 20% 25%, rgba(212,168,67,0.32), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(26,75,140,0.32), transparent 38%),
+                radial-gradient(circle at 30% 80%, rgba(15,157,88,0.18), transparent 35%),
+                radial-gradient(circle at 85% 75%, rgba(212,168,67,0.22), transparent 40%);
+            filter: blur(20px);
+            animation: authBlobDrift 20s ease-in-out infinite alternate;
+            will-change: transform;
+        }
+        #student-auth-view.active-view::after {
+            animation-duration: 27s;
+            animation-direction: alternate-reverse;
+            opacity: 0.65;
+            filter: blur(34px);
+        }
+        body.dark-mode #student-auth-view.active-view::before,
+        body.dark-mode #student-auth-view.active-view::after {
+            background:
+                radial-gradient(circle at 20% 25%, rgba(100,149,237,0.28), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(212,168,67,0.18), transparent 38%),
+                radial-gradient(circle at 30% 80%, rgba(15,157,88,0.16), transparent 35%),
+                radial-gradient(circle at 85% 75%, rgba(100,149,237,0.20), transparent 40%);
+        }
+        @keyframes authBlobDrift {
+            0%   { transform: translate3d(0,0,0) rotate(0deg) scale(1); }
+            50%  { transform: translate3d(2%, -3%, 0) rotate(8deg) scale(1.08); }
+            100% { transform: translate3d(-3%, 2%, 0) rotate(-6deg) scale(1.03); }
+        }
+
+        /* Perspective grid "floor" for extra depth, drawn on the container itself */
+        #student-auth-view.active-view {
+            background-image:
+                repeating-linear-gradient(0deg, rgba(15,43,92,0.05) 0 1px, transparent 1px 46px),
+                repeating-linear-gradient(90deg, rgba(15,43,92,0.05) 0 1px, transparent 1px 46px);
+            background-position: center bottom;
+            background-size: 46px 46px, 46px 46px;
+            mask-image: linear-gradient(to bottom, transparent 0%, #000 55%, #000 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 55%, #000 100%);
+        }
+        body.dark-mode #student-auth-view.active-view {
+            background-image:
+                repeating-linear-gradient(0deg, rgba(100,149,237,0.08) 0 1px, transparent 1px 46px),
+                repeating-linear-gradient(90deg, rgba(100,149,237,0.08) 0 1px, transparent 1px 46px);
+        }
+
+        /* The auth card: glass + entrance + glow pulse + spotlight that follows the cursor */
+        .auth-box {
+            transform-style: preserve-3d;
+            transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            animation: authCardIn 0.7s cubic-bezier(0.22,1,0.36,1) both,
+                       authGlowPulse 4.5s ease-in-out infinite 0.7s;
+        }
+        @keyframes authCardIn {
+            from { opacity: 0; transform: translateY(40px) rotateX(8deg) scale(0.94); }
+            to   { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1); }
+        }
+        @keyframes authGlowPulse {
+            0%, 100% { box-shadow: var(--shadow-lg), 0 0 0 rgba(212,168,67,0); }
+            50%      { box-shadow: var(--shadow-lg), 0 0 42px rgba(212,168,67,0.30); }
+        }
+        .auth-box::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(280px circle at var(--mx,50%) var(--my,15%), rgba(212,168,67,0.18), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+        .auth-box:hover::after { opacity: 1; }
+        .auth-box h3 .highlight {
+            display: inline-block;
+            animation: wave3d 2.6s ease-in-out infinite;
+            transform-origin: 70% 70%;
+        }
+        @keyframes wave3d {
+            0%, 100% { transform: rotate(0deg); }
+            20%      { transform: rotate(14deg); }
+            40%      { transform: rotate(-8deg); }
+            60%      { transform: rotate(10deg); }
+        }
     </style>
 </head>
 <body>
@@ -10097,6 +10272,38 @@
             const pBox = document.getElementById('price-box');
             if (pt && pBox) { pBox.style.display = (pt.value === 'free') ? 'none' : 'block'; }
         };
+
+        /* ==========================================================================
+           PREMIUM 3D INTERACTION LAYER (login/register cards only — purely cosmetic,
+           wrapped safely so it can never interfere with app logic)
+           ========================================================================== */
+        (function() {
+            try {
+                var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                var canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+                if (reduceMotion || !canHover) return;
+                var cards = document.querySelectorAll('.auth-box');
+                cards.forEach(function(card) {
+                    var raf = null;
+                    card.addEventListener('mousemove', function(e) {
+                        var rect = card.getBoundingClientRect();
+                        var px = (e.clientX - rect.left) / rect.width;
+                        var py = (e.clientY - rect.top) / rect.height;
+                        if (raf) cancelAnimationFrame(raf);
+                        raf = requestAnimationFrame(function() {
+                            var rotateY = (px - 0.5) * 8;
+                            var rotateX = (0.5 - py) * 8;
+                            card.style.transform = 'perspective(1000px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg) translateY(-2px)';
+                            card.style.setProperty('--mx', (px * 100) + '%');
+                            card.style.setProperty('--my', (py * 100) + '%');
+                        });
+                    });
+                    card.addEventListener('mouseleave', function() {
+                        card.style.transform = '';
+                    });
+                });
+            } catch (e) { /* fail silent — cosmetic layer only, never breaks the app */ }
+        })();
 
         /* ==========================================================================
            INIT
