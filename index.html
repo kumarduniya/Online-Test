@@ -4182,6 +4182,15 @@
                     <span style="color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;" onclick="window.handleForgotPassword()">Forgot Password?</span>
                 </div>
                 <button class="btn btn-primary" onclick="window.handleStudentLogin()">Login 🔓</button>
+                <div style="display:flex;align-items:center;gap:8px;margin:14px 0;">
+                    <div style="flex:1;height:1px;background:rgba(0,0,0,0.12);"></div>
+                    <span style="font-size:11px;color:var(--text-muted);">OR</span>
+                    <div style="flex:1;height:1px;background:rgba(0,0,0,0.12);"></div>
+                </div>
+                <button type="button" class="btn btn-outline" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="window.handleGoogleAuth()">
+                    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                    Continue with Google
+                </button>
                 <p class="sub-text" style="margin-top:14px;margin-bottom:0;">New student? <span style="color:var(--accent);font-weight:700;cursor:pointer;" onclick="window.toggleAuthScreens('register')">Register Here</span></p>
             </div>
 
@@ -4215,6 +4224,15 @@
                     </div>
                     <button id="btn-send-otp" class="btn btn-primary" onclick="window.handleSendOTP()">Send OTP 📩</button>
                 </div>
+                <div style="display:flex;align-items:center;gap:8px;margin:14px 0;">
+                    <div style="flex:1;height:1px;background:rgba(0,0,0,0.12);"></div>
+                    <span style="font-size:11px;color:var(--text-muted);">OR</span>
+                    <div style="flex:1;height:1px;background:rgba(0,0,0,0.12);"></div>
+                </div>
+                <button type="button" class="btn btn-outline" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="window.handleGoogleAuth()">
+                    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                    Sign up with Google
+                </button>
 
                 <div id="reg-otp-field" style="display:none;margin-top:14px;background:rgba(212,168,67,0.08);padding:14px;border-radius:var(--radius);border:2px solid var(--accent);">
                     <div class="form-group">
@@ -5626,6 +5644,62 @@
             });
         };
 
+        window.pendingGoogleCredential = null;
+
+        window.handleGoogleAuth = function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            window.showLoadingModal("Connecting to Google...<br>Please wait.");
+            auth.signInWithPopup(provider).then((result) => {
+                const user = result.user;
+                return db.collection("users").doc(user.uid).get().then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        localStorage.setItem('mockSarthiUser', JSON.stringify(userData));
+                        window.studentInfo = userData;
+                        window.closeModal();
+                        window.updateProfileUI();
+                        window.checkPendingTestOrGoHome();
+                    } else {
+                        window.closeModal();
+                        const enteredPhone = prompt("📱 Apna 10-digit mobile number likhein (Report dekhne ke liye zaroori hai):", "");
+                        const phone = (enteredPhone || "").trim();
+                        window.showLoadingModal("Creating your account...<br>Please wait.");
+                        return db.collection("users").doc(user.uid).set({
+                            name: user.displayName || "Student",
+                            email: user.email,
+                            phone: phone,
+                            isPremium: false,
+                            uid: user.uid,
+                            photoURL: user.photoURL || "",
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }).then(() => {
+                            const userData = { name: user.displayName || "Student", email: user.email, phone: phone, isPremium: false, photoURL: user.photoURL || "" };
+                            localStorage.setItem('mockSarthiUser', JSON.stringify(userData));
+                            window.studentInfo = userData;
+                            window.closeModal();
+                            window.showCustomAlert("Welcome!", "Account created successfully! 🎉", "🎓");
+                            setTimeout(window.checkPendingTestOrGoHome, 1200);
+                        });
+                    }
+                });
+            }).catch((error) => {
+                window.closeModal();
+                if (error.code === 'auth/account-exists-with-different-credential') {
+                    // Purana account isi email se password wale system me already bana hai.
+                    // Google credential ko yaad rakho, aur student ko password se login karwao - tab link kar denge.
+                    window.pendingGoogleCredential = error.credential;
+                    window.toggleAuthScreens('login');
+                    const loginEmailInput = document.getElementById('login-email');
+                    if (loginEmailInput) loginEmailInput.value = error.email || "";
+                    window.showCustomAlert("Notice", "Ye email pehle se Password se registered hai.<br>Neeche apna Password daal kar Login karein — Google account apne aap link ho jayega, aur agli baar seedha Google se login kar paoge.", "💡");
+                } else if (error.code === 'auth/popup-closed-by-user') {
+                    // Student ne popup band kar diya, kuch karne ki zarurat nahi
+                } else {
+                    window.showCustomAlert("Error", "Google Sign-In failed: " + error.message, "❌");
+                }
+            });
+        };
+
         window.handleStudentLogin = function() {
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-password').value.trim();
@@ -5639,6 +5713,13 @@
                 btn.disabled = true; }
             auth.signInWithEmailAndPassword(email, pass).then((userCredential) => {
                 const user = userCredential.user;
+                if (window.pendingGoogleCredential) {
+                    const credToLink = window.pendingGoogleCredential;
+                    window.pendingGoogleCredential = null;
+                    user.linkWithCredential(credToLink).catch((linkErr) => {
+                        console.log("Google link skipped: " + linkErr.message);
+                    });
+                }
                 return db.collection("users").doc(user.uid).get();
             }).then((doc) => {
                 if (btn) { btn.innerText = oldText;
