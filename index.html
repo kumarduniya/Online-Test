@@ -77,6 +77,9 @@
             --card-border: rgba(255, 255, 255, 0.3);
             --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
             --card-glow: rgba(212, 168, 67, 0.15);
+            --classic-maroon: #7a1f2b;
+            --classic-maroon-light: #9c2e3c;
+            --classic-ivory: #f7f0dc;
         }
 
         body.dark-mode {
@@ -97,6 +100,9 @@
             --card-border: rgba(42, 63, 96, 0.5);
             --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             --card-glow: rgba(100, 149, 237, 0.15);
+            --classic-maroon: #b5495a;
+            --classic-maroon-light: #d06a7b;
+            --classic-ivory: #d9cfa8;
         }
 
         /* ============================================================
@@ -251,6 +257,17 @@
             height: 300px;
             background: radial-gradient(circle, rgba(212, 168, 67, 0.08) 0%, transparent 70%);
             border-radius: 50%;
+            pointer-events: none;
+        }
+        .tcs-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--classic-maroon), var(--accent) 50%, var(--classic-maroon));
+            z-index: 2;
             pointer-events: none;
         }
         .brand-wrapper {
@@ -4145,10 +4162,10 @@
             z-index: -1;
             pointer-events: none;
             background:
-                radial-gradient(circle at 20% 25%, rgba(212,168,67,0.32), transparent 40%),
+                radial-gradient(circle at 20% 25%, rgba(212,168,67,0.34), transparent 40%),
                 radial-gradient(circle at 80% 20%, rgba(26,75,140,0.32), transparent 38%),
-                radial-gradient(circle at 30% 80%, rgba(15,157,88,0.18), transparent 35%),
-                radial-gradient(circle at 85% 75%, rgba(212,168,67,0.22), transparent 40%);
+                radial-gradient(circle at 30% 80%, rgba(122,31,43,0.22), transparent 35%),
+                radial-gradient(circle at 85% 75%, rgba(212,168,67,0.24), transparent 40%);
             filter: blur(20px);
             animation: authBlobDrift 20s ease-in-out infinite alternate;
             will-change: transform;
@@ -4164,7 +4181,7 @@
             background:
                 radial-gradient(circle at 20% 25%, rgba(100,149,237,0.28), transparent 40%),
                 radial-gradient(circle at 80% 20%, rgba(212,168,67,0.18), transparent 38%),
-                radial-gradient(circle at 30% 80%, rgba(15,157,88,0.16), transparent 35%),
+                radial-gradient(circle at 30% 80%, rgba(181,73,90,0.20), transparent 35%),
                 radial-gradient(circle at 85% 75%, rgba(100,149,237,0.20), transparent 40%);
         }
         @keyframes authBlobDrift {
@@ -4206,7 +4223,7 @@
         }
         @keyframes authGlowPulse {
             0%, 100% { box-shadow: var(--shadow-lg), 0 0 0 rgba(212,168,67,0); }
-            50%      { box-shadow: var(--shadow-lg), 0 0 42px rgba(212,168,67,0.30); }
+            50%      { box-shadow: var(--shadow-lg), 0 0 42px rgba(212,168,67,0.28), 0 0 70px rgba(122,31,43,0.14); }
         }
         .auth-box::after {
             content: '';
@@ -4230,6 +4247,52 @@
             40%      { transform: rotate(-8deg); }
             60%      { transform: rotate(10deg); }
         }
+
+        /* ---------- Classical royal touch: gold corner frame + maroon accent ---------- */
+        .auth-box {
+            border: 1px solid rgba(212,168,67,0.35);
+        }
+        .auth-box::before {
+            content: '';
+            position: absolute;
+            inset: 9px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.9;
+            background:
+                linear-gradient(var(--accent), var(--accent)) top left / 18px 2px no-repeat,
+                linear-gradient(var(--accent), var(--accent)) top left / 2px 18px no-repeat,
+                linear-gradient(var(--accent), var(--accent)) top right / 18px 2px no-repeat,
+                linear-gradient(var(--accent), var(--accent)) top right / 2px 18px no-repeat,
+                linear-gradient(var(--classic-maroon), var(--classic-maroon)) bottom left / 18px 2px no-repeat,
+                linear-gradient(var(--classic-maroon), var(--classic-maroon)) bottom left / 2px 18px no-repeat,
+                linear-gradient(var(--classic-maroon), var(--classic-maroon)) bottom right / 18px 2px no-repeat,
+                linear-gradient(var(--classic-maroon), var(--classic-maroon)) bottom right / 2px 18px no-repeat;
+        }
+        .auth-box .sub-text {
+            position: relative;
+            padding-bottom: 16px;
+        }
+        .auth-box .sub-text::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 7px;
+            transform: translateX(-50%);
+            width: 64px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--classic-maroon), transparent);
+        }
+        .auth-box .sub-text::after {
+            content: '❖';
+            position: absolute;
+            left: 50%;
+            bottom: -1px;
+            transform: translateX(-50%);
+            color: var(--classic-maroon);
+            font-size: 10px;
+        }
+        body.dark-mode .auth-box .sub-text::after { color: var(--accent-light); }
     </style>
 </head>
 <body>
