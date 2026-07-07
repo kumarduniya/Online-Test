@@ -380,6 +380,12 @@
             overflow: hidden;
             flex-shrink: 0;
             position: relative;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .header-profile .profile-avatar:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.3);
         }
         .header-profile .profile-avatar img {
             width: 100%;
@@ -533,6 +539,11 @@
             font-weight: 700;
             color: var(--text-main);
             overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .tcs-sub-header .s-profile-small .sp-avatar:hover {
+            transform: scale(1.1);
         }
         .tcs-sub-header .s-profile-small .sp-avatar img {
             width: 100%;
@@ -974,6 +985,12 @@
             color: var(--text-muted);
             background: var(--bg-subtle);
             overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+        #profile-modal .pm-box .pm-avatar:hover {
+            transform: scale(1.04);
         }
         #profile-modal .pm-box .pm-avatar img {
             width: 100%;
@@ -1019,6 +1036,46 @@
         }
         #profile-modal .pm-box .pm-detail .pm-value.free {
             color: var(--text-muted);
+        }
+
+        /* ---- Profile Photo Lightbox ---- */
+        #profile-photo-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            z-index: 999999999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            padding: 30px;
+        }
+        #profile-photo-lightbox.active {
+            display: flex;
+        }
+        #profile-photo-lightbox .ppl-content {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+            border: 3px solid var(--accent);
+            object-fit: contain;
+            background: #fff;
+            padding: 4px;
+        }
+        #profile-photo-lightbox .ppl-close-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
         }
 
         @keyframes popIn {
@@ -1867,6 +1924,25 @@
             .sub-exam-progress-stats span {
                 white-space: nowrap;
             }
+
+            /* Result view mobile: stack columns */
+            .result-layout {
+                flex-direction: column !important;
+            }
+            .result-left,
+            .result-right {
+                width: 100% !important;
+                flex: none !important;
+                max-width: 100% !important;
+            }
+            .result-right {
+                margin-top: 18px;
+                border-top: 2px solid var(--border-color);
+                padding-top: 18px;
+            }
+            .analysis-box-inner {
+                max-height: 300px !important;
+            }
         }
 
         @media (max-width: 480px) {
@@ -2674,12 +2750,12 @@
            CERTIFICATE / SCORE CARD
            ============================================================ */
         .score-card-certificate {
-            max-width: 780px;
-            margin: 16px auto;
+            max-width: 100%;
+            margin: 0 auto 12px auto;
             background: linear-gradient(145deg, #ffffff, #f8faff);
-            border-radius: var(--radius-xl);
-            padding: 28px 32px 24px;
-            box-shadow: 0 20px 60px rgba(15, 43, 92, 0.15), 0 0 0 1px rgba(212, 168, 67, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px 16px;
+            box-shadow: 0 8px 30px rgba(15, 43, 92, 0.12), 0 0 0 1px rgba(212, 168, 67, 0.2);
             border: 2px solid var(--accent);
             position: relative;
             overflow: hidden;
@@ -2710,58 +2786,58 @@
         .score-card-certificate .cert-header {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             border-bottom: 2px solid var(--accent);
-            padding-bottom: 14px;
-            margin-bottom: 18px;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
         .score-card-certificate .cert-header .cert-logo {
-            width: 64px;
-            height: 64px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             object-fit: contain;
             border: 2px solid var(--accent);
             background: #fff;
-            padding: 4px;
+            padding: 3px;
             flex-shrink: 0;
         }
         .score-card-certificate .cert-header .cert-title-group {
             flex: 1;
         }
         .score-card-certificate .cert-header .cert-title-group .cert-main-title {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 800;
             color: var(--primary);
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
         .score-card-certificate .cert-header .cert-title-group .cert-main-title span {
             color: var(--accent);
         }
         .score-card-certificate .cert-header .cert-title-group .cert-sub-title {
-            font-size: 13px;
+            font-size: 11px;
             color: var(--text-muted);
             font-weight: 500;
         }
         .score-card-certificate .cert-header .cert-title-group .cert-test-info {
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 600;
             color: var(--primary);
-            margin-top: 2px;
+            margin-top: 1px;
         }
         .score-card-certificate .cert-header .cert-title-group .cert-test-info span {
             color: var(--danger);
         }
         .score-card-certificate .cert-body {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px 24px;
-            margin: 16px 0;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px 14px;
+            margin: 10px 0;
         }
         .score-card-certificate .cert-body .cert-item {
             background: var(--bg-subtle);
-            border-radius: var(--radius);
-            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            padding: 8px 10px;
             text-align: center;
             border: 1px solid var(--border-color);
             transition: var(--transition);
@@ -2771,17 +2847,17 @@
             box-shadow: var(--shadow-sm);
         }
         .score-card-certificate .cert-body .cert-item .cert-label {
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
         .score-card-certificate .cert-body .cert-item .cert-value {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 800;
             color: var(--primary);
-            margin-top: 4px;
+            margin-top: 2px;
         }
         .score-card-certificate .cert-body .cert-item .cert-value.gold {
             color: #f59e0b;
@@ -2796,22 +2872,22 @@
             color: var(--primary-light);
         }
         .score-card-certificate .cert-body .cert-item .cert-sub {
-            font-size: 12px;
+            font-size: 9px;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-top: 1px;
         }
         .score-card-certificate .cert-footer {
             border-top: 2px solid var(--accent);
-            padding-top: 14px;
-            margin-top: 6px;
+            padding-top: 10px;
+            margin-top: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 6px;
         }
         .score-card-certificate .cert-footer .cert-student {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-main);
         }
@@ -2819,16 +2895,235 @@
             color: var(--accent);
         }
         .score-card-certificate .cert-footer .cert-date {
-            font-size: 12px;
+            font-size: 10px;
             color: var(--text-muted);
         }
         .score-card-certificate .cert-footer .cert-badge {
             background: var(--accent-gradient);
             color: var(--primary-dark);
-            padding: 4px 16px;
+            padding: 3px 12px;
             border-radius: 50px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
+        }
+
+        /* ============================================================
+           RESULT VIEW – TWO COLUMN LAYOUT
+           ============================================================ */
+        .result-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            max-width: 100%;
+            align-items: flex-start;
+            padding: 0 4px;
+        }
+        .result-left {
+            flex: 0 0 45%;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 45%;
+        }
+        .result-right {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 55%;
+        }
+
+        /* Make analytics container full width inside right column */
+        .result-right .analytics-container {
+            margin: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            padding: 14px 16px !important;
+        }
+        .result-right .analytics-container .chart-wrapper {
+            height: 170px !important;
+            max-height: 200px !important;
+        }
+        .result-right .analytics-container .analytics-title {
+            font-size: 14px !important;
+            padding-bottom: 6px !important;
+            margin-bottom: 8px !important;
+        }
+        .result-right .sub-graph-container .sub-graph-wrapper {
+            height: 130px !important;
+            max-height: 160px !important;
+        }
+        .result-right .sub-graph-container .sub-graph-title {
+            font-size: 12px !important;
+        }
+
+        /* Compact score card in left column */
+        .result-left .score-card-certificate {
+            padding: 12px 14px !important;
+            margin-bottom: 4px !important;
+        }
+        .result-left .score-card-certificate .cert-body {
+            grid-template-columns: 1fr 1fr 1fr !important;
+            gap: 6px !important;
+        }
+        .result-left .score-card-certificate .cert-body .cert-item {
+            padding: 4px 6px !important;
+        }
+        .result-left .score-card-certificate .cert-body .cert-item .cert-value {
+            font-size: 18px !important;
+        }
+        .result-left .score-card-certificate .cert-header .cert-logo {
+            width: 38px !important;
+            height: 38px !important;
+        }
+        .result-left .score-card-certificate .cert-header .cert-title-group .cert-main-title {
+            font-size: 15px !important;
+        }
+        .result-left .score-card-certificate .cert-header .cert-title-group .cert-sub-title {
+            font-size: 10px !important;
+        }
+
+        /* Buttons row in left column */
+        .result-buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: flex-start;
+        }
+        .result-buttons-row .btn {
+            flex: 1 1 auto;
+            min-width: 80px;
+            font-size: 11px !important;
+            padding: 6px 12px !important;
+            margin: 0 !important;
+        }
+
+        /* Analysis container in left column */
+        .result-analysis-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #analysis-btn-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: flex-start;
+            position: relative !important;
+            top: auto !important;
+            z-index: auto !important;
+            background: transparent !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+        }
+        #analysis-btn-container .btn {
+            font-size: 10px !important;
+            padding: 4px 10px !important;
+            flex: 0 1 auto;
+        }
+
+        /* Analysis box – LARGER for better readability */
+        .analysis-box {
+            display: none;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+        .analysis-box .analysis-box-inner {
+            max-height: 420px;
+            overflow-y: auto;
+            padding: 16px 18px;
+            scroll-behavior: smooth;
+        }
+        .analysis-box .analysis-box-inner::-webkit-scrollbar {
+            width: 5px;
+        }
+        .analysis-box .analysis-box-inner::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+        .analysis-box .analysis-box-inner .analysis-q-text {
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .analysis-box .analysis-box-inner .analysis-options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .analysis-box .analysis-box-inner .analysis-options-grid .opt-item {
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .analysis-box .analysis-box-inner .analysis-options-grid .opt-item.correct {
+            background: rgba(15, 157, 88, 0.12);
+            border-color: var(--success);
+        }
+        .analysis-box .analysis-box-inner .analysis-options-grid .opt-item.wrong {
+            background: rgba(220, 53, 69, 0.10);
+            border-color: var(--danger);
+        }
+        .analysis-box .analysis-box-inner .analysis-solution {
+            background: var(--bg-subtle);
+            padding: 14px 16px;
+            border-left: 4px solid var(--accent);
+            border-radius: var(--radius-sm);
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.7;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .analysis-box .analysis-box-inner .analysis-solution::-webkit-scrollbar {
+            width: 4px;
+        }
+        .analysis-box .analysis-box-inner .analysis-solution::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        /* Leaderboard in left column */
+        .result-left .leaderboard-container {
+            margin: 0 !important;
+            max-width: 100% !important;
+            padding: 10px 12px !important;
+        }
+        .result-left .leaderboard-container .lb-title {
+            font-size: 15px !important;
+            padding-bottom: 6px !important;
+            margin-bottom: 8px !important;
+        }
+        .result-left .leaderboard-container .lb-item {
+            padding: 4px 8px !important;
+            gap: 8px !important;
+        }
+        .result-left .leaderboard-container .lb-item .lb-avatar {
+            width: 26px !important;
+            height: 26px !important;
+        }
+        .result-left .leaderboard-container .lb-item .lb-name {
+            font-size: 12px !important;
+        }
+        .result-left .leaderboard-container .lb-item .lb-score {
+            font-size: 12px !important;
         }
 
         /* ============================================================
@@ -4078,20 +4373,27 @@
            (Purely additive — no existing rule is removed, only enhanced)
            ============================================================ */
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
+            *,
+            *::before,
+            *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
                 scroll-behavior: auto !important;
             }
         }
-        * { -webkit-tap-highlight-color: transparent; }
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
         body {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
         }
-        img, svg { -webkit-user-drag: none; }
+        img,
+        svg {
+            -webkit-user-drag: none;
+        }
 
         /* Smoother gradient scrollbar */
         ::-webkit-scrollbar-thumb {
@@ -4109,23 +4411,33 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.35) 48%, rgba(255,255,255,0) 66%);
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.35) 48%, rgba(255, 255, 255, 0) 66%);
             transform: translateX(-130%);
             transition: transform 0.65s ease;
             pointer-events: none;
         }
-        .btn:hover::after { transform: translateX(130%); }
-        .btn:hover { transform: translateY(-3px) scale(1.015); }
-        .btn:active { transform: translateY(-1px) scale(0.98); transition-duration: 0.08s; }
+        .btn:hover::after {
+            transform: translateX(130%);
+        }
+        .btn:hover {
+            transform: translateY(-3px) scale(1.015);
+        }
+        .btn:active {
+            transform: translateY(-1px) scale(0.98);
+            transition-duration: 0.08s;
+        }
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-light), var(--primary) 60%, var(--primary-dark));
-            box-shadow: 0 6px 16px rgba(15,43,92,0.30), inset 0 1px 0 rgba(255,255,255,0.15);
+            box-shadow: 0 6px 16px rgba(15, 43, 92, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
         .btn-primary:hover {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark) 75%, var(--primary-dark));
-            box-shadow: 0 10px 26px rgba(15,43,92,0.42), inset 0 1px 0 rgba(255,255,255,0.2);
+            box-shadow: 0 10px 26px rgba(15, 43, 92, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
-        .btn-accent:hover, .btn-success:hover, .btn-danger:hover, .btn-warning:hover {
+        .btn-accent:hover,
+        .btn-success:hover,
+        .btn-danger:hover,
+        .btn-warning:hover {
             filter: brightness(1.06);
         }
 
@@ -4161,11 +4473,10 @@
             inset: -25%;
             z-index: -1;
             pointer-events: none;
-            background:
-                radial-gradient(circle at 20% 25%, rgba(212,168,67,0.34), transparent 40%),
-                radial-gradient(circle at 80% 20%, rgba(26,75,140,0.32), transparent 38%),
-                radial-gradient(circle at 30% 80%, rgba(122,31,43,0.22), transparent 35%),
-                radial-gradient(circle at 85% 75%, rgba(212,168,67,0.24), transparent 40%);
+            background: radial-gradient(circle at 20% 25%, rgba(212, 168, 67, 0.34), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(26, 75, 140, 0.32), transparent 38%),
+                radial-gradient(circle at 30% 80%, rgba(122, 31, 43, 0.22), transparent 35%),
+                radial-gradient(circle at 85% 75%, rgba(212, 168, 67, 0.24), transparent 40%);
             filter: blur(20px);
             animation: authBlobDrift 20s ease-in-out infinite alternate;
             will-change: transform;
@@ -4178,79 +4489,104 @@
         }
         body.dark-mode #student-auth-view.active-view::before,
         body.dark-mode #student-auth-view.active-view::after {
-            background:
-                radial-gradient(circle at 20% 25%, rgba(100,149,237,0.28), transparent 40%),
-                radial-gradient(circle at 80% 20%, rgba(212,168,67,0.18), transparent 38%),
-                radial-gradient(circle at 30% 80%, rgba(181,73,90,0.20), transparent 35%),
-                radial-gradient(circle at 85% 75%, rgba(100,149,237,0.20), transparent 40%);
+            background: radial-gradient(circle at 20% 25%, rgba(100, 149, 237, 0.28), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(212, 168, 67, 0.18), transparent 38%),
+                radial-gradient(circle at 30% 80%, rgba(181, 73, 90, 0.20), transparent 35%),
+                radial-gradient(circle at 85% 75%, rgba(100, 149, 237, 0.20), transparent 40%);
         }
         @keyframes authBlobDrift {
-            0%   { transform: translate3d(0,0,0) rotate(0deg) scale(1); }
-            50%  { transform: translate3d(2%, -3%, 0) rotate(8deg) scale(1.08); }
-            100% { transform: translate3d(-3%, 2%, 0) rotate(-6deg) scale(1.03); }
+            0% {
+                transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+            }
+            50% {
+                transform: translate3d(2%, -3%, 0) rotate(8deg) scale(1.08);
+            }
+            100% {
+                transform: translate3d(-3%, 2%, 0) rotate(-6deg) scale(1.03);
+            }
         }
 
         /* Perspective grid "floor" for extra depth, drawn on the container itself */
         #student-auth-view.active-view {
-            background-image:
-                repeating-linear-gradient(0deg, rgba(15,43,92,0.05) 0 1px, transparent 1px 46px),
-                repeating-linear-gradient(90deg, rgba(15,43,92,0.05) 0 1px, transparent 1px 46px);
+            background-image: repeating-linear-gradient(0deg, rgba(15, 43, 92, 0.05) 0 1px, transparent 1px 46px),
+                repeating-linear-gradient(90deg, rgba(15, 43, 92, 0.05) 0 1px, transparent 1px 46px);
             background-position: center bottom;
             background-size: 46px 46px, 46px 46px;
             mask-image: linear-gradient(to bottom, transparent 0%, #000 55%, #000 100%);
             -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 55%, #000 100%);
         }
         body.dark-mode #student-auth-view.active-view {
-            background-image:
-                repeating-linear-gradient(0deg, rgba(100,149,237,0.08) 0 1px, transparent 1px 46px),
-                repeating-linear-gradient(90deg, rgba(100,149,237,0.08) 0 1px, transparent 1px 46px);
+            background-image: repeating-linear-gradient(0deg, rgba(100, 149, 237, 0.08) 0 1px, transparent 1px 46px),
+                repeating-linear-gradient(90deg, rgba(100, 149, 237, 0.08) 0 1px, transparent 1px 46px);
         }
 
         /* The auth card: glass + entrance + glow pulse + spotlight that follows the cursor */
         .auth-box {
             transform-style: preserve-3d;
-            transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease;
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
             background: var(--card-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--card-border);
-            animation: authCardIn 0.7s cubic-bezier(0.22,1,0.36,1) both,
-                       authGlowPulse 4.5s ease-in-out infinite 0.7s;
+            animation: authCardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both,
+                authGlowPulse 4.5s ease-in-out infinite 0.7s;
         }
         @keyframes authCardIn {
-            from { opacity: 0; transform: translateY(40px) rotateX(8deg) scale(0.94); }
-            to   { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(40px) rotateX(8deg) scale(0.94);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0deg) scale(1);
+            }
         }
         @keyframes authGlowPulse {
-            0%, 100% { box-shadow: var(--shadow-lg), 0 0 0 rgba(212,168,67,0); }
-            50%      { box-shadow: var(--shadow-lg), 0 0 42px rgba(212,168,67,0.28), 0 0 70px rgba(122,31,43,0.14); }
+            0%,
+            100% {
+                box-shadow: var(--shadow-lg), 0 0 0 rgba(212, 168, 67, 0);
+            }
+            50% {
+                box-shadow: var(--shadow-lg), 0 0 42px rgba(212, 168, 67, 0.28), 0 0 70px rgba(122, 31, 43, 0.14);
+            }
         }
         .auth-box::after {
             content: '';
             position: absolute;
             inset: 0;
             pointer-events: none;
-            background: radial-gradient(280px circle at var(--mx,50%) var(--my,15%), rgba(212,168,67,0.18), transparent 60%);
+            background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 15%), rgba(212, 168, 67, 0.18), transparent 60%);
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 2;
         }
-        .auth-box:hover::after { opacity: 1; }
+        .auth-box:hover::after {
+            opacity: 1;
+        }
         .auth-box h3 .highlight {
             display: inline-block;
             animation: wave3d 2.6s ease-in-out infinite;
             transform-origin: 70% 70%;
         }
         @keyframes wave3d {
-            0%, 100% { transform: rotate(0deg); }
-            20%      { transform: rotate(14deg); }
-            40%      { transform: rotate(-8deg); }
-            60%      { transform: rotate(10deg); }
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+            20% {
+                transform: rotate(14deg);
+            }
+            40% {
+                transform: rotate(-8deg);
+            }
+            60% {
+                transform: rotate(10deg);
+            }
         }
 
         /* ---------- Classical royal touch: gold corner frame + maroon accent ---------- */
         .auth-box {
-            border: 1px solid rgba(212,168,67,0.35);
+            border: 1px solid rgba(212, 168, 67, 0.35);
         }
         .auth-box::before {
             content: '';
@@ -4259,8 +4595,7 @@
             pointer-events: none;
             z-index: 1;
             opacity: 0.9;
-            background:
-                linear-gradient(var(--accent), var(--accent)) top left / 18px 2px no-repeat,
+            background: linear-gradient(var(--accent), var(--accent)) top left / 18px 2px no-repeat,
                 linear-gradient(var(--accent), var(--accent)) top left / 2px 18px no-repeat,
                 linear-gradient(var(--accent), var(--accent)) top right / 18px 2px no-repeat,
                 linear-gradient(var(--accent), var(--accent)) top right / 2px 18px no-repeat,
@@ -4292,7 +4627,9 @@
             color: var(--classic-maroon);
             font-size: 10px;
         }
-        body.dark-mode .auth-box .sub-text::after { color: var(--accent-light); }
+        body.dark-mode .auth-box .sub-text::after {
+            color: var(--accent-light);
+        }
     </style>
 </head>
 <body>
@@ -4301,7 +4638,7 @@
     <div id="profile-modal">
         <div class="pm-box">
             <button class="pm-close" onclick="window.closeProfileModal()">✕</button>
-            <div class="pm-avatar" id="pm-avatar">
+            <div class="pm-avatar" id="pm-avatar" onclick="window.openProfilePhotoLightbox()">
                 <span id="pm-avatar-text">👤</span>
                 <img id="pm-avatar-img" style="display:none;" />
             </div>
@@ -4319,6 +4656,12 @@
                 <button class="btn btn-outline btn-sm" onclick="window.closeProfileModal()">Close</button>
             </div>
         </div>
+    </div>
+
+    <!-- ===== PROFILE PHOTO LIGHTBOX ===== -->
+    <div id="profile-photo-lightbox" onclick="window.closeProfilePhotoLightbox()">
+        <img class="ppl-content" id="ppl-image" src="" alt="Profile Photo" />
+        <div class="ppl-close-hint">✕ Click anywhere to close</div>
     </div>
 
     <!-- ===== MODALS ===== -->
@@ -4386,7 +4729,7 @@
 
                 <div class="header-controls">
                     <div class="header-profile" id="header-profile" style="display:none;">
-                        <div class="profile-avatar" id="header-avatar">
+                        <div class="profile-avatar" id="header-avatar" onclick="window.openProfilePhotoLightbox()" title="Tap to enlarge photo">
                             <span id="header-avatar-text">👤</span>
                             <img id="header-avatar-img" style="display:none;" />
                         </div>
@@ -4406,7 +4749,7 @@
                     <span class="s-category" id="top-scategory">Category</span>
                     <span class="s-code" id="top-scode">Code: ---</span>
                     <div class="s-profile-small" id="top-profile-small" style="display:none;">
-                        <div class="sp-avatar" id="sp-avatar">
+                        <div class="sp-avatar" id="sp-avatar" onclick="window.openProfilePhotoLightbox()" title="Tap to enlarge photo">
                             <span id="sp-avatar-text">👤</span>
                             <img id="sp-avatar-img" style="display:none;" />
                         </div>
@@ -4718,106 +5061,135 @@
             </div>
         </div>
 
-        <!-- ===== RESULT VIEW ===== -->
+        <!-- ===== RESULT VIEW – TWO COLUMN LAYOUT ===== -->
         <div id="result-view" class="view-section" oncontextmenu="return false;">
             <div class="result-title" id="result-heading"><span class="highlight">🎉</span> Test Submitted!</div>
             <div id="rank-loader" style="margin:6px 0 10px 0;color:var(--primary);font-weight:700;display:none;"><div class="loader-mini"></div> Calculating rank...</div>
 
-            <div id="report-section" style="text-align:center;">
-                <div class="score-card-certificate" id="score-card-cert">
-                    <div class="cert-header">
-                        <img class="cert-logo" id="cert-logo-img" src="" alt="Logo" />
-                        <div class="cert-title-group">
-                            <div class="cert-main-title">TEST <span>BODHI</span></div>
-                            <div class="cert-sub-title" id="cert-exam-title">Performance Certificate</div>
-                            <div class="cert-test-info" id="cert-test-info">📋 <span id="cert-exam-name">Exam</span>  •  Code: <span id="cert-test-code">---</span></div>
+            <div id="report-section">
+                <!-- TWO COLUMN LAYOUT -->
+                <div class="result-layout">
+
+                    <!-- LEFT COLUMN: Score Card (compact), Buttons, Analysis, Leaderboard -->
+                    <div class="result-left">
+
+                        <!-- Score Card (compact) -->
+                        <div class="score-card-certificate" id="score-card-cert">
+                            <div class="cert-header">
+                                <img class="cert-logo" id="cert-logo-img" src="" alt="Logo" />
+                                <div class="cert-title-group">
+                                    <div class="cert-main-title">TEST <span>BODHI</span></div>
+                                    <div class="cert-sub-title" id="cert-exam-title">Performance Certificate</div>
+                                    <div class="cert-test-info" id="cert-test-info">📋 <span id="cert-exam-name">Exam</span>  •  Code: <span id="cert-test-code">---</span></div>
+                                </div>
+                            </div>
+                            <div class="cert-body" id="cert-body">
+                                <div class="cert-item">
+                                    <div class="cert-label">✅ Right / Wrong</div>
+                                    <div class="cert-value green" id="cert-right-wrong">0 / 0</div>
+                                    <div class="cert-sub">Correct / Incorrect</div>
+                                </div>
+                                <div class="cert-item">
+                                    <div class="cert-label">🏆 Rank / Students</div>
+                                    <div class="cert-value gold" id="cert-rank">#0 / 0</div>
+                                    <div class="cert-sub">Your Position</div>
+                                </div>
+                                <div class="cert-item">
+                                    <div class="cert-label">⭐ Final Marks</div>
+                                    <div class="cert-value blue" id="cert-score">0 / 0</div>
+                                    <div class="cert-sub">Scored</div>
+                                </div>
+                            </div>
+                            <div class="cert-footer">
+                                <div class="cert-student">👤 <span id="cert-student-name">Student</span></div>
+                                <div class="cert-date" id="cert-date">Generated: Just now</div>
+                                <div class="cert-badge">🎓 Certificate</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="cert-body" id="cert-body">
-                        <div class="cert-item">
-                            <div class="cert-label">✅ Right / Wrong</div>
-                            <div class="cert-value green" id="cert-right-wrong">0 / 0</div>
-                            <div class="cert-sub">Correct / Incorrect</div>
+
+                        <!-- Buttons Row -->
+                        <div class="result-buttons-row">
+                            <button id="btn-img-down" class="btn btn-primary" onclick="window.downloadCertificateImage()">🖼️ Download</button>
+                            <button id="btn-pdf-down-res" class="btn btn-danger" onclick="window.handleResultPDFClick()">📄 Q&A PDF</button>
+                            <button id="btn-reattempt" class="btn btn-warning" onclick="window.startReattempt()">🔄 Reattempt</button>
                         </div>
-                        <div class="cert-item">
-                            <div class="cert-label">🏆 Rank / Students</div>
-                            <div class="cert-value gold" id="cert-rank">#0 / 0</div>
-                            <div class="cert-sub">Your Position</div>
+
+                        <!-- Analysis Section -->
+                        <div class="result-analysis-section">
+                            <div id="analysis-btn-container" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-start;position:relative !important;top:auto !important;z-index:auto !important;background:transparent !important;padding:0 !important;box-shadow:none !important;border:none !important;margin:0 !important;max-width:100% !important;">
+                                <button class="btn btn-success btn-sm" onclick="window.showAnalysis('right')">✅ Correct (<span id="btn-cnt-right">0</span>)</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.showAnalysis('wrong')">❌ Wrong (<span id="btn-cnt-wrong">0</span>)</button>
+                                <button class="btn btn-outline btn-sm" style="border-color:var(--text-muted);color:var(--text-muted);" onclick="window.showAnalysis('blank')">⬜ Blank (<span id="btn-cnt-blank">0</span>)</button>
+                            </div>
+
+                            <div id="analysis-box" class="analysis-box">
+                                <div class="analysis-box-inner" id="analysis-box-inner"></div>
+                            </div>
                         </div>
-                        <div class="cert-item" style="grid-column: span 2;">
-                            <div class="cert-label">⭐ Final Marks Scored</div>
-                            <div class="cert-value blue" id="cert-score">0 / 0</div>
-                            <div class="cert-sub">Out of Total Marks</div>
+
+                        <!-- Leaderboard -->
+                        <div id="leaderboard-container" class="leaderboard-container" style="display:none;">
+                            <div class="lb-title">🏆 Leaderboard <span class="lb-badge">Top Performers</span></div>
+                            <div id="lb-list"></div>
                         </div>
-                    </div>
-                    <div class="cert-footer">
-                        <div class="cert-student">👤 <span id="cert-student-name">Student</span></div>
-                        <div class="cert-date" id="cert-date">Generated: Just now</div>
-                        <div class="cert-badge">🎓 Certificate</div>
-                    </div>
-                </div>
 
-                <!-- ENHANCED ANALYTICS: Main Graph + Sub-Graphs + Detailed Table -->
-                <div id="analytics-container" class="analytics-container" style="display:none;">
-                    <div class="analytics-title">
-                        📊 Subject-wise Performance
-                        <span class="analytics-badge">Manual Tags</span>
-                    </div>
-                    <!-- MAIN GRAPH: Subject-wise scores (Correct, Wrong, Blank) -->
-                    <div class="chart-wrapper" style="height:200px;">
-                        <canvas id="mainSubjectChart"></canvas>
-                    </div>
-
-                    <!-- SUB-GRAPHS: Topic-wise per subject -->
-                    <div id="sub-graphs-container" style="margin-top:16px;"></div>
-
-                    <!-- DETAILED PERFORMANCE TABLE -->
-                    <div id="result-topic-table" style="margin-top:16px; border-top:1px solid var(--border-color); padding-top:12px; overflow-x:auto;">
-                        <h4 style="margin:0 0 8px 0; color:var(--primary); font-size:14px;">📋 Detailed Topic Performance</h4>
-                        <table class="topic-perf-table">
-                            <thead style="background:var(--primary); color:#fff;">
-                                <tr>
-                                    <th style="padding:6px 8px;">Subject</th>
-                                    <th style="padding:6px 8px;">Topic</th>
-                                    <th style="padding:6px 8px;">Total</th>
-                                    <th style="padding:6px 8px;">Correct</th>
-                                    <th style="padding:6px 8px;">Wrong</th>
-                                    <th style="padding:6px 8px;">Blank</th>
-                                    <th style="padding:6px 8px;">Accuracy</th>
-                                    <th style="padding:6px 8px;">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="result-topic-table-body"></tbody>
-                        </table>
-                        <div style="text-align:center;margin-top:8px;">
-                            <button class="topic-table-more-btn" id="result-topic-more-btn" onclick="window.toggleResultTopicTable()">📋 Show More Topics</button>
+                        <!-- Close button -->
+                        <div style="text-align:center;margin:6px 0 12px 0;">
+                            <button class="btn btn-primary" style="max-width:280px;margin:0 auto;font-size:12px;padding:8px 20px;" onclick="window.closeAndRedirect()">🏠 Close & Go Home</button>
                         </div>
+
                     </div>
-                </div>
 
-                <div style="display:flex;gap:8px;max-width:600px;margin:10px auto;flex-wrap:wrap;justify-content:center;">
-                    <button id="btn-img-down" class="btn btn-primary" style="flex:1;min-width:100px;font-size:12px;padding:8px;" onclick="window.downloadCertificateImage()">🖼️ Download Certificate</button>
-                    <button id="btn-pdf-down-res" class="btn btn-danger" style="flex:1;min-width:100px;font-size:12px;padding:8px;" onclick="window.handleResultPDFClick()">📄 Q&A PDF</button>
-                    <button id="btn-reattempt" class="btn btn-warning" style="flex:1;min-width:100px;font-size:12px;padding:8px;" onclick="window.startReattempt()">🔄 Reattempt</button>
-                </div>
+                    <!-- RIGHT COLUMN: Graphs (Analytics) -->
+                    <div class="result-right">
 
-                <div id="analysis-btn-container" style="display:flex;gap:4px;max-width:600px;margin:10px auto;justify-content:center;flex-wrap:wrap;position:sticky;top:65px;z-index:900;background:var(--bg-container);padding:8px;border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid var(--border-color);">
-                    <button class="btn btn-success btn-sm" onclick="window.showAnalysis('right')">✅ Correct (<span id="btn-cnt-right">0</span>)</button>
-                    <button class="btn btn-danger btn-sm" onclick="window.showAnalysis('wrong')">❌ Wrong (<span id="btn-cnt-wrong">0</span>)</button>
-                    <button class="btn btn-outline btn-sm" style="border-color:var(--text-muted);color:var(--text-muted);" onclick="window.showAnalysis('blank')">⬜ Blank (<span id="btn-cnt-blank">0</span>)</button>
-                </div>
-                <div id="analysis-box" class="analysis-box"></div>
+                        <!-- ENHANCED ANALYTICS: Main Graph + Sub-Graphs + Detailed Table -->
+                        <div id="analytics-container" class="analytics-container" style="display:none;">
+                            <div class="analytics-title">
+                                📊 Subject-wise Performance
+                                <span class="analytics-badge">Manual Tags</span>
+                            </div>
+                            <!-- MAIN GRAPH: Subject-wise scores (Correct, Wrong, Blank) -->
+                            <div class="chart-wrapper" style="height:180px;">
+                                <canvas id="mainSubjectChart"></canvas>
+                            </div>
 
-                <div id="leaderboard-container" class="leaderboard-container" style="display:none;">
-                    <div class="lb-title">🏆 Leaderboard <span class="lb-badge">Top Performers</span></div>
-                    <div id="lb-list"></div>
-                </div>
+                            <!-- SUB-GRAPHS: Topic-wise per subject -->
+                            <div id="sub-graphs-container" style="margin-top:12px;"></div>
 
-                <div style="text-align:center;margin:16px 0;">
-                    <button class="btn btn-primary" style="max-width:280px;margin:0 auto;font-size:13px;padding:10px;" onclick="window.closeAndRedirect()">🏠 Close & Go Home</button>
+                            <!-- DETAILED PERFORMANCE TABLE -->
+                            <div id="result-topic-table" style="margin-top:12px; border-top:1px solid var(--border-color); padding-top:10px; overflow-x:auto;">
+                                <h4 style="margin:0 0 6px 0; color:var(--primary); font-size:13px;">📋 Detailed Topic Performance</h4>
+                                <table class="topic-perf-table">
+                                    <thead style="background:var(--primary); color:#fff;">
+                                        <tr>
+                                            <th style="padding:4px 6px;">Subject</th>
+                                            <th style="padding:4px 6px;">Topic</th>
+                                            <th style="padding:4px 6px;">Total</th>
+                                            <th style="padding:4px 6px;">Correct</th>
+                                            <th style="padding:4px 6px;">Wrong</th>
+                                            <th style="padding:4px 6px;">Blank</th>
+                                            <th style="padding:4px 6px;">Accuracy</th>
+                                            <th style="padding:4px 6px;">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="result-topic-table-body"></tbody>
+                                </table>
+                                <div style="text-align:center;margin-top:6px;">
+                                    <button class="topic-table-more-btn" id="result-topic-more-btn" onclick="window.toggleResultTopicTable()" style="font-size:11px;padding:4px 16px;">📋 Show More Topics</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- end right column -->
+
                 </div>
+                <!-- end result-layout -->
             </div>
+            <!-- end report-section -->
         </div>
+        <!-- end result-view -->
 
         <!-- ===== LOADING / ERROR ===== -->
         <div id="loading-view" class="view-section" style="text-align:center; padding:40px 20px;">
@@ -5357,6 +5729,43 @@
 
         document.getElementById('profile-modal')?.addEventListener('click', function(e) {
             if (e.target === this) window.closeProfileModal();
+        });
+
+        /* ==========================================================================
+           PROFILE PHOTO LIGHTBOX
+           ========================================================================== */
+        window.openProfilePhotoLightbox = function() {
+            const user = window.studentInfo;
+            const photoUrl = user.photoURL && user.photoURL.startsWith('http') ? window.fixGoogleDriveUrl(user.photoURL) :
+                null;
+            if (!photoUrl) {
+                // No photo, show a friendly message
+                window.showCustomAlert("No Photo", "You haven't uploaded a profile photo yet.<br>Click on '📸 Photo' button to add one.",
+                    "📷");
+                return;
+            }
+            const lightbox = document.getElementById('profile-photo-lightbox');
+            const img = document.getElementById('ppl-image');
+            if (lightbox && img) {
+                img.src = photoUrl;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeProfilePhotoLightbox = function() {
+            const lightbox = document.getElementById('profile-photo-lightbox');
+            if (lightbox) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        // Also close with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.closeProfilePhotoLightbox();
+            }
         });
 
         /* ==========================================================================
@@ -9509,7 +9918,7 @@
         };
 
         /* ==========================================================================
-           ANALYSIS – with Solution Toggle Button (FIXED)
+           ANALYSIS – with Larger Box and Better Readability
            ========================================================================== */
         window.showAnalysis = function(t) {
             window.currentAnalysisArray = [];
@@ -9525,21 +9934,25 @@
                     window.currentAnalysisArray.push({ q, originalIndex: i, uAns: u, isRight: iR, isBlank: iB });
                 }
             });
+
             const ansBox = document.getElementById('analysis-box');
-            if (!ansBox) return;
+            const inner = document.getElementById('analysis-box-inner');
+            if (!ansBox || !inner) return;
+
             if (window.currentAnalysisArray.length === 0) {
-                ansBox.innerHTML =
+                inner.innerHTML =
                     `<div style="text-align:center;padding:16px;color:var(--text-muted);font-size:14px;">No questions found.</div>`;
                 ansBox.style.display = 'block';
                 return;
             }
+
             window.currentAnalysisIndex = 0;
             window.renderAnalysisSlide();
             ansBox.style.display = 'block';
             setTimeout(() => {
                 const e = document.getElementById('analysis-box');
                 if (e) {
-                    const y = e.getBoundingClientRect().top + window.scrollY - 130;
+                    const y = e.getBoundingClientRect().top + window.scrollY - 80;
                     window.scrollTo({ top: y, behavior: 'smooth' });
                 }
             }, 100);
@@ -9554,35 +9967,47 @@
             const gA = window.getCleanAns(uA);
             const sI = d.isRight ? "✅" : (d.isBlank ? "⬜" : "❌");
             const tt = { 'right': 'Correct', 'wrong': 'Wrong', 'blank': 'Blank' };
+
+            const inner = document.getElementById('analysis-box-inner');
+            if (!inner) return;
+
             const pH = q.passage ?
-                `<div style="background:var(--bg-subtle);padding:10px 14px;border-left:4px solid var(--accent);margin-bottom:12px;font-size:13px;font-style:italic;color:var(--text-main);border-radius:var(--radius-sm);">${q.passage}</div>` :
+                `<div style="background:var(--bg-subtle);padding:12px 16px;border-left:4px solid var(--accent);margin-bottom:12px;font-size:13px;font-style:italic;color:var(--text-main);border-radius:var(--radius-sm);">${q.passage}</div>` :
                 "";
+
             let uT = "";
             let tC = "";
             if (d.isBlank) { uT = "Skipped";
                 tC = "color:var(--text-muted);"; } else if (d.isRight) { uT = `Your Answer: ${uA} (Correct ✅)`;
                 tC = "color:var(--success);"; } else { uT = `Your Answer: ${uA} (Wrong ❌) | Correct: ${cA||"N/A"}`;
                 tC = "color:var(--danger);"; }
-            let oH = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">';
+
+            let oH = '<div class="analysis-options-grid">';
             (q.opts || []).forEach(o => {
                 let b = "var(--bg-card)";
                 let br = "1px solid var(--border-color)";
                 let f = "normal";
                 let c = "var(--text-main)";
+                let cls = "";
                 const oC = window.getCleanAns(o.id);
                 let ic = '<span style="margin-right:4px;visibility:hidden;">✅</span>';
-                if (oC === cA) { b = "rgba(15, 157, 88, 0.10)";
+                if (oC === cA) {
+                    cls = "correct";
+                    b = "rgba(15, 157, 88, 0.12)";
                     br = "2px solid var(--success)";
                     f = "bold";
                     c = "var(--success)";
-                    ic = '<span style="margin-right:4px;">✅</span>'; } else if (oC === gA && !d.isRight) { b =
-                        "rgba(220, 53, 69, 0.10)";
+                    ic = '<span style="margin-right:4px;">✅</span>';
+                } else if (oC === gA && !d.isRight) {
+                    cls = "wrong";
+                    b = "rgba(220, 53, 69, 0.10)";
                     br = "2px solid var(--danger)";
                     f = "bold";
                     c = "var(--danger)";
-                    ic = '<span style="margin-right:4px;">❌</span>'; }
+                    ic = '<span style="margin-right:4px;">❌</span>';
+                }
                 oH +=
-                    `<div style="padding:8px 12px;border:${br};border-radius:var(--radius-sm);background:${b};color:${c};font-weight:${f};font-size:13px;display:flex;align-items:flex-start;gap:4px;">${ic}<div><b>${o.id}.</b> ${o.text}</div></div>`;
+                    `<div class="opt-item ${cls}" style="padding:10px 14px;border-radius:var(--radius-sm);border:${br};background:${b};color:${c};font-weight:${f};font-size:14px;display:flex;align-items:flex-start;gap:6px;">${ic}<div><b>${o.id}.</b> ${o.text}</div></div>`;
             });
             oH += '</div>';
 
@@ -9591,25 +10016,34 @@
             let solHtml = '';
             if (hasExp) {
                 solHtml = `
-                        <div style="margin-top:8px;">
-                            <button class="sq-solution-btn" onclick="window.toggleAnalysisSolution('${solId}')">💡 View Solution</button>
-                            <div class="sq-solution-content" id="${solId}" style="margin-top:6px;padding:10px 12px;background:var(--bg-subtle);border-left:3px solid var(--accent);border-radius:var(--radius-sm);font-size:13px;line-height:1.6;color:var(--text-main);display:none;">
-                                <button class="sq-solution-close" onclick="window.closeAnalysisSolution('${solId}')">✕ Close</button>
-                                <br>${q.exp}
-                            </div>
+                    <div style="margin-top:10px;">
+                        <button class="sq-solution-btn" onclick="window.toggleAnalysisSolution('${solId}')" style="padding:4px 16px;font-size:12px;">💡 View Solution</button>
+                        <div class="sq-solution-content" id="${solId}" style="margin-top:6px;padding:14px 16px;background:var(--bg-subtle);border-left:4px solid var(--accent);border-radius:var(--radius-sm);font-size:14px;line-height:1.7;color:var(--text-main);display:none;max-height:180px;overflow-y:auto;">
+                            <button class="sq-solution-close" onclick="window.closeAnalysisSolution('${solId}')" style="float:right;background:transparent;border:none;color:var(--danger);font-weight:700;font-size:12px;cursor:pointer;">✕ Close</button>
+                            <br>${q.exp}
                         </div>
-                    `;
+                    </div>
+                `;
             }
 
             const h =
-                `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:8px;margin-bottom:12px;flex-wrap:wrap;gap:6px;"><b style="color:var(--primary);font-size:14px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b><button class="btn btn-danger btn-sm" onclick="document.getElementById('analysis-box').style.display='none';" style="font-size:10px;padding:4px 12px;">✕ Close</button></div>${pH}<b style="font-size:16px;color:var(--text-main);display:block;margin-bottom:12px;line-height:1.5;">${sI} Q${i+1}. ${q.q}</b><div style="${tC}font-weight:700;margin-bottom:12px;padding:8px 12px;border-radius:var(--radius-sm);background:var(--bg-subtle);border:1px solid var(--border-color);font-size:13px;">${uT}</div>${oH}${solHtml}<div style="display:flex;justify-content:space-between;margin-top:16px;border-top:1px solid var(--border-color);padding-top:12px;gap:8px;"><button class="btn btn-outline btn-sm" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''} style="font-size:11px;">⬅️ Prev</button><button class="btn btn-primary btn-sm" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''} style="font-size:11px;">Next ➡️</button></div>`;
+                `<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:8px;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
+                    <b style="color:var(--primary);font-size:15px;">${tt[window.currentAnalysisType]} (${window.currentAnalysisIndex+1} of ${window.currentAnalysisArray.length})</b>
+                    <button class="btn btn-danger btn-sm" onclick="document.getElementById('analysis-box').style.display='none';" style="font-size:10px;padding:4px 12px;">✕ Close</button>
+                </div>
+                ${pH}
+                <div class="analysis-q-text"><b style="font-size:17px;color:var(--text-main);line-height:1.6;">${sI} Q${i+1}. ${q.q}</b></div>
+                <div style="${tC}font-weight:700;margin-bottom:12px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--bg-subtle);border:1px solid var(--border-color);font-size:14px;">${uT}</div>
+                ${oH}
+                ${solHtml}
+                <div style="display:flex;justify-content:space-between;margin-top:16px;border-top:1px solid var(--border-color);padding-top:12px;gap:8px;">
+                    <button class="btn btn-outline btn-sm" onclick="window.prevAnalysis()" ${window.currentAnalysisIndex===0?'disabled':''} style="font-size:11px;">⬅️ Prev</button>
+                    <button class="btn btn-primary btn-sm" onclick="window.nextAnalysis()" ${window.currentAnalysisIndex===window.currentAnalysisArray.length-1?'disabled':''} style="font-size:11px;">Next ➡️</button>
+                </div>`;
 
-            const ansBox = document.getElementById('analysis-box');
-            if (ansBox) {
-                ansBox.innerHTML = h;
-                if (window.MathJax) {
-                    window.MathJax.typesetPromise([ansBox]).catch(e => console.log('MathJax analysis error:', e));
-                }
+            inner.innerHTML = h;
+            if (window.MathJax) {
+                window.MathJax.typesetPromise([inner]).catch(e => console.log('MathJax analysis error:', e));
             }
         };
 
@@ -9621,6 +10055,12 @@
                     if (e.id !== id) e.style.display = 'none';
                 });
                 el.style.display = isOpen ? 'none' : 'block';
+                // Scroll to solution if opening
+                if (!isOpen && el) {
+                    setTimeout(() => {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
             }
         };
 
@@ -10374,10 +10814,13 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v24.0 — FINAL FIXES APPLIED');
-        console.log('✅ Explanations now render for ALL questions (tagged or not) in PDF, Analysis, and Report');
+        console.log('🚀 TEST BODHI v24.1 — FINAL FIXES APPLIED');
+        console.log('✅ Result view now uses TWO-COLUMN LAYOUT: Graphs on RIGHT, everything else on LEFT');
+        console.log('✅ Analysis box is LARGER with scrollable content for better readability');
+        console.log('✅ Profile photo is NOW CLICKABLE — opens a full-size lightbox');
+        console.log('✅ Explanations render for ALL questions (tagged or not) in PDF, Analysis, and Report');
         console.log('✅ MathJax formatting preserved without raw code');
-        console.log('✅ Main graph now shows Correct (Green), Wrong (Red), Blank (Yellow)');
+        console.log('✅ Main graph shows Correct (Green), Wrong (Red), Blank (Yellow)');
         console.log('✅ Sub-graphs also show Correct/Wrong/Blank with proper colors');
         console.log('✅ Detailed performance table includes all topics with status (Strong/Average/Weak)');
         console.log('📌 Tag format: !tag(Subject:Topic)');
