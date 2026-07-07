@@ -4097,6 +4097,19 @@
         </div>
     </div>
 
+    <!-- ===== STANDALONE LEADERBOARD MODAL (check latest rank without retaking test) ===== -->
+    <div id="standalone-lb-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-box" style="max-width:440px;text-align:left;padding:16px;">
+            <div class="leaderboard-container" style="margin:0;max-width:none;box-shadow:none;">
+                <div class="lb-title" style="margin-bottom:8px;">🏆 Leaderboard <span class="lb-badge" id="standalone-lb-testname">Top Performers</span></div>
+                <div id="standalone-lb-list" style="max-height:48vh;overflow-y:auto;"></div>
+            </div>
+            <div class="modal-btns" style="margin-top:10px;text-align:center;">
+                <button class="btn btn-outline" onclick="window.closeStandaloneLeaderboard()">✕ Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== SUBMISSION SUMMARY POPUP ===== -->
     <div id="submit-summary-modal">
         <div class="ss-box">
@@ -4172,11 +4185,11 @@
                 <p class="sub-text">Login to continue your learning journey</p>
                 <div class="form-group">
                     <label>📧 Email</label>
-                    <input type="email" id="login-email" placeholder="your@email.com" />
+                    <input type="email" id="login-email" placeholder="your@email.com" autocomplete="off" />
                 </div>
                 <div class="form-group">
                     <label>🔒 Password</label>
-                    <input type="password" id="login-password" placeholder="Enter password" />
+                    <input type="password" id="login-password" placeholder="Enter password" autocomplete="new-password" />
                 </div>
                 <div style="text-align:right;margin:-4px 0 14px 0;">
                     <span style="color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;" onclick="window.handleForgotPassword()">Forgot Password?</span>
@@ -4201,11 +4214,11 @@
                 <div id="reg-quick-fields">
                     <div class="form-group">
                         <label>👤 Full Name</label>
-                        <input type="text" id="reg-name-quick" placeholder="Enter your full name" />
+                        <input type="text" id="reg-name-quick" placeholder="Enter your full name" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>📱 Mobile Number</label>
-                        <input type="tel" id="reg-phone-quick" placeholder="10-digit number" maxlength="10" />
+                        <input type="tel" id="reg-phone-quick" placeholder="10-digit number" maxlength="10" autocomplete="off" />
                     </div>
                     <button type="button" class="btn btn-primary" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="window.handleGoogleAuth(true)">
                         <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
@@ -4219,19 +4232,19 @@
                 <div id="reg-form-fields" style="display:none;">
                     <div class="form-group">
                         <label>👤 Full Name</label>
-                        <input type="text" id="reg-name" placeholder="Enter your full name" />
+                        <input type="text" id="reg-name" placeholder="Enter your full name" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>📧 Email (for OTP)</label>
-                        <input type="email" id="reg-email" placeholder="your@email.com" />
+                        <input type="email" id="reg-email" placeholder="your@email.com" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>📱 Mobile</label>
-                        <input type="tel" id="reg-phone" placeholder="10-digit number" maxlength="10" />
+                        <input type="tel" id="reg-phone" placeholder="10-digit number" maxlength="10" autocomplete="off" />
                     </div>
                     <div class="form-group">
                         <label>🔒 Password</label>
-                        <input type="password" id="reg-password" placeholder="Min 6 characters" />
+                        <input type="password" id="reg-password" placeholder="Min 6 characters" autocomplete="new-password" />
                     </div>
                     <div class="form-group">
                         <label>🛡️ Security Check</label>
@@ -4932,6 +4945,15 @@
                     localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
                     if (typeof window.updateProfileUI === 'function') window.updateProfileUI();
                 }
+                // Always resync attempted-tests from the server for THIS uid,
+                // so a fresh account never shows stale/borrowed progress.
+                if (typeof window.refreshAttemptedTestsFromServer === 'function') {
+                    window.refreshAttemptedTestsFromServer(() => {
+                        if (typeof window.rerenderCurrentTestListIfVisible === 'function') {
+                            window.rerenderCurrentTestListIfVisible();
+                        }
+                    });
+                }
             }).catch(() => {});
         });
 
@@ -4990,6 +5012,62 @@
         window.portalLogoURL = "";
         window.portalLogoShape = "round";
         window.attemptedTestsCache = {};
+
+        // Attempted-tests data is namespaced per logged-in user (uid), never
+        // shared globally on the device. This is what guarantees a brand
+        // new account never inherits another student's "already attempted"
+        // status just because they signed up on the same phone/browser.
+        window.getAttemptedStorageKey = function() {
+            const uid = (window.studentInfo && window.studentInfo.uid) || 'guest';
+            return 'mockSarthiAttempted_' + uid;
+        };
+
+        // Pulls the CURRENT user's own attempted tests fresh from Firestore
+        // (source of truth) instead of trusting whatever happens to be
+        // cached locally. This fixes two things at once:
+        //  1) A new signup on a device that was used before never sees
+        //     old "already attempted" tests, because a brand-new uid has
+        //     zero matching result documents on the server.
+        //  2) A student who attempted a test on another device sees the
+        //     correct "attempted" state here too, since it's server-driven.
+        window.refreshAttemptedTestsFromServer = function(onDone) {
+            const uid = window.studentInfo && window.studentInfo.uid;
+            const phone = window.studentInfo && window.studentInfo.phone;
+            const key = window.getAttemptedStorageKey();
+            const applyRecords = (records) => {
+                const attemptedRecords = {};
+                records.forEach(r => {
+                    if (r.testCode) {
+                        const code = String(r.testCode).replace('-RE', '');
+                        const prevScore = attemptedRecords[code];
+                        if (prevScore === undefined || Number(r.score) > Number(prevScore)) {
+                            attemptedRecords[code] = r.score;
+                        }
+                    }
+                });
+                window.attemptedTestsCache = attemptedRecords;
+                localStorage.setItem(key, JSON.stringify(attemptedRecords));
+                if (typeof onDone === 'function') onDone(attemptedRecords);
+            };
+            if (uid) {
+                db.collection("results").where("uid", "==", uid).get().then(snap => {
+                    const records = [];
+                    snap.forEach(d => records.push(d.data()));
+                    applyRecords(records);
+                }).catch(() => { if (typeof onDone === 'function') onDone(window.attemptedTestsCache || {}); });
+            } else if (phone) {
+                // Fallback for older sessions / legacy result docs saved before
+                // the uid field existed on each result.
+                db.collection("results").where("phone", "==", phone).get().then(snap => {
+                    const records = [];
+                    snap.forEach(d => records.push(d.data()));
+                    applyRecords(records);
+                }).catch(() => { if (typeof onDone === 'function') onDone(window.attemptedTestsCache || {}); });
+            } else {
+                window.attemptedTestsCache = {};
+                if (typeof onDone === 'function') onDone({});
+            }
+        };
         window.topicChartInstance = null;
         window._resultTopicShowAll = false;
         window._resultAllTags = [];
@@ -5475,7 +5553,24 @@
             window.showCustomAlert("Unlock PRO Access", msg, "🔒");
         };
 
+        // Forcibly wipes every login/register input field. Called on every
+        // page load and every time the auth screen is shown, so that a
+        // previous student's name/phone/email saved by the browser's own
+        // autofill/address memory can NEVER silently carry over into a
+        // different student's new account (root cause of wrong name/phone
+        // being written to a freshly created account).
+        window.clearAuthForms = function() {
+            ['login-email', 'login-password', 'reg-name-quick', 'reg-phone-quick',
+             'reg-name', 'reg-email', 'reg-phone', 'reg-password', 'reg-captcha',
+             'reg-otp-input'
+            ].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+        };
+
         window.toggleAuthScreens = function(type) {
+            window.clearAuthForms();
             const loginBox = document.getElementById('auth-login-box');
             const regBox = document.getElementById('auth-register-box');
             if (loginBox && regBox) {
@@ -5795,18 +5890,31 @@
             window.showCustomConfirm("Logout", "Are you sure you want to logout?", () => {
                 auth.signOut().then(() => {
                     localStorage.removeItem('mockSarthiUser');
+                    window.attemptedTestsCache = {};
+                    window.studentInfo = null;
                     window.location.href = BASE_URL;
                 });
             }, "🚪");
         };
 
         window.checkPendingTestOrGoHome = function() {
-            const pendingTest = localStorage.getItem('pendingTestCode');
-            if (pendingTest) {
-                localStorage.removeItem('pendingTestCode');
-                window.location.href = BASE_URL + "?test=" + pendingTest;
+            // Refresh this account's attempted-tests state from the server
+            // BEFORE navigating home, so freshly logged-in/registered users
+            // always see their own real progress — never anything left over
+            // from a different account used earlier on this device.
+            const goNext = () => {
+                const pendingTest = localStorage.getItem('pendingTestCode');
+                if (pendingTest) {
+                    localStorage.removeItem('pendingTestCode');
+                    window.location.href = BASE_URL + "?test=" + pendingTest;
+                } else {
+                    window.location.reload();
+                }
+            };
+            if (typeof window.refreshAttemptedTestsFromServer === 'function') {
+                window.refreshAttemptedTestsFromServer(goNext);
             } else {
-                window.location.reload();
+                goNext();
             }
         };
 
@@ -6290,6 +6398,7 @@
 
             window.applyDeviceAdjustments();
             window.loadPortalLogo();
+            if (typeof window.clearAuthForms === 'function') window.clearAuthForms();
 
             const savedUser = localStorage.getItem('mockSarthiUser');
             let isLoggedIn = false;
@@ -6298,7 +6407,7 @@
                     window.studentInfo = JSON.parse(savedUser);
                     isLoggedIn = true;
                     window.updateProfileUI();
-                    const attempted = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+                    const attempted = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
                     window.attemptedTestsCache = attempted;
                 } catch (e) {}
             }
@@ -6685,6 +6794,7 @@
            SUB-EXAMS VIEW – WITH PROGRESS BAR (FIXED OVERFLOW)
            ========================================================================== */
         window.showSubExamsView = function(boardName) {
+            window.currentBoard = boardName;
             window.navStack.push({ type: 'subExams', board: boardName });
             try { history.pushState({}, "", window.location.pathname); } catch (e) {}
             const bc = document.getElementById('breadcrumb-container');
@@ -6713,7 +6823,7 @@
                 return;
             }
 
-            const attempted = window.attemptedTestsCache || JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+            const attempted = window.attemptedTestsCache || JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
             const attemptedCodes = Object.keys(attempted);
 
             let html = '<div class="sub-exam-grid">';
@@ -6888,7 +6998,7 @@
             }
             const isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo
                 .isPremium === true));
-            const attemptedRecords = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+            const attemptedRecords = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
             testsToRender.forEach(t => {
                 const p = window.parseHack(t.topic);
                 const currentSub = p.subcat || t.subject || t.sub || "Test";
@@ -6930,6 +7040,12 @@
                 const actionBtn = (isFreeStatus || isPremiumUser) ?
                     `<button class="btn btn-primary btn-sm" style="width:100%;font-size:11px;padding:6px;" onclick="window.navigateToTestEntry('${t.code}','${boardName}','${subExamName}','${activeCat}','${subjectName}')">📝 Give Test</button>` :
                     `<button class="btn btn-warning btn-sm" style="width:100%;font-size:11px;padding:6px;" onclick="window.showPremiumModal()">🔒 Unlock PRO</button>`;
+                // Already attempted this test? Show a "Leaderboard" button so
+                // the student can check their CURRENT rank on demand — without
+                // needing to retake the test just to refresh their standing.
+                const leaderboardBtn = (attemptedRecords[t.code] !== undefined) ?
+                    `<button class="btn btn-outline btn-sm" style="width:100%;font-size:11px;padding:6px;margin-top:4px;" onclick="window.openStandaloneLeaderboard('${t.code}','${(currentSub||'Test').replace(/'/g,"\\'")}')">🏆 Leaderboard</button>` :
+                    "";
                 html += `
                     <div class="test-card">
                         <div>
@@ -6949,12 +7065,29 @@
                         <div>
                             ${summaryHtml}
                             ${actionBtn}
+                            ${leaderboardBtn}
                         </div>
                     </div>
                 `;
             });
             html += '</div>';
             contentArea.innerHTML = html;
+        };
+
+        // Re-renders whichever test list screen is currently on-screen, so
+        // that a background attempted-tests refresh (e.g. right after
+        // login resolves) immediately reflects on the visible cards
+        // instead of requiring a manual navigation/reload.
+        window.rerenderCurrentTestListIfVisible = function() {
+            const appLayout = document.getElementById('st-app-layout');
+            const folderView = document.getElementById('st-folder-view');
+            if (appLayout && appLayout.style.display !== 'none' && window.currentBoard && window.currentSubExam &&
+                window.currentCategory) {
+                window.renderDirectTests(window.currentBoard, window.currentSubExam, window.currentCategory, window
+                    .currentSubject || 'ALL');
+            } else if (folderView && folderView.style.display !== 'none' && window.currentBoard) {
+                window.showSubExamsView(window.currentBoard);
+            }
         };
 
         window.navigateToTestEntry = function(testCode, boardName, subExamName, activeCat, subjectName) {
@@ -8597,6 +8730,7 @@
 
             const sC = window.isReattemptMode ? (window.examData.code + "-RE") : window.examData.code;
             const resData = {
+                uid: (window.studentInfo && window.studentInfo.uid) || "",
                 name: window.studentInfo.name || "Student",
                 phone: window.studentInfo.phone || "",
                 score: window.studentInfo.score,
@@ -8608,10 +8742,10 @@
                 timestamp: Date.now()
             };
             db.collection("results").add(resData).then(() => {
-                const attemptedRecords = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+                const attemptedRecords = window.attemptedTestsCache || {};
                 attemptedRecords[window.examData.code] = window.studentInfo.score;
-                localStorage.setItem('mockSarthiAttempted', JSON.stringify(attemptedRecords));
                 window.attemptedTestsCache = attemptedRecords;
+                localStorage.setItem(window.getAttemptedStorageKey(), JSON.stringify(attemptedRecords));
                 window.fetchLeaderboardWithPhotos(window.examData.code);
                 db.collection("results").where("testCode", "==", sC).get().then(snap => {
                     const scores = [];
@@ -9001,7 +9135,7 @@
                     window.fetchLeaderboardUserPhotos(results, list);
                 });
             }).catch(() => {
-                const attempted = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+                const attempted = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
                 const results = [];
                 for (const key in attempted) {
                     if (key === testCode || key === testCode + "-RE") {
@@ -9011,6 +9145,40 @@
                 }
                 window.renderLeaderboardWithPhotos(results, list);
             });
+        };
+
+        // Lets a student check a test's CURRENT leaderboard/rank on demand,
+        // any time, without retaking the test. Since more students keep
+        // submitting the same test at different times, ranks shift after
+        // the fact — this always pulls a fresh query from Firestore so the
+        // rank shown is up to the second, no re-attempt required.
+        window.openStandaloneLeaderboard = function(testCode, testName) {
+            const modal = document.getElementById('standalone-lb-modal');
+            const list = document.getElementById('standalone-lb-list');
+            const nameBadge = document.getElementById('standalone-lb-testname');
+            if (!modal || !list) return;
+            if (nameBadge) nameBadge.innerText = testName || 'Top Performers';
+            modal.style.display = 'flex';
+            list.innerHTML = '<div style="text-align:center;padding:12px;"><div class="loader-mini"></div> Loading latest ranks...</div>';
+
+            db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
+                const results = [];
+                snapshot.forEach(doc => results.push(doc.data()));
+                db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
+                    snap2.forEach(doc => results.push(doc.data()));
+                    window.fetchLeaderboardUserPhotos(results, list);
+                }).catch(() => {
+                    window.fetchLeaderboardUserPhotos(results, list);
+                });
+            }).catch(() => {
+                list.innerHTML =
+                    '<div class="lb-empty">⚠️ Could not load the leaderboard right now. Please check your connection and try again.</div>';
+            });
+        };
+
+        window.closeStandaloneLeaderboard = function() {
+            const modal = document.getElementById('standalone-lb-modal');
+            if (modal) modal.style.display = 'none';
         };
 
         window.fetchLeaderboardUserPhotos = function(results, list) {
@@ -9290,13 +9458,20 @@
                 return window.showCustomAlert("Error", "No registered mobile number found. Cannot fetch report.", "⚠️");
             }
             const phoneInput = window.studentInfo.phone;
+            const uid = window.studentInfo.uid;
             const dispPhone = document.getElementById('disp-hist-phone');
             if (dispPhone) dispPhone.innerText = phoneInput;
             const histLoader = document.getElementById('st-hist-loader');
             const histList = document.getElementById('st-hist-list');
             if (histLoader) histLoader.style.display = 'block';
             if (histList) histList.innerHTML = '';
-            db.collection("results").where("phone", "==", phoneInput).get().then(snap => {
+            // Prefer a strict uid match — two different students could end up
+            // sharing the same phone digits by mistake, and uid is the only
+            // value that's guaranteed unique per account. Fall back to phone
+            // only for older result records saved before uid was recorded.
+            const query = uid ? db.collection("results").where("uid", "==", uid) :
+                db.collection("results").where("phone", "==", phoneInput);
+            query.get().then(snap => {
                 const records = [];
                 snap.forEach(d => records.push(d.data()));
                 window.handleStudentHistory({ records });
@@ -9312,10 +9487,10 @@
             const records = data.records || [];
             const list = document.getElementById('st-hist-list');
             if (!list) return;
-            const attemptedRecords = JSON.parse(localStorage.getItem('mockSarthiAttempted') || '{}');
+            const attemptedRecords = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
             records.forEach(r => { if (r.testCode) { const code = r.testCode.replace('-RE', '');
                     attemptedRecords[code] = r.score; } });
-            localStorage.setItem('mockSarthiAttempted', JSON.stringify(attemptedRecords));
+            localStorage.setItem(window.getAttemptedStorageKey(), JSON.stringify(attemptedRecords));
             window.attemptedTestsCache = attemptedRecords;
             if (records.length === 0) {
                 list.innerHTML =
