@@ -6784,16 +6784,40 @@
                         localTestInfo.questions = window.sanitizeQuestions(localTestInfo.questions);
                         window.handleTestLoad(localTestInfo);
                     } else {
-                        db.collection("tests").doc(testCode).get().then((doc) => {
-                            if (doc.exists) {
-                                const fData = doc.data();
-                                fData.questions = window.sanitizeQuestions(fData.questions);
-                                window.handleTestLoad(fData);
-                            } else {
+                        const testRef = db.collection("tests").doc(testCode);
+                        testRef.get().then((doc) => {
+                            if (!doc.exists) {
                                 const loadingV = document.getElementById('loading-view');
                                 if (loadingV) loadingV.classList.remove('active-view');
                                 window.showErrorView("❌ Test not found in Database.");
+                                return;
                             }
+                            const fData = doc.data();
+                            testRef.collection("secure").doc("key").get().then((secureDoc) => {
+                                if (secureDoc.exists) {
+                                    const secure = secureDoc.data();
+                                    if (secure.rawText) fData.rawText = secure.rawText;
+                                    if (secure.answerKey && fData.questions) {
+                                        fData.questions = fData.questions.map((q, i) => ({
+                                            ...q,
+                                            ans: (secure.answerKey[i] && secure.answerKey[i].ans) || "",
+                                            exp: (secure.answerKey[i] && secure.answerKey[i].exp) || ""
+                                        }));
+                                    }
+                                }
+                                fData.questions = window.sanitizeQuestions(fData.questions);
+                                window.handleTestLoad(fData);
+                            }).catch(() => {
+                                // Not authorized to read the answer key yet (e.g. this
+                                // is a paid test and the student isn't premium). Load
+                                // the test without it -- the existing free/premium
+                                // gate on the entry screen still decides whether
+                                // "Start Test" is shown, and there is now no answer
+                                // key sitting in memory for an unauthorized user to
+                                // read out of the console.
+                                fData.questions = window.sanitizeQuestions(fData.questions);
+                                window.handleTestLoad(fData);
+                            });
                         }).catch((error) => {
                             const loadingV = document.getElementById('loading-view');
                             if (loadingV) loadingV.classList.remove('active-view');
