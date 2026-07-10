@@ -357,54 +357,6 @@
             flex-wrap: wrap;
         }
 
-        /* ===== SITE MENU (hamburger + dropdown) ===== */
-        .site-menu-wrap { position: relative; display: none; }
-        .site-menu-btn {
-            display: flex; align-items: center; gap: 6px;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
-            color: #fff; font-size: 12px; font-weight: 700; padding: 7px 12px;
-            border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition);
-        }
-        .site-menu-btn:hover { background: rgba(255,255,255,0.2); }
-        .site-menu-dropdown {
-            display: none; position: absolute; top: calc(100% + 8px); right: 0;
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: var(--radius); box-shadow: var(--shadow-lg);
-            min-width: 220px; overflow: hidden; z-index: 500;
-        }
-        .site-menu-dropdown.open { display: block; }
-        .site-menu-dropdown button {
-            display: flex; align-items: center; gap: 10px; width: 100%;
-            background: none; border: none; text-align: left; padding: 11px 16px;
-            font-size: 13px; font-weight: 600; color: var(--text-main); cursor: pointer;
-            transition: background 0.15s;
-        }
-        .site-menu-dropdown button:hover { background: var(--bg-subtle); }
-        .site-menu-dropdown .menu-divider { height: 1px; background: var(--border-color); margin: 4px 0; }
-        .site-menu-dropdown button.danger { color: var(--danger); }
-
-        /* ===== SITE FOOTER ===== */
-        #site-footer {
-            background: var(--bg-header, var(--primary));
-            color: #d7e2f2; padding: 22px 16px 16px; margin-top: 24px;
-            font-size: 12px; text-align: center;
-        }
-        #site-footer .footer-links {
-            display: flex; justify-content: center; flex-wrap: wrap; gap: 18px;
-            margin-bottom: 12px;
-        }
-        #site-footer .footer-links span {
-            cursor: pointer; color: #cfdcf2; font-weight: 600; transition: color 0.2s;
-        }
-        #site-footer .footer-links span:hover { color: var(--accent-light); }
-        #site-footer .footer-copy { color: #93a6c4; font-size: 11px; }
-        #site-footer .footer-tagline { color: var(--accent-light); font-weight: 700; margin-bottom: 4px; font-size: 12px; }
-        /* Hide menu + footer during an active exam attempt — no distractions mid-test */
-        body:has(#exam-view.active-view) #site-footer,
-        body:has(#exam-view.active-view) .site-menu-wrap {
-            display: none !important;
-        }
-
         .header-profile {
             display: flex;
             align-items: center;
@@ -4776,20 +4728,6 @@
                 </div>
 
                 <div class="header-controls">
-                    <div class="site-menu-wrap" id="site-menu-wrap">
-                        <button class="site-menu-btn" id="site-menu-btn" onclick="window.toggleSiteMenu()">☰ Menu</button>
-                        <div class="site-menu-dropdown" id="site-menu-dropdown">
-                            <button onclick="window.siteMenuAction('home')">🏠 Home</button>
-                            <button onclick="window.siteMenuAction('report')">📈 My Report</button>
-                            <button onclick="window.siteMenuAction('profile')">👤 My Profile</button>
-                            <div class="menu-divider"></div>
-                            <button onclick="window.siteMenuAction('notice')">📢 Notice Board</button>
-                            <button onclick="window.siteMenuAction('contact')">✉️ Contact & Support</button>
-                            <button onclick="window.siteMenuAction('policy')">📄 Privacy Policy</button>
-                            <div class="menu-divider"></div>
-                            <button class="danger" onclick="window.siteMenuAction('logout')">🚪 Logout</button>
-                        </div>
-                    </div>
                     <div class="header-profile" id="header-profile" style="display:none;">
                         <div class="profile-avatar" id="header-avatar" onclick="window.openProfilePhotoLightbox()" title="Tap to enlarge photo">
                             <span id="header-avatar-text">👤</span>
@@ -5264,30 +5202,7 @@
             <button class="btn btn-primary" style="max-width:220px; margin:0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
         </div>
 
-        <!-- ===== INFO MODAL (Notice Board / Contact / Privacy Policy) ===== -->
-        <div id="info-modal" class="modal-overlay" style="display:none;">
-            <div class="modal-box" style="max-width:480px;text-align:left;padding:20px;">
-                <div class="lb-title" id="info-modal-title" style="margin-bottom:10px;">📢 Notice Board</div>
-                <div id="info-modal-body" style="max-height:52vh;overflow-y:auto;font-size:13px;line-height:1.7;color:var(--text-main);"></div>
-                <div class="modal-btns" style="margin-top:14px;text-align:center;">
-                    <button class="btn btn-outline" onclick="window.closeInfoModal()">✕ Close</button>
-                </div>
-            </div>
-        </div>
-
     </div><!-- end container -->
-
-    <!-- ===== SITE FOOTER ===== -->
-    <footer id="site-footer">
-        <div class="footer-tagline">TEST BODHI — Practice · Prepare · Succeed</div>
-        <div class="footer-links">
-            <span onclick="window.siteMenuAction('notice')">📢 Notice Board</span>
-            <span onclick="window.siteMenuAction('contact')">✉️ Contact & Support</span>
-            <span onclick="window.siteMenuAction('policy')">📄 Privacy Policy</span>
-            <span onclick="window.siteMenuAction('about')">ℹ️ About Us</span>
-        </div>
-        <div class="footer-copy">© <span id="footer-year">2026</span> TEST BODHI. All rights reserved. Made with ❤️ for students.</div>
-    </footer>
 
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js">
     </script>
@@ -5324,6 +5239,57 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+
+        // ==========================================================================
+        // AUTH-READY GATE (FIX)
+        // ----------------------------------------------------------------------
+        // Bug: window.onload used to trust the CACHED copy of the login in
+        // localStorage ("mockSarthiUser") straightaway and mark the student as
+        // logged in / with a uid, even though the real Firebase Auth session
+        // (firebase.auth().currentUser, which is what security rules actually
+        // check via request.auth) restores asynchronously and can, on some
+        // browsers/devices, fail to restore at all (private/incognito windows,
+        // blocked 3rd-party storage, cleared IndexedDB, etc). Any Firestore
+        // read/write against rules like "allow read: if request.auth != null"
+        // (results, leaderboard, report) then permanently failed with
+        // "permission-denied" for that session — even though the UI still
+        // showed the student as logged in — because request.auth was null on
+        // the server even though window.studentInfo looked fully populated.
+        //
+        // Fix: every protected Firestore call now goes through
+        // window.ensureFirebaseSession(), which waits for Firebase Auth's
+        // FIRST onAuthStateChanged event before running the query. If that
+        // event confirms there is genuinely no live Firebase session (despite
+        // a cached local login), we stop pretending the student is logged in,
+        // clear the stale cache, and send them back to a clean login screen
+        // instead of showing a confusing "permission-denied" wall or silently
+        // falling back to incomplete/wrong data.
+        // ==========================================================================
+        window.authReady = new Promise((resolve) => {
+            const unsubAuthReady = auth.onAuthStateChanged((user) => {
+                unsubAuthReady();
+                resolve(user);
+            });
+        });
+
+        window.ensureFirebaseSession = function() {
+            return window.authReady.then((user) => {
+                if (user) return user;
+                // Real Firebase session never came back — a locally cached
+                // "logged in" state can't be trusted for reads/writes that
+                // require request.auth != null. Force a clean re-login.
+                window.studentInfo = null;
+                localStorage.removeItem('mockSarthiUser');
+                if (typeof window.updateProfileUI === 'function') window.updateProfileUI();
+                window.showCustomAlert("Session Expired",
+                    "We couldn't verify your login session, so your report/leaderboard can't be fetched. Please log in again.",
+                    "🔒");
+                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+                const authView = document.getElementById('student-auth-view');
+                if (authView) authView.classList.add('active-view');
+                return null;
+            });
+        };
 
         // Keeps the logged-in user's data (photo, premium status, name...) in
         // sync with Firestore on every page load / every device — not just at
@@ -5690,90 +5656,6 @@
             const m = document.getElementById('custom-modal');
             if (m) m.style.display = 'none';
         };
-
-        /* ==========================================================================
-           SITE MENU (hamburger) + FOOTER LINKS
-           ========================================================================== */
-        window.toggleSiteMenu = function() {
-            const dd = document.getElementById('site-menu-dropdown');
-            if (dd) dd.classList.toggle('open');
-        };
-        // Close the dropdown if the person clicks anywhere outside it
-        document.addEventListener('click', function(e) {
-            const wrap = document.getElementById('site-menu-wrap');
-            const dd = document.getElementById('site-menu-dropdown');
-            if (!wrap || !dd) return;
-            if (!wrap.contains(e.target)) dd.classList.remove('open');
-        });
-
-        // Simple, editable content for the info panels. Update the text
-        // inside these strings any time contact details / policies change —
-        // no need to touch layout code elsewhere.
-        window.SITE_INFO_CONTENT = {
-            notice: {
-                title: "📢 Notice Board",
-                html: "<p style='margin-bottom:10px;'><b>Welcome to TEST BODHI!</b></p><p style='margin-bottom:10px;'>Yahan aapko naye tests, exam schedule aur important updates ki jaankari milegi.</p><p style='color:var(--text-muted);font-size:12px;'>(Admin: is section ka text apni zaroorat ke hisaab se yahan badal sakte hain — jaise upcoming test dates, result announcements, etc.)</p>"
-            },
-            contact: {
-                title: "✉️ Contact & Support",
-                html: "<p style='margin-bottom:8px;'>Koi bhi dikkat ho to humse sampark karein:</p><p style='margin-bottom:6px;'>📱 WhatsApp: <b>+91-XXXXXXXXXX</b></p><p style='margin-bottom:6px;'>📧 Email: <b>support@testbodhi.com</b></p><p style='margin-bottom:6px;'>🕐 Support Time: 9 AM – 8 PM (Mon–Sat)</p>"
-            },
-            policy: {
-                title: "📄 Privacy Policy",
-                html: "<p style='margin-bottom:8px;'>Hum aapki personal jaankari (naam, phone number, test results) sirf portal ki services dene ke liye use karte hain — kisi third-party ko bechte nahi hain.</p><p style='margin-bottom:8px;'>Aapka data secure Firebase servers par store hota hai.</p><p style='color:var(--text-muted);font-size:12px;'>(Admin: poori Privacy Policy / Terms & Conditions yahan add karein.)</p>"
-            },
-            about: {
-                title: "ℹ️ About Us",
-                html: "<p style='margin-bottom:8px;'><b>TEST BODHI</b> ek online mock-test platform hai jo students ko exam preparation ke liye practice tests, instant results, aur detailed performance analysis deta hai.</p><p style='color:var(--text-muted);font-size:12px;'>(Admin: yahan apni team/mission ke baare mein 2-3 lines likh sakte hain.)</p>"
-            }
-        };
-
-        window.showInfoModal = function(type) {
-            const info = window.SITE_INFO_CONTENT[type];
-            if (!info) return;
-            const modal = document.getElementById('info-modal');
-            const titleEl = document.getElementById('info-modal-title');
-            const bodyEl = document.getElementById('info-modal-body');
-            if (titleEl) titleEl.innerText = info.title;
-            if (bodyEl) bodyEl.innerHTML = info.html;
-            if (modal) modal.style.display = 'flex';
-        };
-        window.closeInfoModal = function() {
-            const modal = document.getElementById('info-modal');
-            if (modal) modal.style.display = 'none';
-        };
-
-        window.siteMenuAction = function(action) {
-            const dd = document.getElementById('site-menu-dropdown');
-            if (dd) dd.classList.remove('open');
-            switch (action) {
-                case 'home':
-                    if (typeof window.goToHome === 'function') window.goToHome();
-                    break;
-                case 'report':
-                    if (typeof window.goToHome === 'function') window.goToHome();
-                    if (typeof window.switchStudentTab === 'function') setTimeout(() => window.switchStudentTab('history'), 50);
-                    break;
-                case 'profile':
-                    if (typeof window.openProfileModal === 'function') window.openProfileModal();
-                    break;
-                case 'logout':
-                    if (typeof window.handleStudentLogout === 'function') window.handleStudentLogout();
-                    break;
-                case 'notice':
-                case 'contact':
-                case 'policy':
-                case 'about':
-                    window.showInfoModal(action);
-                    break;
-            }
-        };
-
-        // Footer copyright year stays correct automatically
-        (function() {
-            const y = document.getElementById('footer-year');
-            if (y) y.innerText = new Date().getFullYear();
-        })();
 
         window.showCustomAlert = function(title, msg, icon = "⚠️") {
             window.showModal(icon, title, msg, false, null, null);
@@ -6445,8 +6327,6 @@
            ========================================================================== */
         window.updateProfileUI = function() {
             const user = window.studentInfo;
-            const siteMenuWrap = document.getElementById('site-menu-wrap');
-            if (siteMenuWrap) siteMenuWrap.style.display = (user && user.name) ? 'block' : 'none';
             const headerProfile = document.getElementById('header-profile');
             const headerName = document.getElementById('header-profile-name');
             const headerAvatarText = document.getElementById('header-avatar-text');
@@ -6934,6 +6814,16 @@
                     const attempted = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
                     window.attemptedTestsCache = attempted;
                 } catch (e) {}
+                // Cached login only reflects localStorage, not a live Firebase
+                // session. Confirm the real session in the background — if it
+                // never comes back, ensureFirebaseSession() clears the stale
+                // cache and bounces to a clean login screen (see AUTH-READY
+                // GATE above) instead of leaving every report/leaderboard
+                // fetch permanently broken with silent permission-denied
+                // errors.
+                window.authReady.then((user) => {
+                    if (!user) window.ensureFirebaseSession();
+                });
             }
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -9301,24 +9191,31 @@
                 timeSpent: window.totalTimeSpent,
                 timestamp: Date.now()
             };
-            db.collection("results").add(resData).then(() => {
-                const attemptedRecords = window.attemptedTestsCache || {};
-                attemptedRecords[window.examData.code] = window.studentInfo.score;
-                window.attemptedTestsCache = attemptedRecords;
-                localStorage.setItem(window.getAttemptedStorageKey(), JSON.stringify(attemptedRecords));
-                window.fetchLeaderboardWithPhotos(window.examData.code);
-                db.collection("results").where("testCode", "==", sC).get().then(snap => {
-                    const scores = [];
-                    snap.forEach(d => scores.push(d.data().score));
-                    scores.sort((a, b) => b - a);
-                    const rank = scores.indexOf(window.studentInfo.score) + 1;
+            window.ensureFirebaseSession().then((user) => {
+                if (!user) {
                     if (rankLoader) rankLoader.style.display = 'none';
-                    document.getElementById('cert-rank').innerText = '#' + rank + ' / ' + scores.length;
+                    document.getElementById('cert-rank').innerText = '#N/A / N/A';
+                    return;
+                }
+                db.collection("results").add(resData).then(() => {
+                    const attemptedRecords = window.attemptedTestsCache || {};
+                    attemptedRecords[window.examData.code] = window.studentInfo.score;
+                    window.attemptedTestsCache = attemptedRecords;
+                    localStorage.setItem(window.getAttemptedStorageKey(), JSON.stringify(attemptedRecords));
+                    window.fetchLeaderboardWithPhotos(window.examData.code);
+                    db.collection("results").where("testCode", "==", sC).get().then(snap => {
+                        const scores = [];
+                        snap.forEach(d => scores.push(d.data().score));
+                        scores.sort((a, b) => b - a);
+                        const rank = scores.indexOf(window.studentInfo.score) + 1;
+                        if (rankLoader) rankLoader.style.display = 'none';
+                        document.getElementById('cert-rank').innerText = '#' + rank + ' / ' + scores.length;
+                    });
+                }).catch(() => {
+                    if (rankLoader) rankLoader.style.display = 'none';
+                    document.getElementById('cert-rank').innerText = '#N/A / N/A';
+                    window.fetchLeaderboardWithPhotos(window.examData.code);
                 });
-            }).catch(() => {
-                if (rankLoader) rankLoader.style.display = 'none';
-                document.getElementById('cert-rank').innerText = '#N/A / N/A';
-                window.fetchLeaderboardWithPhotos(window.examData.code);
             });
         };
 
@@ -9685,25 +9582,25 @@
             container.style.display = 'block';
             list.innerHTML = '<div style="text-align:center;padding:12px;"><div class="loader-mini"></div> Loading ranks...</div>';
 
-            db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
-                const results = [];
-                snapshot.forEach(doc => results.push(doc.data()));
-                db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
-                    snap2.forEach(doc => results.push(doc.data()));
-                    window.fetchLeaderboardUserPhotos(results, list);
+            window.ensureFirebaseSession().then((user) => {
+                if (!user) { list.innerHTML = ''; container.style.display = 'none'; return; }
+                db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
+                    const results = [];
+                    snapshot.forEach(doc => results.push(doc.data()));
+                    db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
+                        snap2.forEach(doc => results.push(doc.data()));
+                        window.fetchLeaderboardUserPhotos(results, list);
+                    }).catch(() => {
+                        window.fetchLeaderboardUserPhotos(results, list);
+                    });
                 }).catch(() => {
-                    window.fetchLeaderboardUserPhotos(results, list);
+                    // NOTE: this used to silently fall back to only the CURRENT
+                    // student's own locally-cached score, which made a broken
+                    // leaderboard look like it was "working" while hiding every
+                    // other student's result. Show a clear error instead.
+                    list.innerHTML =
+                        '<div class="lb-empty">⚠️ Could not load the leaderboard right now. Please check your connection and try again.</div>';
                 });
-            }).catch(() => {
-                const attempted = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
-                const results = [];
-                for (const key in attempted) {
-                    if (key === testCode || key === testCode + "-RE") {
-                        results.push({ name: window.studentInfo.name || "Student", score: attempted[key],
-                            phone: window.studentInfo.phone || "" });
-                    }
-                }
-                window.renderLeaderboardWithPhotos(results, list);
             });
         };
 
@@ -9721,18 +9618,21 @@
             modal.style.display = 'flex';
             list.innerHTML = '<div style="text-align:center;padding:12px;"><div class="loader-mini"></div> Loading latest ranks...</div>';
 
-            db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
-                const results = [];
-                snapshot.forEach(doc => results.push(doc.data()));
-                db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
-                    snap2.forEach(doc => results.push(doc.data()));
-                    window.fetchLeaderboardUserPhotos(results, list);
+            window.ensureFirebaseSession().then((user) => {
+                if (!user) { modal.style.display = 'none'; return; }
+                db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
+                    const results = [];
+                    snapshot.forEach(doc => results.push(doc.data()));
+                    db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
+                        snap2.forEach(doc => results.push(doc.data()));
+                        window.fetchLeaderboardUserPhotos(results, list);
+                    }).catch(() => {
+                        window.fetchLeaderboardUserPhotos(results, list);
+                    });
                 }).catch(() => {
-                    window.fetchLeaderboardUserPhotos(results, list);
+                    list.innerHTML =
+                        '<div class="lb-empty">⚠️ Could not load the leaderboard right now. Please check your connection and try again.</div>';
                 });
-            }).catch(() => {
-                list.innerHTML =
-                    '<div class="lb-empty">⚠️ Could not load the leaderboard right now. Please check your connection and try again.</div>';
             });
         };
 
@@ -10049,63 +9949,29 @@
                 return window.showCustomAlert("Error", "No registered mobile number found. Cannot fetch report.", "⚠️");
             }
             const phoneInput = window.studentInfo.phone;
-            // FIX: window.studentInfo.uid can lag behind the real Firebase auth
-            // state (onAuthStateChanged fires async), so a student who reloads
-            // the page and clicks "My Report" quickly could have uid === undefined
-            // even though they ARE logged in. Reading auth.currentUser.uid directly
-            // avoids that race condition.
-            const uid = (auth.currentUser && auth.currentUser.uid) || window.studentInfo.uid;
+            const uid = window.studentInfo.uid;
             const dispPhone = document.getElementById('disp-hist-phone');
             if (dispPhone) dispPhone.innerText = phoneInput;
             const histLoader = document.getElementById('st-hist-loader');
             const histList = document.getElementById('st-hist-list');
             if (histLoader) histLoader.style.display = 'block';
             if (histList) histList.innerHTML = '';
-
-            const byUid = uid ? db.collection("results").where("uid", "==", uid).get() :
-                Promise.resolve(null);
-
-            byUid.then(snapByUid => {
-                const records = [];
-                const seen = new Set();
-                if (snapByUid) {
-                    snapByUid.forEach(d => {
-                        const data = d.data();
-                        records.push(data);
-                        if (data.testCode) seen.add(data.testCode);
-                    });
-                }
-                // Older result records saved before "uid" existed on the
-                // document won't show up in the uid query above. Merge in a
-                // phone-based fetch as well, but do it as a SEPARATE, isolated
-                // step — if Firestore security rules reject this fallback
-                // query (e.g. rules only allow "uid == request.auth.uid"),
-                // it must not wipe out the uid results we already have.
-                db.collection("results").where("phone", "==", phoneInput).get().then(snapByPhone => {
-                    snapByPhone.forEach(d => {
-                        const data = d.data();
-                        if (!data.testCode || !seen.has(data.testCode)) {
-                            records.push(data);
-                            if (data.testCode) seen.add(data.testCode);
-                        }
-                    });
+            // Prefer a strict uid match — two different students could end up
+            // sharing the same phone digits by mistake, and uid is the only
+            // value that's guaranteed unique per account. Fall back to phone
+            // only for older result records saved before uid was recorded.
+            window.ensureFirebaseSession().then((user) => {
+                if (!user) { if (histLoader) histLoader.style.display = 'none'; return; }
+                const query = uid ? db.collection("results").where("uid", "==", uid) :
+                    db.collection("results").where("phone", "==", phoneInput);
+                query.get().then(snap => {
+                    const records = [];
+                    snap.forEach(d => records.push(d.data()));
                     window.handleStudentHistory({ records });
-                }).catch(phoneErr => {
-                    // Phone-fallback failed (likely a security-rules restriction on
-                    // querying by phone) — that's fine as long as we already have
-                    // the uid-based results. Log it so it's diagnosable, don't block.
-                    console.warn('Phone-based history fallback failed (non-fatal):', phoneErr);
-                    window.handleStudentHistory({ records });
+                }).catch(err => {
+                    if (histLoader) histLoader.style.display = 'none';
+                    window.showCustomAlert("Error", "Failed to fetch history from database.", "❌");
                 });
-            }).catch(err => {
-                if (histLoader) histLoader.style.display = 'none';
-                // FIX: show the REAL Firestore error (code + message) instead of a
-                // generic string, so the actual cause (permission-denied,
-                // failed-precondition/missing-index, unavailable/network, etc.)
-                // is visible immediately instead of guessing.
-                console.error('fetchStudentHistory error:', err);
-                const reason = (err && (err.code || err.message)) ? (err.code ? err.code + ': ' + err.message : err.message) : 'Unknown error';
-                window.showCustomAlert("Error", "Failed to fetch history from database.\n(" + reason + ")", "❌");
             });
         };
 
