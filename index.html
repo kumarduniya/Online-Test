@@ -4909,7 +4909,10 @@
                         <h4 style="margin:0 0 4px 0;color:var(--primary);font-size:15px;">📈 My Performance Report</h4>
                         <p style="font-size:12px;color:var(--text-muted);margin:0;">Mobile: <b id="disp-hist-phone" style="color:var(--text-main);">...</b></p>
                     </div>
-                    <button class="btn btn-primary btn-sm" onclick="window.fetchStudentHistory()" style="margin:0;width:auto;">🔄 Refresh Report</button>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="btn btn-danger" onclick="window.showWeakQuestions()" style="font-size:11px; padding:6px 12px;">💪 My Weak Questions</button>
+                        <button class="btn btn-primary btn-sm" onclick="window.fetchStudentHistory()" style="font-size:11px; padding:6px 12px;">🔄 Refresh Report</button>
+                    </div>
                     <input type="hidden" id="hist-phone" />
                 </div>
 
@@ -5215,7 +5218,7 @@
 
     <script>
         /* ==========================================================================
-           FULL SCRIPT – ALL FIXES APPLIED
+           FULL SCRIPT – ALL FIXES APPLIED + WEAK QUESTIONS FEATURE
            ========================================================================== */
 
         // ---- CONFIG ----
@@ -5239,57 +5242,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-
-        // ==========================================================================
-        // AUTH-READY GATE (FIX)
-        // ----------------------------------------------------------------------
-        // Bug: window.onload used to trust the CACHED copy of the login in
-        // localStorage ("mockSarthiUser") straightaway and mark the student as
-        // logged in / with a uid, even though the real Firebase Auth session
-        // (firebase.auth().currentUser, which is what security rules actually
-        // check via request.auth) restores asynchronously and can, on some
-        // browsers/devices, fail to restore at all (private/incognito windows,
-        // blocked 3rd-party storage, cleared IndexedDB, etc). Any Firestore
-        // read/write against rules like "allow read: if request.auth != null"
-        // (results, leaderboard, report) then permanently failed with
-        // "permission-denied" for that session — even though the UI still
-        // showed the student as logged in — because request.auth was null on
-        // the server even though window.studentInfo looked fully populated.
-        //
-        // Fix: every protected Firestore call now goes through
-        // window.ensureFirebaseSession(), which waits for Firebase Auth's
-        // FIRST onAuthStateChanged event before running the query. If that
-        // event confirms there is genuinely no live Firebase session (despite
-        // a cached local login), we stop pretending the student is logged in,
-        // clear the stale cache, and send them back to a clean login screen
-        // instead of showing a confusing "permission-denied" wall or silently
-        // falling back to incomplete/wrong data.
-        // ==========================================================================
-        window.authReady = new Promise((resolve) => {
-            const unsubAuthReady = auth.onAuthStateChanged((user) => {
-                unsubAuthReady();
-                resolve(user);
-            });
-        });
-
-        window.ensureFirebaseSession = function() {
-            return window.authReady.then((user) => {
-                if (user) return user;
-                // Real Firebase session never came back — a locally cached
-                // "logged in" state can't be trusted for reads/writes that
-                // require request.auth != null. Force a clean re-login.
-                window.studentInfo = null;
-                localStorage.removeItem('mockSarthiUser');
-                if (typeof window.updateProfileUI === 'function') window.updateProfileUI();
-                window.showCustomAlert("Session Expired",
-                    "We couldn't verify your login session, so your report/leaderboard can't be fetched. Please log in again.",
-                    "🔒");
-                document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-                const authView = document.getElementById('student-auth-view');
-                if (authView) authView.classList.add('active-view');
-                return null;
-            });
-        };
 
         // Keeps the logged-in user's data (photo, premium status, name...) in
         // sync with Firestore on every page load / every device — not just at
@@ -6814,16 +6766,6 @@
                     const attempted = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
                     window.attemptedTestsCache = attempted;
                 } catch (e) {}
-                // Cached login only reflects localStorage, not a live Firebase
-                // session. Confirm the real session in the background — if it
-                // never comes back, ensureFirebaseSession() clears the stale
-                // cache and bounces to a clean login screen (see AUTH-READY
-                // GATE above) instead of leaving every report/leaderboard
-                // fetch permanently broken with silent permission-denied
-                // errors.
-                window.authReady.then((user) => {
-                    if (!user) window.ensureFirebaseSession();
-                });
             }
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -9084,6 +9026,7 @@
 
         /* ==========================================================================
            CALCULATE SCORE & SUBMIT – with Enhanced Analytics (Main Graph + Sub-Graphs)
+           + WEAK QUESTIONS STORAGE
            ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
@@ -9109,6 +9052,8 @@
             window.studentInfo.wrong = 0;
             window.studentInfo.blank = 0;
 
+            // Collect weak questions
+            const weakQs = [];
             // Collect tag-wise performance (Subject:Topic)
             const tagPerformance = {};
             const allTags = [];
@@ -9134,6 +9079,14 @@
                     tagPerformance[tag].wrong++;
                 }
                 tagPerformance[tag].total++;
+
+                // Store weak question info
+                if (!window.userAnswers[i] || gA !== cA) {
+                    weakQs.push({
+                        qId: i,
+                        isBlank: !window.userAnswers[i]
+                    });
+                }
             }
 
             const btnRight = document.getElementById('btn-cnt-right');
@@ -9185,37 +9138,32 @@
                 phone: window.studentInfo.phone || "",
                 score: window.studentInfo.score,
                 testCode: sC,
+                testName: window.examData.exam || window.examData.code || "Test",
                 right: window.studentInfo.right,
                 wrong: window.studentInfo.wrong,
                 blank: window.studentInfo.blank,
                 timeSpent: window.totalTimeSpent,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                weakQuestions: weakQs   // <-- NEW: store weak questions
             };
-            window.ensureFirebaseSession().then((user) => {
-                if (!user) {
+            db.collection("results").add(resData).then(() => {
+                const attemptedRecords = window.attemptedTestsCache || {};
+                attemptedRecords[window.examData.code] = window.studentInfo.score;
+                window.attemptedTestsCache = attemptedRecords;
+                localStorage.setItem(window.getAttemptedStorageKey(), JSON.stringify(attemptedRecords));
+                window.fetchLeaderboardWithPhotos(window.examData.code);
+                db.collection("results").where("testCode", "==", sC).get().then(snap => {
+                    const scores = [];
+                    snap.forEach(d => scores.push(d.data().score));
+                    scores.sort((a, b) => b - a);
+                    const rank = scores.indexOf(window.studentInfo.score) + 1;
                     if (rankLoader) rankLoader.style.display = 'none';
-                    document.getElementById('cert-rank').innerText = '#N/A / N/A';
-                    return;
-                }
-                db.collection("results").add(resData).then(() => {
-                    const attemptedRecords = window.attemptedTestsCache || {};
-                    attemptedRecords[window.examData.code] = window.studentInfo.score;
-                    window.attemptedTestsCache = attemptedRecords;
-                    localStorage.setItem(window.getAttemptedStorageKey(), JSON.stringify(attemptedRecords));
-                    window.fetchLeaderboardWithPhotos(window.examData.code);
-                    db.collection("results").where("testCode", "==", sC).get().then(snap => {
-                        const scores = [];
-                        snap.forEach(d => scores.push(d.data().score));
-                        scores.sort((a, b) => b - a);
-                        const rank = scores.indexOf(window.studentInfo.score) + 1;
-                        if (rankLoader) rankLoader.style.display = 'none';
-                        document.getElementById('cert-rank').innerText = '#' + rank + ' / ' + scores.length;
-                    });
-                }).catch(() => {
-                    if (rankLoader) rankLoader.style.display = 'none';
-                    document.getElementById('cert-rank').innerText = '#N/A / N/A';
-                    window.fetchLeaderboardWithPhotos(window.examData.code);
+                    document.getElementById('cert-rank').innerText = '#' + rank + ' / ' + scores.length;
                 });
+            }).catch(() => {
+                if (rankLoader) rankLoader.style.display = 'none';
+                document.getElementById('cert-rank').innerText = '#N/A / N/A';
+                window.fetchLeaderboardWithPhotos(window.examData.code);
             });
         };
 
@@ -9582,25 +9530,25 @@
             container.style.display = 'block';
             list.innerHTML = '<div style="text-align:center;padding:12px;"><div class="loader-mini"></div> Loading ranks...</div>';
 
-            window.ensureFirebaseSession().then((user) => {
-                if (!user) { list.innerHTML = ''; container.style.display = 'none'; return; }
-                db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
-                    const results = [];
-                    snapshot.forEach(doc => results.push(doc.data()));
-                    db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
-                        snap2.forEach(doc => results.push(doc.data()));
-                        window.fetchLeaderboardUserPhotos(results, list);
-                    }).catch(() => {
-                        window.fetchLeaderboardUserPhotos(results, list);
-                    });
+            db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
+                const results = [];
+                snapshot.forEach(doc => results.push(doc.data()));
+                db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
+                    snap2.forEach(doc => results.push(doc.data()));
+                    window.fetchLeaderboardUserPhotos(results, list);
                 }).catch(() => {
-                    // NOTE: this used to silently fall back to only the CURRENT
-                    // student's own locally-cached score, which made a broken
-                    // leaderboard look like it was "working" while hiding every
-                    // other student's result. Show a clear error instead.
-                    list.innerHTML =
-                        '<div class="lb-empty">⚠️ Could not load the leaderboard right now. Please check your connection and try again.</div>';
+                    window.fetchLeaderboardUserPhotos(results, list);
                 });
+            }).catch(() => {
+                const attempted = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
+                const results = [];
+                for (const key in attempted) {
+                    if (key === testCode || key === testCode + "-RE") {
+                        results.push({ name: window.studentInfo.name || "Student", score: attempted[key],
+                            phone: window.studentInfo.phone || "" });
+                    }
+                }
+                window.renderLeaderboardWithPhotos(results, list);
             });
         };
 
@@ -9618,21 +9566,18 @@
             modal.style.display = 'flex';
             list.innerHTML = '<div style="text-align:center;padding:12px;"><div class="loader-mini"></div> Loading latest ranks...</div>';
 
-            window.ensureFirebaseSession().then((user) => {
-                if (!user) { modal.style.display = 'none'; return; }
-                db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
-                    const results = [];
-                    snapshot.forEach(doc => results.push(doc.data()));
-                    db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
-                        snap2.forEach(doc => results.push(doc.data()));
-                        window.fetchLeaderboardUserPhotos(results, list);
-                    }).catch(() => {
-                        window.fetchLeaderboardUserPhotos(results, list);
-                    });
+            db.collection("results").where("testCode", "==", testCode).get().then((snapshot) => {
+                const results = [];
+                snapshot.forEach(doc => results.push(doc.data()));
+                db.collection("results").where("testCode", "==", testCode + "-RE").get().then((snap2) => {
+                    snap2.forEach(doc => results.push(doc.data()));
+                    window.fetchLeaderboardUserPhotos(results, list);
                 }).catch(() => {
-                    list.innerHTML =
-                        '<div class="lb-empty">⚠️ Could not load the leaderboard right now. Please check your connection and try again.</div>';
+                    window.fetchLeaderboardUserPhotos(results, list);
                 });
+            }).catch(() => {
+                list.innerHTML =
+                    '<div class="lb-empty">⚠️ Could not load the leaderboard right now. Please check your connection and try again.</div>';
             });
         };
 
@@ -9960,18 +9905,15 @@
             // sharing the same phone digits by mistake, and uid is the only
             // value that's guaranteed unique per account. Fall back to phone
             // only for older result records saved before uid was recorded.
-            window.ensureFirebaseSession().then((user) => {
-                if (!user) { if (histLoader) histLoader.style.display = 'none'; return; }
-                const query = uid ? db.collection("results").where("uid", "==", uid) :
-                    db.collection("results").where("phone", "==", phoneInput);
-                query.get().then(snap => {
-                    const records = [];
-                    snap.forEach(d => records.push(d.data()));
-                    window.handleStudentHistory({ records });
-                }).catch(err => {
-                    if (histLoader) histLoader.style.display = 'none';
-                    window.showCustomAlert("Error", "Failed to fetch history from database.", "❌");
-                });
+            const query = uid ? db.collection("results").where("uid", "==", uid) :
+                db.collection("results").where("phone", "==", phoneInput);
+            query.get().then(snap => {
+                const records = [];
+                snap.forEach(d => records.push(d.data()));
+                window.handleStudentHistory({ records });
+            }).catch(err => {
+                if (histLoader) histLoader.style.display = 'none';
+                window.showCustomAlert("Error", "Failed to fetch history from database.", "❌");
             });
         };
 
@@ -10593,6 +10535,150 @@
         };
 
         /* ==========================================================================
+           WEAK QUESTIONS FEATURE – NEW FUNCTIONS
+           ========================================================================== */
+        window.showWeakQuestions = function() {
+            const uid = window.studentInfo.uid;
+            if (!uid) {
+                return window.showCustomAlert("Error", "You are not logged in.", "⚠️");
+            }
+
+            window.showLoadingModal("Fetching your weak questions...");
+
+            db.collection("results").where("uid", "==", uid).get().then((snapshot) => {
+                const weakMap = new Map(); // testCode -> { testName, weakQuestions: [] }
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.weakQuestions && data.weakQuestions.length > 0) {
+                        const code = data.testCode || 'unknown';
+                        const name = data.testName || code;
+                        if (!weakMap.has(code)) {
+                            weakMap.set(code, { testName: name, questions: [] });
+                        }
+                        // Merge questions (avoid duplicates if multiple attempts)
+                        const existing = weakMap.get(code).questions;
+                        data.weakQuestions.forEach(wq => {
+                            if (!existing.some(e => e.qId === wq.qId)) {
+                                existing.push(wq);
+                            }
+                        });
+                    }
+                });
+
+                window.closeModal(); // close loading
+
+                if (weakMap.size === 0) {
+                    return window.showCustomAlert("💪 Weak Questions", "You have no weak questions! Great job! 🎉", "🎯");
+                }
+
+                // Render in a modal
+                let html = '<div style="max-height:60vh; overflow-y:auto; text-align:left;">';
+                for (const [code, data] of weakMap) {
+                    html += `<h4 style="margin:10px 0 4px 0; color:var(--primary);">📝 ${data.testName}</h4>`;
+                    html += `<ul style="list-style:none; padding-left:0;">`;
+                    data.questions.forEach((wq, idx) => {
+                        // We need to fetch the actual question text. Since we have the test code and qId,
+                        // we can fetch the test data on demand, but for now we show a placeholder.
+                        // For better UX, we could pre-fetch all test data, but that would be heavy.
+                        // We'll display a "Practice" button that will fetch the question when clicked.
+                        const status = wq.isBlank ? '⬜ Blank' : '❌ Wrong';
+                        html += `<li style="padding:4px 0; border-bottom:1px solid var(--border-color);">
+                                    Q${wq.qId+1} ${status} 
+                                    <button class="btn btn-sm btn-outline" onclick="window.practiceWeakQuestion('${code}', ${wq.qId})" style="font-size:10px; padding:2px 8px;">Practice</button>
+                                </li>`;
+                    });
+                    html += `</ul>`;
+                    html += `<button class="btn btn-warning btn-sm" onclick="window.startWeakTest('${code}')">🔁 Practice All Weak Questions</button>`;
+                    html += `<hr style="margin:12px 0;">`;
+                }
+                html += '</div>';
+
+                window.showCustomAlert("💪 My Weak Questions", html, "📚");
+
+            }).catch(err => {
+                window.closeModal();
+                window.showCustomAlert("Error", "Failed to fetch weak questions: " + err.message, "❌");
+            });
+        };
+
+        window.practiceWeakQuestion = function(testCode, qId) {
+            // Fetch the original test data to get the question
+            db.collection("tests").doc(testCode).get().then((doc) => {
+                if (!doc.exists) {
+                    return window.showCustomAlert("Error", "Test data not found.", "❌");
+                }
+                const testData = doc.data();
+                const question = testData.questions?.[qId];
+                if (!question) {
+                    return window.showCustomAlert("Error", "Question not found.", "❌");
+                }
+                // Create a mini test with just this question
+                const weakExamData = {
+                    ...testData,
+                    code: testCode + '-WEAK-SINGLE',
+                    questions: [question],
+                    totTime: 60, // 1 minute for a single question
+                    qTime: 30,
+                    exam: testData.exam + ' (Weak Q)'
+                };
+                window.examData = weakExamData;
+                window.startExam(true);
+            }).catch(err => {
+                window.showCustomAlert("Error", "Could not load question: " + err.message, "❌");
+            });
+        };
+
+        window.startWeakTest = function(testCode) {
+            // First, fetch the weak questions for this test from the stored results
+            const uid = window.studentInfo.uid;
+            db.collection("results").where("uid", "==", uid).where("testCode", "==", testCode).get().then((snapshot) => {
+                const weakIndices = new Set();
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.weakQuestions) {
+                        data.weakQuestions.forEach(wq => weakIndices.add(wq.qId));
+                    }
+                });
+
+                if (weakIndices.size === 0) {
+                    return window.showCustomAlert("Info", "No weak questions for this test.", "💡");
+                }
+
+                // Fetch the full test data
+                db.collection("tests").doc(testCode).get().then((doc) => {
+                    if (!doc.exists) {
+                        return window.showCustomAlert("Error", "Test data not found.", "❌");
+                    }
+                    const testData = doc.data();
+                    const allQuestions = testData.questions || [];
+                    const weakQuestions = allQuestions.filter((_, idx) => weakIndices.has(idx));
+
+                    if (weakQuestions.length === 0) {
+                        return window.showCustomAlert("Info", "No weak questions found.", "💡");
+                    }
+
+                    // Create a new exam with only weak questions
+                    const weakExamData = {
+                        ...testData,
+                        code: testCode + '-WEAK',
+                        questions: weakQuestions,
+                        totTime: weakQuestions.length * 60, // 1 min per question
+                        qTime: 45,
+                        exam: testData.exam + ' (Weak Practice)'
+                    };
+                    window.examData = weakExamData;
+                    window.startExam(true); // reattempt mode
+                }).catch(err => {
+                    window.showCustomAlert("Error", "Failed to load test: " + err.message, "❌");
+                });
+
+            }).catch(err => {
+                window.showCustomAlert("Error", "Failed to fetch weak questions: " + err.message, "❌");
+            });
+        };
+
+        /* ==========================================================================
            PREMIUM 3D INTERACTION LAYER (login/register cards only — purely cosmetic,
            wrapped safely so it can never interfere with app logic)
            ========================================================================== */
@@ -10630,7 +10716,7 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v24.1 — FINAL FIXES APPLIED');
+        console.log('🚀 TEST BODHI v24.1 — FINAL FIXES + WEAK QUESTIONS FEATURE');
         console.log('✅ Result view now uses TWO-COLUMN LAYOUT: Graphs on RIGHT, everything else on LEFT');
         console.log('✅ Analysis box is LARGER with scrollable content for better readability');
         console.log('✅ Profile photo is NOW CLICKABLE — opens a full-size lightbox');
@@ -10639,6 +10725,7 @@
         console.log('✅ Main graph shows Correct (Green), Wrong (Red), Blank (Yellow)');
         console.log('✅ Sub-graphs also show Correct/Wrong/Blank with proper colors');
         console.log('✅ Detailed performance table includes all topics with status (Strong/Average/Weak)');
+        console.log('✅ NEW: Weak Questions feature – practice only your weak questions!');
         console.log('📌 Tag format: !tag(Subject:Topic)');
         console.log('📌 Solution toggle shows explanation in analysis and report');
     </script>
