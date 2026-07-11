@@ -4808,12 +4808,17 @@
             <div class="pm-detail">
                 <span class="pm-label">🗺️ State</span>
                 <span class="pm-value" id="pm-state-display">Not set</span>
-                <select class="pm-edit-input" id="pm-state-input" style="display:none;"></select>
+                <select class="pm-edit-input" id="pm-state-input" style="display:none;" onchange="window.onPmStateChange()"></select>
             </div>
             <div class="pm-detail">
                 <span class="pm-label">📍 District</span>
                 <span class="pm-value" id="pm-district-display">Not set</span>
-                <input class="pm-edit-input" id="pm-district-input" type="text" placeholder="e.g. Meerut" style="display:none;" />
+                <select class="pm-edit-input" id="pm-district-input" style="display:none;"><option value="">Select State First</option></select>
+            </div>
+            <div class="pm-detail">
+                <span class="pm-label">📮 Pin Code</span>
+                <span class="pm-value" id="pm-pincode-display">Not set</span>
+                <input class="pm-edit-input" id="pm-pincode-input" type="tel" placeholder="6-digit PIN code" maxlength="6" inputmode="numeric" style="display:none;" />
             </div>
             <div class="pm-detail" style="border-bottom:none;">
                 <span class="pm-label">👨‍👩‍👦 Family Phone</span>
@@ -5449,34 +5454,29 @@
         const db = firebase.firestore();
 
         /* ==========================================================================
-           STUDENT ID — every registered student gets a permanent unique ID.
-           Deterministic from their Firebase UID (no central counter needed, so it
-           works from pure client code and is safe under the existing Firestore
-           rules, which only allow a user to write their OWN user document).
+           STUDENT ID — the student's own 10-digit registration mobile number IS
+           their Student ID. Always unique per account and the student already
+           knows it by heart — nothing to "generate" or remember separately.
            ========================================================================== */
-        window.generateStudentId = function(uid) {
-            const str = String(uid || Math.random().toString(36));
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) {
-                hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
-            }
-            const num = 100000 + (hash % 900000); // always exactly 6 digits: 100000-999999
-            return String(num);
+        window.generateStudentId = function(phone) {
+            const digits = String(phone || "").replace(/[^0-9]/g, "");
+            return digits || null;
         };
 
         // Backfills a studentId onto ANY already-registered user the first time
         // they load the app after this feature shipped, and assigns one instantly
-        // to brand-new registrations. Safe to call repeatedly — no-ops if a valid
-        // 6-digit id is already present. Also auto-fixes any old-format id
-        // (e.g. the earlier "TB-XXXXXX" scheme) by regenerating it as a clean
-        // 6-digit number, since that's the format everyone should have now.
+        // to brand-new registrations. Safe to call repeatedly — no-ops if the
+        // stored studentId already matches the account's phone number. Also
+        // auto-fixes any old-format id (e.g. an earlier hashed 6-digit scheme)
+        // by replacing it with the phone number, since that's the source of
+        // truth now.
         window.ensureStudentId = function(uid, userData) {
             if (!uid) return Promise.resolve(userData && userData.studentId);
+            const phoneDigits = window.generateStudentId(userData && userData.phone);
+            if (!phoneDigits) return Promise.resolve(userData && userData.studentId); // no phone on file yet — nothing to set
             const existing = userData && userData.studentId;
-            const isValidSixDigit = existing && /^[0-9]{6}$/.test(String(existing));
-            if (isValidSixDigit) return Promise.resolve(existing);
-            const newId = window.generateStudentId(uid);
-            return db.collection("users").doc(uid).update({ studentId: newId }).then(() => newId).catch(() => newId);
+            if (existing && String(existing) === phoneDigits) return Promise.resolve(existing);
+            return db.collection("users").doc(uid).update({ studentId: phoneDigits }).then(() => phoneDigits).catch(() => phoneDigits);
         };
 
         // Keeps the logged-in user's data (photo, premium status, name...) in
@@ -5651,6 +5651,69 @@
             "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
         ];
 
+        window.INDIA_DISTRICTS_BY_STATE = {
+            "Andhra Pradesh": ["Alluri Sitharama Raju", "Anakapalli", "Ananthapuramu", "Annamayya", "Bapatla", "Chittoor", "Dr. B.R. Ambedkar Konaseema", "East Godavari", "Eluru", "Guntur", "Kakinada", "Krishna", "Kurnool", "Nandyal", "Nellore", "NTR", "Palnadu", "Parvathipuram Manyam", "Prakasam", "Srikakulam", "Sri Sathya Sai", "Tirupati", "Visakhapatnam", "Vizianagaram", "West Godavari", "YSR Kadapa"],
+            "Arunachal Pradesh": ["Anjaw", "Bichom", "Changlang", "East Kameng", "East Siang", "Kamle", "Keyi Panyor", "Kra Daadi", "Kurung Kumey", "Lepa Rada", "Lohit", "Longding", "Lower Dibang Valley", "Lower Siang", "Lower Subansiri", "Namsai", "Pakke-Kessang", "Papum Pare", "Shi Yomi", "Siang", "Tawang", "Tirap", "Upper Dibang Valley", "Upper Siang", "Upper Subansiri", "West Kameng", "West Siang"],
+            "Assam": ["Baksa", "Bajali", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo", "Chirang", "Darrang", "Dhemaji", "Dhubri", "Dibrugarh", "Dima Hasao", "Goalpara", "Golaghat", "Hailakandi", "Hojai", "Jorhat", "Kamrup", "Kamrup Metropolitan", "Karbi Anglong", "Karimganj", "Kokrajhar", "Lakhimpur", "Majuli", "Morigaon", "Nagaon", "Nalbari", "Sivasagar", "Sonitpur", "South Salmara-Mankachar", "Tamulpur", "Tinsukia", "Udalguri", "West Karbi Anglong"],
+            "Bihar": ["Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur", "Buxar", "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui", "Jehanabad", "Kaimur", "Katihar", "Khagaria", "Kishanganj", "Lakhisarai", "Madhepura", "Madhubani", "Munger", "Muzaffarpur", "Nalanda", "Nawada", "Patna", "Purnia", "Rohtas", "Saharsa", "Samastipur", "Saran", "Sheikhpura", "Sheohar", "Sitamarhi", "Siwan", "Supaul", "Vaishali", "West Champaran"],
+            "Chhattisgarh": ["Balod", "Baloda Bazar", "Balrampur-Ramanujganj", "Bastar", "Bemetara", "Bijapur", "Bilaspur", "Dantewada", "Dhamtari", "Durg", "Gariaband", "Gaurela-Pendra-Marwahi", "Janjgir-Champa", "Jashpur", "Kabirdham", "Kanker", "Khairagarh-Chhuikhadan-Gandai", "Kondagaon", "Korba", "Korea", "Mahasamund", "Manendragarh-Chirmiri-Bharatpur", "Mohla-Manpur-Ambagarh Chowki", "Mungeli", "Narayanpur", "Raigarh", "Raipur", "Rajnandgaon", "Sarangarh-Bilaigarh", "Sakti", "Sukma", "Surajpur", "Surguja"],
+            "Goa": ["North Goa", "South Goa"],
+            "Gujarat": ["Ahmedabad", "Amreli", "Anand", "Aravalli", "Banaskantha", "Bharuch", "Bhavnagar", "Botad", "Chhota Udaipur", "Dahod", "Dang", "Devbhumi Dwarka", "Gandhinagar", "Gir Somnath", "Jamnagar", "Junagadh", "Kheda", "Kutch", "Mahisagar", "Mehsana", "Morbi", "Narmada", "Navsari", "Panchmahal", "Patan", "Porbandar", "Rajkot", "Sabarkantha", "Surat", "Surendranagar", "Tapi", "Vadodara", "Valsad"],
+            "Haryana": ["Ambala", "Bhiwani", "Charkhi Dadri", "Faridabad", "Fatehabad", "Gurugram", "Hisar", "Jhajjar", "Jind", "Kaithal", "Karnal", "Kurukshetra", "Mahendragarh", "Nuh", "Palwal", "Panchkula", "Panipat", "Rewari", "Rohtak", "Sirsa", "Sonipat", "Yamunanagar"],
+            "Himachal Pradesh": ["Bilaspur", "Chamba", "Hamirpur", "Kangra", "Kinnaur", "Kullu", "Lahaul and Spiti", "Mandi", "Shimla", "Sirmaur", "Solan", "Una"],
+            "Jharkhand": ["Bokaro", "Chatra", "Deoghar", "Dhanbad", "Dumka", "East Singhbhum", "Garhwa", "Giridih", "Godda", "Gumla", "Hazaribag", "Jamtara", "Khunti", "Koderma", "Latehar", "Lohardaga", "Pakur", "Palamu", "Ramgarh", "Ranchi", "Sahibganj", "Seraikela-Kharsawan", "Simdega", "West Singhbhum"],
+            "Karnataka": ["Bagalkot", "Ballari", "Belagavi", "Bangalore Rural", "Bangalore Urban", "Bidar", "Chamarajanagar", "Chikkaballapur", "Chikmagalur", "Chitradurga", "Dakshina Kannada", "Davanagere", "Dharwad", "Gadag", "Kalaburagi", "Hassan", "Haveri", "Kodagu", "Kolar", "Koppal", "Mandya", "Mysore", "Raichur", "Ramanagara", "Shimoga", "Tumakuru", "Udupi", "Uttara Kannada", "Vijayanagara", "Vijayapura", "Yadgir"],
+            "Kerala": ["Alappuzha", "Ernakulam", "Idukki", "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikode", "Malappuram", "Palakkad", "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"],
+            "Madhya Pradesh": ["Agar Malwa", "Alirajpur", "Anuppur", "Ashoknagar", "Balaghat", "Barwani", "Betul", "Bhind", "Bhopal", "Burhanpur", "Chhatarpur", "Chhindwara", "Damoh", "Datia", "Dewas", "Dhar", "Dindori", "Guna", "Gwalior", "Harda", "Hoshangabad", "Indore", "Jabalpur", "Jhabua", "Katni", "Khandwa", "Khargone", "Maihar", "Mandla", "Mandsaur", "Mauganj", "Morena", "Narsinghpur", "Neemuch", "Niwari", "Panna", "Pandhurna", "Raisen", "Rajgarh", "Ratlam", "Rewa", "Sagar", "Satna", "Sehore", "Seoni", "Shahdol", "Shajapur", "Sheopur", "Shivpuri", "Sidhi", "Singrauli", "Tikamgarh", "Ujjain", "Umaria", "Vidisha"],
+            "Maharashtra": ["Ahmednagar", "Akola", "Amravati", "Chhatrapati Sambhajinagar (Aurangabad)", "Beed", "Bhandara", "Buldhana", "Chandrapur", "Dharashiv (Osmanabad)", "Dhule", "Gadchiroli", "Gondia", "Hingoli", "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai City", "Mumbai Suburban", "Nanded", "Nandurbar", "Nagpur", "Nashik", "Palghar", "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"],
+            "Manipur": ["Bishnupur", "Chandel", "Churachandpur", "Imphal East", "Imphal West", "Jiribam", "Kakching", "Kamjong", "Kangpokpi", "Noney", "Pherzawl", "Senapati", "Tamenglong", "Tengnoupal", "Thoubal", "Ukhrul"],
+            "Meghalaya": ["East Garo Hills", "East Jaintia Hills", "East Khasi Hills", "Eastern West Khasi Hills", "North Garo Hills", "Ri Bhoi", "South Garo Hills", "South West Garo Hills", "South West Khasi Hills", "West Garo Hills", "West Jaintia Hills", "West Khasi Hills"],
+            "Mizoram": ["Aizawl", "Champhai", "Hnahthial", "Khawzawl", "Kolasib", "Lawngtlai", "Lunglei", "Mamit", "Saiha", "Saitual", "Serchhip"],
+            "Nagaland": ["Ch\u00fcmoukedima", "Dimapur", "Kiphire", "Kohima", "Longleng", "Mokokchung", "Mon", "Niuland", "Noklak", "Peren", "Phek", "Shamator", "Tseminy\u00fc", "Tuensang", "Wokha", "Zunheboto"],
+            "Odisha": ["Angul", "Boudh", "Bhadrak", "Balangir", "Bargarh", "Balasore", "Cuttack", "Debagarh", "Dhenkanal", "Ganjam", "Gajapati", "Jharsuguda", "Jajpur", "Jagatsinghpur", "Khordha", "Kendujhar", "Kalahandi", "Kandhamal", "Koraput", "Kendrapara", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nuapada", "Nayagarh", "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh"],
+            "Punjab": ["Amritsar", "Barnala", "Bathinda", "Faridkot", "Fatehgarh Sahib", "Fazilka", "Firozpur", "Gurdaspur", "Hoshiarpur", "Jalandhar", "Kapurthala", "Ludhiana", "Malerkotla", "Mansa", "Moga", "Pathankot", "Patiala", "Rupnagar", "Sahibzada Ajit Singh Nagar (Mohali)", "Sangrur", "Shahid Bhagat Singh Nagar (Nawanshahr)", "Sri Muktsar Sahib", "Tarn Taran"],
+            "Rajasthan": ["Ajmer", "Alwar", "Balotra", "Banswara", "Baran", "Barmer", "Beawar", "Bharatpur", "Bhilwara", "Bikaner", "Bundi", "Chittorgarh", "Churu", "Dausa", "Deeg", "Dholpur", "Didwana Kuchaman", "Dungarpur", "Hanumangarh", "Jaipur", "Jaisalmer", "Jalore", "Jhalawar", "Jhunjhunu", "Jodhpur", "Karauli", "Khairthal-Tijara", "Kota", "Kotputli-Behror", "Nagaur", "Pali", "Phalodi", "Pratapgarh", "Rajsamand", "Salumbar", "Sawai Madhopur", "Sikar", "Sirohi", "Sri Ganganagar", "Tonk", "Udaipur"],
+            "Sikkim": ["Gangtok", "Gyalshing", "Mangan", "Namchi", "Pakyong", "Soreng"],
+            "Tamil Nadu": ["Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Dindigul", "Erode", "Kallakurichi", "Kanchipuram", "Kanyakumari", "Karur", "Krishnagiri", "Madurai", "Mayiladuthurai", "Nagapattinam", "Nilgiris", "Namakkal", "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem", "Sivaganga", "Tenkasi", "Tiruppur", "Tiruchirappalli", "Theni", "Tirunelveli", "Thanjavur", "Thoothukudi", "Tirupattur", "Tiruvallur", "Tiruvarur", "Tiruvannamalai", "Vellore", "Viluppuram", "Virudhunagar"],
+            "Telangana": ["Adilabad", "Bhadradri Kothagudem", "Hanamkonda", "Hyderabad", "Jagtial", "Jangaon", "Jayashankar Bhupalpally", "Jogulamba Gadwal", "Kamareddy", "Karimnagar", "Khammam", "Kumuram Bheem Asifabad", "Mahabubabad", "Mahbubnagar", "Mancherial", "Medak", "Medchal-Malkajgiri", "Mulugu", "Nalgonda", "Nagarkurnool", "Narayanpet", "Nirmal", "Nizamabad", "Peddapalli", "Rajanna Sircilla", "Ranga Reddy", "Sangareddy", "Siddipet", "Suryapet", "Vikarabad", "Wanaparthy", "Warangal", "Yadadri Bhuvanagiri"],
+            "Tripura": ["Dhalai", "Gomati", "Khowai", "North Tripura", "Sepahijala", "South Tripura", "Unakoti", "West Tripura"],
+            "Uttar Pradesh": ["Agra", "Aligarh", "Ambedkar Nagar", "Amethi", "Amroha", "Auraiya", "Ayodhya", "Azamgarh", "Baghpat", "Bahraich", "Ballia", "Balrampur", "Banda", "Barabanki", "Bareilly", "Basti", "Bhadohi", "Bijnor", "Budaun", "Bulandshahr", "Chandauli", "Chitrakoot", "Deoria", "Etah", "Etawah", "Farrukhabad", "Fatehpur", "Firozabad", "Gautam Buddha Nagar", "Ghaziabad", "Ghazipur", "Gonda", "Gorakhpur", "Hamirpur", "Hapur", "Hardoi", "Hathras", "Jalaun", "Jaunpur", "Jhansi", "Kannauj", "Kanpur Dehat", "Kanpur Nagar", "Kasganj", "Kaushambi", "Kushinagar", "Lakhimpur Kheri", "Lalitpur", "Lucknow", "Maharajganj", "Mahoba", "Mainpuri", "Mathura", "Mau", "Meerut", "Mirzapur", "Moradabad", "Muzaffarnagar", "Pilibhit", "Pratapgarh", "Prayagraj", "Raebareli", "Rampur", "Saharanpur", "Sambhal", "Sant Kabir Nagar", "Shahjahanpur", "Shamli", "Shravasti", "Siddharthnagar", "Sitapur", "Sonbhadra", "Sultanpur", "Unnao", "Varanasi"],
+            "Uttarakhand": ["Almora", "Bageshwar", "Chamoli", "Champawat", "Dehradun", "Haridwar", "Nainital", "Pauri Garhwal", "Pithoragarh", "Rudraprayag", "Tehri Garhwal", "Udham Singh Nagar", "Uttarkashi"],
+            "West Bengal": ["Alipurduar", "Bankura", "Birbhum", "Cooch Behar", "Dakshin Dinajpur", "Darjeeling", "Hooghly", "Howrah", "Jalpaiguri", "Jhargram", "Kalimpong", "Kolkata", "Maldah", "Murshidabad", "Nadia", "North 24 Parganas", "Paschim Bardhaman", "Paschim Medinipur", "Purba Bardhaman", "Purba Medinipur", "Purulia", "South 24 Parganas", "Uttar Dinajpur"],
+            "Andaman and Nicobar Islands": ["Nicobar", "North and Middle Andaman", "South Andaman"],
+            "Chandigarh": ["Chandigarh"],
+            "Dadra and Nagar Haveli and Daman and Diu": ["Dadra and Nagar Haveli", "Daman", "Diu"],
+            "Jammu and Kashmir": ["Anantnag", "Bandipore", "Baramulla", "Budgam", "Doda", "Ganderbal", "Jammu", "Kathua", "Kishtwar", "Kulgam", "Kupwara", "Poonch", "Pulwama", "Rajouri", "Ramban", "Reasi", "Samba", "Shopian", "Srinagar", "Udhampur"],
+            "Ladakh": ["Kargil", "Leh"],
+            "Lakshadweep": ["Lakshadweep"],
+            "Delhi": ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"],
+            "Puducherry": ["Karaikal", "Mahe", "Puducherry", "Yanam"],
+        };
+
+        // Populates the District dropdown based on a chosen State. Called on
+        // profile-modal open and whenever the State select changes.
+        window.populatePmDistricts = function(selectedState, selectedDistrict) {
+            const distInput = document.getElementById('pm-district-input');
+            if (!distInput) return;
+            const list = window.INDIA_DISTRICTS_BY_STATE[selectedState] || [];
+            if (list.length === 0) {
+                distInput.innerHTML = '<option value="">Select State First</option>';
+                distInput.disabled = true;
+                return;
+            }
+            distInput.disabled = false;
+            distInput.innerHTML = '<option value="">Select District</option>' +
+                list.map(d => `<option value="${d}">${d}</option>`).join('');
+            if (selectedDistrict && list.includes(selectedDistrict)) {
+                distInput.value = selectedDistrict;
+            }
+        };
+
+        window.onPmStateChange = function() {
+            const stateInput = document.getElementById('pm-state-input');
+            window.populatePmDistricts(stateInput ? stateInput.value : "", "");
+        };
+
         window.openProfileModal = function() {
             const modal = document.getElementById('profile-modal');
             if (!modal) return;
@@ -5659,7 +5722,7 @@
             document.getElementById('pm-email').innerText = user.email || "No email set";
             document.getElementById('pm-phone').innerText = user.phone || "Not set";
             const idEl = document.getElementById('pm-studentid');
-            if (idEl) idEl.innerText = user.studentId || "Generating...";
+            if (idEl) idEl.innerText = user.studentId || (user.phone ? window.generateStudentId(user.phone) : "Not set — add phone number");
             const isPremium = (user.isPremium === "TRUE" || user.isPremium === true);
             const typeEl = document.getElementById('pm-type');
             if (isPremium) {
@@ -5685,24 +5748,30 @@
             const addrDisp = document.getElementById('pm-address-display');
             const stateDisp = document.getElementById('pm-state-display');
             const distDisp = document.getElementById('pm-district-display');
+            const pinDisp = document.getElementById('pm-pincode-display');
             const famDisp = document.getElementById('pm-familyphone-display');
             if (addrDisp) addrDisp.innerText = user.address || "Not set";
             if (stateDisp) stateDisp.innerText = user.state || "Not set";
             if (distDisp) distDisp.innerText = user.district || "Not set";
+            if (pinDisp) pinDisp.innerText = user.pincode || "Not set";
             if (famDisp) famDisp.innerText = user.familyPhone || "Not set";
 
             const addrInput = document.getElementById('pm-address-input');
             const stateInput = document.getElementById('pm-state-input');
-            const distInput = document.getElementById('pm-district-input');
+            const pinInput = document.getElementById('pm-pincode-input');
             const famInput = document.getElementById('pm-familyphone-input');
             if (addrInput) addrInput.value = user.address || "";
-            if (distInput) distInput.value = user.district || "";
+            if (pinInput) pinInput.value = user.pincode || "";
             if (famInput) famInput.value = user.familyPhone || "";
             if (stateInput && stateInput.options.length === 0) {
                 stateInput.innerHTML = '<option value="">Select State</option>' +
                     window.INDIAN_STATES_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
             }
             if (stateInput) stateInput.value = user.state || "";
+            // District dropdown depends on the chosen State, so it must be
+            // (re)built every time the modal opens, using whatever district
+            // was saved before (if it still matches the state's district list).
+            window.populatePmDistricts(user.state || "", user.district || "");
 
             window.togglePmEdit(false);
             modal.style.display = 'flex';
@@ -5710,8 +5779,8 @@
         };
 
         window.togglePmEdit = function(editing) {
-            const displays = ['pm-address-display', 'pm-state-display', 'pm-district-display', 'pm-familyphone-display'];
-            const inputs = ['pm-address-input', 'pm-state-input', 'pm-district-input', 'pm-familyphone-input'];
+            const displays = ['pm-address-display', 'pm-state-display', 'pm-district-display', 'pm-pincode-display', 'pm-familyphone-display'];
+            const inputs = ['pm-address-input', 'pm-state-input', 'pm-district-input', 'pm-pincode-input', 'pm-familyphone-input'];
             displays.forEach(id => { const el = document.getElementById(id);
                 if (el) el.style.display = editing ? 'none' : 'inline-block'; });
             inputs.forEach(id => { const el = document.getElementById(id);
@@ -5730,25 +5799,33 @@
             if (!uid) return window.showCustomAlert("Error", "Please log in again.", "⚠️");
             const address = (document.getElementById('pm-address-input')?.value || "").trim();
             const state = document.getElementById('pm-state-input')?.value || "";
-            const district = (document.getElementById('pm-district-input')?.value || "").trim();
+            const district = document.getElementById('pm-district-input')?.value || "";
+            const pincode = (document.getElementById('pm-pincode-input')?.value || "").trim();
             const familyPhone = (document.getElementById('pm-familyphone-input')?.value || "").trim();
+
+            if (pincode && !/^[0-9]{6}$/.test(pincode)) {
+                return window.showCustomAlert("Invalid PIN Code", "Pin Code 6 digits ka hona chahiye (e.g. 250001).", "⚠️");
+            }
 
             const saveBtn = document.getElementById('pm-save-btn');
             if (saveBtn) { saveBtn.innerText = "⏳ Saving...";
                 saveBtn.disabled = true; }
 
-            db.collection("users").doc(uid).update({ address, state, district, familyPhone }).then(() => {
-                window.studentInfo = Object.assign({}, window.studentInfo, { address, state, district, familyPhone });
+            db.collection("users").doc(uid).update({ address, state, district, pincode, familyPhone }).then(() => {
+                window.studentInfo = Object.assign({}, window.studentInfo, { address, state, district, pincode, familyPhone });
                 localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
                 if (saveBtn) { saveBtn.innerText = "💾 Save";
                     saveBtn.disabled = false; }
                 window.togglePmEdit(false);
                 window.openProfileModal();
-                window.showCustomAlert("Saved", "✅ Profile details updated! Ye rank calculation me use hoga.", "🎉");
+                // Small corner toast confirms the save reached the server —
+                // separate from window.showCustomAlert's full modal, which is
+                // too heavy for a routine "saved" confirmation.
+                window.showToast("Profile saved to server!", "✅");
             }).catch((err) => {
                 if (saveBtn) { saveBtn.innerText = "💾 Save";
                     saveBtn.disabled = false; }
-                window.showCustomAlert("Error", "Save failed: " + err.message, "❌");
+                window.showCustomAlert("Save Failed", "Address save nahi ho paya: " + err.message + "<br><br>Agar ye baar-baar ho raha hai to internet connection check karein ya app admin se sampark karein.", "❌");
             });
         };
 
@@ -6003,6 +6080,29 @@
 
         window.showCustomAlert = function(title, msg, icon = "⚠️") {
             window.showModal(icon, title, msg, false, null, null);
+        };
+
+        // Small auto-dismissing corner notification — used for quick "saved to
+        // server" confirmations where a full-screen modal would be overkill.
+        window.showToast = function(msg, icon = "✅") {
+            let holder = document.getElementById('mini-toast-holder');
+            if (!holder) {
+                holder = document.createElement('div');
+                holder.id = 'mini-toast-holder';
+                holder.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:999999999;display:flex;flex-direction:column;gap:8px;align-items:flex-end;';
+                document.body.appendChild(holder);
+            }
+            const toast = document.createElement('div');
+            toast.style.cssText = 'background:var(--bg-card);color:var(--text-main);border-left:4px solid var(--success);box-shadow:var(--shadow-lg);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;max-width:280px;opacity:0;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease;';
+            toast.innerHTML = `<span style="font-size:16px;">${icon}</span><span>${msg}</span>`;
+            holder.appendChild(toast);
+            requestAnimationFrame(() => { toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)'; });
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(8px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 2600);
         };
 
         window.showCustomConfirm = function(title, msg, onYes, icon = "❓") {
@@ -6472,7 +6572,7 @@
             const phone = window.tempAuthData.phone || storedData.phone;
             auth.createUserWithEmailAndPassword(email, pass).then((userCredential) => {
                 const user = userCredential.user;
-                const newStudentId = window.generateStudentId(user.uid);
+                const newStudentId = window.generateStudentId(phone);
                 return db.collection("users").doc(user.uid).set({
                     name: name,
                     email: email,
@@ -6543,7 +6643,7 @@
                             finalPhone = (enteredPhone || "").trim();
                         }
                         window.showLoadingModal("Creating your account...<br>Please wait.");
-                        const newStudentId = window.generateStudentId(user.uid);
+                        const newStudentId = window.generateStudentId(finalPhone);
                         return db.collection("users").doc(user.uid).set({
                             name: finalName,
                             email: user.email,
