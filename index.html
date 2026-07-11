@@ -483,9 +483,7 @@
             transform: translateY(-1px);
         }
         .header-menu-dropdown {
-            position: absolute;
-            top: calc(100% + 10px);
-            right: 0;
+            position: fixed;
             min-width: 210px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -495,7 +493,7 @@
             display: none;
             flex-direction: column;
             gap: 2px;
-            z-index: 500;
+            z-index: 999999999;
             animation: fadeSlideIn 0.18s ease;
         }
         .header-menu-dropdown.open {
@@ -1171,6 +1169,17 @@
         }
         #profile-modal .pm-box .pm-detail .pm-value.free {
             color: var(--text-muted);
+        }
+        #profile-modal .pm-box .pm-edit-input {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 8px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--primary);
+            background: var(--bg-input);
+            color: var(--text-main);
+            max-width: 150px;
+            text-align: right;
         }
 
         /* ---- Profile Photo Lightbox ---- */
@@ -4780,6 +4789,10 @@
             <div class="pm-name" id="pm-name">Student</div>
             <div class="pm-email" id="pm-email">student@email.com</div>
             <div class="pm-detail">
+                <span class="pm-label">🆔 Student ID</span>
+                <span class="pm-value" id="pm-studentid" style="font-weight:800;letter-spacing:0.5px;">...</span>
+            </div>
+            <div class="pm-detail">
                 <span class="pm-label">📱 Phone</span>
                 <span class="pm-value" id="pm-phone">Not set</span>
             </div>
@@ -4787,9 +4800,41 @@
                 <span class="pm-label">📋 Account Type</span>
                 <span class="pm-value" id="pm-type">FREE</span>
             </div>
-            <div class="pm-detail" style="border-bottom:none;padding-top:12px;justify-content:center;">
+            <div class="pm-detail">
+                <span class="pm-label">🏠 Address</span>
+                <span class="pm-value" id="pm-address-display">Not set</span>
+                <input class="pm-edit-input" id="pm-address-input" type="text" placeholder="House no, area, city" style="display:none;" />
+            </div>
+            <div class="pm-detail">
+                <span class="pm-label">🗺️ State</span>
+                <span class="pm-value" id="pm-state-display">Not set</span>
+                <select class="pm-edit-input" id="pm-state-input" style="display:none;"></select>
+            </div>
+            <div class="pm-detail">
+                <span class="pm-label">📍 District</span>
+                <span class="pm-value" id="pm-district-display">Not set</span>
+                <input class="pm-edit-input" id="pm-district-input" type="text" placeholder="e.g. Meerut" style="display:none;" />
+            </div>
+            <div class="pm-detail" style="border-bottom:none;">
+                <span class="pm-label">👨‍👩‍👦 Family Phone</span>
+                <span class="pm-value" id="pm-familyphone-display">Not set</span>
+                <input class="pm-edit-input" id="pm-familyphone-input" type="tel" placeholder="Parent/Guardian number" style="display:none;" />
+            </div>
+            <div class="pm-detail" style="border-bottom:none;padding-top:12px;justify-content:center;gap:8px;">
+                <button class="btn btn-outline btn-sm" id="pm-edit-btn" onclick="window.togglePmEdit(true)">✏️ Edit Profile</button>
+                <button class="btn btn-success btn-sm" id="pm-save-btn" style="display:none;" onclick="window.savePmDetails()">💾 Save</button>
+                <button class="btn btn-outline btn-sm" id="pm-cancel-btn" style="display:none;" onclick="window.togglePmEdit(false)">Cancel</button>
                 <button class="btn btn-outline btn-sm" onclick="window.closeProfileModal()">Close</button>
             </div>
+        </div>
+    </div>
+
+    <!-- ===== TEST ROOM MODAL (group live test with friends) ===== -->
+    <div id="test-room-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999999999;align-items:center;justify-content:center;padding:16px;">
+        <div style="background:var(--bg-card);border-radius:var(--radius-lg);max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:20px;position:relative;box-shadow:var(--shadow-lg);">
+            <button onclick="window.closeTestRoomModal()" style="position:absolute;top:10px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);">✕</button>
+            <h3 style="margin:0 0 12px 0;color:var(--primary);font-size:16px;">👥 Test Room</h3>
+            <div id="trm-body">Loading...</div>
         </div>
     </div>
 
@@ -4876,7 +4921,7 @@
                                 <button class="hmd-item" onclick="window.closeHeaderMenu();window.goToMyReport()">📈 My Report</button>
                                 <button class="hmd-item" onclick="window.closeHeaderMenu();window.showWeakQuestions()">💪 My Weak Questions</button>
                                 <button class="hmd-item" onclick="window.closeHeaderMenu();window.goToLiveTests()">🔴 Live Tests</button>
-                                <button class="hmd-item" onclick="window.closeHeaderMenu();window.openProfileUpload();window.goToHome();">📸 Change Photo</button>
+                                <button class="hmd-item" onclick="window.closeHeaderMenu();window.openProfileUpload();window.scrollTo(0,0);">📸 Change Photo</button>
                                 <div class="hmd-divider"></div>
                                 <button class="hmd-item hmd-danger" onclick="window.closeHeaderMenu();window.handleStudentLogout()">🚪 Logout</button>
                             </div>
@@ -5006,10 +5051,6 @@
         <div id="student-dashboard-view" class="view-section">
             <div class="dash-welcome-box" id="sticky-welcome-box">
                 <div class="greeting">👋 Welcome, <span class="name" id="dash-user-name">Student</span> <span id="premium-badge" class="premium-badge" style="background:var(--text-muted);color:#fff;">FREE</span></div>
-                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                    <button class="btn btn-outline btn-sm" onclick="window.openProfileUpload()">📸 Photo</button>
-                    <button class="btn btn-danger btn-sm" onclick="window.handleStudentLogout()">Logout 🔄</button>
-                </div>
             </div>
 
             <div id="profile-upload-section" style="display:none;margin-bottom:14px;">
@@ -5058,6 +5099,7 @@
                     <div class="loader-mini" style="width:28px; height:28px;"></div> <br />
                     <span style="color:var(--text-muted); margin-top:8px; display:inline-block; font-size:13px;">Loading live tests...</span>
                 </div>
+                <div id="my-room-invites"></div>
                 <div id="live-tests-ongoing"></div>
 
                 <div style="margin-top:22px;">
@@ -5087,6 +5129,7 @@
                 </div>
 
                 <div id="st-hist-content">
+                    <div id="my-rank-card" style="background:rgba(37,99,235,0.06);border:2px solid var(--primary);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;"></div>
                     <div style="background:rgba(15,157,88,0.08);border:2px solid var(--success);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;">
                         <h3 style="margin:0 0 12px 0;color:var(--success);text-align:center;font-size:17px;">📊 Overall Report Card</h3>
                         <div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:8px;text-align:center;">
@@ -5405,6 +5448,37 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        /* ==========================================================================
+           STUDENT ID — every registered student gets a permanent unique ID.
+           Deterministic from their Firebase UID (no central counter needed, so it
+           works from pure client code and is safe under the existing Firestore
+           rules, which only allow a user to write their OWN user document).
+           ========================================================================== */
+        window.generateStudentId = function(uid) {
+            const str = String(uid || Math.random().toString(36));
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+            }
+            const num = 100000 + (hash % 900000); // always exactly 6 digits: 100000-999999
+            return String(num);
+        };
+
+        // Backfills a studentId onto ANY already-registered user the first time
+        // they load the app after this feature shipped, and assigns one instantly
+        // to brand-new registrations. Safe to call repeatedly — no-ops if a valid
+        // 6-digit id is already present. Also auto-fixes any old-format id
+        // (e.g. the earlier "TB-XXXXXX" scheme) by regenerating it as a clean
+        // 6-digit number, since that's the format everyone should have now.
+        window.ensureStudentId = function(uid, userData) {
+            if (!uid) return Promise.resolve(userData && userData.studentId);
+            const existing = userData && userData.studentId;
+            const isValidSixDigit = existing && /^[0-9]{6}$/.test(String(existing));
+            if (isValidSixDigit) return Promise.resolve(existing);
+            const newId = window.generateStudentId(uid);
+            return db.collection("users").doc(uid).update({ studentId: newId }).then(() => newId).catch(() => newId);
+        };
+
         // Keeps the logged-in user's data (photo, premium status, name...) in
         // sync with Firestore on every page load / every device — not just at
         // the moment of interactive login. Without this, a device that was
@@ -5425,6 +5499,15 @@
                     window.studentInfo = Object.assign({}, window.studentInfo, freshData, { uid: user.uid });
                     localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
                     if (typeof window.updateProfileUI === 'function') window.updateProfileUI();
+
+                    // Auto-generate a Student ID for this account if it doesn't have one yet
+                    // (covers every already-registered student automatically).
+                    window.ensureStudentId(user.uid, freshData).then((sid) => {
+                        if (sid && window.studentInfo.studentId !== sid) {
+                            window.studentInfo.studentId = sid;
+                            localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                        }
+                    });
                 }
                 // Always resync attempted-tests from the server for THIS uid,
                 // so a fresh account never shows stale/borrowed progress.
@@ -5559,6 +5642,15 @@
         /* ==========================================================================
            PROFILE MODAL
            ========================================================================== */
+        window.INDIAN_STATES_LIST = [
+            "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+            "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra",
+            "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
+            "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+            "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+            "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+        ];
+
         window.openProfileModal = function() {
             const modal = document.getElementById('profile-modal');
             if (!modal) return;
@@ -5566,6 +5658,8 @@
             document.getElementById('pm-name').innerText = user.name || "Student";
             document.getElementById('pm-email').innerText = user.email || "No email set";
             document.getElementById('pm-phone').innerText = user.phone || "Not set";
+            const idEl = document.getElementById('pm-studentid');
+            if (idEl) idEl.innerText = user.studentId || "Generating...";
             const isPremium = (user.isPremium === "TRUE" || user.isPremium === true);
             const typeEl = document.getElementById('pm-type');
             if (isPremium) {
@@ -5586,8 +5680,76 @@
                 avatarText.style.display = 'block';
                 avatarText.innerText = (user.name || 'S').charAt(0).toUpperCase();
             }
+
+            // Editable location/contact details
+            const addrDisp = document.getElementById('pm-address-display');
+            const stateDisp = document.getElementById('pm-state-display');
+            const distDisp = document.getElementById('pm-district-display');
+            const famDisp = document.getElementById('pm-familyphone-display');
+            if (addrDisp) addrDisp.innerText = user.address || "Not set";
+            if (stateDisp) stateDisp.innerText = user.state || "Not set";
+            if (distDisp) distDisp.innerText = user.district || "Not set";
+            if (famDisp) famDisp.innerText = user.familyPhone || "Not set";
+
+            const addrInput = document.getElementById('pm-address-input');
+            const stateInput = document.getElementById('pm-state-input');
+            const distInput = document.getElementById('pm-district-input');
+            const famInput = document.getElementById('pm-familyphone-input');
+            if (addrInput) addrInput.value = user.address || "";
+            if (distInput) distInput.value = user.district || "";
+            if (famInput) famInput.value = user.familyPhone || "";
+            if (stateInput && stateInput.options.length === 0) {
+                stateInput.innerHTML = '<option value="">Select State</option>' +
+                    window.INDIAN_STATES_LIST.map(s => `<option value="${s}">${s}</option>`).join('');
+            }
+            if (stateInput) stateInput.value = user.state || "";
+
+            window.togglePmEdit(false);
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        };
+
+        window.togglePmEdit = function(editing) {
+            const displays = ['pm-address-display', 'pm-state-display', 'pm-district-display', 'pm-familyphone-display'];
+            const inputs = ['pm-address-input', 'pm-state-input', 'pm-district-input', 'pm-familyphone-input'];
+            displays.forEach(id => { const el = document.getElementById(id);
+                if (el) el.style.display = editing ? 'none' : 'inline-block'; });
+            inputs.forEach(id => { const el = document.getElementById(id);
+                if (el) el.style.display = editing ? 'inline-block' : 'none'; });
+            const editBtn = document.getElementById('pm-edit-btn');
+            const saveBtn = document.getElementById('pm-save-btn');
+            const cancelBtn = document.getElementById('pm-cancel-btn');
+            if (editBtn) editBtn.style.display = editing ? 'none' : 'inline-block';
+            if (saveBtn) saveBtn.style.display = editing ? 'inline-block' : 'none';
+            if (cancelBtn) cancelBtn.style.display = editing ? 'inline-block' : 'none';
+            if (!editing) window.openProfileModal.__resetting = false;
+        };
+
+        window.savePmDetails = function() {
+            const uid = window.studentInfo && window.studentInfo.uid;
+            if (!uid) return window.showCustomAlert("Error", "Please log in again.", "⚠️");
+            const address = (document.getElementById('pm-address-input')?.value || "").trim();
+            const state = document.getElementById('pm-state-input')?.value || "";
+            const district = (document.getElementById('pm-district-input')?.value || "").trim();
+            const familyPhone = (document.getElementById('pm-familyphone-input')?.value || "").trim();
+
+            const saveBtn = document.getElementById('pm-save-btn');
+            if (saveBtn) { saveBtn.innerText = "⏳ Saving...";
+                saveBtn.disabled = true; }
+
+            db.collection("users").doc(uid).update({ address, state, district, familyPhone }).then(() => {
+                window.studentInfo = Object.assign({}, window.studentInfo, { address, state, district, familyPhone });
+                localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                if (saveBtn) { saveBtn.innerText = "💾 Save";
+                    saveBtn.disabled = false; }
+                window.togglePmEdit(false);
+                window.openProfileModal();
+                window.showCustomAlert("Saved", "✅ Profile details updated! Ye rank calculation me use hoga.", "🎉");
+            }).catch((err) => {
+                if (saveBtn) { saveBtn.innerText = "💾 Save";
+                    saveBtn.disabled = false; }
+                window.showCustomAlert("Error", "Save failed: " + err.message, "❌");
+            });
         };
 
         window.closeProfileModal = function() {
@@ -5657,7 +5819,17 @@
         window.toggleHeaderMenu = function(e) {
             if (e) e.stopPropagation();
             const dd = document.getElementById('header-menu-dropdown');
-            if (!dd) return;
+            const btn = document.getElementById('header-menu-btn');
+            if (!dd || !btn) return;
+            const willOpen = !dd.classList.contains('open');
+            if (willOpen) {
+                const r = btn.getBoundingClientRect();
+                dd.style.top = (r.bottom + 8) + 'px';
+                let leftPos = r.right - 210;
+                if (leftPos < 8) leftPos = 8;
+                dd.style.left = leftPos + 'px';
+                dd.style.right = 'auto';
+            }
             dd.classList.toggle('open');
         };
         window.closeHeaderMenu = function() {
@@ -5747,24 +5919,43 @@
             return JSON.parse(localStorage.getItem('mockSarthiHidden')) || [];
         };
 
+        window.isLiveTestCurrentlyLive = function(t) {
+            if (t.testMode !== 'live') return false;
+            const now = new Date();
+            const startOk = t.liveStart ? now >= new Date(t.liveStart) : true;
+            const endOk = t.liveEnd ? now <= new Date(t.liveEnd) : true;
+            return startOk && endOk;
+        };
+        window.isLiveTestExpired = function(t) {
+            return t.testMode === 'live' && t.liveEnd && new Date() > new Date(t.liveEnd);
+        };
+
         window.getAllMergedTests = function() {
             const hidden = window.getHiddenTests();
             const unifiedMap = new Map();
             if (window.globalActiveTests && window.globalActiveTests.length > 0) {
                 window.globalActiveTests.forEach(t => {
-                    if (!hidden.includes(t.code) && t.testMode !== 'live') unifiedMap.set(t.code, t);
+                    if (hidden.includes(t.code)) return;
+                    // A live-mode test only stays out of the normal Active list while
+                    // its live window hasn't ended yet. Once liveEnd passes, it
+                    // automatically reappears under its original board/exam/category
+                    // just like any other active test.
+                    if (t.testMode === 'live' && !window.isLiveTestExpired(t)) return;
+                    unifiedMap.set(t.code, t);
                 });
             }
             const localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
             localTests.forEach(lt => {
-                if (lt.isActive !== false && !hidden.includes(lt.code) && lt.testMode !== 'live') unifiedMap.set(lt.code, lt);
+                if (lt.isActive === false || hidden.includes(lt.code)) return;
+                if (lt.testMode === 'live' && !window.isLiveTestExpired(lt)) return;
+                unifiedMap.set(lt.code, lt);
             });
             return Array.from(unifiedMap.values());
         };
 
         window.getAllLiveTests = function() {
             const hidden = window.getHiddenTests();
-            const all = (window.globalActiveTests || []).filter(t => t.testMode === 'live' && !hidden.includes(t.code) && t.isActive !== false);
+            const all = (window.globalActiveTests || []).filter(t => t.testMode === 'live' && !hidden.includes(t.code) && t.isActive !== false && !window.isLiveTestExpired(t));
             return all;
         };
 
@@ -6281,6 +6472,7 @@
             const phone = window.tempAuthData.phone || storedData.phone;
             auth.createUserWithEmailAndPassword(email, pass).then((userCredential) => {
                 const user = userCredential.user;
+                const newStudentId = window.generateStudentId(user.uid);
                 return db.collection("users").doc(user.uid).set({
                     name: name,
                     email: email,
@@ -6288,15 +6480,16 @@
                     isPremium: false,
                     uid: user.uid,
                     photoURL: "",
+                    studentId: newStudentId,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            }).then(() => {
+                }).then(() => newStudentId);
+            }).then((newStudentId) => {
                 window.closeModal();
-                const userData = { name, email, phone, isPremium: false, photoURL: "" };
+                const userData = { name, email, phone, isPremium: false, photoURL: "", studentId: newStudentId };
                 localStorage.setItem('mockSarthiUser', JSON.stringify(userData));
                 window.studentInfo = userData;
                 sessionStorage.removeItem('sessionRegData');
-                window.showCustomAlert("Welcome!", "Account created successfully! 🎉", "🎓");
+                window.showCustomAlert("Welcome!", `Account created successfully! 🎉<br><br>🆔 Your Student ID: <b>${newStudentId}</b>`, "🎓");
                 setTimeout(window.checkPendingTestOrGoHome, 1500);
             }).catch((error) => {
                 window.closeModal();
@@ -6335,6 +6528,12 @@
                         window.closeModal();
                         window.updateProfileUI();
                         window.checkPendingTestOrGoHome();
+                        window.ensureStudentId(user.uid, userData).then((sid) => {
+                            if (sid && window.studentInfo.studentId !== sid) {
+                                window.studentInfo.studentId = sid;
+                                localStorage.setItem('mockSarthiUser', JSON.stringify(window.studentInfo));
+                            }
+                        });
                     } else {
                         let finalName = prefillName || user.displayName || "Student";
                         let finalPhone = prefillPhone;
@@ -6344,6 +6543,7 @@
                             finalPhone = (enteredPhone || "").trim();
                         }
                         window.showLoadingModal("Creating your account...<br>Please wait.");
+                        const newStudentId = window.generateStudentId(user.uid);
                         return db.collection("users").doc(user.uid).set({
                             name: finalName,
                             email: user.email,
@@ -6351,13 +6551,14 @@
                             isPremium: false,
                             uid: user.uid,
                             photoURL: user.photoURL || "",
+                            studentId: newStudentId,
                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                         }).then(() => {
-                            const userData = { name: finalName, email: user.email, phone: finalPhone, isPremium: false, photoURL: user.photoURL || "" };
+                            const userData = { name: finalName, email: user.email, phone: finalPhone, isPremium: false, photoURL: user.photoURL || "", studentId: newStudentId };
                             localStorage.setItem('mockSarthiUser', JSON.stringify(userData));
                             window.studentInfo = userData;
                             window.closeModal();
-                            window.showCustomAlert("Welcome!", "Account created successfully! 🎉", "🎓");
+                            window.showCustomAlert("Welcome!", `Account created successfully! 🎉<br><br>🆔 Your Student ID: <b>${newStudentId}</b>`, "🎓");
                             setTimeout(window.checkPendingTestOrGoHome, 1200);
                         });
                     }
@@ -7098,14 +7299,12 @@
             if (data.testMode === 'live') {
                 const now = new Date();
                 const startOk = data.liveStart ? now >= new Date(data.liveStart) : true;
-                const endOk = data.liveEnd ? now <= new Date(data.liveEnd) : true;
                 if (!startOk) {
                     const s = new Date(data.liveStart).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
                     return window.showErrorView(`🔴 Ye Live Test abhi shuru nahi hua hai. Yeh ${s} se live hoga.`);
                 }
-                if (!endOk) {
-                    return window.showErrorView("🔴 Is Live Test ka time window khatam ho chuka hai.");
-                }
+                // Once liveEnd has passed, the test simply behaves like a normal
+                // Active test again — no block here (see getAllMergedTests).
             }
             const localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
             const localTest = localTests.find(t => t.code === data.code);
@@ -7262,6 +7461,7 @@
                 setTimeout(renderNow, 900);
             }
             window.loadUpcomingScheduleForStudent();
+            window.checkMyRoomInvites();
 
             clearInterval(window._liveCountdownInterval);
             window._liveCountdownInterval = setInterval(() => {
@@ -7314,6 +7514,7 @@
                             <span class="badge" style="font-size:9px;">Qs: ${t.qs||(t.questions?t.questions.length:0)}</span>
                         </div>
                         <button class="btn btn-danger" style="width:100%;margin-top:6px;" onclick="window.navigateToTestEntry('${t.code}','${board.replace(/'/g,"\\'")}','${exam.replace(/'/g,"\\'")}','${cat.replace(/'/g,"\\'")}','${sub.replace(/'/g,"\\'")}')">🚀 Start Live Test Now</button>
+                        <button class="btn btn-outline" style="width:100%;margin-top:6px;" onclick="window.createTestRoom('${t.code}','${board.replace(/'/g,"\\'")}','${exam.replace(/'/g,"\\'")}','${cat.replace(/'/g,"\\'")}','${sub.replace(/'/g,"\\'")}')">👥 Create Test Room (Play with Friends)</button>
                     </div>
                 `;
             });
@@ -7385,6 +7586,188 @@
                 box.innerHTML = h;
             }).catch((error) => {
                 box.innerHTML = `<p style="text-align:center;color:var(--danger);font-size:11px;">Failed to load schedule.</p>`;
+            });
+        };
+
+        /* ==========================================================================
+           TEST ROOMS — take a Live Test together with friends.
+           Host creates a room, invites friends by their Student ID, and when the
+           host starts the room, every invited member is redirected into the same
+           test at the same moment. Results/rank are then compared only within
+           that room (in addition to the normal All India report).
+           ========================================================================== */
+        window._roomUnsub = null;
+
+        window.createTestRoom = function(testCode, board, exam, category, subject) {
+            const me = window.studentInfo;
+            if (!me || !me.uid) return window.showCustomAlert("Error", "Please log in again.", "⚠️");
+            const roomId = "RM" + Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10);
+            const roomObj = {
+                hostUid: me.uid,
+                hostName: me.name || "Host",
+                testCode, board, exam, category, subject,
+                status: "waiting",
+                createdAt: new Date().toISOString(),
+                memberUids: [me.uid],
+                memberInfo: {
+                    [me.uid]: { name: me.name || "Host", studentId: me.studentId || "", submitted: false, score: null }
+                }
+            };
+            db.collection("testRooms").doc(roomId).set(roomObj).then(() => {
+                window.openTestRoomModal(roomId, true);
+            }).catch((err) => {
+                window.showCustomAlert("Error", "Room create failed: " + err.message + (err.code === 'permission-denied' ? "\n\n⚠️ Firestore rules me 'testRooms' collection ka rule add karwana hoga." : ""), "❌");
+            });
+        };
+
+        window.openTestRoomModal = function(roomId, isHost) {
+            const modal = document.getElementById('test-room-modal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+            window.currentOpenRoomId = roomId;
+            if (window._roomUnsub) { window._roomUnsub();
+                window._roomUnsub = null; }
+            window._roomUnsub = db.collection("testRooms").doc(roomId).onSnapshot((doc) => {
+                if (!doc.exists) return;
+                window.renderTestRoomBody(roomId, doc.data(), isHost);
+            }, (err) => {
+                document.getElementById('trm-body').innerHTML = `<p style="color:var(--danger);font-size:12px;">Room load failed: ${err.message}</p>`;
+            });
+        };
+
+        window.closeTestRoomModal = function() {
+            const modal = document.getElementById('test-room-modal');
+            if (modal) modal.style.display = 'none';
+            if (window._roomUnsub) { window._roomUnsub();
+                window._roomUnsub = null; }
+        };
+
+        window.renderTestRoomBody = function(roomId, room, isHost) {
+            const body = document.getElementById('trm-body');
+            if (!body) return;
+            const me = window.studentInfo;
+            const amIHost = room.hostUid === (me && me.uid);
+            const members = room.memberUids || [];
+
+            // Member who is NOT the host: auto-redirect the instant the host starts.
+            if (!amIHost && room.status === 'started' && !window._roomAutoStarted) {
+                window._roomAutoStarted = true;
+                window.currentRoomId = roomId;
+                window.closeTestRoomModal();
+                window.navigateToTestEntry(room.testCode, room.board, room.exam, room.category, room.subject);
+                return;
+            }
+            if (amIHost && room.status === 'started' && !window._roomAutoStarted) {
+                window._roomAutoStarted = true;
+                window.currentRoomId = roomId;
+                window.closeTestRoomModal();
+                window.navigateToTestEntry(room.testCode, room.board, room.exam, room.category, room.subject);
+                return;
+            }
+
+            let membersHtml = members.map(uid => {
+                const info = (room.memberInfo && room.memberInfo[uid]) || {};
+                const isHostBadge = uid === room.hostUid ? ' <span class="badge" style="background:var(--primary);color:#fff;font-size:8px;">HOST</span>' : '';
+                const submittedBadge = info.submitted ? ` <span class="badge" style="background:var(--success);color:#fff;font-size:8px;">✅ Submitted (${info.score||0})</span>` : '';
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-subtle);border-radius:var(--radius-sm);margin-bottom:6px;font-size:12px;"><span><b>${info.name||'Student'}</b> ${info.studentId ? '(ID: '+info.studentId+')' : ''}${isHostBadge}</span>${submittedBadge}</div>`;
+            }).join('');
+
+            let html = `
+                <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px 0;">🎓 ${room.board} — ${room.exam} | 📂 ${room.category}</p>
+                <div style="background:rgba(37,99,235,0.08);border:1px dashed var(--primary);border-radius:var(--radius);padding:10px;text-align:center;margin-bottom:12px;">
+                    <div style="font-size:10px;color:var(--text-muted);">Room Code (share with friends)</div>
+                    <div style="font-size:20px;font-weight:800;letter-spacing:2px;color:var(--primary);">${roomId}</div>
+                </div>
+                <h4 style="font-size:12px;margin:0 0 6px 0;color:var(--text-main);">👥 Members (${members.length})</h4>
+                ${membersHtml}
+            `;
+
+            if (amIHost && room.status === 'waiting') {
+                html += `
+                    <div style="display:flex;gap:6px;margin-top:12px;">
+                        <input type="text" id="trm-friend-id" placeholder="Friend's 6-digit Student ID" style="flex:1;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border-color);" />
+                        <button class="btn btn-primary btn-sm" onclick="window.addFriendToRoom('${roomId}')">➕ Add</button>
+                    </div>
+                    <button class="btn btn-danger" style="width:100%;margin-top:14px;" onclick="window.startRoomTest('${roomId}')">🚀 Start Room Test Now (Everyone)</button>
+                `;
+            } else if (!amIHost && room.status === 'waiting') {
+                html += `<p style="text-align:center;font-size:12px;color:var(--warning);margin-top:12px;">⏳ Waiting for host to start the test... (this will auto-open when they do)</p>`;
+            }
+
+            html += `<button class="btn btn-outline" style="width:100%;margin-top:10px;" onclick="window.showRoomLeaderboard('${roomId}')">🏆 Room Leaderboard</button>`;
+            body.innerHTML = html;
+        };
+
+        window.addFriendToRoom = function(roomId) {
+            const input = document.getElementById('trm-friend-id');
+            const sid = input ? input.value.trim() : "";
+            if (!/^[0-9]{6}$/.test(sid)) return window.showCustomAlert("Invalid ID", "6-digit Student ID daalein.", "⚠️");
+            db.collection("users").where("studentId", "==", sid).limit(1).get().then((snap) => {
+                if (snap.empty) return window.showCustomAlert("Not Found", "Is Student ID ka koi account nahi mila.", "❌");
+                const doc = snap.docs[0];
+                const friendUid = doc.id;
+                const friendData = doc.data();
+                db.collection("testRooms").doc(roomId).update({
+                    memberUids: firebase.firestore.FieldValue.arrayUnion(friendUid),
+                    [`memberInfo.${friendUid}`]: { name: friendData.name || "Student", studentId: sid, submitted: false, score: null }
+                }).then(() => {
+                    if (input) input.value = "";
+                }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
+            }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
+        };
+
+        window.startRoomTest = function(roomId) {
+            window.showCustomConfirm("Start Test", "Sabhi members ke liye test abhi shuru ho jayega. Confirm?", () => {
+                db.collection("testRooms").doc(roomId).update({ status: "started", startedAt: new Date().toISOString() })
+                    .catch((err) => window.showCustomAlert("Error", err.message, "❌"));
+            }, "🚀");
+        };
+
+        window.checkMyRoomInvites = function() {
+            const box = document.getElementById('my-room-invites');
+            const me = window.studentInfo;
+            if (!box || !me || !me.uid) return;
+            db.collection("testRooms").where("memberUids", "array-contains", me.uid).get().then((snap) => {
+                const rooms = [];
+                snap.forEach(doc => { const d = doc.data();
+                    if (d.status !== 'ended') rooms.push({ id: doc.id, ...d }); });
+                if (rooms.length === 0) { box.innerHTML = "";
+                    return; }
+                let html = "";
+                rooms.forEach(r => {
+                    const amIHost = r.hostUid === me.uid;
+                    html += `
+                        <div class="live-test-card" style="border-color:var(--primary);">
+                            <span class="upcoming-badge" style="background:var(--primary);color:#fff;">👥 Test Room ${r.status === 'started' ? '(Live Now)' : '(Waiting)'}</span>
+                            <div style="margin-top:8px;font-weight:800;color:var(--primary);font-size:14px;">🎓 ${r.exam} — ${r.board}</div>
+                            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${amIHost ? 'You created this room' : 'Hosted by ' + r.hostName} • Room: ${r.id}</div>
+                            <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="window.openTestRoomModal('${r.id}', ${amIHost})">🔓 Open Room</button>
+                        </div>
+                    `;
+                });
+                box.innerHTML = html;
+            }).catch(() => { box.innerHTML = ""; });
+        };
+
+        window.showRoomLeaderboard = function(roomId) {
+            db.collection("testRooms").doc(roomId).get().then((roomDoc) => {
+                if (!roomDoc.exists) return;
+                const room = roomDoc.data();
+                db.collection("results").where("roomId", "==", roomId).get().then((snap) => {
+                    const scores = [];
+                    snap.forEach(d => scores.push(d.data()));
+                    scores.sort((a, b) => (b.score || 0) - (a.score || 0));
+                    let html = `<h3 style="text-align:center;color:var(--primary);font-size:16px;margin-bottom:10px;">🏆 Room Leaderboard</h3>`;
+                    if (scores.length === 0) {
+                        html += `<p style="text-align:center;color:var(--text-muted);font-size:12px;">Abhi tak kisi ne submit nahi kiya.</p>`;
+                    } else {
+                        scores.forEach((s, idx) => {
+                            const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : (idx + 1) + '.'));
+                            html += `<div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--bg-subtle);border-radius:var(--radius-sm);margin-bottom:6px;font-size:13px;"><span>${medal} <b>${s.name||'Student'}</b></span><b style="color:var(--success);">${s.score||0}</b></div>`;
+                        });
+                    }
+                    window.showCustomAlert("Room Leaderboard", html, "🏆");
+                }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
             });
         };
 
@@ -10259,13 +10642,13 @@
            SOLUTION button included, answer shows full option text (FIXED)
            ========================================================================== */
         window.fetchStudentHistory = function() {
-            if (!window.studentInfo || !window.studentInfo.phone) {
-                return window.showCustomAlert("Error", "No registered mobile number found. Cannot fetch report.", "⚠️");
+            const uid = window.studentInfo && window.studentInfo.uid;
+            const phoneInput = window.studentInfo && window.studentInfo.phone;
+            if (!uid && !phoneInput) {
+                return window.showCustomAlert("Error", "No account/mobile number found. Please log in again.", "⚠️");
             }
-            const phoneInput = window.studentInfo.phone;
-            const uid = window.studentInfo.uid;
             const dispPhone = document.getElementById('disp-hist-phone');
-            if (dispPhone) dispPhone.innerText = phoneInput;
+            if (dispPhone) dispPhone.innerText = phoneInput || "—";
             const histLoader = document.getElementById('st-hist-loader');
             const histList = document.getElementById('st-hist-list');
             if (histLoader) histLoader.style.display = 'block';
@@ -10279,10 +10662,22 @@
             query.get().then(snap => {
                 const records = [];
                 snap.forEach(d => records.push(d.data()));
-                window.handleStudentHistory({ records });
+                // If a uid-based query legitimately finds nothing (e.g. very old
+                // results saved before "uid" existed on the record), fall back
+                // to a phone-based lookup so the report never appears empty
+                // just because of that historical gap.
+                if (records.length === 0 && uid && phoneInput) {
+                    db.collection("results").where("phone", "==", phoneInput).get().then(snap2 => {
+                        const records2 = [];
+                        snap2.forEach(d => records2.push(d.data()));
+                        window.handleStudentHistory({ records: records2 });
+                    }).catch(() => window.handleStudentHistory({ records: [] }));
+                } else {
+                    window.handleStudentHistory({ records });
+                }
             }).catch(err => {
                 if (histLoader) histLoader.style.display = 'none';
-                window.showCustomAlert("Error", "Failed to fetch history from database.", "❌");
+                window.showCustomAlert("Error", "Failed to fetch history from database: " + err.message, "❌");
             });
         };
 
@@ -10350,6 +10745,73 @@
             list.innerHTML = h;
 
             window.renderSubjectFilterAndTopicPerformance(allSavedTests, records);
+            window.computeAndShowRanks();
+        };
+
+        /* ==========================================================================
+           ALL INDIA / STATE / DISTRICT RANK — based on total score across "results",
+           cross-referenced with each student's state/district on their "users" doc.
+           ========================================================================== */
+        window.computeAndShowRanks = function() {
+            const uid = window.studentInfo && window.studentInfo.uid;
+            const rankCard = document.getElementById('my-rank-card');
+            if (!uid || !rankCard) return;
+            rankCard.innerHTML = "<div style='text-align:center;padding:10px;'><div class='loader-mini' style='width:22px;height:22px;'></div></div>";
+            Promise.all([
+                db.collection("results").get(),
+                db.collection("users").get()
+            ]).then(([resultsSnap, usersSnap]) => {
+                const userMeta = {};
+                usersSnap.forEach(doc => { userMeta[doc.id] = doc.data(); });
+                const totals = {};
+                resultsSnap.forEach(doc => {
+                    const r = doc.data();
+                    if (!r.uid) return;
+                    totals[r.uid] = (totals[r.uid] || 0) + (r.score || 0);
+                });
+                const rows = Object.keys(totals).map(u => ({
+                    uid: u,
+                    score: totals[u],
+                    state: (userMeta[u] && userMeta[u].state) || "",
+                    district: (userMeta[u] && userMeta[u].district) || ""
+                }));
+                rows.sort((a, b) => b.score - a.score);
+
+                const myState = (userMeta[uid] && userMeta[uid].state) || "";
+                const myDistrict = (userMeta[uid] && userMeta[uid].district) || "";
+                const myIdx = rows.findIndex(r => r.uid === uid);
+
+                if (myIdx === -1) {
+                    rankCard.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:12px;margin:0;'>Rank ke liye pehle koi test complete karein.</p>";
+                    return;
+                }
+
+                const allIndiaRank = myIdx + 1;
+                const totalStudents = rows.length;
+
+                const stateRows = myState ? rows.filter(r => r.state === myState) : [];
+                const stateRank = myState ? (stateRows.findIndex(r => r.uid === uid) + 1) : null;
+
+                const distRows = myDistrict ? rows.filter(r => r.district === myDistrict && r.state === myState) : [];
+                const distRank = myDistrict ? (distRows.findIndex(r => r.uid === uid) + 1) : null;
+
+                let html = `<h4 style="margin:0 0 10px 0;color:var(--primary);font-size:15px;text-align:center;">🏆 My Rank</h4>
+                    <div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;text-align:center;">
+                        <div><div style="font-size:11px;color:var(--text-muted);">🇮🇳 All India</div><b style="font-size:20px;color:var(--primary);">#${allIndiaRank}</b><div style="font-size:10px;color:var(--text-muted);">of ${totalStudents}</div></div>`;
+                if (myState) {
+                    html += `<div><div style="font-size:11px;color:var(--text-muted);">🗺️ ${myState}</div><b style="font-size:20px;color:var(--success);">#${stateRank}</b><div style="font-size:10px;color:var(--text-muted);">of ${stateRows.length}</div></div>`;
+                }
+                if (myDistrict) {
+                    html += `<div><div style="font-size:11px;color:var(--text-muted);">📍 ${myDistrict}</div><b style="font-size:20px;color:var(--warning);">#${distRank}</b><div style="font-size:10px;color:var(--text-muted);">of ${distRows.length}</div></div>`;
+                }
+                html += `</div>`;
+                if (!myState) {
+                    html += `<p style="text-align:center;font-size:11px;color:var(--text-muted);margin:10px 0 0 0;">📝 State/District Rank dekhne ke liye apni <b>Profile</b> me State &amp; District add karein.</p>`;
+                }
+                rankCard.innerHTML = html;
+            }).catch((err) => {
+                rankCard.innerHTML = `<p style="text-align:center;color:var(--danger);font-size:11px;">Rank load failed: ${err.message}</p>`;
+            });
         };
 
         /* ---- Subject Filter Bar + Topic Performance ----
