@@ -462,6 +462,141 @@
             }
         }
 
+        /* ---- HEADER MENU (Profile / My Report / Weak Qs / Photo / Logout) ---- */
+        .header-menu-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.20);
+            color: #fff;
+            border-radius: 50px;
+            padding: 4px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .header-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+        .header-menu-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            min-width: 210px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+            z-index: 500;
+            animation: fadeSlideIn 0.18s ease;
+        }
+        .header-menu-dropdown.open {
+            display: flex;
+        }
+        .header-menu-dropdown .hmd-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+            transition: background 0.15s;
+        }
+        .header-menu-dropdown .hmd-item:hover {
+            background: var(--bg-subtle);
+        }
+        .header-menu-dropdown .hmd-item.hmd-danger {
+            color: var(--danger);
+        }
+        .header-menu-dropdown .hmd-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 4px 4px;
+        }
+
+        /* ---- LIVE TEST CARD & BADGES ---- */
+        .live-test-card {
+            background: var(--bg-card);
+            border: 2px solid var(--danger);
+            border-radius: var(--radius-lg);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        .live-dot-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--danger);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 12px;
+            border-radius: 50px;
+            letter-spacing: 0.4px;
+        }
+        .live-dot-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            animation: livePulseDot 1.2s infinite;
+        }
+        @keyframes livePulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+        .upcoming-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--warning);
+            color: #1a2332;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 12px;
+            border-radius: 50px;
+        }
+        .live-test-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .live-countdown {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--danger);
+            background: rgba(220,53,69,0.08);
+            padding: 3px 10px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+        .upcoming-test-card {
+            background: var(--bg-subtle);
+            border: 1.5px dashed var(--warning);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+
         /* ---- SUB HEADER – Exam | Category | Code ---- */
         .tcs-sub-header {
             background: var(--bg-subtle);
@@ -4734,389 +4869,504 @@
                             <img id="header-avatar-img" style="display:none;" />
                         </div>
                         <span class="profile-name" id="header-profile-name">Student</span>
-                        <button class="profile-btn-header" onclick="window.openProfileModal()" title="My Profile">👤 Profile</button>
+                        <div style="position:relative;">
+                            <button class="header-menu-btn" id="header-menu-btn" onclick="window.toggleHeaderMenu(event)" title="Menu">☰ Menu</button>
+                            <div class="header-menu-dropdown" id="header-menu-dropdown">
+                                <button class="hmd-item" onclick="window.closeHeaderMenu();window.openProfileModal()">👤 My Profile</button>
+                                <button class="hmd-item" onclick="window.closeHeaderMenu();window.goToMyReport()">📈 My Report</button>
+                                <button class="hmd-item" onclick="window.closeHeaderMenu();window.showWeakQuestions()">💪 My Weak Questions</button>
+                                <button class="hmd-item" onclick="window.closeHeaderMenu();window.goToLiveTests()">🔴 Live Tests</button>
+                                <button class="hmd-item" onclick="window.closeHeaderMenu();window.openProfileUpload();window.goToHome();">📸 Change Photo</button>
+                                <div class="hmd-divider"></div>
+                                <button class="hmd-item hmd-danger" onclick="window.closeHeaderMenu();window.handleStudentLogout()">🚪 Logout</button>
+                            </div>
+                        </div>
                     </div>
                     <button class="theme-toggle" onclick="window.toggleDarkMode()" title="Toggle Theme">🌙 Dark</button>
                     <div id="timer-box" class="timer" style="display:none;"><span>⏱</span><span id="main-time">00:00</span></div>
                 </div>
             </div>
-            
-            
+            <div id="student-top-bar" class="tcs-sub-header" style="display:none;">
+                <div class="s-left">
+                    <span class="s-name" id="top-sname">👤 Student</span>
+                </div>
+                <div class="s-right">
+                    <span class="s-exam" id="top-sexam">Exam</span>
+                    <span class="s-category" id="top-scategory">Category</span>
+                    <span class="s-code" id="top-scode">Code: ---</span>
+                    <div class="s-profile-small" id="top-profile-small" style="display:none;">
+                        <div class="sp-avatar" id="sp-avatar" onclick="window.openProfilePhotoLightbox()" title="Tap to enlarge photo">
+                            <span id="sp-avatar-text">👤</span>
+                            <img id="sp-avatar-img" style="display:none;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="auto-save-indicator">✅ Progress Auto-Saved</div>
         </div>
 
+        <!-- ===== STUDENT AUTH ===== -->
+        <div id="student-auth-view" class="view-section">
+            <div id="auth-login-box" class="auth-box">
+                <h3>Welcome Back <span class="highlight">👋</span></h3>
+                <p class="sub-text">Login to continue your learning journey</p>
+                <div class="form-group">
+                    <label>📧 Email</label>
+                    <input type="email" id="login-email" placeholder="your@email.com" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label>🔒 Password</label>
+                    <input type="password" id="login-password" placeholder="Enter password" autocomplete="new-password" />
+                </div>
+                <div style="text-align:right;margin:-4px 0 14px 0;">
+                    <span style="color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;" onclick="window.handleForgotPassword()">Forgot Password?</span>
+                </div>
+                <button class="btn btn-primary" onclick="window.handleStudentLogin()">Login 🔓</button>
+                <div style="display:flex;align-items:center;gap:8px;margin:14px 0;">
+                    <div style="flex:1;height:1px;background:rgba(0,0,0,0.12);"></div>
+                    <span style="font-size:11px;color:var(--text-muted);">OR</span>
+                    <div style="flex:1;height:1px;background:rgba(0,0,0,0.12);"></div>
+                </div>
+                <button type="button" class="btn btn-outline" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="window.handleGoogleAuth()">
+                    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                    Continue with Google
+                </button>
+                <p class="sub-text" style="margin-top:14px;margin-bottom:0;">New student? <span style="color:var(--accent);font-weight:700;cursor:pointer;" onclick="window.toggleAuthScreens('register')">Register Here</span></p>
+            </div>
 
+            <div id="auth-register-box" class="auth-box" style="display:none;">
+                <h3>Create Account <span class="highlight">📝</span></h3>
+                <p class="sub-text">Register once & unlock all tests</p>
 
+                <div id="reg-quick-fields">
+                    <div class="form-group">
+                        <label>👤 Full Name</label>
+                        <input type="text" id="reg-name-quick" placeholder="Enter your full name" autocomplete="off" />
+                    </div>
+                    <div class="form-group">
+                        <label>📱 Mobile Number</label>
+                        <input type="tel" id="reg-phone-quick" placeholder="10-digit number" maxlength="10" autocomplete="off" />
+                    </div>
+                    <button type="button" class="btn btn-primary" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="window.handleGoogleAuth(true)">
+                        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                        Sign up with Google
+                    </button>
+                    <p class="sub-text" style="margin-top:10px;margin-bottom:0;text-align:center;">
+                        <span style="color:var(--accent);font-weight:700;cursor:pointer;font-size:12px;" onclick="document.getElementById('reg-form-fields').style.display='block';document.getElementById('reg-quick-fields').style.display='none';">Prefer Email + Password instead?</span>
+                    </p>
+                </div>
 
+                <div id="reg-form-fields" style="display:none;">
+                    <div class="form-group">
+                        <label>👤 Full Name</label>
+                        <input type="text" id="reg-name" placeholder="Enter your full name" autocomplete="off" />
+                    </div>
+                    <div class="form-group">
+                        <label>📧 Email (for OTP)</label>
+                        <input type="email" id="reg-email" placeholder="your@email.com" autocomplete="off" />
+                    </div>
+                    <div class="form-group">
+                        <label>📱 Mobile</label>
+                        <input type="tel" id="reg-phone" placeholder="10-digit number" maxlength="10" autocomplete="off" />
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Password</label>
+                        <input type="password" id="reg-password" placeholder="Min 6 characters" autocomplete="new-password" />
+                    </div>
+                    <div class="form-group">
+                        <label>🛡️ Security Check</label>
+                        <div class="captcha-container">
+                            <div id="captcha-display" class="captcha-box">A5B9X</div>
+                            <button class="btn-refresh" onclick="window.generateCaptcha()" title="Refresh">🔄</button>
+                        </div>
+                        <input type="text" id="reg-captcha" placeholder="Enter code above" style="text-transform:uppercase;" />
+                    </div>
+                    <button id="btn-send-otp" class="btn btn-primary" onclick="window.handleSendOTP()">Send OTP 📩</button>
+                    <p class="sub-text" style="margin-top:10px;margin-bottom:0;text-align:center;">
+                        <span style="color:var(--accent);font-weight:700;cursor:pointer;font-size:12px;" onclick="document.getElementById('reg-form-fields').style.display='none';document.getElementById('reg-quick-fields').style.display='block';">← Back to quick sign up</span>
+                    </p>
+                </div>
 
+                <div id="reg-otp-field" style="display:none;margin-top:14px;background:rgba(212,168,67,0.08);padding:14px;border-radius:var(--radius);border:2px solid var(--accent);">
+                    <div class="form-group">
+                        <label style="color:var(--accent);">🔑 Enter 6-Digit OTP</label>
+                        <input type="text" id="reg-otp-input" placeholder="Enter OTP" maxlength="6" style="text-align:center;font-weight:700;font-size:18px;letter-spacing:5px;" />
+                    </div>
+                    <button class="btn btn-success" onclick="window.handleVerifyAndRegister()">Verify & Create 🎉</button>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+                        <span id="otp-timer-text" style="font-size:11px;color:var(--text-muted);">Resend in <span id="otp-countdown" style="font-weight:700;color:var(--accent);">30</span>s</span>
+                        <button id="btn-resend-otp" class="btn btn-outline btn-sm" onclick="window.resendOTP()" disabled>Resend OTP</button>
+                    </div>
+                </div>
+                <p class="sub-text" style="margin-top:14px;margin-bottom:0;">Already have an account? <span style="color:var(--accent);font-weight:700;cursor:pointer;" onclick="window.toggleAuthScreens('login')">Login Here</span></p>
+            </div>
+        </div>
 
+        <!-- ===== STUDENT DASHBOARD ===== -->
+        <div id="student-dashboard-view" class="view-section">
+            <div class="dash-welcome-box" id="sticky-welcome-box">
+                <div class="greeting">👋 Welcome, <span class="name" id="dash-user-name">Student</span> <span id="premium-badge" class="premium-badge" style="background:var(--text-muted);color:#fff;">FREE</span></div>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <button class="btn btn-outline btn-sm" onclick="window.openProfileUpload()">📸 Photo</button>
+                    <button class="btn btn-danger btn-sm" onclick="window.handleStudentLogout()">Logout 🔄</button>
+                </div>
+            </div>
 
+            <div id="profile-upload-section" style="display:none;margin-bottom:14px;">
+                <div class="profile-upload-area">
+                    <div class="pua-preview" id="pua-preview">
+                        <span id="pua-preview-text">👤</span>
+                        <img id="pua-preview-img" style="display:none;" />
+                    </div>
+                    <div class="pua-info">
+                        <div class="pua-label">Profile Photo</div>
+                        <div class="pua-name" id="pua-name">Student</div>
+                    </div>
+                    <div class="pua-btns">
+                        <label for="profile-upload-file" class="btn btn-primary btn-sm" style="margin:0;cursor:pointer;">📁 Choose</label>
+                        <input type="file" id="profile-upload-file" accept="image/png,image/jpeg,image/jpg" style="display:none;" onchange="window.uploadProfilePhoto(event)" />
+                        <button class="btn btn-danger btn-sm" onclick="window.removeProfilePhoto()">🗑️ Remove</button>
+                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('profile-upload-section').style.display='none';">✕ Close</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-tabs" style="justify-content:center;gap:8px;border:none;margin-bottom:8px;flex-wrap:wrap;">
+                <button class="tab-btn active" id="tab-st-active" style="border-radius:var(--radius);flex:none;width:45%;" onclick="window.switchStudentTab('active')">📝 Active Tests</button>
+                <button class="tab-btn" id="tab-st-live" style="border-radius:var(--radius);flex:none;width:45%;background:var(--danger);color:#fff;" onclick="window.switchStudentTab('live')">🔴 Live Tests</button>
+            </div>
+
+            <div id="st-active-section">
+                <div id="breadcrumb-container" class="breadcrumb-nav" style="display:none;"></div>
+                <div id="st-active-loader" style="text-align:center;display:none;padding:20px;">
+                    <div class="loader-mini" style="width:28px; height:28px;"></div> <br />
+                    <span style="color:var(--text-muted); margin-top:8px; display:inline-block; font-size:13px;">Loading active tests...</span>
+                </div>
+                <div id="st-folder-view"></div>
+                <div id="st-app-layout" class="app-layout" style="display:none;flex-direction:column;gap:12px;">
+                    <div id="st-sidebar-menu" class="category-grid-wrapper"></div>
+                    <div id="st-content-area" class="content-area"></div>
+                </div>
+            </div>
+
+            <div id="st-live-section" style="display:none;">
+                <div style="background:var(--bg-card);border:2px solid var(--danger);padding:16px;border-radius:var(--radius-lg);margin-bottom:16px;box-shadow:var(--shadow-sm);">
+                    <h4 style="margin:0 0 4px 0;color:var(--danger);font-size:15px;">🔴 Live Tests</h4>
+                    <p style="font-size:12px;color:var(--text-muted);margin:0;">Yeh tests sirf ek fixed date-time window ke andar hi diye ja sakte hain — daal kar wapas nahi aa payenge.</p>
+                </div>
+                <div id="live-tests-loader" style="text-align:center;display:none;padding:20px;">
+                    <div class="loader-mini" style="width:28px; height:28px;"></div> <br />
+                    <span style="color:var(--text-muted); margin-top:8px; display:inline-block; font-size:13px;">Loading live tests...</span>
+                </div>
+                <div id="live-tests-ongoing"></div>
+
+                <div style="margin-top:22px;">
+                    <h4 style="margin:0 0 10px 0;color:var(--warning);font-size:14px;">📅 Upcoming Schedule</h4>
+                    <div id="live-tests-upcoming"></div>
+                </div>
+            </div>
+
+            <div id="st-history-section" style="display:none;">
+                <div style="background:var(--bg-card);border:1px solid var(--border-color);padding:16px;border-radius:var(--radius-lg);margin-bottom:16px;box-shadow:var(--shadow-sm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <div>
+                        <h4 style="margin:0 0 4px 0;color:var(--primary);font-size:15px;">📈 My Performance Report</h4>
+                        <p style="font-size:12px;color:var(--text-muted);margin:0;">Mobile: <b id="disp-hist-phone" style="color:var(--text-main);">...</b></p>
+                    </div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="btn btn-primary btn-sm" onclick="window.fetchStudentHistory()" style="font-size:11px; padding:6px 12px;">🔄 Refresh Report</button>
+                    </div>
+                    <input type="hidden" id="hist-phone" />
+                </div>
+
+                <div id="subject-filter-section-top" style="margin:0 0 16px 0; border:2px solid var(--accent); border-radius:var(--radius); padding:12px 14px; background:var(--bg-subtle);">
+                    <h3 style="color:var(--primary); font-size:14px; margin:0 0 8px 0;">📂 Filter by Subject</h3>
+                    <div class="subject-filter-bar" id="subject-filter-bar-top" style="margin:0; border:none; padding:0; background:transparent;"></div>
+                    <div id="subject-questions-container-top" class="subject-questions-container" style="margin-top:8px;">
+                        <p style="color:var(--text-muted); font-size:13px; padding:8px 0;">Select a subject above to see all questions.</p>
+                    </div>
+                </div>
+
+                <div id="st-hist-content">
+                    <div style="background:rgba(15,157,88,0.08);border:2px solid var(--success);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;">
+                        <h3 style="margin:0 0 12px 0;color:var(--success);text-align:center;font-size:17px;">📊 Overall Report Card</h3>
+                        <div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:8px;text-align:center;">
+                            <div><h4 style="margin:0;font-size:11px;color:var(--text-muted);">Tests Given</h4><b style="font-size:22px;color:var(--primary);" id="gr-tot">0</b></div>
+                            <div><h4 style="margin:0;font-size:11px;color:var(--text-muted);">Qs Attended</h4><b style="font-size:22px;color:var(--primary);" id="gr-qs">0</b></div>
+                            <div><h4 style="margin:0;font-size:11px;color:var(--text-muted);">Accuracy</h4><b style="font-size:22px;color:var(--danger);" id="gr-acc">0%</b></div>
+                        </div>
+                        <div id="gr-bar" style="display:flex;height:24px;border-radius:50px;overflow:hidden;margin-top:10px;background:var(--bg-input);border:1px solid var(--border-color);"></div>
+                        <div style="display:flex;justify-content:center;gap:14px;margin-top:6px;font-size:11px;font-weight:700;flex-wrap:wrap;">
+                            <span style="color:var(--success);">🟩 Correct (<span id="gr-r">0</span>)</span>
+                            <span style="color:var(--danger);">🟥 Wrong (<span id="gr-w">0</span>)</span>
+                            <span style="color:var(--text-muted);">⬜ Blank (<span id="gr-b">0</span>)</span>
+                        </div>
+                    </div>
+                    <h3 style="color:var(--primary);border-bottom:2px solid var(--border-color);padding-bottom:6px;font-size:16px;">📜 Individual Test Records</h3>
+                    <div id="st-hist-loader" style="text-align:center; display:none; margin-top:16px;">
+                        <div class="loader-mini" style="width:28px; height:28px;"></div><br />
+                        <span style="color:var(--text-muted); margin-top:8px; display:inline-block; font-size:13px;">Loading report history...</span>
+                    </div>
+                    <div id="st-hist-list" style="display:flex;flex-direction:column;gap:12px;margin-top:12px;"></div>
+
+                    <div id="topic-performance-table" style="margin-top:16px; border-top:2px solid var(--border-color); padding-top:12px;">
+                        <h3 style="color:var(--primary); font-size:14px; margin-bottom:6px;">📊 Topic-wise Performance (Strong / Weak)</h3>
+                        <div id="topic-table-container" class="topic-perf-table-wrap">
+                            <table class="topic-perf-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Topic</th>
+                                        <th>Total</th>
+                                        <th>Correct</th>
+                                        <th>Wrong</th>
+                                        <th>Blank</th>
+                                        <th>Accuracy</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topic-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TEST ENTRY ===== -->
+        <div id="login-view" class="view-section">
+            <div id="specific-test-login" style="max-width:440px;margin:16px auto;background:var(--bg-card);padding:24px;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);border-top:5px solid var(--accent);">
+                <h3 style="color:var(--primary);text-align:center;margin-bottom:2px;font-size:18px;" id="login-test-name">Test Entry</h3>
+                <p style="text-align:center;color:var(--danger);font-weight:700;margin:0;font-size:13px;">Code: <span id="disp-code">...</span></p>
+                <p style="text-align:center;color:var(--text-muted);font-size:12px;margin:2px 0 4px 0;">+<span id="disp-marks"></span> / -<span id="disp-neg"></span></p>
+                <p id="disp-time-info" style="text-align:center;color:var(--primary);font-size:11px;font-weight:700;margin:0 0 12px 0;"></p>
+
+                <div style="margin:10px 0 14px 0;text-align:center;border-bottom:1px dashed var(--border-color);padding-bottom:10px;">
+                    <label style="font-weight:700;color:var(--text-main);cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:13px;">
+                        <input type="checkbox" id="randomize-qs" style="transform:scale(1.2);accent-color:var(--accent);" /> 🔀 Randomize Order
+                    </label>
+                </div>
+
+                <div style="background:var(--bg-subtle);padding:14px;border-radius:var(--radius-lg);border:1px solid var(--border-color);margin-bottom:14px;">
+                    <h4 style="margin:0 0 4px 0;color:var(--text-main);font-size:14px;">📝 Ready to start?</h4>
+                    <p style="text-align:center;color:var(--success);font-size:12px;font-weight:700;margin:0 0 10px 0;border-bottom:1px dashed var(--border-color);padding-bottom:8px;">Logged in as: <b id="test-entry-name">Student</b></p>
+                    <div id="test-action-area"></div>
+                </div>
+                <div style="text-align:center;">
+                    <button class="btn btn-outline btn-sm" onclick="window.closeAndRedirect()">🏠 Back to Dashboard</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== EXAM VIEW ===== -->
+        <div id="exam-view" class="view-section" style="padding:0;display:none;" oncontextmenu="return false;">
+            <div class="exam-wrapper">
+                <div class="exam-left" id="exam-left-panel">
+                    <div class="q-header">
+                        <span class="q-number" id="q-no-header">Question 1</span>
+                        <div class="q-actions">
+                            <button id="btn-bookmark" class="bookmark-btn" onclick="window.toggleBookmark()">☆ Bookmark</button>
+                            <span id="q-timer-badge" class="q-timer-badge" style="display:none;">⏳ <span id="q-sec-left">0</span>s</span>
+                        </div>
+                    </div>
+                    <div id="q-scroll-area">
+                        <div id="q-passage" class="q-passage-box" style="display:none;"></div>
+                        <div class="q-text" id="q-text">Loading question...</div>
+                        <div class="options-div" id="options-box"></div>
+                    </div>
+                </div>
+
+                <div class="exam-sidebar" id="exam-sidebar">
+                    <div class="sb-title">
+                        <span>📋 Question Palette</span>
+                        <button class="sb-close-btn" id="sb-close-btn" onclick="window.closeSidebar()">✕</button>
+                    </div>
+                    <div class="sb-palette-grid" id="sb-palette-grid"></div>
+                    <div class="sb-stats" id="sb-stats">
+                        <div class="stat-row"><span>✅ Answered</span><span class="stat-val green" id="sb-answered">0</span></div>
+                        <div class="stat-row"><span>❌ Not Answered</span><span class="stat-val red" id="sb-notanswered">0</span></div>
+                        <div class="stat-row"><span>⭐ Marked</span><span class="stat-val orange" id="sb-marked">0</span></div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-total"><span>📌 Total</span><span id="sb-total">0</span></div>
+                    </div>
+                    <div style="margin-top:8px;text-align:center;font-size:10px;color:var(--text-muted);border-top:1px solid var(--border-color);padding-top:8px;flex-shrink:0;">
+                        <span class="legend-item" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;margin:0 4px;"><span class="box status-answered" style="width:14px;height:14px;font-size:6px;">✓</span> Ans</span>
+                        <span class="legend-item" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;margin:0 4px;"><span class="box status-not-answered" style="width:14px;height:14px;font-size:6px;">!</span> Not</span>
+                        <span class="legend-item" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;margin:0 4px;"><span class="box status-not-visited" style="width:14px;height:14px;font-size:6px;">◻</span> Visited</span>
+                        <span class="legend-item" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;margin:0 4px;"><span class="box" style="width:14px;height:14px;border-color:var(--accent);font-size:6px;">⭐</span> Bookmark</span>
+                    </div>
+                </div>
+
+                <button class="sidebar-toggle" id="sidebar-toggle" onclick="window.toggleSidebar()">📋</button>
+            </div>
+        </div>
+
+        <!-- ===== EXAM BOTTOM CONTROLS ===== -->
+        <div id="exam-bottom-controls">
+            <div class="action-buttons">
+                <button class="action-btn btn-prev" onclick="window.prevQ()">◀ Prev</button>
+                <button class="action-btn btn-clear" onclick="window.clearResponse()">🧹 Clear</button>
+                <button class="action-btn btn-next" onclick="window.nextQ(false)">Save & Next ▶</button>
+                <button class="action-btn btn-submit" onclick="window.openSubmitSummary()">📤 Submit</button>
+            </div>
+        </div>
+
+        <!-- ===== PALETTE OVERLAY ===== -->
+        <div id="palette-overlay" class="fullscreen-overlay">
+            <div class="fs-container">
+                <div class="fs-header">
+                    <h3 style="margin:0;color:var(--primary);font-size:17px;">📋 All Questions</h3>
+                    <button class="btn btn-danger btn-sm" onclick="window.togglePaletteOverlay(false)">✕ Close</button>
+                </div>
+                <div class="palette-legend">
+                    <span class="legend-item"><span class="box status-answered" id="cnt-ans">0</span> Answered</span>
+                    <span class="legend-item"><span class="box status-not-answered" id="cnt-notans">0</span> Not Answered</span>
+                    <span class="legend-item"><span class="box status-not-visited" id="cnt-notvis">0</span> Not Visited</span>
+                </div>
+                <div class="question-palette" id="palette-grid"></div>
+            </div>
+        </div>
+
+        <!-- ===== RESULT VIEW – TWO COLUMN LAYOUT ===== -->
+        <div id="result-view" class="view-section" oncontextmenu="return false;">
+            <div class="result-title" id="result-heading"><span class="highlight">🎉</span> Test Submitted!</div>
+            <div id="rank-loader" style="margin:6px 0 10px 0;color:var(--primary);font-weight:700;display:none;"><div class="loader-mini"></div> Calculating rank...</div>
+
+            <div id="report-section">
+                <!-- TWO COLUMN LAYOUT -->
+                <div class="result-layout">
+
+                    <!-- LEFT COLUMN: Score Card (compact), Buttons, Analysis, Leaderboard -->
+                    <div class="result-left">
+
+                        <!-- Score Card (compact) -->
+                        <div class="score-card-certificate" id="score-card-cert">
+                            <div class="cert-header">
+                                <img class="cert-logo" id="cert-logo-img" src="" alt="Logo" />
+                                <div class="cert-title-group">
+                                    <div class="cert-main-title">TEST <span>BODHI</span></div>
+                                    <div class="cert-sub-title" id="cert-exam-title">Performance Certificate</div>
+                                    <div class="cert-test-info" id="cert-test-info">📋 <span id="cert-exam-name">Exam</span>  •  Code: <span id="cert-test-code">---</span></div>
+                                </div>
+                            </div>
+                            <div class="cert-body" id="cert-body">
+                                <div class="cert-item">
+                                    <div class="cert-label">✅ Right / Wrong</div>
+                                    <div class="cert-value green" id="cert-right-wrong">0 / 0</div>
+                                    <div class="cert-sub">Correct / Incorrect</div>
+                                </div>
+                                <div class="cert-item">
+                                    <div class="cert-label">🏆 Rank / Students</div>
+                                    <div class="cert-value gold" id="cert-rank">#0 / 0</div>
+                                    <div class="cert-sub">Your Position</div>
+                                </div>
+                                <div class="cert-item">
+                                    <div class="cert-label">⭐ Final Marks</div>
+                                    <div class="cert-value blue" id="cert-score">0 / 0</div>
+                                    <div class="cert-sub">Scored</div>
+                                </div>
+                            </div>
+                            <div class="cert-footer">
+                                <div class="cert-student">👤 <span id="cert-student-name">Student</span></div>
+                                <div class="cert-date" id="cert-date">Generated: Just now</div>
+                                <div class="cert-badge">🎓 Certificate</div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons Row -->
+                        <div class="result-buttons-row">
+                            <button id="btn-img-down" class="btn btn-primary" onclick="window.downloadCertificateImage()">🖼️ Download</button>
+                            <button id="btn-pdf-down-res" class="btn btn-danger" onclick="window.handleResultPDFClick()">📄 Q&A PDF</button>
+                            <button id="btn-reattempt" class="btn btn-warning" onclick="window.startReattempt()">🔄 Reattempt</button>
+                        </div>
+
+                        <!-- Analysis Section -->
+                        <div class="result-analysis-section">
+                            <div id="analysis-btn-container" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-start;position:relative !important;top:auto !important;z-index:auto !important;background:transparent !important;padding:0 !important;box-shadow:none !important;border:none !important;margin:0 !important;max-width:100% !important;">
+                                <button class="btn btn-success btn-sm" onclick="window.showAnalysis('right')">✅ Correct (<span id="btn-cnt-right">0</span>)</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.showAnalysis('wrong')">❌ Wrong (<span id="btn-cnt-wrong">0</span>)</button>
+                                <button class="btn btn-outline btn-sm" style="border-color:var(--text-muted);color:var(--text-muted);" onclick="window.showAnalysis('blank')">⬜ Blank (<span id="btn-cnt-blank">0</span>)</button>
+                            </div>
+
+                            <div id="analysis-box" class="analysis-box">
+                                <div class="analysis-box-inner" id="analysis-box-inner"></div>
+                            </div>
+                        </div>
+
+                        <!-- Leaderboard -->
+                        <div id="leaderboard-container" class="leaderboard-container" style="display:none;">
+                            <div class="lb-title">🏆 Leaderboard <span class="lb-badge">Top Performers</span></div>
+                            <div id="lb-list"></div>
+                        </div>
+
+                        <!-- Close button -->
+                        <div style="text-align:center;margin:6px 0 12px 0;">
+                            <button class="btn btn-primary" style="max-width:280px;margin:0 auto;font-size:12px;padding:8px 20px;" onclick="window.closeAndRedirect()">🏠 Close & Go Home</button>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN: Graphs (Analytics) -->
+                    <div class="result-right">
+
+                        <!-- ENHANCED ANALYTICS: Main Graph + Sub-Graphs + Detailed Table -->
+                        <div id="analytics-container" class="analytics-container" style="display:none;">
+                            <div class="analytics-title">
+                                📊 Subject-wise Performance
+                                <span class="analytics-badge">Manual Tags</span>
+                            </div>
+                            <!-- MAIN GRAPH: Subject-wise scores (Correct, Wrong, Blank) -->
+                            <div class="chart-wrapper" style="height:180px;">
+                                <canvas id="mainSubjectChart"></canvas>
+                            </div>
+
+                            <!-- SUB-GRAPHS: Topic-wise per subject -->
+                            <div id="sub-graphs-container" style="margin-top:12px;"></div>
+
+                            <!-- DETAILED PERFORMANCE TABLE -->
+                            <div id="result-topic-table" style="margin-top:12px; border-top:1px solid var(--border-color); padding-top:10px; overflow-x:auto;">
+                                <h4 style="margin:0 0 6px 0; color:var(--primary); font-size:13px;">📋 Detailed Topic Performance</h4>
+                                <table class="topic-perf-table">
+                                    <thead style="background:var(--primary); color:#fff;">
+                                        <tr>
+                                            <th style="padding:4px 6px;">Subject</th>
+                                            <th style="padding:4px 6px;">Topic</th>
+                                            <th style="padding:4px 6px;">Total</th>
+                                            <th style="padding:4px 6px;">Correct</th>
+                                            <th style="padding:4px 6px;">Wrong</th>
+                                            <th style="padding:4px 6px;">Blank</th>
+                                            <th style="padding:4px 6px;">Accuracy</th>
+                                            <th style="padding:4px 6px;">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="result-topic-table-body"></tbody>
+                                </table>
+                                <div style="text-align:center;margin-top:6px;">
+                                    <button class="topic-table-more-btn" id="result-topic-more-btn" onclick="window.toggleResultTopicTable()" style="font-size:11px;padding:4px 16px;">📋 Show More Topics</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- end right column -->
+
+                </div>
+                <!-- end result-layout -->
+            </div>
+            <!-- end report-section -->
+        </div>
         <!-- end result-view -->
 
-        
-
-
-        <!-- ===== ADMIN AUTH ===== -->
-        <div id="admin-auth-view" class="view-section" style="text-align:center;padding:30px 16px;">
-            <div style="max-width:380px;margin:0 auto;background:var(--bg-card);padding:24px;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);border-top:5px solid var(--accent);">
-                <h3 style="color:var(--primary);margin-top:0;font-size:19px;">🔒 Admin Login</h3>
-                <div class="form-group">
-                    <label>Admin Email</label>
-                    <input type="email" id="admin-id" placeholder="you@example.com" autocomplete="username" />
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="admin-pass" placeholder="Enter Password" autocomplete="current-password" />
-                </div>
-                <button class="btn btn-primary" id="admin-login-btn" onclick="window.loginAdmin()">Login to Dashboard</button>
-                <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="window.closeAndRedirect()">⬅ Back to Home</button>
-            </div>
+        <!-- ===== LOADING / ERROR ===== -->
+        <div id="loading-view" class="view-section" style="text-align:center; padding:40px 20px;">
+            <div class="loader-mini" style="width:36px; height:36px; border-width:4px;"></div>
+            <h3 style="color:var(--primary); margin-top:16px; font-size:17px;">Loading data, please wait...</h3>
+        </div>
+        <div id="error-view" class="view-section" style="text-align:center; padding:40px 20px;">
+            <h2 style="color:var(--danger); font-size:20px;">❌ Failed to load test</h2>
+            <p id="error-msg" style="color:var(--text-muted); font-size:14px; margin-bottom:16px;">Network slow or test not found.</p>
+            <button class="btn btn-primary" style="max-width:220px; margin:0 auto;" onclick="window.closeAndRedirect()">🔄 Refresh Page</button>
         </div>
 
-        <!-- ===== ADMIN DASHBOARD ===== -->
-        <div id="admin-view" class="view-section">
-            <div class="admin-tabs">
-                <button class="tab-btn active" id="tab-create" onclick="window.switchAdminTab('create')">➕ Create / Edit Test</button>
-                <button class="tab-btn" id="tab-manage" onclick="window.switchAdminTab('manage')">📂 Saved Tests</button>
-                <button class="tab-btn" id="tab-icons" onclick="window.switchAdminTab('icons')">🏛️ Manage Icons</button>
-                <button class="tab-btn" id="tab-reorder" onclick="window.switchAdminTab('reorder')">🔢 Reorder Icons</button>
-                <button class="tab-btn" id="tab-students" onclick="window.switchAdminTab('students')">👨‍🎓 Student Performance</button>
-                <button class="tab-btn" id="tab-logo" onclick="window.switchAdminTab('logo')">🖼️ Logo Manager</button>
-                <button class="tab-btn" id="tab-liveschedule" onclick="window.switchAdminTab('liveschedule')" style="background:var(--danger);color:#fff;">🔴 Live Test Schedule</button>
-                <button class="tab-btn" id="tab-logout" onclick="window.logoutAdmin()" style="background:var(--danger);color:#fff;margin-left:auto;">🚪 Logout</button>
-            </div>
-
-            <div id="admin-create-section">
-                <div class="admin-section" style="background:rgba(212,168,67,0.06);border:2px solid var(--accent);">
-                    <div class="admin-section-title" style="color:var(--accent);font-size:14px;">⚡ Quick Auto-Fill <span class="badge-admin" style="background:var(--accent);color:var(--primary-dark);padding:1px 10px;border-radius:50px;font-size:10px;font-weight:700;">Smart</span></div>
-                    <div class="flex-row">
-                        <div class="form-group" style="margin-bottom:0;">
-                            <select id="quick-board" onchange="window.fillQuick('board')" style="border-color:var(--accent);font-weight:600;font-size:12px;">
-                                <option value="">1. Board</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <select id="quick-exam" onchange="window.fillQuick('exam')" style="border-color:var(--accent);font-weight:600;font-size:12px;">
-                                <option value="">2. Exam</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <select id="quick-cat" onchange="window.fillQuick('cat')" style="border-color:var(--accent);font-weight:600;font-size:12px;">
-                                <option value="">3. Category</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <select id="quick-sub" onchange="window.fillQuick('sub')" style="border-color:var(--accent);font-weight:600;font-size:12px;">
-                                <option value="">4. Subject</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="admin-section">
-                    <div class="admin-section-title">📋 Test Details</div>
-                    <div class="admin-grid-2">
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label style="color:var(--primary);font-size:11px;">🏛️ Board / Icon</label>
-                            <input type="text" id="a-board" onkeyup="window.autoFillLogo()" onchange="window.autoFillLogo()" placeholder="e.g. UPPSC, SSC" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label style="color:var(--primary);font-size:11px;">🖼️ Logo (URL or Upload)</label>
-                            <div style="display:flex;gap:6px;">
-                                <input type="text" id="a-logo" placeholder="Logo URL" style="flex:1;" />
-                                <label for="upload-logo-file" class="btn btn-primary btn-sm" style="margin:0;cursor:pointer;font-size:10px;padding:4px 10px;">📁 Upload</label>
-                                <input type="file" id="upload-logo-file" accept="image/png,image/jpeg" style="display:none;" onchange="window.uploadImageToFirebase('upload-logo-file','a-logo')" />
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Exam Name</label>
-                            <input type="text" id="a-exam" placeholder="e.g. RO/ARO" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Test Folder (Category)</label>
-                            <select id="a-category" onchange="if(this.value==='CUSTOM'){document.getElementById('a-custom-cat').style.display='block';}else{document.getElementById('a-custom-cat').style.display='none';}">
-                                <option value="Previous Year Papers">📜 Previous Year Papers</option>
-                                <option value="Mock Tests">📝 Mock Tests</option>
-                                <option value="Sectional Tests">🧩 Sectional Tests</option>
-                                <option value="Chapter Tests">📖 Chapter Tests</option>
-                                <option value="CUSTOM">➕ Add Custom...</option>
-                            </select>
-                            <input type="text" id="a-custom-cat" style="display:none;margin-top:6px;border-color:var(--accent);font-size:12px;" placeholder="Custom category name..." />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Subject</label>
-                            <input type="text" id="a-sub" placeholder="e.g. Hindi, GS" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Chapter/Topic</label>
-                            <input type="text" id="a-topic" placeholder="e.g. Vyakaran" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Test Code</label>
-                            <input type="text" id="a-code" placeholder="UP-01" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>📑 Test Summary</label>
-                            <textarea id="a-summary" style="min-height:50px;font-size:12px;" placeholder="e.g. Hindi Vyakaran, Sandhi, Samas..."></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="background:rgba(220,53,69,0.06);border:2px solid var(--danger);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;">
-                        <label style="color:var(--danger);font-size:12px;font-weight:800;">🚦 Test Mode — Kaise publish karna hai?</label>
-                        <select id="a-test-mode" onchange="window.toggleLiveFields()" style="border-color:var(--danger);font-weight:700;">
-                            <option value="active">📝 Active Test (normal — hamesha available)</option>
-                            <option value="live">🔴 Live Test (sirf select date/time ke beech available)</option>
-                        </select>
-
-                        <div id="live-test-fields" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--danger);">
-                            <div class="admin-grid-2" style="gap:10px;">
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <label style="font-size:11px;">🟢 Live Start (Date &amp; Time)</label>
-                                    <input type="datetime-local" id="a-live-start" />
-                                </div>
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <label style="font-size:11px;">🔴 Live End (Date &amp; Time)</label>
-                                    <input type="datetime-local" id="a-live-end" />
-                                </div>
-                            </div>
-                            <p style="font-size:10px;color:var(--text-muted);margin-top:6px;">
-                                ℹ️ Ye test student ko sirf <b>Live Tests</b> tab me, sirf is date-time window ke andar hi dikhega
-                                aur diya ja sakega. Window khatam hone ke baad wo automatically hat jayega.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="admin-grid-2">
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Marks Per Q</label>
-                            <input type="number" step="0.5" id="a-marks" value="2" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Negative</label>
-                            <input type="number" step="0.25" id="a-neg" value="0.5" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Total Time (Mins)</label>
-                            <input type="number" id="a-tot-time" value="0" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Time Per Q (Secs)</label>
-                            <input type="number" id="a-q-time" value="0" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>PDF Status</label>
-                            <select id="a-pdf-type" onchange="window.togglePriceBox()">
-                                <option value="paid">🔒 Paid</option>
-                                <option value="free">🔓 Free</option>
-                            </select>
-                        </div>
-                        <div class="form-group" id="price-box" style="margin-bottom:10px;">
-                            <label>PDF Price (₹)</label>
-                            <input type="number" id="a-price" placeholder="49" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Secret Key</label>
-                            <input type="text" id="a-key" placeholder="ANK" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>Total Qs (Auto)</label>
-                            <input type="number" id="a-qs-count" readonly style="background:var(--bg-subtle);color:var(--primary);font-weight:700;font-size:13px;" placeholder="0" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                            <span style="color:var(--danger);font-size:13px;"><b>📄 Paste Questions Here <span style="font-weight:normal; font-size:10px; color:var(--text-muted);">(Use $$ for Math, !tag(Subject:Topic) for manual tagging)</span></b></span>
-                            <button type="button" class="btn btn-sm btn-outline" style="border-color:var(--success); color:var(--success);font-size:10px;padding:3px 12px;" onclick="window.openVisualEditor()">👁️ Open Visual Editor</button>
-                        </label>
-                        <textarea id="a-rawdata" onkeyup="window.updateQsCount()" onchange="window.updateQsCount()" placeholder="!P Passage...&#10;!!1! What is 2+2? !tag(Math:Arithmetic)&#10;!A Option...&#10;!!! Ans&#10;!!!! Exp..." style="min-height:100px;font-size:12px;"></textarea>
-                    </div>
-
-                    <div id="visual-editor-container" class="visual-preview-box"></div>
-
-                    <button id="btn-generate" class="btn btn-primary" onclick="window.generateAndSaveLink()">🚀 Generate / Update Test</button>
-
-                    <div id="linkContainer" style="display:none;margin-top:14px;background:var(--bg-subtle);padding:14px;border-radius:var(--radius);border:2px solid var(--accent);">
-                        <label style="color:var(--warning);font-weight:700;font-size:12px;">👇 Copy this link:</label>
-                        <input type="text" id="generatedLink" readonly onclick="this.select();navigator.clipboard.writeText(this.value);window.showCustomAlert('Copied','Link copied!','✅');" style="font-weight:700;padding:10px;width:100%;border-radius:var(--radius);border:1px solid var(--border-color);cursor:pointer;background:var(--bg-card);color:var(--text-main);font-size:12px;" />
-                    </div>
-                </div>
-            </div>
-
-            <div id="admin-manage-section" style="display:none;">
-                <div id="leaderboard-view" style="display:none;background:var(--bg-card);padding:14px;border:2px solid var(--primary);border-radius:var(--radius-lg);margin-bottom:16px;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--border-color);padding-bottom:8px;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
-                        <h3 style="margin:0;color:var(--primary);font-size:15px;">📊 Result: <span id="lb-title"></span></h3>
-                        <div style="display:flex;gap:6px;">
-                            <button class="btn btn-danger btn-sm" onclick="window.downloadLeaderboardImage()" style="font-size:10px;">🖼️ Download</button>
-                            <button class="btn btn-outline btn-sm" style="background:var(--danger);color:#fff;border:none;font-size:10px;" onclick="document.getElementById('leaderboard-view').style.display='none';">✕</button>
-                        </div>
-                    </div>
-                    <div style="overflow-x:auto;" id="leaderboard-content"></div>
-                </div>
-
-                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-                    <h3 style="color:var(--primary);margin:0;font-size:15px;">📁 Active Tests List</h3>
-                    <button class="btn btn-danger btn-sm" onclick="window.clearAdminMemory()" style="font-size:11px;">🗑️ Clear Memory</button>
-                </div>
-                <div id="dashboard-list"></div>
-            </div>
-
-            <div id="admin-icons-section" style="display:none;">
-                <div class="admin-section" style="border:2px solid var(--accent);">
-                    <div class="admin-section-title" style="color:var(--accent);font-size:14px;">🏛️ Manage Main Icons</div>
-                    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Update icon names and logos for the home page.</p>
-                    <div class="admin-grid-2">
-                        <div class="form-group">
-                            <label style="font-size:11px;">Select Icon</label>
-                            <select id="icon-select" onchange="window.onIconSelect()" style="border-color:var(--accent);font-weight:600;font-size:12px;"></select>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:11px;">Update Name</label>
-                            <input type="text" id="icon-new-name" />
-                        </div>
-                        <div class="form-group" style="grid-column:1/3;">
-                            <label style="font-size:11px;">Update Logo (URL or Upload)</label>
-                            <div style="display:flex;gap:6px;">
-                                <input type="text" id="icon-new-logo" style="flex:1;" />
-                                <label for="upload-icon-file" class="btn btn-primary btn-sm" style="margin:0;cursor:pointer;font-size:10px;padding:4px 10px;">📁 Upload</label>
-                                <input type="file" id="upload-icon-file" accept="image/png,image/jpeg" style="display:none;" onchange="window.uploadImageToFirebase('upload-icon-file','icon-new-logo')" />
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-                        <button class="btn btn-primary" onclick="window.updateAdminIcon()" style="font-size:12px;padding:8px 16px;">🔄 Update Icon</button>
-                        <button class="btn btn-danger" onclick="window.deleteAdminIcon()" style="font-size:12px;padding:8px 16px;">🗑️ Delete Icon & Tests</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="admin-reorder-section" style="display:none;">
-                <div class="admin-section" style="border:2px solid var(--accent);">
-                    <div class="admin-section-title" style="color:var(--accent);font-size:14px;">🔢 Reorder Icons by Serial Number</div>
-                    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">
-                        Enter a serial number (1, 2, 3, …) for each icon. The home page will display them in ascending order.
-                        <br /><b>Tip:</b> If two icons get the same number, they'll be ordered alphabetically.
-                    </p>
-                    <div id="serial-reorder-container" class="serial-reorder-container"></div>
-                    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center;">
-                        <button class="btn btn-primary" onclick="window.saveSerialOrder()" style="font-size:12px;padding:8px 16px;">💾 Save Order</button>
-                        <button class="btn btn-outline" onclick="window.loadSerialOrder()" style="font-size:12px;padding:8px 16px;">🔄 Reset to Saved</button>
-                    </div>
-                    <div id="reorder-status" style="margin-top:10px;text-align:center;font-weight:600;color:var(--success);display:none;font-size:13px;">✅ Order saved successfully!</div>
-                </div>
-            </div>
-
-            <div id="admin-students-section" style="display:none;">
-                <div class="admin-section" style="border:2px solid var(--primary);">
-                    <div class="admin-section-title" style="color:var(--primary);font-size:14px;">👨‍🎓 Student Performance Dashboard</div>
-                    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">View all students and their test performance. Export data to Excel.</p>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
-                        <button class="btn btn-success" onclick="window.fetchStudentPerformance()" style="font-size:12px;padding:8px 16px;">🔄 Refresh Data</button>
-                        <button class="btn btn-primary" onclick="window.exportStudentPerformanceExcel()" style="font-size:12px;padding:8px 16px;">📊 Export Excel</button>
-                        <button class="btn btn-outline" onclick="window.exportStudentPerformanceCSV()" style="font-size:12px;padding:8px 16px;">📄 Export CSV</button>
-                    </div>
-                    <div id="perf-loader" style="display:none;text-align:center;padding:16px;">
-                        <div class="loader-mini"></div> Loading student data...
-                    </div>
-                    <div id="perf-table-wrap" class="perf-table-wrap" style="display:none;"></div>
-                    <div id="perf-empty" style="display:none;text-align:center;padding:20px;color:var(--text-muted);font-size:13px;">No student data found.</div>
-                </div>
-            </div>
-
-            <div id="admin-logo-section" style="display:none;">
-                <div class="admin-section" style="border:2px solid var(--accent);">
-                    <div class="admin-section-title" style="color:var(--accent);font-size:14px;">🖼️ Portal Logo Manager</div>
-                    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
-                        Upload or paste a logo URL. The logo will appear in the header, PDF watermark, and question watermark.
-                        <br><b>Tip:</b> For round logos, use a square image with transparent background.
-                    </p>
-
-                    <div class="logo-manager-area">
-                        <div class="lm-row">
-                            <div class="lm-preview" id="lm-preview">
-                                <span id="lm-preview-text">🏛️</span>
-                                <img id="lm-preview-img" style="display:none;" />
-                            </div>
-                            <div class="lm-info">
-                                <div class="lm-label">Current Portal Logo</div>
-                                <div id="lm-status" style="font-size:11px;color:var(--text-muted);">No logo set. Using default.</div>
-                            </div>
-                            <div class="lm-btns">
-                                <button class="btn btn-danger btn-sm" onclick="window.removePortalLogo()" style="font-size:10px;">🗑️ Remove</button>
-                            </div>
-                        </div>
-
-                        <div class="lm-row">
-                            <label for="logo-upload-file" class="btn btn-primary" style="margin:0;cursor:pointer;font-size:12px;padding:8px 18px;">📁 Upload Logo</label>
-                            <input type="file" id="logo-upload-file" accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp" style="display:none;" onchange="window.uploadPortalLogo(event)" />
-                            <span style="font-size:11px;color:var(--text-muted);">PNG, JPG, SVG, WEBP (max 2MB)</span>
-                        </div>
-
-                        <div class="lm-url-row">
-                            <input type="text" id="logo-url-input" placeholder="Paste image URL here..." style="flex:1;" />
-                            <button class="btn btn-success" onclick="window.setPortalLogoFromUrl()" style="font-size:12px;padding:8px 18px;">🔗 Apply URL</button>
-                            <button class="btn btn-outline" onclick="document.getElementById('logo-url-input').value='';" style="font-size:11px;padding:6px 12px;">✕ Clear</button>
-                        </div>
-
-                        <div class="lm-row" style="justify-content:flex-start;gap:16px;border-top:1px solid var(--border-color);padding-top:10px;margin-top:4px;">
-                            <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;">
-                                <input type="radio" name="logo-shape" value="round" checked onchange="window.setLogoShape('round')" /> 🔵 Round
-                            </label>
-                            <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:6px;cursor:pointer;">
-                                <input type="radio" name="logo-shape" value="square" onchange="window.setLogoShape('square')" /> ◻️ Square
-                            </label>
-                            <span style="font-size:11px;color:var(--text-muted);">Shape applies to header and PDF</span>
-                        </div>
-                    </div>
-
-                    <div id="logo-save-status" style="margin-top:8px;text-align:center;font-weight:600;color:var(--success);display:none;font-size:13px;">✅ Logo updated successfully!</div>
-                </div>
-            </div>
-
-            <div id="admin-liveschedule-section" style="display:none;">
-                <div class="admin-section" style="border:2px solid var(--danger);">
-                    <div class="admin-section-title" style="color:var(--danger);font-size:14px;">📅 Upcoming Live Test Schedule</div>
-                    <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">
-                        Yahan aap sirf ek <b>announcement</b> daal sakte hain — "Fla board ka fla exam ka fla type ka test is date ko hoga" —
-                        taki student ko pehle se pata chale. Yeh test ki actual questions/content se alag hai; jab actual test ready ho,
-                        use <b>Test Mode → 🔴 Live Test</b> se upar bana kar publish karein.
-                    </p>
-
-                    <div class="admin-grid-2">
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>🏛️ Board</label>
-                            <input type="text" id="sch-board" placeholder="e.g. UPPSC, SSC" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>🎓 Exam Name</label>
-                            <input type="text" id="sch-exam" placeholder="e.g. RO/ARO" />
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>📂 Test Type</label>
-                            <select id="sch-type">
-                                <option value="Previous Year Papers">📜 Previous Year Papers</option>
-                                <option value="Mock Tests">📝 Mock Tests</option>
-                                <option value="Sectional Tests">🧩 Sectional Tests</option>
-                                <option value="Chapter Tests">📖 Chapter Tests</option>
-                                <option value="Full Length Live Test">🏆 Full Length Live Test</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="margin-bottom:10px;">
-                            <label>🗓️ Scheduled Date &amp; Time</label>
-                            <input type="datetime-local" id="sch-date" />
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom:10px;">
-                        <label>📝 Note (optional)</label>
-                        <textarea id="sch-note" style="min-height:50px;font-size:12px;" placeholder="e.g. Syllabus: Full Paper 1, 100 Qs, 2 Hours"></textarea>
-                    </div>
-                    <button id="btn-sch-save" class="btn btn-danger" onclick="window.saveScheduledTest()">📅 Add to Schedule</button>
-
-                    <div id="schedule-list" style="margin-top:18px;"></div>
-                </div>
-            </div>
-
-        </div><!-- end admin-view -->
     </div><!-- end container -->
 
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js">
@@ -5130,7 +5380,7 @@
 
     <script>
         /* ==========================================================================
-           FULL SCRIPT – ALL FIXES APPLIED
+           FULL SCRIPT – ALL FIXES APPLIED + WEAK QUESTIONS FEATURE
            ========================================================================== */
 
         // ---- CONFIG ----
@@ -5402,6 +5652,39 @@
         };
 
         /* ==========================================================================
+           HEADER MENU (dropdown: Profile / My Report / Weak Qs / Live Tests / Photo / Logout)
+           ========================================================================== */
+        window.toggleHeaderMenu = function(e) {
+            if (e) e.stopPropagation();
+            const dd = document.getElementById('header-menu-dropdown');
+            if (!dd) return;
+            dd.classList.toggle('open');
+        };
+        window.closeHeaderMenu = function() {
+            const dd = document.getElementById('header-menu-dropdown');
+            if (dd) dd.classList.remove('open');
+        };
+        document.addEventListener('click', function(e) {
+            const dd = document.getElementById('header-menu-dropdown');
+            const btn = document.getElementById('header-menu-btn');
+            if (!dd || !dd.classList.contains('open')) return;
+            if (e.target === btn || dd.contains(e.target)) return;
+            dd.classList.remove('open');
+        });
+
+        window.goToMyReport = function() {
+            const dashView = document.getElementById('student-dashboard-view');
+            if (!dashView || !dashView.classList.contains('active-view')) window.closeAndRedirect(true);
+            window.switchStudentTab('history');
+        };
+
+        window.goToLiveTests = function() {
+            const dashView = document.getElementById('student-dashboard-view');
+            if (!dashView || !dashView.classList.contains('active-view')) window.closeAndRedirect(true);
+            window.switchStudentTab('live');
+        };
+
+        /* ==========================================================================
            DEVICE DETECTION
            ========================================================================== */
         window.getDeviceInfo = function() {
@@ -5469,14 +5752,20 @@
             const unifiedMap = new Map();
             if (window.globalActiveTests && window.globalActiveTests.length > 0) {
                 window.globalActiveTests.forEach(t => {
-                    if (!hidden.includes(t.code)) unifiedMap.set(t.code, t);
+                    if (!hidden.includes(t.code) && t.testMode !== 'live') unifiedMap.set(t.code, t);
                 });
             }
             const localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
             localTests.forEach(lt => {
-                if (lt.isActive !== false && !hidden.includes(lt.code)) unifiedMap.set(lt.code, lt);
+                if (lt.isActive !== false && !hidden.includes(lt.code) && lt.testMode !== 'live') unifiedMap.set(lt.code, lt);
             });
             return Array.from(unifiedMap.values());
+        };
+
+        window.getAllLiveTests = function() {
+            const hidden = window.getHiddenTests();
+            const all = (window.globalActiveTests || []).filter(t => t.testMode === 'live' && !hidden.includes(t.code) && t.isActive !== false);
+            return all;
         };
 
         window.toggleAdminLock = function(show) {
@@ -6654,16 +6943,141 @@
                 const toggleBtn = document.querySelector('.theme-toggle');
                 if (toggleBtn) toggleBtn.innerText = '☀️ Light';
             }
+            clearInterval(window.globalTimer);
+            clearInterval(window.qTimer);
+            clearInterval(window.autoSaveTimer);
+            clearInterval(window.otpTimerInterval);
             document.querySelectorAll('.view-section').forEach(v => { v.classList.remove('active-view'); v.style.display = ''; });
+            const topBar = document.getElementById('student-top-bar');
+            if (topBar) topBar.style.display = 'none';
             const rawDataElem = document.getElementById('a-rawdata');
             if (rawDataElem) rawDataElem.addEventListener('input', window.updateQsCount);
 
+            window.applyDeviceAdjustments();
             window.loadPortalLogo();
+            if (typeof window.clearAuthForms === 'function') window.clearAuthForms();
 
-            // Admin-only build: this file has no student portal, so it always
-            // lands directly on the Admin Login screen.
-            const authView = document.getElementById('admin-auth-view');
-            if (authView) authView.classList.add('active-view');
+            const savedUser = localStorage.getItem('mockSarthiUser');
+            let isLoggedIn = false;
+            if (savedUser) {
+                try {
+                    window.studentInfo = JSON.parse(savedUser);
+                    isLoggedIn = true;
+                    window.updateProfileUI();
+                    const attempted = JSON.parse(localStorage.getItem(window.getAttemptedStorageKey()) || '{}');
+                    window.attemptedTestsCache = attempted;
+                } catch (e) {}
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const testCode = urlParams.get('test');
+
+            if (testCode) {
+                if (!isLoggedIn) {
+                    localStorage.setItem('pendingTestCode', testCode);
+                    const authView = document.getElementById('student-auth-view');
+                    if (authView) authView.classList.add('active-view');
+                    window.toggleAdminLock(false);
+                } else {
+                    const loadingView = document.getElementById('loading-view');
+                    if (loadingView) loadingView.classList.add('active-view');
+                    window.toggleAdminLock(false);
+                    const localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
+                    const localTestInfo = localTests.find(t => t.code === testCode);
+                    if (localTestInfo) {
+                        localTestInfo.questions = window.sanitizeQuestions(localTestInfo.questions);
+                        window.handleTestLoad(localTestInfo);
+                    } else {
+                        const testRef = db.collection("tests").doc(testCode);
+                        testRef.get().then((doc) => {
+                            if (!doc.exists) {
+                                const loadingV = document.getElementById('loading-view');
+                                if (loadingV) loadingV.classList.remove('active-view');
+                                window.showErrorView("❌ Test not found in Database.");
+                                return;
+                            }
+                            const fData = doc.data();
+                            testRef.collection("secure").doc("key").get().then((secureDoc) => {
+                                if (secureDoc.exists) {
+                                    const secure = secureDoc.data();
+                                    if (secure.rawText) fData.rawText = secure.rawText;
+                                    if (secure.answerKey && fData.questions) {
+                                        fData.questions = fData.questions.map((q, i) => ({
+                                            ...q,
+                                            ans: (secure.answerKey[i] && secure.answerKey[i].ans) || "",
+                                            exp: (secure.answerKey[i] && secure.answerKey[i].exp) || ""
+                                        }));
+                                    }
+                                }
+                                fData.questions = window.sanitizeQuestions(fData.questions);
+                                window.handleTestLoad(fData);
+                            }).catch(() => {
+                                // Not authorized to read the answer key yet (e.g. this
+                                // is a paid test and the student isn't premium). Load
+                                // the test without it -- the existing free/premium
+                                // gate on the entry screen still decides whether
+                                // "Start Test" is shown, and there is now no answer
+                                // key sitting in memory for an unauthorized user to
+                                // read out of the console.
+                                fData.questions = window.sanitizeQuestions(fData.questions);
+                                window.handleTestLoad(fData);
+                            });
+                        }).catch((error) => {
+                            const loadingV = document.getElementById('loading-view');
+                            if (loadingV) loadingV.classList.remove('active-view');
+                            window.showErrorView("❌ Network Error!");
+                        });
+                    }
+                }
+            } else {
+                if (isLoggedIn) {
+                    const dashView = document.getElementById('student-dashboard-view');
+                    if (dashView) dashView.classList.add('active-view');
+                    window.switchStudentTab('active');
+                } else {
+                    const authView = document.getElementById('student-auth-view');
+                    if (authView) authView.classList.add('active-view');
+                }
+            }
+
+            window.addEventListener('popstate', function(e) {
+                const sumModal = document.getElementById('summary-modal');
+                if (sumModal && sumModal.style.display === 'flex') { sumModal.style.display = 'none'; return; }
+                const o = document.getElementById('palette-overlay');
+                if (o && o.style.display === 'block') { o.style.display = 'none';
+                    try { history.pushState({}, "", window.location.pathname); } catch (err) {} return; }
+                const sidebar = document.getElementById('exam-sidebar');
+                if (sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open');
+                    window.sidebarOpen = false;
+                    const backdrop = document.getElementById('sidebar-backdrop');
+                    if (backdrop) backdrop.classList.remove('active');
+                    const toggleBtn = document.getElementById('sidebar-toggle');
+                    if (toggleBtn) toggleBtn.innerText = '📋'; }
+                const examView = document.getElementById('exam-view');
+                if (examView && examView.classList.contains('active-view')) {
+                    examView.classList.remove('active-view');
+                    examView.style.display = 'none';
+                    const examControls = document.getElementById('exam-bottom-controls');
+                    const topBar = document.getElementById('student-top-bar');
+                    const timerBox = document.getElementById('timer-box');
+                    const dashView = document.getElementById('student-dashboard-view');
+                    if (examControls) examControls.style.display = 'none';
+                    if (topBar) topBar.style.display = 'none';
+                    if (timerBox) timerBox.style.display = 'none';
+                    clearInterval(window.globalTimer);
+                    clearInterval(window.qTimer);
+                    clearInterval(window.autoSaveTimer);
+                    if (dashView) {
+                        dashView.classList.add('active-view');
+                        document.querySelectorAll('.view-section').forEach(v => { v.classList.remove('active-view'); v.style.display = ''; });
+                        dashView.classList.add('active-view');
+                    }
+                    window.toggleAdminLock(true);
+                    window.showExamsView();
+                    return;
+                }
+                window.closeAndRedirect();
+            });
         };
 
         window.showErrorView = function(msg) {
@@ -6681,6 +7095,18 @@
         window.handleTestLoad = function(data) {
             if (data.error) return window.showErrorView("❌ Test not found!");
             if (data.isActive === false) return window.showErrorView("❌ This test is currently inactive.");
+            if (data.testMode === 'live') {
+                const now = new Date();
+                const startOk = data.liveStart ? now >= new Date(data.liveStart) : true;
+                const endOk = data.liveEnd ? now <= new Date(data.liveEnd) : true;
+                if (!startOk) {
+                    const s = new Date(data.liveStart).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+                    return window.showErrorView(`🔴 Ye Live Test abhi shuru nahi hua hai. Yeh ${s} se live hoga.`);
+                }
+                if (!endOk) {
+                    return window.showErrorView("🔴 Is Live Test ka time window khatam ho chuka hai.");
+                }
+            }
             const localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
             const localTest = localTests.find(t => t.code === data.code);
             if (localTest) {
@@ -6793,22 +7219,173 @@
         window.switchStudentTab = function(tab) {
             window.toggleAdminLock(true);
             const tabActive = document.getElementById('tab-st-active');
+            const tabLive = document.getElementById('tab-st-live');
             const tabHistory = document.getElementById('tab-st-history');
             const secActive = document.getElementById('st-active-section');
+            const secLive = document.getElementById('st-live-section');
             const secHistory = document.getElementById('st-history-section');
+            [tabActive, tabLive, tabHistory].forEach(b => b && b.classList.remove('active'));
+            [secActive, secLive, secHistory].forEach(s => s && (s.style.display = 'none'));
             if (tab === 'active') {
                 if (tabActive) tabActive.classList.add('active');
-                if (tabHistory) tabHistory.classList.remove('active');
                 if (secActive) secActive.style.display = 'block';
-                if (secHistory) secHistory.style.display = 'none';
                 window.fetchActiveTests();
+            } else if (tab === 'live') {
+                if (tabLive) tabLive.classList.add('active');
+                if (secLive) secLive.style.display = 'block';
+                window.fetchLiveTests();
             } else {
                 if (tabHistory) tabHistory.classList.add('active');
-                if (tabActive) tabActive.classList.remove('active');
-                if (secActive) secActive.style.display = 'none';
                 if (secHistory) secHistory.style.display = 'block';
                 window.fetchStudentHistory();
             }
+        };
+
+        /* ==========================================================================
+           LIVE TESTS TAB — ongoing live tests + upcoming schedule announcements
+           ========================================================================== */
+        window._liveCountdownInterval = null;
+
+        window.fetchLiveTests = function() {
+            const loader = document.getElementById('live-tests-loader');
+            const ongoingBox = document.getElementById('live-tests-ongoing');
+            if (loader) loader.style.display = (window.globalActiveTests && window.globalActiveTests.length > 0) ? 'none' : 'block';
+
+            const renderNow = () => {
+                if (loader) loader.style.display = 'none';
+                window.renderLiveOngoingTests();
+            };
+            if (window.globalActiveTests && window.globalActiveTests.length > 0) {
+                renderNow();
+            } else {
+                window.attachLiveTestsListener(true);
+                setTimeout(renderNow, 900);
+            }
+            window.loadUpcomingScheduleForStudent();
+
+            clearInterval(window._liveCountdownInterval);
+            window._liveCountdownInterval = setInterval(() => {
+                const liveSec = document.getElementById('st-live-section');
+                if (liveSec && liveSec.style.display !== 'none') window.renderLiveOngoingTests();
+            }, 30000);
+        };
+
+        window.renderLiveOngoingTests = function() {
+            const box = document.getElementById('live-tests-ongoing');
+            if (!box) return;
+            const liveTests = window.getAllLiveTests();
+            const now = new Date();
+
+            const ongoing = [];
+            const notStarted = [];
+            liveTests.forEach(t => {
+                const start = t.liveStart ? new Date(t.liveStart) : null;
+                const end = t.liveEnd ? new Date(t.liveEnd) : null;
+                if (end && now > end) return; // expired, don't show
+                if (start && now < start) notStarted.push(t);
+                else ongoing.push(t);
+            });
+
+            if (ongoing.length === 0 && notStarted.length === 0) {
+                box.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:13px;padding:20px 0;'>Abhi koi Live Test available nahi hai. Neeche upcoming schedule dekhein 👇</p>";
+                return;
+            }
+
+            let html = "";
+            ongoing.forEach(t => {
+                const p = window.parseHack(t.topic);
+                const board = p.board || t.exam || "General Exam";
+                const exam = t.exam || "Mock Test";
+                const cat = p.cat || t.category || "Mock Tests";
+                const sub = p.subcat || t.subject || t.sub || "Subject";
+                const end = t.liveEnd ? new Date(t.liveEnd) : null;
+                const countdown = end ? window.formatCountdown(end - now) : "";
+                html += `
+                    <div class="live-test-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <span class="live-dot-badge"><span class="dot"></span> LIVE NOW</span>
+                            ${countdown ? `<span class="live-countdown">⏳ Ends in ${countdown}</span>` : ""}
+                        </div>
+                        <div style="margin-top:8px;font-weight:800;color:var(--primary);font-size:14px;">🏛️ ${board} — 🎓 ${exam}</div>
+                        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${sub}${t.code ? ' • Code: ' + t.code : ''}</div>
+                        <div class="live-test-meta-row">
+                            <span class="badge" style="font-size:9px;">📂 ${cat}</span>
+                            <span class="badge" style="font-size:9px;">⏱ ${t.totTime||0} Min</span>
+                            <span class="badge" style="font-size:9px;">Qs: ${t.qs||(t.questions?t.questions.length:0)}</span>
+                        </div>
+                        <button class="btn btn-danger" style="width:100%;margin-top:6px;" onclick="window.navigateToTestEntry('${t.code}','${board.replace(/'/g,"\\'")}','${exam.replace(/'/g,"\\'")}','${cat.replace(/'/g,"\\'")}','${sub.replace(/'/g,"\\'")}')">🚀 Start Live Test Now</button>
+                    </div>
+                `;
+            });
+            notStarted.forEach(t => {
+                const p = window.parseHack(t.topic);
+                const board = p.board || t.exam || "General Exam";
+                const exam = t.exam || "Mock Test";
+                const cat = p.cat || t.category || "Mock Tests";
+                const sub = p.subcat || t.subject || t.sub || "Subject";
+                const start = new Date(t.liveStart);
+                const countdown = window.formatCountdown(start - now);
+                const startStr = start.toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+                html += `
+                    <div class="live-test-card" style="border-color:var(--warning);">
+                        <span class="upcoming-badge">📅 Starts Soon</span>
+                        <div style="margin-top:8px;font-weight:800;color:var(--primary);font-size:14px;">🏛️ ${board} — 🎓 ${exam}</div>
+                        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${sub}${t.code ? ' • Code: ' + t.code : ''}</div>
+                        <div class="live-test-meta-row">
+                            <span class="badge" style="font-size:9px;">📂 ${cat}</span>
+                            <span class="badge" style="font-size:9px;">🗓️ ${startStr}</span>
+                        </div>
+                        <div class="live-countdown" style="margin-top:4px;background:rgba(245,158,11,0.12);color:var(--warning);">⏳ Starts in ${countdown}</div>
+                    </div>
+                `;
+            });
+            box.innerHTML = html;
+        };
+
+        window.formatCountdown = function(ms) {
+            if (ms <= 0) return "0m";
+            const totalMin = Math.floor(ms / 60000);
+            const days = Math.floor(totalMin / 1440);
+            const hrs = Math.floor((totalMin % 1440) / 60);
+            const mins = totalMin % 60;
+            let s = "";
+            if (days > 0) s += days + "d ";
+            if (hrs > 0 || days > 0) s += hrs + "h ";
+            s += mins + "m";
+            return s.trim();
+        };
+
+        window.loadUpcomingScheduleForStudent = function() {
+            const box = document.getElementById('live-tests-upcoming');
+            if (!box) return;
+            box.innerHTML = "<div style='text-align:center;padding:10px;'><div class='loader-mini' style='width:22px;height:22px;'></div></div>";
+            db.collection("scheduledTests").get().then((snap) => {
+                const now = new Date();
+                const items = [];
+                snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+                const upcoming = items.filter(it => it.date && new Date(it.date) >= now).sort((a, b) => new Date(a.date) - new Date(b.date));
+                if (upcoming.length === 0) {
+                    box.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:12px;padding:10px 0;'>Koi upcoming test announcement nahi hai.</p>";
+                    return;
+                }
+                let h = "";
+                upcoming.forEach(it => {
+                    const dateStr = new Date(it.date).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    h += `
+                        <div class="upcoming-test-card">
+                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                                <span style="font-weight:800;color:var(--primary);font-size:13px;">🏛️ ${it.board} — 🎓 ${it.exam}</span>
+                                <span class="upcoming-badge">📅 ${dateStr}</span>
+                            </div>
+                            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">📂 ${it.type||'Mock Tests'}</div>
+                            ${it.note ? `<div style="font-size:11px;color:var(--text-main);margin-top:4px;">📝 ${it.note}</div>` : ""}
+                        </div>
+                    `;
+                });
+                box.innerHTML = h;
+            }).catch((error) => {
+                box.innerHTML = `<p style="text-align:center;color:var(--danger);font-size:11px;">Failed to load schedule.</p>`;
+            });
         };
 
         window.fetchActiveTests = function() {
@@ -6818,27 +7395,63 @@
                 const adminManage = document.getElementById('admin-manage-section');
                 if (adminManage && adminManage.style.display === 'block') window.renderDashboard();
                 else window.showExamsView();
+                window.attachLiveTestsListener();
                 return;
             }
             const stLoader = document.getElementById('st-active-loader');
             const stFolder = document.getElementById('st-folder-view');
             if (stLoader) stLoader.style.display = 'block';
             if (stFolder) stFolder.innerHTML = '';
-            db.collection("tests").get().then((querySnapshot) => {
+            window.attachLiveTestsListener(true);
+        };
+
+        // ==========================================================================
+        // LIVE SYNC: keeps window.globalActiveTests updated in real time via a
+        // Firestore onSnapshot listener, so anything the admin adds/edits/removes
+        // reaches every open student tab instantly -- no manual refresh needed.
+        // Safety: while a student is mid-exam or on any screen other than the
+        // exam-selection list, incoming updates only refresh the underlying data
+        // quietly in the background; the visible list is only re-painted when the
+        // student is actually looking at it, so an in-progress test, an open
+        // result, or a report screen is never disturbed by a live update.
+        // ==========================================================================
+        window._liveTestsListenerAttached = false;
+        window.attachLiveTestsListener = function(isFirstLoad) {
+            if (window._liveTestsListenerAttached) return;
+            window._liveTestsListenerAttached = true;
+            db.collection("tests").onSnapshot((querySnapshot) => {
                 const tests = [];
                 querySnapshot.forEach((doc) => { tests.push(doc.data()); });
                 window.globalActiveTests = tests;
+
+                const stLoader = document.getElementById('st-active-loader');
                 if (stLoader) stLoader.style.display = 'none';
-                const adminManage = document.getElementById('admin-manage-section');
-                if (adminManage && adminManage.style.display === 'block') window.renderDashboard();
-                else window.showExamsView();
-            }).catch((error) => {
+
+                const examView = document.getElementById('exam-view');
+                const isMidExam = examView && examView.classList.contains('active-view');
+                if (isMidExam) return;
+
+                const dashView = document.getElementById('student-dashboard-view');
+                const isOnDashboard = dashView && dashView.classList.contains('active-view');
+                const activeSection = document.getElementById('st-active-section');
+                const isOnActiveTab = activeSection && activeSection.style.display !== 'none';
+                const liveSection = document.getElementById('st-live-section');
+                const isOnLiveTab = liveSection && liveSection.style.display !== 'none';
+
+                if (isFirstLoad || (isOnDashboard && isOnActiveTab)) {
+                    window.showExamsView();
+                }
+                if (isOnDashboard && isOnLiveTab && typeof window.renderLiveOngoingTests === 'function') {
+                    window.renderLiveOngoingTests();
+                }
+                isFirstLoad = false;
+            }, (error) => {
+                const stLoader = document.getElementById('st-active-loader');
                 if (stLoader) stLoader.style.display = 'none';
                 const localTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
                 window.globalActiveTests = localTests;
-                const adminManage = document.getElementById('admin-manage-section');
-                if (adminManage && adminManage.style.display === 'block') window.renderDashboard();
-                else window.showExamsView();
+                window.showExamsView();
+                window._liveTestsListenerAttached = false;
             });
         };
 
@@ -7320,14 +7933,12 @@
             const reorderSec = document.getElementById('admin-reorder-section');
             const studentsSec = document.getElementById('admin-students-section');
             const logoSec = document.getElementById('admin-logo-section');
-            const liveSchedSec = document.getElementById('admin-liveschedule-section');
             if (createSec) createSec.style.display = 'none';
             if (manageSec) manageSec.style.display = 'none';
             if (iconSec) iconSec.style.display = 'none';
             if (reorderSec) reorderSec.style.display = 'none';
             if (studentsSec) studentsSec.style.display = 'none';
             if (logoSec) logoSec.style.display = 'none';
-            if (liveSchedSec) liveSchedSec.style.display = 'none';
             document.querySelectorAll('.admin-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
             const tabs = document.querySelectorAll('.admin-tabs .tab-btn');
             if (tab === 'create') {
@@ -7366,10 +7977,6 @@
                 shapeRadios.forEach(r => {
                     r.checked = (r.value === window.portalLogoShape);
                 });
-            } else if (tab === 'liveschedule') {
-                if (tabs.length > 6) tabs[6].classList.add('active');
-                if (liveSchedSec) liveSchedSec.style.display = 'block';
-                window.loadScheduleList();
             }
         };
 
@@ -7565,64 +8172,10 @@
             }, "🗑️");
         };
 
-        window.openAdminLogin = function() {
-            try {
-                document.querySelectorAll('.view-section').forEach(v => { v.classList.remove('active-view'); v.style.display = ''; });
-                const authView = document.getElementById('admin-auth-view');
-                if (authView) { authView.classList.add('active-view');
-                    window.toggleAdminLock(false);
-                    window.scrollTo(0, 0); }
-            } catch (e) { console.error(e); }
-        };
-
-        window.loginAdmin = function() {
-            const idElem = document.getElementById('admin-id');
-            const passElem = document.getElementById('admin-pass');
-            const email = idElem ? idElem.value.trim() : "";
-            const pass = passElem ? passElem.value.trim() : "";
-            if (!email || !pass) {
-                window.showCustomAlert("Error", "❌ Enter email and password!", "❌");
-                return;
-            }
-            const btn = document.getElementById('admin-login-btn');
-            if (btn) { btn.disabled = true; btn.innerText = "Logging in..."; }
-
-            auth.signInWithEmailAndPassword(email, pass).then((cred) => {
-                // Login alone is not enough -- the account must also be listed
-                // in the server-side "admins" collection. Firestore Rules (not
-                // this JS) are what actually enforce this; this check just
-                // gives a clean UI message instead of a wall of write-denied
-                // errors if someone signs in with a non-admin account.
-                return db.collection("admins").doc(cred.user.uid).get().then((doc) => {
-                    if (btn) { btn.disabled = false; btn.innerText = "Login to Dashboard"; }
-                    if (doc.exists) {
-                        const authView = document.getElementById('admin-auth-view');
-                        const adminView = document.getElementById('admin-view');
-                        if (authView) authView.classList.remove('active-view');
-                        if (adminView) adminView.classList.add('active-view');
-                        window.switchAdminTab('create');
-                    } else {
-                        auth.signOut();
-                        window.showCustomAlert("Error", "❌ This account is not authorized as admin.", "❌");
-                    }
-                });
-            }).catch((error) => {
-                if (btn) { btn.disabled = false; btn.innerText = "Login to Dashboard"; }
-                window.showCustomAlert("Error", "❌ Invalid email or password!", "❌");
-            });
-        };
-
-        window.logoutAdmin = function() {
-            auth.signOut().then(() => {
-                document.querySelectorAll('.view-section').forEach(v => { v.classList.remove('active-view'); v.style.display = ''; });
-                const idElem = document.getElementById('admin-id');
-                const passElem = document.getElementById('admin-pass');
-                if (idElem) idElem.value = '';
-                if (passElem) passElem.value = '';
-                const authView = document.getElementById('admin-auth-view');
-                if (authView) authView.classList.add('active-view');
-            });
-        };
+        // Admin login is not part of the student portal. This build intentionally
+        // contains no admin views or admin credentials.
+        window.openAdminLogin = function() { /* disabled in student portal */ };
+        window.loginAdmin = function() { /* disabled in student portal */ };
 
         window.renderDashboard = function() {
             const dbTests = window.globalActiveTests || [];
@@ -7663,15 +8216,11 @@
                         else if (t.rawText) { const m = String(t.rawText).match(/!!\s*\d+\s*!/g); if (m) qC = m
                                 .length; }
                     }
-                    const isLiveMode = t.testMode === 'live';
-                    const liveBadge = isLiveMode ?
-                        `<span class="badge" style="font-size:8px;background:var(--danger);color:#fff;">🔴 LIVE: ${t.liveStart ? new Date(t.liveStart).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '?'} → ${t.liveEnd ? new Date(t.liveEnd).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '?'}</span>` :
-                        `<span class="badge" style="font-size:8px;background:var(--primary);color:#fff;">📝 Active Test</span>`;
                     h += `
-                        <div class="test-card" ${isLiveMode ? 'style="border:2px solid var(--danger);"' : ''}>
+                        <div class="test-card">
                             <div class="test-header"><div class="test-title" style="font-size:13px;">🎓 ${cEx} | ${cSu} (${t.code})</div>${sBtn}</div>
                             ${chapterTopic ? `<div class="test-subtitle" style="font-size:10px;">📖 ${chapterTopic}</div>` : ""}
-                            <div class="test-meta">${liveBadge}<span class="badge" style="font-size:8px;">📂 ${cCa}</span><span class="badge badge-primary" style="font-size:8px;">Qs: ${qC}</span><span class="badge" style="font-size:8px;">${pT}</span><span class="badge" style="font-size:8px;">+${t.marks||2}/-${t.neg||0}</span></div>
+                            <div class="test-meta"><span class="badge" style="font-size:8px;">📂 ${cCa}</span><span class="badge badge-primary" style="font-size:8px;">Qs: ${qC}</span><span class="badge" style="font-size:8px;">${pT}</span><span class="badge" style="font-size:8px;">+${t.marks||2}/-${t.neg||0}</span></div>
                             <input type="text" value="${t.link||(BASE_URL+'?test='+t.code)}" readonly style="width:100%;padding:6px;border:1px solid var(--border-color);font-size:10px;border-radius:var(--radius-sm);background:var(--bg-input);color:var(--text-main);margin-bottom:4px;">
                             <div style="display:flex;gap:4px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:8px;">
                                 <button class="btn btn-primary btn-sm" onclick="window.editTest('${t.code}')" style="font-size:9px;padding:3px 10px;">✏️ Edit</button>
@@ -7812,15 +8361,6 @@
             if (aRaw) aRaw.value = raw || "";
             if (aQsCount) aQsCount.value = window.parseRawQuestions(raw || "").length;
             window.togglePriceBox();
-
-            const aTestModeElem = document.getElementById('a-test-mode');
-            const aLiveStartElem = document.getElementById('a-live-start');
-            const aLiveEndElem = document.getElementById('a-live-end');
-            if (aTestModeElem) aTestModeElem.value = t.testMode === 'live' ? 'live' : 'active';
-            if (aLiveStartElem) aLiveStartElem.value = t.liveStart || "";
-            if (aLiveEndElem) aLiveEndElem.value = t.liveEnd || "";
-            window.toggleLiveFields();
-
             window.switchAdminTab('create');
             window.scrollTo(0, 0);
             const btn = document.getElementById('btn-generate');
@@ -7890,22 +8430,6 @@
             const eKey = "ANK";
             let eCategory = aCatElem ? aCatElem.value : "Mock Tests";
             if (eCategory === "CUSTOM" && aCustomCatElem) { eCategory = aCustomCatElem.value || "Custom Category"; }
-
-            const aTestModeElem = document.getElementById('a-test-mode');
-            const aLiveStartElem = document.getElementById('a-live-start');
-            const aLiveEndElem = document.getElementById('a-live-end');
-            const eTestMode = aTestModeElem ? aTestModeElem.value : "active";
-            if (eTestMode === "live") {
-                if (!aLiveStartElem?.value || !aLiveEndElem?.value) {
-                    return window.showCustomAlert("Live Dates Missing", "🔴 Live Test ke liye Start aur End date-time dono bharna zaroori hai.", "⚠️");
-                }
-                if (new Date(aLiveEndElem.value) <= new Date(aLiveStartElem.value)) {
-                    return window.showCustomAlert("Invalid Dates", "End date-time, Start date-time ke baad ka hona chahiye.", "⚠️");
-                }
-            }
-            const eLiveStart = (eTestMode === "live" && aLiveStartElem) ? aLiveStartElem.value : "";
-            const eLiveEnd = (eTestMode === "live" && aLiveEndElem) ? aLiveEndElem.value : "";
-
             let rawText = aRawDataElem ? aRawDataElem.value : "";
             if (!rawText.trim()) return window.showCustomAlert("Empty Box", "Paste questions!", "⚠️");
             const parsedQs = window.parseRawQuestions(rawText);
@@ -7944,9 +8468,6 @@
                 qs: fQs,
                 rawText: rawText,
                 isActive: true,
-                testMode: eTestMode,
-                liveStart: eLiveStart,
-                liveEnd: eLiveEnd,
                 tags: finalQs.map(q => q.tag || "General")
             };
 
@@ -7968,10 +8489,6 @@
                 if (aRawDataElem) aRawDataElem.value = "";
                 if (document.getElementById('a-qs-count')) document.getElementById('a-qs-count').value = "";
                 if (aSummaryElem) aSummaryElem.value = "";
-                if (aTestModeElem) aTestModeElem.value = "active";
-                if (aLiveStartElem) aLiveStartElem.value = "";
-                if (aLiveEndElem) aLiveEndElem.value = "";
-                window.toggleLiveFields();
 
                 const tLink = BASE_URL + "?test=" + eCode;
                 const sTests = JSON.parse(localStorage.getItem('myMockTests')) || [];
@@ -8878,6 +9395,7 @@
 
         /* ==========================================================================
            CALCULATE SCORE & SUBMIT – with Enhanced Analytics (Main Graph + Sub-Graphs)
+           + WEAK QUESTIONS STORAGE
            ========================================================================== */
         window.calculateScoreAndSubmit = function() {
             clearInterval(window.globalTimer);
@@ -8903,6 +9421,8 @@
             window.studentInfo.wrong = 0;
             window.studentInfo.blank = 0;
 
+            // Collect weak questions
+            const weakQs = [];
             // Collect tag-wise performance (Subject:Topic)
             const tagPerformance = {};
             const allTags = [];
@@ -8928,6 +9448,14 @@
                     tagPerformance[tag].wrong++;
                 }
                 tagPerformance[tag].total++;
+
+                // Store weak question info
+                if (!window.userAnswers[i] || gA !== cA) {
+                    weakQs.push({
+                        qId: i,
+                        isBlank: !window.userAnswers[i]
+                    });
+                }
             }
 
             const btnRight = document.getElementById('btn-cnt-right');
@@ -8979,11 +9507,13 @@
                 phone: window.studentInfo.phone || "",
                 score: window.studentInfo.score,
                 testCode: sC,
+                testName: window.examData.exam || window.examData.code || "Test",
                 right: window.studentInfo.right,
                 wrong: window.studentInfo.wrong,
                 blank: window.studentInfo.blank,
                 timeSpent: window.totalTimeSpent,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                weakQuestions: weakQs   // <-- NEW: store weak questions
             };
             db.collection("results").add(resData).then(() => {
                 const attemptedRecords = window.attemptedTestsCache || {};
@@ -9733,63 +10263,26 @@
                 return window.showCustomAlert("Error", "No registered mobile number found. Cannot fetch report.", "⚠️");
             }
             const phoneInput = window.studentInfo.phone;
-            // FIX: window.studentInfo.uid can lag behind the real Firebase auth
-            // state (onAuthStateChanged fires async), so a student who reloads
-            // the page and clicks "My Report" quickly could have uid === undefined
-            // even though they ARE logged in. Reading auth.currentUser.uid directly
-            // avoids that race condition.
-            const uid = (auth.currentUser && auth.currentUser.uid) || window.studentInfo.uid;
+            const uid = window.studentInfo.uid;
             const dispPhone = document.getElementById('disp-hist-phone');
             if (dispPhone) dispPhone.innerText = phoneInput;
             const histLoader = document.getElementById('st-hist-loader');
             const histList = document.getElementById('st-hist-list');
             if (histLoader) histLoader.style.display = 'block';
             if (histList) histList.innerHTML = '';
-
-            const byUid = uid ? db.collection("results").where("uid", "==", uid).get() :
-                Promise.resolve(null);
-
-            byUid.then(snapByUid => {
+            // Prefer a strict uid match — two different students could end up
+            // sharing the same phone digits by mistake, and uid is the only
+            // value that's guaranteed unique per account. Fall back to phone
+            // only for older result records saved before uid was recorded.
+            const query = uid ? db.collection("results").where("uid", "==", uid) :
+                db.collection("results").where("phone", "==", phoneInput);
+            query.get().then(snap => {
                 const records = [];
-                const seen = new Set();
-                if (snapByUid) {
-                    snapByUid.forEach(d => {
-                        const data = d.data();
-                        records.push(data);
-                        if (data.testCode) seen.add(data.testCode);
-                    });
-                }
-                // Older result records saved before "uid" existed on the
-                // document won't show up in the uid query above. Merge in a
-                // phone-based fetch as well, but do it as a SEPARATE, isolated
-                // step — if Firestore security rules reject this fallback
-                // query (e.g. rules only allow "uid == request.auth.uid"),
-                // it must not wipe out the uid results we already have.
-                db.collection("results").where("phone", "==", phoneInput).get().then(snapByPhone => {
-                    snapByPhone.forEach(d => {
-                        const data = d.data();
-                        if (!data.testCode || !seen.has(data.testCode)) {
-                            records.push(data);
-                            if (data.testCode) seen.add(data.testCode);
-                        }
-                    });
-                    window.handleStudentHistory({ records });
-                }).catch(phoneErr => {
-                    // Phone-fallback failed (likely a security-rules restriction on
-                    // querying by phone) — that's fine as long as we already have
-                    // the uid-based results. Log it so it's diagnosable, don't block.
-                    console.warn('Phone-based history fallback failed (non-fatal):', phoneErr);
-                    window.handleStudentHistory({ records });
-                });
+                snap.forEach(d => records.push(d.data()));
+                window.handleStudentHistory({ records });
             }).catch(err => {
                 if (histLoader) histLoader.style.display = 'none';
-                // FIX: show the REAL Firestore error (code + message) instead of a
-                // generic string, so the actual cause (permission-denied,
-                // failed-precondition/missing-index, unavailable/network, etc.)
-                // is visible immediately instead of guessing.
-                console.error('fetchStudentHistory error:', err);
-                const reason = (err && (err.code || err.message)) ? (err.code ? err.code + ': ' + err.message : err.message) : 'Unknown error';
-                window.showCustomAlert("Error", "Failed to fetch history from database.\n(" + reason + ")", "❌");
+                window.showCustomAlert("Error", "Failed to fetch history from database.", "❌");
             });
         };
 
@@ -10411,110 +10904,147 @@
         };
 
         /* ==========================================================================
-           LIVE TEST FIELDS TOGGLE
+           WEAK QUESTIONS FEATURE – NEW FUNCTIONS
            ========================================================================== */
-        window.toggleLiveFields = function() {
-            const modeSel = document.getElementById('a-test-mode');
-            const liveBox = document.getElementById('live-test-fields');
-            if (modeSel && liveBox) { liveBox.style.display = (modeSel.value === 'live') ? 'block' : 'none'; }
-        };
-
-        /* ==========================================================================
-           LIVE TEST SCHEDULE (upcoming announcements — no questions attached yet)
-           ========================================================================== */
-        window.saveScheduledTest = function() {
-            const boardEl = document.getElementById('sch-board');
-            const examEl = document.getElementById('sch-exam');
-            const typeEl = document.getElementById('sch-type');
-            const dateEl = document.getElementById('sch-date');
-            const noteEl = document.getElementById('sch-note');
-            const btn = document.getElementById('btn-sch-save');
-
-            const board = boardEl ? boardEl.value.trim() : "";
-            const exam = examEl ? examEl.value.trim() : "";
-            const type = typeEl ? typeEl.value : "Mock Tests";
-            const date = dateEl ? dateEl.value : "";
-            const note = noteEl ? noteEl.value.trim() : "";
-
-            if (!board || !exam || !date) {
-                return window.showCustomAlert("Missing Fields", "Board, Exam Name aur Date bharna zaroori hai.", "⚠️");
+        window.showWeakQuestions = function() {
+            const uid = window.studentInfo.uid;
+            if (!uid) {
+                return window.showCustomAlert("Error", "You are not logged in.", "⚠️");
             }
 
-            const editId = window.currentScheduleEditId || null;
-            const docId = editId || ("SCH-" + Date.now());
-            const obj = { board, exam, type, date, note, createdAt: editId ? undefined : new Date().toISOString() };
+            window.showLoadingModal("Fetching your weak questions...");
 
-            if (btn) { btn.innerText = "⏳ Saving...";
-                btn.disabled = true; }
+            db.collection("results").where("uid", "==", uid).get().then((snapshot) => {
+                const weakMap = new Map(); // testCode -> { testName, weakQuestions: [] }
 
-            db.collection("scheduledTests").doc(docId).set(obj, { merge: true }).then(() => {
-                if (btn) { btn.innerText = "📅 Add to Schedule";
-                    btn.disabled = false; }
-                if (boardEl) boardEl.value = "";
-                if (examEl) examEl.value = "";
-                if (dateEl) dateEl.value = "";
-                if (noteEl) noteEl.value = "";
-                window.currentScheduleEditId = null;
-                window.showCustomAlert("Saved", "✅ Schedule saved! Student ko 'Live Tests' tab me dikhega.", "📅");
-                window.loadScheduleList();
-            }).catch((error) => {
-                if (btn) { btn.innerText = "📅 Add to Schedule";
-                    btn.disabled = false; }
-                window.showCustomAlert("Error", error.message, "❌");
-            });
-        };
-
-        window.loadScheduleList = function() {
-            const list = document.getElementById('schedule-list');
-            if (!list) return;
-            list.innerHTML = "<div style='text-align:center;padding:14px;'><div class='loader-mini'></div></div>";
-            db.collection("scheduledTests").get().then((snap) => {
-                const items = [];
-                snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-                items.sort((a, b) => new Date(a.date) - new Date(b.date));
-                if (items.length === 0) {
-                    list.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:13px;padding:16px 0;'>Koi schedule nahi mila.</p>";
-                    return;
-                }
-                let h = "";
-                items.forEach(it => {
-                    const dateStr = it.date ? new Date(it.date).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "?";
-                    const isPast = it.date && new Date(it.date) < new Date();
-                    h += `
-                        <div class="test-card" style="${isPast ? 'opacity:0.55;' : ''}border:2px solid var(--danger);">
-                            <div class="test-header"><div class="test-title" style="font-size:13px;">🏛️ ${it.board} — 🎓 ${it.exam}</div>${isPast ? '<span class="badge" style="background:var(--text-muted);color:#fff;">Past</span>' : '<span class="badge" style="background:var(--danger);color:#fff;">📅 Upcoming</span>'}</div>
-                            <div class="test-meta"><span class="badge" style="font-size:8px;">📂 ${it.type||'Mock Tests'}</span><span class="badge badge-primary" style="font-size:8px;">🗓️ ${dateStr}</span></div>
-                            ${it.note ? `<div class="test-subtitle" style="font-size:11px;margin-top:4px;">📝 ${it.note}</div>` : ""}
-                            <div style="display:flex;gap:4px;flex-wrap:wrap;border-top:1px solid var(--border-color);padding-top:8px;margin-top:8px;">
-                                <button class="btn btn-primary btn-sm" style="font-size:9px;padding:3px 10px;" onclick='window.editScheduledTest(${JSON.stringify(it).replace(/'/g,"&apos;")})'>✏️ Edit</button>
-                                <button class="btn btn-danger btn-sm" style="font-size:9px;padding:3px 10px;" onclick="window.deleteScheduledTest('${it.id}')">🗑️ Delete</button>
-                            </div>
-                        </div>
-                    `;
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.weakQuestions && data.weakQuestions.length > 0) {
+                        const code = data.testCode || 'unknown';
+                        const name = data.testName || code;
+                        if (!weakMap.has(code)) {
+                            weakMap.set(code, { testName: name, questions: [] });
+                        }
+                        // Merge questions (avoid duplicates if multiple attempts)
+                        const existing = weakMap.get(code).questions;
+                        data.weakQuestions.forEach(wq => {
+                            if (!existing.some(e => e.qId === wq.qId)) {
+                                existing.push(wq);
+                            }
+                        });
+                    }
                 });
-                list.innerHTML = h;
-            }).catch((error) => {
-                list.innerHTML = `<p style='text-align:center;color:var(--danger);font-size:12px;'>Failed to load: ${error.message}</p>`;
+
+                window.closeModal(); // close loading
+
+                if (weakMap.size === 0) {
+                    return window.showCustomAlert("💪 Weak Questions", "You have no weak questions! Great job! 🎉", "🎯");
+                }
+
+                // Render in a modal
+                let html = '<div style="max-height:60vh; overflow-y:auto; text-align:left;">';
+                for (const [code, data] of weakMap) {
+                    html += `<h4 style="margin:10px 0 4px 0; color:var(--primary);">📝 ${data.testName}</h4>`;
+                    html += `<ul style="list-style:none; padding-left:0;">`;
+                    data.questions.forEach((wq, idx) => {
+                        // We need to fetch the actual question text. Since we have the test code and qId,
+                        // we can fetch the test data on demand, but for now we show a placeholder.
+                        // For better UX, we could pre-fetch all test data, but that would be heavy.
+                        // We'll display a "Practice" button that will fetch the question when clicked.
+                        const status = wq.isBlank ? '⬜ Blank' : '❌ Wrong';
+                        html += `<li style="padding:4px 0; border-bottom:1px solid var(--border-color);">
+                                    Q${wq.qId+1} ${status} 
+                                    <button class="btn btn-sm btn-outline" onclick="window.practiceWeakQuestion('${code}', ${wq.qId})" style="font-size:10px; padding:2px 8px;">Practice</button>
+                                </li>`;
+                    });
+                    html += `</ul>`;
+                    html += `<button class="btn btn-warning btn-sm" onclick="window.startWeakTest('${code}')">🔁 Practice All Weak Questions</button>`;
+                    html += `<hr style="margin:12px 0;">`;
+                }
+                html += '</div>';
+
+                window.showCustomAlert("💪 My Weak Questions", html, "📚");
+
+            }).catch(err => {
+                window.closeModal();
+                window.showCustomAlert("Error", "Failed to fetch weak questions: " + err.message, "❌");
             });
         };
 
-        window.editScheduledTest = function(it) {
-            document.getElementById('sch-board').value = it.board || "";
-            document.getElementById('sch-exam').value = it.exam || "";
-            document.getElementById('sch-type').value = it.type || "Mock Tests";
-            document.getElementById('sch-date').value = it.date || "";
-            document.getElementById('sch-note').value = it.note || "";
-            window.currentScheduleEditId = it.id;
-            window.scrollTo(0, 0);
+        window.practiceWeakQuestion = function(testCode, qId) {
+            // Fetch the original test data to get the question
+            db.collection("tests").doc(testCode).get().then((doc) => {
+                if (!doc.exists) {
+                    return window.showCustomAlert("Error", "Test data not found.", "❌");
+                }
+                const testData = doc.data();
+                const question = testData.questions?.[qId];
+                if (!question) {
+                    return window.showCustomAlert("Error", "Question not found.", "❌");
+                }
+                // Create a mini test with just this question
+                const weakExamData = {
+                    ...testData,
+                    code: testCode + '-WEAK-SINGLE',
+                    questions: [question],
+                    totTime: 60, // 1 minute for a single question
+                    qTime: 30,
+                    exam: testData.exam + ' (Weak Q)'
+                };
+                window.examData = weakExamData;
+                window.startExam(true);
+            }).catch(err => {
+                window.showCustomAlert("Error", "Could not load question: " + err.message, "❌");
+            });
         };
 
-        window.deleteScheduledTest = function(id) {
-            window.showCustomConfirm("Delete Schedule", "Is scheduled announcement ko delete karein?", () => {
-                db.collection("scheduledTests").doc(id).delete().then(() => {
-                    window.showCustomAlert("Deleted", "Schedule delete ho gaya.", "🗑️");
-                    window.loadScheduleList();
-                }).catch((error) => window.showCustomAlert("Error", error.message, "❌"));
-            }, "🗑️");
+        window.startWeakTest = function(testCode) {
+            // First, fetch the weak questions for this test from the stored results
+            const uid = window.studentInfo.uid;
+            db.collection("results").where("uid", "==", uid).where("testCode", "==", testCode).get().then((snapshot) => {
+                const weakIndices = new Set();
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.weakQuestions) {
+                        data.weakQuestions.forEach(wq => weakIndices.add(wq.qId));
+                    }
+                });
+
+                if (weakIndices.size === 0) {
+                    return window.showCustomAlert("Info", "No weak questions for this test.", "💡");
+                }
+
+                // Fetch the full test data
+                db.collection("tests").doc(testCode).get().then((doc) => {
+                    if (!doc.exists) {
+                        return window.showCustomAlert("Error", "Test data not found.", "❌");
+                    }
+                    const testData = doc.data();
+                    const allQuestions = testData.questions || [];
+                    const weakQuestions = allQuestions.filter((_, idx) => weakIndices.has(idx));
+
+                    if (weakQuestions.length === 0) {
+                        return window.showCustomAlert("Info", "No weak questions found.", "💡");
+                    }
+
+                    // Create a new exam with only weak questions
+                    const weakExamData = {
+                        ...testData,
+                        code: testCode + '-WEAK',
+                        questions: weakQuestions,
+                        totTime: weakQuestions.length * 60, // 1 min per question
+                        qTime: 45,
+                        exam: testData.exam + ' (Weak Practice)'
+                    };
+                    window.examData = weakExamData;
+                    window.startExam(true); // reattempt mode
+                }).catch(err => {
+                    window.showCustomAlert("Error", "Failed to load test: " + err.message, "❌");
+                });
+
+            }).catch(err => {
+                window.showCustomAlert("Error", "Failed to fetch weak questions: " + err.message, "❌");
+            });
         };
 
         /* ==========================================================================
@@ -10555,7 +11085,7 @@
         window.generateCaptcha();
         window.loadPortalLogo();
 
-        console.log('🚀 TEST BODHI v24.1 — FINAL FIXES APPLIED');
+        console.log('🚀 TEST BODHI v24.1 — FINAL FIXES + WEAK QUESTIONS FEATURE');
         console.log('✅ Result view now uses TWO-COLUMN LAYOUT: Graphs on RIGHT, everything else on LEFT');
         console.log('✅ Analysis box is LARGER with scrollable content for better readability');
         console.log('✅ Profile photo is NOW CLICKABLE — opens a full-size lightbox');
@@ -10564,6 +11094,7 @@
         console.log('✅ Main graph shows Correct (Green), Wrong (Red), Blank (Yellow)');
         console.log('✅ Sub-graphs also show Correct/Wrong/Blank with proper colors');
         console.log('✅ Detailed performance table includes all topics with status (Strong/Average/Weak)');
+        console.log('✅ NEW: Weak Questions feature – practice only your weak questions!');
         console.log('📌 Tag format: !tag(Subject:Topic)');
         console.log('📌 Solution toggle shows explanation in analysis and report');
     </script>
@@ -10571,4 +11102,4 @@
     <!-- ===== PRINT AREA ===== -->
     <div id="print-area"></div>
 </body>
-</html>admin@testbodhi.com admin@testbodhi.com
+</html>
