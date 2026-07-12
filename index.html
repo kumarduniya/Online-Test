@@ -7566,7 +7566,10 @@
             clearInterval(window._liveCountdownInterval);
             window._liveCountdownInterval = setInterval(() => {
                 const liveSec = document.getElementById('st-live-section');
-                if (liveSec && liveSec.style.display !== 'none') window.renderLiveOngoingTests();
+                if (liveSec && liveSec.style.display !== 'none') {
+                    window.renderLiveOngoingTests();
+                    window.checkAndAutoStartMyRooms();
+                }
             }, 30000);
         };
 
@@ -7614,7 +7617,6 @@
                             <span class="badge" style="font-size:9px;">Qs: ${t.qs||(t.questions?t.questions.length:0)}</span>
                         </div>
                         <button class="btn btn-danger" style="width:100%;margin-top:6px;" onclick="window.navigateToTestEntry('${t.code}','${board.replace(/'/g,"\\'")}','${exam.replace(/'/g,"\\'")}','${cat.replace(/'/g,"\\'")}','${sub.replace(/'/g,"\\'")}')">🚀 Start Live Test Now</button>
-                        <button class="btn btn-outline" style="width:100%;margin-top:6px;" onclick="window.createTestRoom('${t.code}','${board.replace(/'/g,"\\'")}','${exam.replace(/'/g,"\\'")}','${cat.replace(/'/g,"\\'")}','${sub.replace(/'/g,"\\'")}')">👥 Create Test Room (Play with Friends)</button>
                     </div>
                 `;
             });
@@ -7664,29 +7666,82 @@
                 const now = new Date();
                 const items = [];
                 snap.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-                const upcoming = items.filter(it => it.date && new Date(it.date) >= now).sort((a, b) => new Date(a.date) - new Date(b.date));
-                if (upcoming.length === 0) {
+                // Keep an item visible for a few hours after it goes live, so the
+                // room card (member list / leaderboard / open-room) doesn't just
+                // vanish the moment the clock ticks over — students still need
+                // it right when the test starts and shortly after.
+                const GRACE_MS = 4 * 60 * 60 * 1000;
+                const visible = items.filter(it => it.date && (now - new Date(it.date)) < GRACE_MS)
+                    .sort((a, b) => new Date(a.date) - new Date(b.date));
+                if (visible.length === 0) {
                     box.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:12px;padding:10px 0;'>Koi upcoming test announcement nahi hai.</p>";
                     return;
                 }
                 let h = "";
-                upcoming.forEach(it => {
+                visible.forEach(it => {
                     const dateStr = new Date(it.date).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    const isLive = new Date(it.date) <= now;
                     h += `
                         <div class="upcoming-test-card">
                             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
                                 <span style="font-weight:800;color:var(--primary);font-size:13px;">🏛️ ${it.board} — 🎓 ${it.exam}</span>
-                                <span class="upcoming-badge">📅 ${dateStr}</span>
+                                <span class="upcoming-badge" ${isLive ? 'style="background:var(--danger);color:#fff;"' : ''}>${isLive ? '🔴 Live Now' : '📅 ' + dateStr}</span>
                             </div>
                             <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">📂 ${it.type||'Mock Tests'}</div>
                             ${it.note ? `<div style="font-size:11px;color:var(--text-main);margin-top:4px;">📝 ${it.note}</div>` : ""}
+                            <div id="sch-room-area-${it.id}" style="margin-top:8px;"></div>
                         </div>
                     `;
                 });
                 box.innerHTML = h;
+                // Room area is filled in separately (needs myRoomsCache, which
+                // may load slightly after this).
+                visible.forEach(it => window.renderScheduleRoomArea(it, isLive_helper(it, now)));
             }).catch((error) => {
                 box.innerHTML = `<p style="text-align:center;color:var(--danger);font-size:11px;">Failed to load schedule.</p>`;
             });
+            function isLive_helper(it, now) { return it.date && new Date(it.date) <= now; }
+        };
+
+        // Renders the Room controls (Create / Join / "your room" status) inside
+        // a schedule card. Only shown when the admin linked a real Test Code to
+        // this schedule entry — a plain text-only announcement gets no room UI.
+        window.renderScheduleRoomArea = function(it, isLive) {
+            const area = document.getElementById('sch-room-area-' + it.id);
+            if (!area) return;
+            if (!it.testCode) { area.innerHTML = "";
+                return; }
+
+            const myRoom = (window.myRoomsCache || []).find(r => r.scheduleId === it.id);
+            const boardSafe = (it.board || "").replace(/'/g, "\\'");
+            const examSafe = (it.exam || "").replace(/'/g, "\\'");
+            const typeSafe = (it.type || "Mock Tests").replace(/'/g, "\\'");
+
+            if (myRoom) {
+                const amIHost = myRoom.hostUid === (window.studentInfo && window.studentInfo.uid);
+                const memberCount = (myRoom.memberUids || []).length;
+                const statusLabel = myRoom.status === 'started' ? '🔴 Live Now' : (myRoom.status === 'ended' ? '🛑 Ended' : '⏳ Waiting');
+                area.innerHTML = `
+                    <div style="background:rgba(37,99,235,0.08);border:1px dashed var(--primary);border-radius:var(--radius-sm);padding:8px 10px;">
+                        <div style="font-size:11px;font-weight:700;color:var(--primary);">👥 Your Room • ${statusLabel} • ${memberCount} joined</div>
+                        <button class="btn btn-primary btn-sm" style="width:100%;margin-top:6px;" onclick="window.openTestRoomModal('${myRoom.id}', ${amIHost})">🔓 Open Room</button>
+                    </div>
+                `;
+                return;
+            }
+
+            if (isLive) {
+                // Test already went live per schedule — no new rooms allowed.
+                area.innerHTML = `<div style="font-size:11px;color:var(--text-muted);">🔒 Ab room create/join nahi ho sakta — test live ho chuka hai. Test seedhe upar se shuru karein.</div>`;
+                return;
+            }
+
+            area.innerHTML = `
+                <div style="display:flex;gap:6px;">
+                    <button class="btn btn-outline btn-sm" style="flex:1;" onclick="window.createTestRoom('${it.id}','${it.testCode}','${boardSafe}','${examSafe}','${typeSafe}','${it.date}')">🆕 Create Room</button>
+                    <button class="btn btn-outline btn-sm" style="flex:1;" onclick="window.promptJoinRoomByCode('${it.id}')">🔑 Join Room</button>
+                </div>
+            `;
         };
 
         /* ==========================================================================
@@ -7698,26 +7753,78 @@
            ========================================================================== */
         window._roomUnsub = null;
 
-        window.createTestRoom = function(testCode, board, exam, category, subject) {
+        window.createTestRoom = function(scheduleId, testCode, board, exam, category, liveAt) {
             const me = window.studentInfo;
             if (!me || !me.uid) return window.showCustomAlert("Error", "Please log in again.", "⚠️");
-            const roomId = "RM" + Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10);
-            const roomObj = {
-                hostUid: me.uid,
-                hostName: me.name || "Host",
-                testCode, board, exam, category, subject,
-                status: "waiting",
-                createdAt: new Date().toISOString(),
-                memberUids: [me.uid],
-                memberInfo: {
-                    [me.uid]: { name: me.name || "Host", studentId: me.studentId || "", submitted: false, score: null }
-                }
+
+            const doCreate = () => {
+                const roomId = "RM" + Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10);
+                const roomObj = {
+                    hostUid: me.uid,
+                    hostName: me.name || "Host",
+                    scheduleId, testCode, board, exam, category, subject: exam,
+                    liveAt: liveAt || null,
+                    status: "waiting",
+                    createdAt: new Date().toISOString(),
+                    memberUids: [me.uid],
+                    memberInfo: {
+                        [me.uid]: { name: me.name || "Host", studentId: me.studentId || "", submitted: false, score: null }
+                    }
+                };
+                db.collection("testRooms").doc(roomId).set(roomObj).then(() => {
+                    window.openTestRoomModal(roomId, true);
+                }).catch((err) => {
+                    window.showCustomAlert("Error", "Room create failed: " + err.message + (err.code === 'permission-denied' ? "\n\n⚠️ Firestore rules me 'testRooms' collection ka rule add karwana hoga." : ""), "❌");
+                });
             };
-            db.collection("testRooms").doc(roomId).set(roomObj).then(() => {
-                window.openTestRoomModal(roomId, true);
-            }).catch((err) => {
-                window.showCustomAlert("Error", "Room create failed: " + err.message + (err.code === 'permission-denied' ? "\n\n⚠️ Firestore rules me 'testRooms' collection ka rule add karwana hoga." : ""), "❌");
-            });
+
+            // Gentle nudge in case they already have a room for this exact
+            // schedule (e.g. accidentally tapped Create instead of Join) —
+            // they can still proceed and delete the extra one later from
+            // inside the room if it really was a mistake.
+            const existing = (window.myRoomsCache || []).find(r => r.scheduleId === scheduleId);
+            if (existing) {
+                return window.showCustomConfirm(
+                    "Already Have A Room",
+                    "Is test ke liye aapka pehle se ek room hai (Code: " + existing.id + "). Kya aap ek naya alag room banana chahte hain?",
+                    doCreate,
+                    "🤔"
+                );
+            }
+            doCreate();
+        };
+
+        window.promptJoinRoomByCode = function(scheduleId) {
+            window.showCustomPrompt("Join Room", "Apne dost ke Room Code daalein:", (code) => {
+                const clean = (code || "").trim().toUpperCase();
+                if (!clean) return;
+                window.joinTestRoomByCode(clean, scheduleId);
+            }, "🔑");
+        };
+
+        window.joinTestRoomByCode = function(roomId, scheduleId) {
+            const me = window.studentInfo;
+            if (!me || !me.uid) return window.showCustomAlert("Error", "Please log in again.", "⚠️");
+            const ref = db.collection("testRooms").doc(roomId);
+            ref.get().then((doc) => {
+                if (!doc.exists) return window.showCustomAlert("Not Found", "Is code ka koi room nahi mila. Code check karke dobara try karein.", "❌");
+                const room = doc.data();
+                if ((room.memberUids || []).includes(me.uid)) {
+                    return window.openTestRoomModal(roomId, room.hostUid === me.uid);
+                }
+                if (room.status !== 'waiting') {
+                    return window.showCustomAlert("Can't Join", "Ye room ab join nahi ho sakta — test already start/end ho chuka hai.", "⚠️");
+                }
+                if (room.liveAt && new Date(room.liveAt) <= new Date()) {
+                    return window.showCustomAlert("Can't Join", "Test live ho chuka hai — ab is room mein join nahi ho sakta.", "🔒");
+                }
+                ref.update({
+                    memberUids: firebase.firestore.FieldValue.arrayUnion(me.uid),
+                    [`memberInfo.${me.uid}`]: { name: me.name || "Student", studentId: me.studentId || "", submitted: false, score: null }
+                }).then(() => {
+                    window.openTestRoomModal(roomId, false);
+                }).catch((err) => window.showCustomAlert("Error", "Join failed: " + err.message, "❌"));
+            }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
         };
 
         window.openTestRoomModal = function(roomId, isHost) {
@@ -7740,6 +7847,8 @@
             if (modal) modal.style.display = 'none';
             if (window._roomUnsub) { window._roomUnsub();
                 window._roomUnsub = null; }
+            if (window._roomLeaderboardUnsub) { window._roomLeaderboardUnsub();
+                window._roomLeaderboardUnsub = null; }
         };
 
         window.renderTestRoomBody = function(roomId, room, isHost) {
@@ -7748,11 +7857,18 @@
             const me = window.studentInfo;
             const amIHost = room.hostUid === (me && me.uid);
             const members = room.memberUids || [];
+            const isLive = room.liveAt ? (new Date(room.liveAt) <= new Date()) : false;
+
+            if (room.status === 'ended') {
+                body.innerHTML = `<p style="text-align:center;font-size:13px;color:var(--danger);padding:20px 0;">🛑 Ye room admin dwara band kar diya gaya hai.</p>`;
+                return;
+            }
 
             // Member who is NOT the host: auto-redirect the instant the host starts.
             if (!amIHost && room.status === 'started' && !window._roomAutoStarted) {
                 window._roomAutoStarted = true;
                 window.currentRoomId = roomId;
+                localStorage.setItem('activeRoomId', roomId); // survives the full-page navigation below
                 window.closeTestRoomModal();
                 window.navigateToTestEntry(room.testCode, room.board, room.exam, room.category, room.subject);
                 return;
@@ -7760,6 +7876,7 @@
             if (amIHost && room.status === 'started' && !window._roomAutoStarted) {
                 window._roomAutoStarted = true;
                 window.currentRoomId = roomId;
+                localStorage.setItem('activeRoomId', roomId);
                 window.closeTestRoomModal();
                 window.navigateToTestEntry(room.testCode, room.board, room.exam, room.category, room.subject);
                 return;
@@ -7783,25 +7900,68 @@
             `;
 
             if (amIHost && room.status === 'waiting') {
-                html += `
-                    <div style="display:flex;gap:6px;margin-top:12px;">
-                        <input type="text" id="trm-friend-id" placeholder="Friend's 6-digit Student ID" style="flex:1;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border-color);" />
-                        <button class="btn btn-primary btn-sm" onclick="window.addFriendToRoom('${roomId}')">➕ Add</button>
-                    </div>
-                    <button class="btn btn-danger" style="width:100%;margin-top:14px;" onclick="window.startRoomTest('${roomId}')">🚀 Start Room Test Now (Everyone)</button>
-                `;
+                if (isLive) {
+                    html += `<p style="text-align:center;font-size:12px;color:var(--danger);margin-top:12px;background:rgba(220,38,38,0.08);padding:8px;border-radius:var(--radius-sm);">🔒 Test live ho chuka hai — ab naye members add nahi kar sakte. Test khud-ba-khud shuru hone wala hai.</p>`;
+                } else {
+                    html += `
+                        <div style="display:flex;gap:6px;margin-top:12px;">
+                            <input type="text" id="trm-friend-id" placeholder="Friend's Student ID (phone number)" style="flex:1;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border-color);" />
+                            <button class="btn btn-primary btn-sm" onclick="window.addFriendToRoom('${roomId}')">➕ Add</button>
+                        </div>
+                    `;
+                }
+                html += `<button class="btn btn-danger" style="width:100%;margin-top:14px;" onclick="window.startRoomTest('${roomId}')">🚀 Start Room Test Now (Everyone)</button>`;
+                html += `<button class="btn btn-outline" style="width:100%;margin-top:8px;border-color:var(--danger);color:var(--danger);" onclick="window.deleteTestRoom('${roomId}')">🗑️ Delete This Room</button>`;
             } else if (!amIHost && room.status === 'waiting') {
                 html += `<p style="text-align:center;font-size:12px;color:var(--warning);margin-top:12px;">⏳ Waiting for host to start the test... (this will auto-open when they do)</p>`;
             }
 
-            html += `<button class="btn btn-outline" style="width:100%;margin-top:10px;" onclick="window.showRoomLeaderboard('${roomId}')">🏆 Room Leaderboard</button>`;
+            html += `<div id="trm-leaderboard" style="margin-top:14px;"><h4 style="font-size:12px;margin:0 0 6px 0;color:var(--text-main);">🏆 Room Leaderboard <span style="font-weight:400;color:var(--text-muted);font-size:10px;">(live — jitne submit kar chuke hain unka score turant yahin dikhega)</span></h4><div id="trm-leaderboard-body" style="font-size:12px;color:var(--text-muted);">Loading...</div></div>`;
             body.innerHTML = html;
+            window.attachRoomLeaderboardListener(roomId);
+        };
+
+        // Live-updating leaderboard embedded inside the room modal — shows
+        // whoever has ALREADY submitted, even if the test's full duration
+        // hasn't finished yet for others. Updates in real time via onSnapshot.
+        window._roomLeaderboardUnsub = null;
+        window.attachRoomLeaderboardListener = function(roomId) {
+            if (window._roomLeaderboardUnsub) { window._roomLeaderboardUnsub();
+                window._roomLeaderboardUnsub = null; }
+            window._roomLeaderboardUnsub = db.collection("results").where("roomId", "==", roomId).onSnapshot((snap) => {
+                const box = document.getElementById('trm-leaderboard-body');
+                if (!box) return;
+                const scores = [];
+                snap.forEach(d => scores.push(d.data()));
+                scores.sort((a, b) => (b.score || 0) - (a.score || 0));
+                if (scores.length === 0) {
+                    box.innerHTML = `<p style="text-align:center;padding:8px 0;">Abhi tak kisi ne submit nahi kiya.</p>`;
+                    return;
+                }
+                box.innerHTML = scores.map((s, idx) => {
+                    const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : (idx + 1) + '.'));
+                    return `<div style="display:flex;justify-content:space-between;padding:6px 10px;background:var(--bg-subtle);border-radius:var(--radius-sm);margin-bottom:6px;"><span>${medal} <b>${s.name||'Student'}</b></span><b style="color:var(--success);">${s.score||0}</b></div>`;
+                }).join('');
+            }, (err) => {
+                const box = document.getElementById('trm-leaderboard-body');
+                if (box) box.innerHTML = `<p style="color:var(--danger);">Leaderboard load nahi ho paya: ${err.message}</p>`;
+            });
+        };
+
+        window.deleteTestRoom = function(roomId) {
+            window.showCustomConfirm("Delete Room?", "Ye room permanently delete ho jayega. Agar aapne ye galti se ban diya tha (jaise ki dost ne pehle se apna room bana liya tha), to ise delete karna sahi hai.", () => {
+                db.collection("testRooms").doc(roomId).delete().then(() => {
+                    window.closeTestRoomModal();
+                    window.showCustomAlert("Deleted", "Room delete ho gaya.", "🗑️");
+                    window.checkMyRoomInvites();
+                }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
+            }, "🗑️");
         };
 
         window.addFriendToRoom = function(roomId) {
             const input = document.getElementById('trm-friend-id');
-            const sid = input ? input.value.trim() : "";
-            if (!/^[0-9]{6}$/.test(sid)) return window.showCustomAlert("Invalid ID", "6-digit Student ID daalein.", "⚠️");
+            const sid = input ? input.value.trim().replace(/[^0-9]/g, "") : "";
+            if (!sid || sid.length < 6) return window.showCustomAlert("Invalid ID", "Friend ka valid Student ID (unka registered phone number) daalein.", "⚠️");
             db.collection("users").where("studentId", "==", sid).limit(1).get().then((snap) => {
                 if (snap.empty) return window.showCustomAlert("Not Found", "Is Student ID ka koi account nahi mila.", "❌");
                 const doc = snap.docs[0];
@@ -7831,6 +7991,9 @@
                 const rooms = [];
                 snap.forEach(doc => { const d = doc.data();
                     if (d.status !== 'ended') rooms.push({ id: doc.id, ...d }); });
+                window.myRoomsCache = rooms; // used by the schedule cards to show "your room" status
+                window.loadUpcomingScheduleForStudent(); // re-render now that we know which rooms I'm in
+                window.checkAndAutoStartMyRooms();
                 if (rooms.length === 0) { box.innerHTML = "";
                     return; }
                 let html = "";
@@ -7840,13 +8003,31 @@
                         <div class="live-test-card" style="border-color:var(--primary);">
                             <span class="upcoming-badge" style="background:var(--primary);color:#fff;">👥 Test Room ${r.status === 'started' ? '(Live Now)' : '(Waiting)'}</span>
                             <div style="margin-top:8px;font-weight:800;color:var(--primary);font-size:14px;">🎓 ${r.exam} — ${r.board}</div>
-                            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${amIHost ? 'You created this room' : 'Hosted by ' + r.hostName} • Room: ${r.id}</div>
+                            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${amIHost ? 'You created this room' : 'Hosted by ' + r.hostName} • Room: ${r.id} • 👥 ${(r.memberUids||[]).length} joined</div>
                             <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="window.openTestRoomModal('${r.id}', ${amIHost})">🔓 Open Room</button>
                         </div>
                     `;
                 });
                 box.innerHTML = html;
             }).catch(() => { box.innerHTML = ""; });
+        };
+
+        // Best-effort auto-start: while any client (host or member) has the Live
+        // Tests tab open, this checks every room the logged-in student belongs
+        // to; if the room's scheduled go-live time has passed and it's still
+        // "waiting", it flips the room to "started" so everyone gets pulled in
+        // automatically. (There's no backend cron in this app, so this only
+        // fires while someone's browser is open around that time — same as how
+        // the rest of the live-test system already works.)
+        window.checkAndAutoStartMyRooms = function() {
+            const me = window.studentInfo;
+            if (!me || !me.uid || !window.myRoomsCache) return;
+            const now = Date.now();
+            window.myRoomsCache.forEach(r => {
+                if (r.status === 'waiting' && r.liveAt && new Date(r.liveAt).getTime() <= now) {
+                    db.collection("testRooms").doc(r.id).update({ status: 'started', startedAt: new Date().toISOString() }).catch(() => {});
+                }
+            });
         };
 
         window.showRoomLeaderboard = function(roomId) {
@@ -9984,6 +10165,7 @@
             window.toggleAdminLock(true);
 
             const sC = window.isReattemptMode ? (window.examData.code + "-RE") : window.examData.code;
+            const activeRoomId = window.currentRoomId || localStorage.getItem('activeRoomId') || null;
             const resData = {
                 uid: (window.studentInfo && window.studentInfo.uid) || "",
                 name: window.studentInfo.name || "Student",
@@ -9996,9 +10178,22 @@
                 blank: window.studentInfo.blank,
                 timeSpent: window.totalTimeSpent,
                 timestamp: Date.now(),
-                weakQuestions: weakQs   // <-- NEW: store weak questions
+                weakQuestions: weakQs,   // <-- NEW: store weak questions
+                roomId: activeRoomId // links this attempt to a "Play with Friends" room, if any
             };
             db.collection("results").add(resData).then(() => {
+                // If this attempt was taken inside a friend Test Room, mark this
+                // student as "submitted" on the room doc too — this is what
+                // powers the ✅ Submitted badge next to their name for
+                // everyone else still viewing the room.
+                if (activeRoomId && window.studentInfo && window.studentInfo.uid) {
+                    db.collection("testRooms").doc(activeRoomId).update({
+                        [`memberInfo.${window.studentInfo.uid}.submitted`]: true,
+                        [`memberInfo.${window.studentInfo.uid}.score`]: window.studentInfo.score
+                    }).catch(() => {}); // best-effort — never block result submission on this
+                    window.currentRoomId = null;
+                    localStorage.removeItem('activeRoomId');
+                }
                 const attemptedRecords = window.attemptedTestsCache || {};
                 attemptedRecords[window.examData.code] = window.studentInfo.score;
                 window.attemptedTestsCache = attemptedRecords;
