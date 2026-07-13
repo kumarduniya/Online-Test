@@ -7767,7 +7767,7 @@
             if (!it.testCode) { area.innerHTML = "";
                 return; }
 
-            const myRoom = (window.myRoomsCache || []).find(r => r.scheduleId === it.id);
+            const myRoom = (window.myRoomsCache || []).find(r => r.scheduleId === it.id || (it.testCode && r.testCode === it.testCode));
             const boardSafe = (it.board || "").replace(/'/g, "\\'");
             const examSafe = (it.exam || "").replace(/'/g, "\\'");
             const typeSafe = (it.type || "Mock Tests").replace(/'/g, "\\'");
@@ -7867,7 +7867,7 @@
             // schedule (e.g. accidentally tapped Create instead of Join) —
             // they can still proceed and delete the extra one later from
             // inside the room if it really was a mistake.
-            const existing = (window.myRoomsCache || []).find(r => r.scheduleId === scheduleId);
+            const existing = (window.myRoomsCache || []).find(r => r.scheduleId === scheduleId || (testCode && r.testCode === testCode));
             if (existing) {
                 return window.showCustomConfirm(
                     "Already Have A Room",
