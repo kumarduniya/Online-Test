@@ -7791,10 +7791,19 @@
 
             area.innerHTML = `
                 <div style="display:flex;gap:6px;">
-                    <button class="btn btn-outline btn-sm" style="flex:1;" onclick="window.createTestRoom('${it.id}','${it.testCode}','${boardSafe}','${examSafe}','${typeSafe}','${it.date}')">🆕 Create Room</button>
+                    <button class="btn btn-outline btn-sm" style="flex:1;" onclick="window.createTestRoom('${it.id}','${it.testCode}','${boardSafe}','${examSafe}','${typeSafe}','${it.date}','${window.computeScheduleEndISO(it)}')">🆕 Create Room</button>
                     <button class="btn btn-outline btn-sm" style="flex:1;" onclick="window.promptJoinRoomByCode('${it.id}')">🔑 Join Room</button>
                 </div>
             `;
+        };
+
+        // A schedule item's live window ends at (start date + duration). Used
+        // both to pass an expiry into new rooms (so they can auto-dissolve) and
+        // anywhere else that needs the true end time.
+        window.computeScheduleEndISO = function(it) {
+            if (!it.date) return "";
+            const end = new Date(it.date).getTime() + ((it.durationMinutes || 0) * 60000);
+            return new Date(end).toISOString();
         };
 
         /* ==========================================================================
@@ -7826,7 +7835,7 @@
             });
         };
 
-        window.createTestRoom = function(scheduleId, testCode, board, exam, category, liveAt) {
+        window.createTestRoom = function(scheduleId, testCode, board, exam, category, liveAt, liveEnd) {
             const me = window.studentInfo;
             if (!me || !me.uid) return window.showCustomAlert("Error", "Please log in again.", "⚠️");
 
@@ -7837,6 +7846,13 @@
                         hostName: me.name || "Host",
                         scheduleId, testCode, board, exam, category, subject: exam,
                         liveAt: liveAt || null,
+                        liveEnd: liveEnd || null,
+                        // A native Firestore Timestamp (not a string) so the
+                        // security rules can safely compare it against
+                        // request.time — this is what lets ANY authenticated
+                        // user delete/clean-up an expired room once the test's
+                        // window has genuinely ended, no matter who's online.
+                        liveEndTs: liveEnd ? firebase.firestore.Timestamp.fromDate(new Date(liveEnd)) : null,
                         status: "waiting",
                         createdAt: new Date().toISOString(),
                         memberUids: [me.uid],
@@ -7912,7 +7928,12 @@
             if (window._roomUnsub) { window._roomUnsub();
                 window._roomUnsub = null; }
             window._roomUnsub = db.collection("testRooms").doc(roomId).onSnapshot((doc) => {
-                if (!doc.exists) return;
+                if (!doc.exists) {
+                    const body = document.getElementById('trm-body');
+                    if (body) body.innerHTML = `<p style="text-align:center;font-size:13px;color:var(--text-muted);padding:20px 0;">🕐 Ye room dissolve ho chuka hai — test ka time khatam ho gaya tha.</p>`;
+                    if (window.myRoomsCache) window.myRoomsCache = window.myRoomsCache.filter(r => r.id !== roomId);
+                    return;
+                }
                 window.renderTestRoomBody(roomId, doc.data(), isHost);
             }, (err) => {
                 document.getElementById('trm-body').innerHTML = `<p style="color:var(--danger);font-size:12px;">Room load failed: ${err.message}</p>`;
@@ -8127,18 +8148,28 @@
             }).catch(() => { box.innerHTML = ""; });
         };
 
-        // Best-effort auto-start: while any client (host or member) has the Live
-        // Tests tab open, this checks every room the logged-in student belongs
-        // to; if the room's scheduled go-live time has passed and it's still
-        // "waiting", it flips the room to "started" so everyone gets pulled in
-        // automatically. (There's no backend cron in this app, so this only
-        // fires while someone's browser is open around that time — same as how
-        // the rest of the live-test system already works.)
+        // Best-effort auto-start AND auto-dissolve: while any client (host or
+        // member) has the Live Tests tab open, this checks every room the
+        // logged-in student belongs to:
+        //  - if the scheduled go-live time has passed and it's still
+        //    "waiting", flips it to "started" so everyone gets pulled in.
+        //  - if the test's live window has FULLY ended (liveEnd passed),
+        //    deletes the room outright — rooms shouldn't linger once their
+        //    test is over. (Security rules allow ANY member to delete an
+        //    already-expired room, so whichever client notices first does it;
+        //    duplicate delete attempts from other clients just silently fail.)
+        // (There's no backend cron in this app, so this only fires while
+        // someone's browser is open around that time — same as how the rest
+        // of the live-test system already works.)
         window.checkAndAutoStartMyRooms = function() {
             const me = window.studentInfo;
             if (!me || !me.uid || !window.myRoomsCache) return;
             const now = Date.now();
             window.myRoomsCache.forEach(r => {
+                if (r.liveEnd && new Date(r.liveEnd).getTime() <= now) {
+                    db.collection("testRooms").doc(r.id).delete().catch(() => {});
+                    return;
+                }
                 if (r.status === 'waiting' && r.liveAt && new Date(r.liveAt).getTime() <= now) {
                     db.collection("testRooms").doc(r.id).update({ status: 'started', startedAt: new Date().toISOString() }).catch(() => {});
                 }
