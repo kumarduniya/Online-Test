@@ -4843,6 +4843,14 @@
         </div>
     </div>
 
+    <div id="live-history-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999999999;align-items:center;justify-content:center;padding:16px;">
+        <div style="background:var(--bg-card);border-radius:var(--radius-lg);max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:20px;position:relative;box-shadow:var(--shadow-lg);">
+            <button onclick="window.closeLiveTestHistory()" style="position:absolute;top:10px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-muted);">✕</button>
+            <h3 style="margin:0 0 12px 0;color:var(--primary);font-size:16px;">🏆 Live Test History</h3>
+            <div id="lth-body">Loading...</div>
+        </div>
+    </div>
+
     <!-- ===== PROFILE PHOTO LIGHTBOX ===== -->
     <div id="profile-photo-lightbox" onclick="window.closeProfilePhotoLightbox()">
         <img class="ppl-content" id="ppl-image" src="" alt="Profile Photo" />
@@ -5096,8 +5104,9 @@
             </div>
 
             <div id="st-live-section" style="display:none;">
-                <div style="background:var(--bg-card);border:2px solid var(--danger);padding:16px;border-radius:var(--radius-lg);margin-bottom:16px;box-shadow:var(--shadow-sm);">
+                <div style="background:var(--bg-card);border:2px solid var(--danger);padding:16px;border-radius:var(--radius-lg);margin-bottom:16px;box-shadow:var(--shadow-sm);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
                     <h4 style="margin:0;color:var(--danger);font-size:15px;">🔴 Live Tests</h4>
+                    <button class="btn btn-outline btn-sm" onclick="window.openLiveTestHistory()">🏆 Live Test History</button>
                 </div>
                 <div id="live-tests-loader" style="text-align:center;display:none;padding:20px;">
                     <div class="loader-mini" style="width:28px; height:28px;"></div> <br />
@@ -7740,6 +7749,21 @@
             let h = "";
             upcoming.forEach(it => {
                 const dateStr = new Date(it.date).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const linkedTest = it.testCode ? (window.globalActiveTests || []).find(t => t.code === it.testCode) : null;
+                let detailsHtml = "";
+                if (linkedTest) {
+                    const qCount = (linkedTest.questions && Array.isArray(linkedTest.questions)) ? linkedTest.questions.length : (linkedTest.qs || 0);
+                    const perQMark = linkedTest.marks || 2;
+                    const totalMarks = qCount * perQMark;
+                    const durMin = it.durationMinutes || linkedTest.totTime || linkedTest.time || 0;
+                    detailsHtml = `
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                            <span class="badge" style="font-size:9px;">⏱ ${durMin} Min</span>
+                            <span class="badge" style="font-size:9px;">📝 ${qCount} Qs</span>
+                            <span class="badge" style="font-size:9px;">🎯 ${totalMarks} Marks</span>
+                        </div>
+                    `;
+                }
                 h += `
                     <div class="upcoming-test-card">
                         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
@@ -7747,6 +7771,7 @@
                             <span class="upcoming-badge">📅 ${dateStr}</span>
                         </div>
                         <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">📂 ${it.type||'Mock Tests'}${it.testCode ? ' • 🔗 Test Code: ' + it.testCode : ''}</div>
+                        ${detailsHtml}
                         ${it.note ? `<div style="font-size:11px;color:var(--text-main);margin-top:4px;">📝 ${it.note}</div>` : ""}
                         <div id="sch-room-area-${it.id}" style="margin-top:8px;"></div>
                     </div>
@@ -7775,11 +7800,15 @@
             if (myRoom) {
                 const amIHost = myRoom.hostUid === (window.studentInfo && window.studentInfo.uid);
                 const memberCount = (myRoom.memberUids || []).length;
+                const maxMembers = myRoom.maxMembers || 20;
                 const statusLabel = myRoom.status === 'started' ? '🔴 Live Now' : (myRoom.status === 'ended' ? '🛑 Ended' : '⏳ Waiting');
+                const addedByFriendMsg = (!amIHost) ?
+                    `<div style="font-size:11px;color:var(--success);margin-bottom:4px;">🎉 Aapko <b>${myRoom.hostName||'a friend'}</b> ne is Live Test ke room mein add kiya hai!</div>` : "";
                 area.innerHTML = `
                     <div style="background:rgba(37,99,235,0.08);border:1px dashed var(--primary);border-radius:var(--radius-sm);padding:8px 10px;">
-                        <div style="font-size:11px;font-weight:700;color:var(--primary);">👥 Your Room • ${statusLabel} • ${memberCount} joined</div>
-                        <button class="btn btn-primary btn-sm" style="width:100%;margin-top:6px;" onclick="window.openTestRoomModal('${myRoom.id}', ${amIHost})">🔓 Open Room</button>
+                        ${addedByFriendMsg}
+                        <div style="font-size:11px;font-weight:700;color:var(--primary);">👥 Your Room • ${statusLabel} • ${memberCount}/${maxMembers} joined</div>
+                        <button class="btn btn-primary btn-sm" style="width:100%;margin-top:6px;" onclick="window.openTestRoomModal('${myRoom.id}', ${amIHost})">🔓 View Room</button>
                     </div>
                 `;
                 return;
@@ -7849,6 +7878,7 @@
                         scheduleId, testCode, board, exam, category, subject: exam,
                         liveAt: liveAt || null,
                         liveEnd: liveEnd || null,
+                        maxMembers: 20, // "Maximum Members" cap shown in the room screen
                         // A native Firestore Timestamp (not a string) so the
                         // security rules can safely compare it against
                         // request.time — this is what lets ANY authenticated
@@ -7870,17 +7900,16 @@
                 });
             };
 
-            // Gentle nudge in case they already have a room for this exact
-            // schedule (e.g. accidentally tapped Create instead of Join) —
-            // they can still proceed and delete the extra one later from
-            // inside the room if it really was a mistake.
+            // Business rule: a student can only be in ONE room per test — no
+            // second room for the same schedule, whether by creating another
+            // or joining a different one. If they already have a room here,
+            // send them straight to it instead of letting a duplicate form.
             const existing = (window.myRoomsCache || []).find(r => r.scheduleId === scheduleId);
             if (existing) {
-                return window.showCustomConfirm(
+                return window.showCustomAlert(
                     "Already Have A Room",
-                    "Is test ke liye aapka pehle se ek room hai (Code: " + existing.id + "). Kya aap ek naya alag room banana chahte hain?",
-                    doCreate,
-                    "🤔"
+                    `Is test ke liye aapka pehle se ek room hai (Code: <b>${existing.id}</b>). Ek test ke liye sirf ek hi room ban sakta hai — apna existing room hi kholein.`,
+                    "🚫"
                 );
             }
             doCreate();
@@ -7907,11 +7936,20 @@
                 if (scheduleId && room.scheduleId && room.scheduleId !== scheduleId) {
                     return window.showCustomAlert("Wrong Test", `Ye Room Code kisi doosre test ke liye hai (Test Code: ${room.testCode}). Sahi schedule card se "Join Room" try karein.`, "⚠️");
                 }
+                // Business rule: only one room per test per student.
+                const existingRoomForThisSchedule = (window.myRoomsCache || []).find(r => r.scheduleId === room.scheduleId);
+                if (existingRoomForThisSchedule) {
+                    return window.showCustomAlert("Already In A Room", `Is test ke liye aap pehle se ek room mein hain (Code: <b>${existingRoomForThisSchedule.id}</b>). Ek test ke liye sirf ek hi room join kiya ja sakta hai.`, "🚫");
+                }
                 if (room.status !== 'waiting') {
                     return window.showCustomAlert("Can't Join", "Ye room ab join nahi ho sakta — test already start/end ho chuka hai.", "⚠️");
                 }
                 if (room.liveAt && new Date(room.liveAt) <= new Date()) {
                     return window.showCustomAlert("Can't Join", "Test live ho chuka hai — ab is room mein join nahi ho sakta.", "🔒");
+                }
+                const maxMembers = room.maxMembers || 20;
+                if ((room.memberUids || []).length >= maxMembers) {
+                    return window.showCustomAlert("Room Full", `Ye room already ${maxMembers} members ke saath full hai.`, "🚫");
                 }
                 ref.update({
                     memberUids: firebase.firestore.FieldValue.arrayUnion(me.uid),
@@ -7949,6 +7987,7 @@
                 window._roomUnsub = null; }
             if (window._roomLeaderboardUnsub) { window._roomLeaderboardUnsub();
                 window._roomLeaderboardUnsub = null; }
+            clearInterval(window._trmCountdownInterval);
         };
 
         window.renderTestRoomBody = function(roomId, room, isHost) {
@@ -7985,18 +8024,24 @@
             let membersHtml = members.map(uid => {
                 const info = (room.memberInfo && room.memberInfo[uid]) || {};
                 const isHostBadge = uid === room.hostUid ? ' <span class="badge" style="background:var(--primary);color:#fff;font-size:8px;">HOST</span>' : '';
-                const submittedBadge = info.submitted ? ` <span class="badge" style="background:var(--success);color:#fff;font-size:8px;">✅ Submitted (${info.score||0})</span>` : '';
+                const submittedBadge = info.submitted ? ` <span class="badge" style="background:var(--success);color:#fff;font-size:8px;">✅ Submitted (${info.score||0})</span>` : ` <span class="badge" style="background:var(--text-muted);color:#fff;font-size:8px;">⏳ Pending</span>`;
                 return `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--bg-subtle);border-radius:var(--radius-sm);margin-bottom:6px;font-size:12px;"><span><b>${info.name||'Student'}</b> ${info.studentId ? '(ID: '+info.studentId+')' : ''}${isHostBadge}</span>${submittedBadge}</div>`;
             }).join('');
 
+            const hostInfo = (room.memberInfo && room.memberInfo[room.hostUid]) || {};
+            const maxMembers = room.maxMembers || 20;
+            const startTimeStr = room.liveAt ? new Date(room.liveAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : "—";
+
             let html = `
-                <p style="font-size:12px;color:var(--text-muted);margin:0 0 8px 0;">🎓 ${room.board} — ${room.exam} | 📂 ${room.category}</p>
+                <p style="font-size:12px;color:var(--text-muted);margin:0 0 4px 0;">🎓 ${room.board} — ${room.exam} | 📂 ${room.category}</p>
+                <p style="font-size:11px;color:var(--text-muted);margin:0 0 8px 0;">👤 Host: <b>${room.hostName||'Unknown'}</b>${hostInfo.studentId ? ' (ID: ' + hostInfo.studentId + ')' : ''} • 👥 ${members.length}/${maxMembers} Members • 🗓️ Starts: ${startTimeStr}</p>
                 <div style="background:rgba(37,99,235,0.08);border:1px dashed var(--primary);border-radius:var(--radius);padding:10px;text-align:center;margin-bottom:12px;">
                     <div style="font-size:10px;color:var(--text-muted);">Room Code (share with friends)</div>
                     <div style="font-size:20px;font-weight:800;letter-spacing:2px;color:var(--primary);">${roomId}</div>
                     <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="window.copyRoomShareText('${roomId}','${(room.board||'').replace(/'/g,"\\'")}','${(room.exam||'').replace(/'/g,"\\'")}','${(room.category||'').replace(/'/g,"\\'")}','${room.testCode||''}')">📋 Copy to share (WhatsApp etc.)</button>
+                    ${(room.status === 'waiting' && room.liveAt) ? `<div style="margin-top:8px;font-size:13px;font-weight:700;color:var(--danger);">⏳ Starts in <span id="trm-countdown">…</span></div>` : ''}
                 </div>
-                <h4 style="font-size:12px;margin:0 0 6px 0;color:var(--text-main);">👥 Members (${members.length})</h4>
+                <h4 style="font-size:12px;margin:0 0 6px 0;color:var(--text-main);">👥 Members (${members.length}/${maxMembers})</h4>
                 ${membersHtml}
             `;
 
@@ -8019,14 +8064,33 @@
 
             html += `<div id="trm-leaderboard" style="margin-top:14px;"><h4 style="font-size:12px;margin:0 0 6px 0;color:var(--text-main);">🏆 Room Leaderboard <span style="font-weight:400;color:var(--text-muted);font-size:10px;">(live — jitne submit kar chuke hain unka score turant yahin dikhega)</span></h4><div id="trm-leaderboard-body" style="font-size:12px;color:var(--text-muted);">Loading...</div></div>`;
             body.innerHTML = html;
-            window.attachRoomLeaderboardListener(roomId);
+            window.attachRoomLeaderboardListener(roomId, room.hostUid);
+
+            // Live, second-by-second countdown to the room's start time.
+            clearInterval(window._trmCountdownInterval);
+            if (room.status === 'waiting' && room.liveAt) {
+                const tick = () => {
+                    const el = document.getElementById('trm-countdown');
+                    if (!el) { clearInterval(window._trmCountdownInterval);
+                        return; }
+                    const diff = new Date(room.liveAt).getTime() - Date.now();
+                    if (diff <= 0) { el.innerText = "Starting…";
+                        return; }
+                    const h = Math.floor(diff / 3600000);
+                    const m = Math.floor((diff % 3600000) / 60000);
+                    const s = Math.floor((diff % 60000) / 1000);
+                    el.innerText = `${h > 0 ? h + 'h ' : ''}${m}m ${s}s`;
+                };
+                tick();
+                window._trmCountdownInterval = setInterval(tick, 1000);
+            }
         };
 
         // Live-updating leaderboard embedded inside the room modal — shows
         // whoever has ALREADY submitted, even if the test's full duration
         // hasn't finished yet for others. Updates in real time via onSnapshot.
         window._roomLeaderboardUnsub = null;
-        window.attachRoomLeaderboardListener = function(roomId) {
+        window.attachRoomLeaderboardListener = function(roomId, hostUid) {
             if (window._roomLeaderboardUnsub) { window._roomLeaderboardUnsub();
                 window._roomLeaderboardUnsub = null; }
             window._roomLeaderboardUnsub = db.collection("results").where("roomId", "==", roomId).onSnapshot((snap) => {
@@ -8040,8 +8104,29 @@
                     return;
                 }
                 box.innerHTML = scores.map((s, idx) => {
-                    const medal = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : (idx + 1) + '.'));
-                    return `<div style="display:flex;justify-content:space-between;padding:6px 10px;background:var(--bg-subtle);border-radius:var(--radius-sm);margin-bottom:6px;"><span>${medal} <b>${s.name||'Student'}</b></span><b style="color:var(--success);">${s.score||0}</b></div>`;
+                    const rank = idx + 1;
+                    const isTop3 = rank <= 3;
+                    const medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : rank + '.'));
+                    const hostBadge = (hostUid && s.uid === hostUid) ? ' <span class="badge" style="background:var(--primary);color:#fff;font-size:8px;">HOST</span>' : '';
+                    const totalAttempted = (s.right || 0) + (s.wrong || 0);
+                    const accuracy = totalAttempted > 0 ? Math.round((s.right / totalAttempted) * 100) : 0;
+                    const timeStr = s.timeSpent ? `${Math.floor(s.timeSpent / 60)}m ${s.timeSpent % 60}s` : "—";
+                    const submitTimeStr = s.timestamp ? new Date(s.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "—";
+                    return `
+                        <div style="padding:8px 10px;background:${isTop3 ? 'rgba(37,99,235,0.08)' : 'var(--bg-subtle)'};border:${isTop3 ? '1px solid var(--primary)' : 'none'};border-radius:var(--radius-sm);margin-bottom:6px;transition:all .3s ease;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-size:12px;">${medal} <b>${s.name||'Student'}</b>${hostBadge} <span style="color:var(--text-muted);font-size:10px;">(ID: ${s.phone||'—'})</span></span>
+                                <b style="color:var(--success);font-size:14px;">${s.score||0}</b>
+                            </div>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;font-size:9px;color:var(--text-muted);">
+                                <span>✅ ${s.right||0} Correct</span>
+                                <span>❌ ${s.wrong||0} Wrong</span>
+                                <span>🎯 ${accuracy}% Accuracy</span>
+                                <span>⏱ ${timeStr}</span>
+                                <span>🕐 Submitted: ${submitTimeStr}</span>
+                            </div>
+                        </div>
+                    `;
                 }).join('');
             }, (err) => {
                 const box = document.getElementById('trm-leaderboard-body');
@@ -8100,16 +8185,41 @@
             const input = document.getElementById('trm-friend-id');
             const sid = input ? input.value.trim().replace(/[^0-9]/g, "") : "";
             if (!sid || sid.length < 6) return window.showCustomAlert("Invalid ID", "Friend ka valid Student ID (unka registered phone number) daalein.", "⚠️");
-            db.collection("users").where("studentId", "==", sid).limit(1).get().then((snap) => {
-                if (snap.empty) return window.showCustomAlert("Not Found", "Is Student ID ka koi account nahi mila.", "❌");
-                const doc = snap.docs[0];
-                const friendUid = doc.id;
-                const friendData = doc.data();
-                db.collection("testRooms").doc(roomId).update({
-                    memberUids: firebase.firestore.FieldValue.arrayUnion(friendUid),
-                    [`memberInfo.${friendUid}`]: { name: friendData.name || "Student", studentId: sid, submitted: false, score: null }
-                }).then(() => {
-                    if (input) input.value = "";
+            db.collection("testRooms").doc(roomId).get().then((roomDoc) => {
+                if (!roomDoc.exists) return window.showCustomAlert("Error", "Room nahi mila.", "❌");
+                const room = roomDoc.data();
+                // Defense-in-depth: the UI already hides this input once the
+                // test is live, but double-check here too before writing.
+                if (room.liveAt && new Date(room.liveAt) <= new Date()) {
+                    return window.showCustomAlert("Locked", "🔒 Test live ho chuka hai — ab is room mein naye members add nahi kiye ja sakte.", "🔒");
+                }
+                const maxMembers = room.maxMembers || 20;
+                if ((room.memberUids || []).length >= maxMembers) {
+                    return window.showCustomAlert("Room Full", `Ye room already ${maxMembers} members ke saath full hai.`, "🚫");
+                }
+                if ((room.memberUids || []).some(uid => (room.memberInfo && room.memberInfo[uid] && room.memberInfo[uid].studentId) === sid)) {
+                    return window.showCustomAlert("Already Added", "Ye student pehle se hi is room mein hai.", "ℹ️");
+                }
+                db.collection("users").where("studentId", "==", sid).limit(1).get().then((snap) => {
+                    if (snap.empty) return window.showCustomAlert("Not Found", "Is Student ID ka koi account nahi mila.", "❌");
+                    const doc = snap.docs[0];
+                    const friendUid = doc.id;
+                    const friendData = doc.data();
+                    // Business rule: that friend can only be in ONE room for
+                    // this test too — check they don't already have a
+                    // different room for the same schedule before adding.
+                    db.collection("testRooms").where("memberUids", "array-contains", friendUid).get().then((friendRoomsSnap) => {
+                        const alreadyInAnotherRoom = friendRoomsSnap.docs.some(d => d.id !== roomId && d.data().scheduleId === room.scheduleId);
+                        if (alreadyInAnotherRoom) {
+                            return window.showCustomAlert("Already In A Room", "Ye student is test ke liye pehle se hi kisi doosre room mein hai.", "🚫");
+                        }
+                        db.collection("testRooms").doc(roomId).update({
+                            memberUids: firebase.firestore.FieldValue.arrayUnion(friendUid),
+                            [`memberInfo.${friendUid}`]: { name: friendData.name || "Student", studentId: sid, submitted: false, score: null }
+                        }).then(() => {
+                            if (input) input.value = "";
+                        }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
+                    }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
                 }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
             }).catch((err) => window.showCustomAlert("Error", err.message, "❌"));
         };
@@ -8192,6 +8302,96 @@
                     db.collection("testRooms").doc(r.id).update({ status: 'started', startedAt: new Date().toISOString() }).catch(() => {});
                 }
             });
+        };
+
+        /* ==========================================================================
+           LIVE TEST HISTORY — every Test Room attempt a student has ever
+           submitted, reconstructed purely from the permanent /results
+           collection (roomId + right/wrong/score/timeSpent/timestamp are all
+           already stored there at submit time). This deliberately does NOT
+           depend on the testRooms document still existing, because rooms are
+           auto-dissolved once a test ends — the results themselves ARE the
+           permanent record, and a room's final standings can always be
+           rebuilt on demand from every result sharing that same roomId.
+           ========================================================================== */
+        window.openLiveTestHistory = function() {
+            const modal = document.getElementById('live-history-modal');
+            const body = document.getElementById('lth-body');
+            if (!modal || !body) return;
+            modal.style.display = 'flex';
+            body.innerHTML = "<div style='text-align:center;padding:20px;'><div class='loader-mini'></div></div>";
+
+            const me = window.studentInfo;
+            if (!me || !me.uid) { body.innerHTML = "<p style='text-align:center;color:var(--text-muted);'>Please log in.</p>";
+                return; }
+
+            db.collection("results").where("uid", "==", me.uid).get().then((snap) => {
+                const myRoomAttempts = [];
+                snap.forEach(doc => { const d = doc.data();
+                    if (d.roomId) myRoomAttempts.push(d); });
+                myRoomAttempts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                if (myRoomAttempts.length === 0) {
+                    body.innerHTML = "<p style='text-align:center;color:var(--text-muted);font-size:13px;padding:20px 0;'>Aapne abhi tak koi Live Test Room attempt nahi kiya hai.</p>";
+                    return;
+                }
+
+                // For each of my room attempts, pull every OTHER result that
+                // shares the same roomId, to reconstruct that room's final
+                // leaderboard + my rank within it.
+                const roomIds = [...new Set(myRoomAttempts.map(a => a.roomId))];
+                Promise.all(roomIds.map(rid => db.collection("results").where("roomId", "==", rid).get()))
+                    .then((snaps) => {
+                        const byRoom = {};
+                        snaps.forEach((s, i) => {
+                            const arr = [];
+                            s.forEach(d => arr.push(d.data()));
+                            arr.sort((a, b) => (b.score || 0) - (a.score || 0));
+                            byRoom[roomIds[i]] = arr;
+                        });
+
+                        let h = "";
+                        myRoomAttempts.forEach((att) => {
+                            const roomBoard = byRoom[att.roomId] || [];
+                            const myRank = roomBoard.findIndex(r => r.uid === me.uid) + 1;
+                            const totalMembers = roomBoard.length;
+                            const attemptDate = att.timestamp ? new Date(att.timestamp).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : "—";
+                            const rankMedal = myRank === 1 ? '🥇' : (myRank === 2 ? '🥈' : (myRank === 3 ? '🥉' : '#' + myRank));
+                            const snapshotId = 'lth-snap-' + att.roomId;
+                            h += `
+                                <div class="test-card" style="margin-bottom:10px;">
+                                    <div class="test-header" style="cursor:pointer;" onclick="window.toggleLthSnapshot('${snapshotId}')">
+                                        <div class="test-title" style="font-size:13px;">🎓 ${att.testName || 'Live Test'}</div>
+                                        <span class="badge" style="background:var(--primary);color:#fff;">${rankMedal} of ${totalMembers}</span>
+                                    </div>
+                                    <div style="font-size:11px;color:var(--text-muted);margin:4px 0;">🗓️ ${attemptDate} • 🔑 Room: ${att.roomId} • Score: <b style="color:var(--success);">${att.score||0}</b> (✅${att.right||0} ❌${att.wrong||0})</div>
+                                    <div style="font-size:10px;color:var(--primary);">▼ tap to see full room leaderboard</div>
+                                    <div id="${snapshotId}" style="display:none;margin-top:8px;">
+                                        ${roomBoard.map((r, idx) => {
+                                            const rank = idx + 1;
+                                            const medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : rank + '.'));
+                                            const isMe = r.uid === me.uid;
+                                            return `<div style="display:flex;justify-content:space-between;padding:5px 8px;background:${isMe ? 'rgba(37,99,235,0.12)' : 'var(--bg-subtle)'};border-radius:var(--radius-sm);margin-bottom:4px;font-size:11px;"><span>${medal} ${r.name||'Student'}${isMe ? ' (You)' : ''}</span><b>${r.score||0}</b></div>`;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        body.innerHTML = h;
+                    });
+            }).catch((error) => {
+                body.innerHTML = `<p style="text-align:center;color:var(--danger);font-size:12px;">Failed to load: ${error.message}</p>`;
+            });
+        };
+
+        window.closeLiveTestHistory = function() {
+            const modal = document.getElementById('live-history-modal');
+            if (modal) modal.style.display = 'none';
+        };
+
+        window.toggleLthSnapshot = function(id) {
+            const el = document.getElementById(id);
+            if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
         };
 
         window.showRoomLeaderboard = function(roomId) {
