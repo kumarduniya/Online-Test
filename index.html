@@ -7561,6 +7561,7 @@
             }
             window.loadScheduleDataAndRender();
             window.checkMyRoomInvites();
+            window.sweepExpiredRooms();
 
             clearInterval(window._liveCountdownInterval);
             window._liveCountdownInterval = setInterval(() => {
@@ -7568,6 +7569,7 @@
                 if (liveSec && liveSec.style.display !== 'none') {
                     window.renderLiveOngoingTests();
                     window.checkAndAutoStartMyRooms();
+                    window.sweepExpiredRooms();
                     // Re-pull the schedule too — a linked test's testMode is
                     // synced to 'live' the moment admin saves the schedule, so
                     // this mainly keeps the "Upcoming Schedule" list itself
@@ -8117,6 +8119,22 @@
                 db.collection("testRooms").doc(roomId).update({ status: "started", startedAt: new Date().toISOString() })
                     .catch((err) => window.showCustomAlert("Error", err.message, "❌"));
             }, "🚀");
+        };
+
+        // Broader clean-up net: instead of only dissolving a room the CURRENT
+        // student happens to belong to, this sweeps for ANY room (belonging to
+        // anyone) whose live window has already ended, and deletes it too.
+        // Security rules already allow any authenticated user to delete a room
+        // once its liveEndTs has passed, so every student's client that visits
+        // Live Tests pitches in — meaning expired rooms get cleared out fast
+        // even if the host/members never reopen the app.
+        window.sweepExpiredRooms = function() {
+            const me = window.studentInfo;
+            if (!me || !me.uid || !window.firebase || !firebase.firestore) return;
+            const nowTs = firebase.firestore.Timestamp.now();
+            db.collection("testRooms").where("liveEndTs", "<", nowTs).limit(15).get().then((snap) => {
+                snap.forEach(doc => doc.ref.delete().catch(() => {}));
+            }).catch(() => {}); // silently ignore (e.g. missing index while it's still building, or offline)
         };
 
         window.checkMyRoomInvites = function() {
