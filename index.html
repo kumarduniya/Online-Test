@@ -3448,15 +3448,15 @@
                 column-gap: 24px !important;
                 column-rule: 1px solid #ccc !important;
                 width: 100% !important;
-                margin-top: 6px !important;
+                margin-top: 4px !important;
                 display: block !important;
             }
             .print-q {
-                margin-bottom: 10px !important;
+                margin-bottom: 6px !important;
                 border-bottom: 1px dashed #ccc !important;
-                padding-bottom: 8px !important;
+                padding-bottom: 5px !important;
                 font-size: 12.5px !important;
-                line-height: 1.5 !important;
+                line-height: 1.3 !important;
                 color: #000 !important;
                 display: block !important;
                 width: 100% !important;
@@ -3468,39 +3468,62 @@
             .opt-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 4px 8px !important;
-                margin: 4px 0 !important;
+                gap: 2px 6px !important;
+                margin: 2px 0 !important;
                 page-break-inside: auto !important;
                 break-inside: auto !important;
             }
             .opt-item {
                 font-size: 12px !important;
                 color: #000 !important;
-                padding: 2px 0 !important;
+                padding: 1px 0 !important;
                 text-align: left !important;
             }
             .print-ans {
                 font-weight: 700 !important;
                 font-size: 11.5px !important;
                 color: #000 !important;
-                margin-top: 3px !important;
+                margin-top: 2px !important;
                 display: block !important;
             }
             .print-exp {
                 color: #222 !important;
                 font-size: 11.5px !important;
-                margin-top: 4px !important;
-                padding: 5px 8px !important;
+                margin-top: 3px !important;
+                padding: 4px 6px !important;
                 background: #f5f5f5 !important;
                 border-left: 3px solid #0f2b5c !important;
-                line-height: 1.4 !important;
+                line-height: 1.2 !important;
                 page-break-inside: auto !important;
                 break-inside: auto !important;
                 text-align: justify !important;
             }
+            /* Solution/Explanation text and Predicted-Question text often
+               come from a rich-text editor that wraps every line in its own
+               <p> or <div>, each carrying the browser's default ~1em
+               top/bottom margin — that stacked-up margin is the "unnecessary
+               gap between lines" being fixed here. Only the spacing of these
+               inner text elements is touched; the surrounding column layout,
+               page breaks, image sizing/position, fonts, and headings are
+               completely untouched. */
+            .print-exp p,
+            .print-exp div,
+            .pdf-pred-content p,
+            .pdf-pred-content div {
+                margin: 0 !important;
+                padding: 0 !important;
+                line-height: 1.25 !important;
+            }
+            .print-exp br,
+            .pdf-pred-content br {
+                line-height: 1.25 !important;
+            }
+            .pdf-pred-content {
+                line-height: 1.25 !important;
+            }
             .print-passage {
-                padding: 4px !important;
-                margin-bottom: 4px !important;
+                padding: 3px !important;
+                margin-bottom: 3px !important;
                 font-style: italic;
                 border-left: 4px solid #333;
                 font-size: 12px !important;
@@ -4209,7 +4232,7 @@
             padding: 2px 10px;
             border-radius: 50px;
             letter-spacing: 0.3px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             border: 1px solid #d4a843;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
@@ -5128,6 +5151,7 @@
                 <div id="subject-filter-section-top" style="margin:0 0 16px 0; border:2px solid var(--accent); border-radius:var(--radius); padding:12px 14px; background:var(--bg-subtle);">
                     <h3 style="color:var(--primary); font-size:14px; margin:0 0 8px 0;">📂 Filter by Subject</h3>
                     <div class="subject-filter-bar" id="subject-filter-bar-top" style="margin:0; border:none; padding:0; background:transparent;"></div>
+                    <div class="subject-filter-bar" id="chapter-filter-bar-top" style="display:none; margin:8px 0 0 0; border:none; padding:0; background:transparent;"></div>
                     <div id="subject-questions-container-top" class="subject-questions-container" style="margin-top:8px;">
                         <p style="color:var(--text-muted); font-size:13px; padding:8px 0;">Select a subject above to see all questions.</p>
                     </div>
@@ -5324,6 +5348,7 @@
                         <div class="result-buttons-row">
                             <button id="btn-img-down" class="btn btn-primary" onclick="window.downloadCertificateImage()">🖼️ Download</button>
                             <button id="btn-pdf-down-res" class="btn btn-danger" onclick="window.handleResultPDFClick()">📄 Q&A PDF</button>
+                            <button id="btn-predicted-pdf" class="btn btn-success" onclick="window.handlePredictedPDFClick()">🔥 Predictive PDF</button>
                             <button id="btn-reattempt" class="btn btn-warning" onclick="window.startReattempt()">🔄 Reattempt</button>
                         </div>
 
@@ -5348,7 +5373,7 @@
 
                         <!-- Close button -->
                         <div style="text-align:center;margin:6px 0 12px 0;">
-                            <button class="btn btn-primary" style="max-width:280px;margin:0 auto;font-size:12px;padding:8px 20px;" onclick="window.closeAndRedirect()">🏠 Close & Go Home</button>
+                            <button id="result-close-btn" class="btn btn-primary" style="max-width:280px;margin:0 auto;font-size:12px;padding:8px 20px;" onclick="window.closeAndRedirect()">🏠 Close & Go Home</button>
                         </div>
 
                     </div>
@@ -5392,6 +5417,9 @@
                                     <button class="topic-table-more-btn" id="result-topic-more-btn" onclick="window.toggleResultTopicTable()" style="font-size:11px;padding:4px 16px;">📋 Show More Topics</button>
                                 </div>
                             </div>
+
+                            <!-- CHAPTER-WISE PERFORMANCE (built from !T topicTag data, per-subject chapter breakdown) -->
+                            <div id="chapter-graphs-container" style="margin-top:12px;"></div>
                         </div>
 
                     </div>
@@ -6273,6 +6301,45 @@
             return str;
         };
 
+        // Root-cause fix for "too much gap between lines" in the Q+A PDF:
+        // question/solution content often arrives with a literal double
+        // line-break (<br><br>) hard-coded in the raw text wherever the
+        // original author wanted a paragraph gap (e.g. between "सही उत्तर..."
+        // and "विस्तृत व्याख्या:"). A <br> forces a full blank line at the
+        // element's line-height, so two in a row render as one extra empty
+        // line — that compounds inside the already-tight PDF columns and
+        // reads as a much bigger gap than intended. Collapsing any run of
+        // 2+ <br> tags down to exactly one <br> right before we drop the
+        // text into the PDF fixes this without touching the parser, the
+        // stored data, or single line breaks (which stay untouched).
+        window.tightenPdfBreaks = function(str) {
+            if (!str) return str;
+            return String(str).replace(/(?:<br\s*\/?>\s*){2,}/gi, '<br>');
+        };
+
+        // Single shared tag-badge builder used by BOTH the Q+A/Full PDF
+        // (executePDFPrintWithMathFix) and the Predictive Master PDF
+        // (executePredictedPDFPrint), so the topic tag above each question
+        // is always identical between the two PDF types. Prefers the new
+        // !T topicTag ("Subject :: Chapter :: Sub-topic") when present,
+        // falling back to the older single-level q.tag / examData.tags.
+        window.buildTopicBadge = function(q, i) {
+            const topicTag = (q.topicTag && q.topicTag.trim()) ? q.topicTag.trim() : "";
+            const rawTag = topicTag || q.tag || window.examData.tags?.[i] || "General";
+            if (topicTag && topicTag.includes('::')) {
+                const parts = topicTag.split('::').map(s => s.trim()).filter(Boolean);
+                return `<span class="pdf-tag-badge" style="background:#7c3aed !important;">${parts.map(x => x.toUpperCase()).join(' → ')}</span>`;
+            }
+            if (rawTag && rawTag !== "General") {
+                const parts = rawTag.split(':');
+                if (parts.length >= 2) {
+                    return `<span class="pdf-tag-badge">${parts[0].trim().toUpperCase()} → ${parts.slice(1).join(':').trim().toUpperCase()}</span>`;
+                }
+                return `<span class="pdf-tag-badge">📌 ${rawTag.toUpperCase()}</span>`;
+            }
+            return `<span class="pdf-tag-badge">📌 GENERAL</span>`;
+        };
+
         window.sanitizeQuestions = function(questionsArray) {
             if (!questionsArray || !Array.isArray(questionsArray)) return [];
             return questionsArray.map(q => {
@@ -6282,6 +6349,13 @@
                 if (safeQ.passage) safeQ.passage = window.sanitizeMath(safeQ.passage);
                 if (safeQ.opts) {
                     safeQ.opts = safeQ.opts.map(o => ({ ...o, text: window.sanitizeMath(o.text) }));
+                }
+                if (safeQ.predicted && Array.isArray(safeQ.predicted)) {
+                    safeQ.predicted = safeQ.predicted.map(p => ({
+                        ...p,
+                        q: p.q ? window.sanitizeMath(p.q) : p.q,
+                        s: p.s ? window.sanitizeMath(p.s) : p.s
+                    }));
                 }
                 return safeQ;
             });
@@ -6304,12 +6378,17 @@
                 .replace(/(\n|^)\s*(![A-D]\s)/gi, '\n$2')
                 .replace(/(\n|^)\s*(!!!\s*[A-D])/gi, '\n$2')
                 .replace(/(\n|^)\s*(!!!!)/g, '\n$2')
-                .replace(/(\n|^)\s*(!P\s)/gi, '\n$1!P ');
+                .replace(/(\n|^)\s*(!P\s)/gi, '\n$1!P ')
+                .replace(/(\n|^)\s*(!T\s)/gi, '\n$1!T ')
+                .replace(/(\n|^)\s*(!PQ\d+\s)/gi, '\n$2')
+                .replace(/(\n|^)\s*(!PS\d+\s)/gi, '\n$2');
             const parsedQs = [];
             let tempQ = null;
             let cPass = "";
             let cMode = "";
             let pendingTag = "";
+            let pendingTopicTag = "";
+            let predictIdx = -1;
             const lines = rawText.split('\n');
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
@@ -6319,6 +6398,34 @@
                 const tagLineMatch = line.match(/^!tag\(([^)]+)\)/i);
                 if (tagLineMatch) {
                     pendingTag = tagLineMatch[1].trim();
+                    continue;
+                }
+
+                const topicTagLineMatch = line.match(/^!T\s+(.+)/i);
+                if (topicTagLineMatch) {
+                    pendingTopicTag = topicTagLineMatch[1].trim();
+                    continue;
+                }
+
+                const pqMatch = line.match(/^!PQ(\d+)\s*(.*)$/i);
+                if (pqMatch && tempQ) {
+                    const n = parseInt(pqMatch[1], 10);
+                    if (!tempQ.predicted) tempQ.predicted = [];
+                    while (tempQ.predicted.length < n) tempQ.predicted.push({ q: "", s: "" });
+                    predictIdx = n - 1;
+                    tempQ.predicted[predictIdx].q = pqMatch[2].trim();
+                    cMode = "predicted_q";
+                    continue;
+                }
+
+                const psMatch = line.match(/^!PS(\d+)\s*(.*)$/i);
+                if (psMatch && tempQ) {
+                    const n = parseInt(psMatch[1], 10);
+                    if (!tempQ.predicted) tempQ.predicted = [];
+                    while (tempQ.predicted.length < n) tempQ.predicted.push({ q: "", s: "" });
+                    predictIdx = n - 1;
+                    tempQ.predicted[predictIdx].s = psMatch[2].trim();
+                    cMode = "predicted_s";
                     continue;
                 }
 
@@ -6347,7 +6454,12 @@
                         tag = pendingTag;
                     }
                     qLine = qLine.replace(/!tag\([^)]*\)/g, '').trim();
-                    tempQ = { q: qLine, opts: [], ans: "", exp: "", passage: cPass || "", tag: tag || "" };
+                    tempQ = {
+                        q: qLine, opts: [], ans: "", exp: "", passage: cPass || "", tag: tag || "",
+                        topicTag: pendingTopicTag || "", predicted: []
+                    };
+                    pendingTopicTag = "";
+                    predictIdx = -1;
                     cMode = "q";
                 } else if (line.match(/^![A-D]/i)) {
                     if (tempQ) {
@@ -6375,6 +6487,10 @@
                             tempQ.exp = (tempQ.exp || "") + (tempQ.exp ? "<br>" : "") + line;
                         } else if (cMode === "q") {
                             tempQ.q = (tempQ.q || "") + (tempQ.q ? "<br>" : "") + line;
+                        } else if (cMode === "predicted_q" && tempQ.predicted && predictIdx >= 0) {
+                            tempQ.predicted[predictIdx].q = (tempQ.predicted[predictIdx].q || "") + (tempQ.predicted[predictIdx].q ? "<br>" : "") + line;
+                        } else if (cMode === "predicted_s" && tempQ.predicted && predictIdx >= 0) {
+                            tempQ.predicted[predictIdx].s = (tempQ.predicted[predictIdx].s || "") + (tempQ.predicted[predictIdx].s ? "<br>" : "") + line;
                         } else if (cMode === "P" && cPass) {
                             cPass = (cPass || "") + (cPass ? "<br>" : "") + line;
                             if (tempQ) tempQ.passage = cPass;
@@ -9576,9 +9692,9 @@
                 <tbody>
                     <tr>
                         <td style="padding:10px 20px;position:relative;z-index:10;">
-                            <div class="print-header" style="text-align:center; border-bottom:2px solid #1a56db; padding-bottom:8px; margin-bottom:16px;">
-                                <h2 style="color:#1a56db; margin:0 0 4px 0;font-size:18px;">${window.examData.exam.toUpperCase()} ${mode==='q_only'?"(Questions Only)":(mode==='q_ans'?"(Questions + Answer Key)":"(Full Solution)")}</h2>
-                                <h3 style="color:#333; margin:0 0 4px 0;font-size:15px;">${window.examData.subject||window.examData.sub||"Subject"} ${dT ? " - "+dT : ""}</h3>
+                            <div class="print-header" style="text-align:center; border-bottom:2px solid #1a56db; padding-bottom:6px; margin-bottom:8px;">
+                                <h2 style="color:#1a56db; margin:0 0 2px 0;font-size:18px;">${window.examData.exam.toUpperCase()} ${mode==='q_only'?"(Questions Only)":(mode==='q_ans'?"(Questions + Answer Key)":"(Full Solution)")}</h2>
+                                <h3 style="color:#333; margin:0 0 2px 0;font-size:15px;">${window.examData.subject||window.examData.sub||"Subject"} ${dT ? " - "+dT : ""}</h3>
                                 <p style="margin:0; font-size:13px; color:#555;"><b>Student Name:</b> ${studentName} | <b>Test Code:</b> ${window.examData.code}</p>
                             </div>
                             <div class="pdf-questions-container">`;
@@ -9592,26 +9708,13 @@
                 const wM = (isW && mode === 'full') ?
                     '<span style="color:red;font-size:16px;margin-right:4px;">❌</span>' : "";
 
-                let tagDisplay = '';
-                const rawTag = q.tag || window.examData.tags?.[i] || "General";
-                if (rawTag && rawTag !== "General") {
-                    const parts = rawTag.split(':');
-                    if (parts.length >= 2) {
-                        const subject = parts[0].trim().toUpperCase();
-                        const topic = parts.slice(1).join(':').trim().toUpperCase();
-                        tagDisplay = `<span class="pdf-tag-badge">${subject} → ${topic}</span>`;
-                    } else {
-                        tagDisplay = `<span class="pdf-tag-badge">📌 ${rawTag.toUpperCase()}</span>`;
-                    }
-                } else {
-                    tagDisplay = `<span class="pdf-tag-badge">📌 GENERAL</span>`;
-                }
+                const tagDisplay = window.buildTopicBadge(q, i);
 
                 h +=
                     `<div class="print-q" style="display:block !important; break-inside:auto !important; page-break-inside:auto !important;">`;
-                if (q.passage) h += `<div class="print-passage">${q.passage}</div>`;
+                if (q.passage) h += `<div class="print-passage">${window.tightenPdfBreaks(q.passage)}</div>`;
                 h += `${tagDisplay}<br>`;
-                h += `<b>${wM}Q${i+1}. ${q.q}</b><div class="opt-grid">`;
+                h += `<b>${wM}Q${i+1}. ${window.tightenPdfBreaks(q.q)}</b><div class="opt-grid">`;
 
                 (q.opts || []).forEach(o => {
                     let inS = "padding:2px 0;color:#000;";
@@ -9620,7 +9723,7 @@
                         inS =
                             "background-color:#065f46 !important; color:#fff !important; font-weight:bold; padding:4px 8px; border-radius:4px; display:inline-block; -webkit-print-color-adjust:exact; print-color-adjust:exact;";
                     }
-                    h += `<div class="opt-item"><span style="${inS}">${o.id}. ${o.text}</span></div>`;
+                    h += `<div class="opt-item"><span style="${inS}">${o.id}. ${window.tightenPdfBreaks(o.text)}</span></div>`;
                 });
                 h += '</div>';
 
@@ -9632,15 +9735,15 @@
                         const aC = (gA === cA) ? "color:green;" : "color:red;";
                         const uD = (gA && uA !== "N/A") ? gA : "Skipped";
                         h +=
-                            `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span> <span style="margin-left:12px;font-weight:bold;font-size:14px;${aC}">Your Ans: ${uD}</span></div>`;
+                            `<div style="margin-top:2px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span> <span style="margin-left:12px;font-weight:bold;font-size:14px;${aC}">Your Ans: ${uD}</span></div>`;
                     } else {
                         h +=
-                            `<div style="margin-top:4px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span></div>`;
+                            `<div style="margin-top:2px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span></div>`;
                     }
                     if (mode === 'full' && q.exp && q.exp.trim() !== "") {
-                        h += `<div class="print-exp"><b>Explanation:</b><br>${q.exp}</div>`;
+                        h += `<div class="print-exp"><b>Explanation:</b><br>${window.tightenPdfBreaks(q.exp)}</div>`;
                     } else if (mode === 'q_ans' && q.exp && q.exp.trim() !== "") {
-                        h += `<div class="print-exp" style="background:#f9f9f9;border-left-color:#888;"><b>Solution:</b><br>${q.exp}</div>`;
+                        h += `<div class="print-exp" style="background:#f9f9f9;border-left-color:#888;"><b>Solution:</b><br>${window.tightenPdfBreaks(q.exp)}</div>`;
                     }
                 }
                 h += '</div>';
@@ -9650,7 +9753,7 @@
             const summ = window.examData.summary || "";
             if (summ.trim() !== "") {
                 h +=
-                    `<div style="margin-top:16px; padding:12px 16px; border:2px solid #1a56db; border-radius:8px; background:#f0f4fa; page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;"><h3 style="color:#1a56db; margin-top:0; margin-bottom:6px;font-size:15px;">📑 Test Summary (Topics Covered)</h3><p style="font-size:14px; color:#333; line-height:1.5; margin-bottom:0;">${summ.replace(/\n/g,'<br>')}</p></div>`;
+                    `<div style="margin-top:8px; padding:8px 12px; border:2px solid #1a56db; border-radius:8px; background:#f0f4fa; page-break-inside:avoid; -webkit-print-color-adjust:exact; print-color-adjust:exact;"><h3 style="color:#1a56db; margin-top:0; margin-bottom:4px;font-size:15px;">📑 Test Summary (Topics Covered)</h3><p style="font-size:14px; color:#333; line-height:1.5; margin-bottom:0;">${summ.replace(/\n/g,'<br>')}</p></div>`;
             }
             pA.innerHTML = h + '</td></tr></tbody></table>';
 
@@ -9690,6 +9793,150 @@
                 window.executePDFPrintWithMathFix(customName, 'full');
             } else {
                 window.showPremiumModal();
+            }
+        };
+
+        window.handlePredictedPDFClick = function() {
+            const isFreeStatus = (window.examData.isFree === true || String(window.examData.isFree).toLowerCase() ===
+                "true");
+            const isPremiumUser = (window.studentInfo && (window.studentInfo.isPremium === "TRUE" || window.studentInfo
+                .isPremium === true));
+            if (isFreeStatus || isPremiumUser) {
+                const customName = window.studentInfo.name || "Student";
+                window.executePredictedPDFPrint(customName);
+            } else {
+                window.showPremiumModal();
+            }
+        };
+
+        window.executePredictedPDFPrint = function(watermark) {
+            const pA = document.getElementById('print-area');
+            if (!pA || !window.examData || !window.examData.questions) return;
+
+            const studentName = watermark || window.studentInfo?.name || "Student";
+            const sU = BASE_URL + "?test=" + window.examData.code;
+            const p = window.parseHack(window.examData.topic);
+            const dT = p.topic || "";
+            const logoUrl = window.portalLogoURL || document.getElementById('header-logo-img')?.src || '';
+            const logoShape = window.portalLogoShape || 'round';
+            const logoStyle = logoShape === 'round' ? 'border-radius:50%;' : 'border-radius:8px;';
+
+            let h = `
+            <div class="pdf-watermark-wrapper">
+                <div class="wm-content">
+                    ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" style="${logoStyle}" />` : ''}
+                    <div class="wm-text">TEST BODHI</div>
+                    <div style="font-size:14px;font-weight:700;color:#0f2b5c;">${studentName}</div>
+                    <div style="font-size:16px;font-weight:600;color:#0f2b5c;letter-spacing:3px;">testbodi.com</div>
+                </div>
+            </div>
+            <table class="pdf-main-table">
+                <thead style="display:table-header-group;">
+                    <tr>
+                        <td style="padding:0;border:none;">
+                            <div class="pdf-header-strip">
+                                <table style="width:100%;border:none;">
+                                    <tr>
+                                        <td style="text-align:left;border:none;padding:0;">
+                                            <div class="hdr-brand">
+                                                ${logoUrl ? `<img src="${logoUrl}" alt="TEST BODHI Logo" style="${logoStyle}" />` : ''}
+                                                <span class="hdr-name">TEST <span>BODHI</span></span>
+                                            </div>
+                                        </td>
+                                        <td style="text-align:right;border:none;padding:0;">
+                                            <a href="${sU}" style="color:#f0d68a;font-weight:bold;font-size:14px;text-decoration:none;">📝 Give Online Test</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tfoot style="display:table-footer-group;">
+                    <tr>
+                        <td style="padding:0;border:none;">
+                            <div class="pdf-footer-strip">
+                                <div class="ftr-text">
+                                    <a href="tel:+918273684939">📞 +91-8273684939</a> |
+                                    <a href="${BASE_URL}">🌐 Website</a> |
+                                    <a href="https://t.me/ankushonlinetest">📢 Telegram</a> |
+                                    <a href="https://whatsapp.com/channel/0029VbDQwhM1yT268t0oVm3k">💬 WhatsApp</a> |
+                                    <a href="https://www.youtube.com/@ankushonlinetest">▶️ YouTube</a>
+                                    <span style="margin-left:16px;color:#f0d68a;">testbodi.com</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <tr>
+                        <td style="padding:10px 20px;position:relative;z-index:10;">
+                            <div class="print-header" style="text-align:center; border-bottom:2px solid #7c3aed; padding-bottom:6px; margin-bottom:8px;">
+                                <h2 style="color:#7c3aed; margin:0 0 2px 0;font-size:18px;">${window.examData.exam.toUpperCase()} (Predictive Master PDF)</h2>
+                                <h3 style="color:#333; margin:0 0 2px 0;font-size:15px;">${window.examData.subject||window.examData.sub||"Subject"} ${dT ? " - "+dT : ""}</h3>
+                                <p style="margin:0; font-size:13px; color:#555;"><b>Student Name:</b> ${studentName} | <b>Test Code:</b> ${window.examData.code}</p>
+                            </div>
+                            <div class="pdf-questions-container">`;
+
+            const totalQ = window.examData.questions.length;
+            window.examData.questions.forEach((q, i) => {
+                const cA = window.getCleanAns(q.ans);
+                h += `<div class="print-q" style="display:block !important; break-inside:auto !important; page-break-inside:auto !important;">`;
+                if (q.passage) h += `<div class="print-passage">${window.tightenPdfBreaks(q.passage)}</div>`;
+                h += `${window.buildTopicBadge(q, i)}<br>`;
+                h += `<b>Q${i+1}. ${window.tightenPdfBreaks(q.q)}</b><div class="opt-grid">`;
+                (q.opts || []).forEach(o => {
+                    const oC = window.getCleanAns(o.id);
+                    let inS = "padding:2px 0;color:#000;";
+                    if (oC === cA) {
+                        inS = "background-color:#065f46 !important; color:#fff !important; font-weight:bold; padding:4px 8px; border-radius:4px; display:inline-block; -webkit-print-color-adjust:exact; print-color-adjust:exact;";
+                    }
+                    h += `<div class="opt-item"><span style="${inS}">${o.id}. ${window.tightenPdfBreaks(o.text)}</span></div>`;
+                });
+                h += '</div>';
+                h += `<div style="margin-top:2px;"><span class="print-ans">Correct Option: ${cA||q.ans||"N/A"}</span></div>`;
+                if (q.exp && q.exp.trim() !== "") {
+                    h += `<div class="print-exp"><b>Explanation:</b><br>${window.tightenPdfBreaks(q.exp)}</div>`;
+                }
+                const predicted = (q.predicted || []).filter(p => (p.q && p.q.trim()) || (p.s && p.s.trim()));
+                if (predicted.length > 0) {
+                    h += `<div style="margin-top:6px;padding:8px 10px;border:2px solid #f59e0b;border-radius:8px;background:#fffbeb;-webkit-print-color-adjust:exact;print-color-adjust:exact;">
+                        <div style="font-weight:800;color:#b45309;font-size:14px;margin-bottom:4px;">🔥 Exam Prediction: 5 Expected Questions</div>`;
+                    predicted.forEach((pred, pi) => {
+                        if (pi > 0) h += `<hr style="margin:6px 0;border:none;border-top:2px dashed #d97706;" />`;
+                        h += `<div style="margin-bottom:2px;">
+                            <div style="font-weight:700;color:#92400e;margin-bottom:2px;">Predicted Q${pi + 1}</div>
+                            <div class="pdf-pred-content" style="font-size:13px;color:#111;margin-bottom:3px;">${window.tightenPdfBreaks(pred.q || "")}</div>`;
+                        if (pred.s && pred.s.trim()) {
+                            h += `<div style="font-weight:700;color:#065f46;margin-bottom:2px;">Solution</div>
+                            <div class="pdf-pred-content" style="font-size:13px;color:#333;">${window.tightenPdfBreaks(pred.s)}</div>`;
+                        }
+                        h += `</div>`;
+                    });
+                    h += `</div>`;
+                }
+                h += '</div>';
+                if (i < totalQ - 1) h += `<hr style="margin:10px 0;border:none;border-top:2px dashed #cbd5e1;" />`;
+            });
+
+            h += `</div></td></tr></tbody></table>`;
+            pA.innerHTML = h;
+
+            document.body.classList.add('print-pdf');
+            const triggerPrint = () => {
+                setTimeout(() => {
+                    window.print();
+                    setTimeout(() => { document.body.classList.remove('print-pdf'); }, 1000);
+                }, 600);
+            };
+            if (window.MathJax) {
+                window.MathJax.typesetPromise([pA]).then(triggerPrint).catch(() => {
+                    setTimeout(() => {
+                        window.MathJax.typesetPromise([pA]).then(triggerPrint).catch(triggerPrint);
+                    }, 500);
+                });
+            } else {
+                triggerPrint();
             }
         };
 
@@ -10427,6 +10674,9 @@
             // RENDER ENHANCED ANALYTICS
             window.renderEnhancedAnalytics(tagPerformance, allTags);
 
+            // RENDER CHAPTER-WISE PERFORMANCE (Subject -> Chapter breakdown from !T topicTag)
+            window.renderChapterPerformance(window.examData.questions);
+
             const rankLoader = document.getElementById('rank-loader');
             if (rankLoader) rankLoader.style.display = 'block';
             window.toggleAdminLock(true);
@@ -10482,6 +10732,169 @@
                 if (rankLoader) rankLoader.style.display = 'none';
                 document.getElementById('cert-rank').innerText = '#N/A / N/A';
                 window.fetchLeaderboardWithPhotos(window.examData.code);
+            });
+        };
+
+        /* ==========================================================================
+           CHAPTER-WISE PERFORMANCE (NEW, additive): Subject -> Chapter breakdown
+           built from each question's !T topicTag ("Subject :: Chapter" or
+           "Subject :: Topic :: Chapter"). Independent of the existing tag-based
+           Subject/Topic analytics above — does not modify that data or flow.
+           ========================================================================== */
+        window.renderChapterPerformance = function(questions) {
+            const container = document.getElementById('chapter-graphs-container');
+            if (!container) return;
+            container.innerHTML = '';
+            (window.chapterChartInstances || []).forEach(c => c && c.destroy());
+            window.chapterChartInstances = [];
+            if (!questions || questions.length === 0) return;
+
+            // Group by Subject -> Chapter using topicTag
+            const subjectChapterMap = {};
+            questions.forEach((q, i) => {
+                const tt = (q.topicTag || '').trim();
+                if (!tt) return;
+                const parts = tt.split('::').map(s => s.trim()).filter(Boolean);
+                if (parts.length < 2) return;
+                const subject = parts[0];
+                const chapter = parts[1];
+                if (!subjectChapterMap[subject]) subjectChapterMap[subject] = {};
+                if (!subjectChapterMap[subject][chapter]) {
+                    subjectChapterMap[subject][chapter] = { correct: 0, wrong: 0, blank: 0, total: 0 };
+                }
+                const perf = subjectChapterMap[subject][chapter];
+                const cA = window.getCleanAns(q.ans);
+                const gA = window.getCleanAns(window.userAnswers[i]);
+                if (!window.userAnswers[i]) {
+                    perf.blank++;
+                } else if (gA === cA) {
+                    perf.correct++;
+                } else {
+                    perf.wrong++;
+                }
+                perf.total++;
+            });
+
+            const subjects = Object.keys(subjectChapterMap);
+            if (subjects.length === 0) return;
+
+            const titleEl = document.createElement('div');
+            titleEl.className = 'analytics-title';
+            titleEl.style.marginTop = '4px';
+            titleEl.innerHTML = '📖 Chapter-wise Performance <span class="analytics-badge">Topic Tags</span>';
+            container.appendChild(titleEl);
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const textColor = isDark ? '#e8edf5' : '#1a2332';
+            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+
+            subjects.forEach(sub => {
+                const chapters = subjectChapterMap[sub];
+                const chapterNames = Object.keys(chapters);
+                if (chapterNames.length === 0) return;
+
+                const chCorrect = chapterNames.map(c => chapters[c].correct || 0);
+                const chWrong = chapterNames.map(c => chapters[c].wrong || 0);
+                const chBlank = chapterNames.map(c => chapters[c].blank || 0);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'sub-graph-container';
+                wrapper.innerHTML = `
+                    <div class="sub-graph-title">📖 ${sub} — Chapter-wise Performance</div>
+                    <div class="sub-graph-wrapper"><canvas id="chapterChart-${sub.replace(/\s/g,'')}"></canvas></div>
+                    <table class="sub-graph-detail-table">
+                        <thead><tr><th>Chapter</th><th>Total</th><th>Correct</th><th>Wrong</th><th>Accuracy</th></tr></thead>
+                        <tbody id="chapterTable-${sub.replace(/\s/g,'')}"></tbody>
+                    </table>
+                `;
+                container.appendChild(wrapper);
+
+                const tbody = wrapper.querySelector('tbody');
+                let tableHtml = '';
+                chapterNames.forEach(c => {
+                    const perf = chapters[c];
+                    const acc = perf.total > 0 ? Math.round((perf.correct / perf.total) * 100) : 0;
+                    tableHtml += `
+                        <tr>
+                            <td>${c}</td>
+                            <td>${perf.total}</td>
+                            <td style="color:var(--success);">${perf.correct}</td>
+                            <td style="color:var(--danger);">${perf.wrong}</td>
+                            <td style="font-weight:bold;">${acc}%</td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = tableHtml;
+
+                const canvas = wrapper.querySelector('canvas');
+                const ctx = canvas.getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chapterNames,
+                        datasets: [{
+                            label: '✅ Correct',
+                            data: chCorrect,
+                            backgroundColor: 'rgba(15,157,88,0.7)',
+                            borderColor: '#0f9d58',
+                            borderWidth: 1,
+                            borderRadius: 3,
+                            maxBarThickness: 40
+                        }, {
+                            label: '❌ Wrong',
+                            data: chWrong,
+                            backgroundColor: 'rgba(220,53,69,0.7)',
+                            borderColor: '#dc3545',
+                            borderWidth: 1,
+                            borderRadius: 3,
+                            maxBarThickness: 40
+                        }, {
+                            label: '⬜ Blank',
+                            data: chBlank,
+                            backgroundColor: '#ffffff',
+                            borderColor: isDark ? '#ffffff' : '#94a3b8',
+                            borderWidth: 1.5,
+                            borderRadius: 3,
+                            maxBarThickness: 40
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: textColor,
+                                    font: { size: 11, weight: 'bold' },
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                ticks: {
+                                    color: textColor,
+                                    font: { size: 10, weight: '600' },
+                                    maxRotation: 30,
+                                    minRotation: 20
+                                },
+                                grid: { display: false }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: textColor,
+                                    font: { size: 11, weight: '600' },
+                                    stepSize: 1
+                                },
+                                grid: { color: gridColor }
+                            }
+                        }
+                    }
+                });
+                window.chapterChartInstances.push(chart);
             });
         };
 
@@ -10757,7 +11170,8 @@
                                     color: textColor,
                                     font: { size: 9 },
                                     maxRotation: 25,
-                                    minRotation: 15
+                                    minRotation: 15,
+                                    autoSkip: false // BUGFIX: Chart.js was auto-hiding alternating topic labels when space was tight, making it look like every other topic was skipped. Forcing all labels to render fixes this without altering any color/design/layout.
                                 },
                                 grid: { display: false }
                             },
@@ -11292,12 +11706,14 @@
 
             const allSavedTests = window.getAllMergedTests();
             const shownTestCodes = new Set();
+            window._historyRecordsCache = window._historyRecordsCache || {};
 
             let h = '';
             records.forEach(r => {
                 const pdfCode = r.testCode ? String(r.testCode).replace('-RE', '') : '';
                 if (shownTestCodes.has(pdfCode)) return;
                 shownTestCodes.add(pdfCode);
+                window._historyRecordsCache[pdfCode] = r; // used by "View Result" below
 
                 const tData = allSavedTests.find(t => t.code === pdfCode) || {};
                 const p = window.parseHack(tData.topic || "");
@@ -11306,12 +11722,118 @@
                 const tCat = p.cat || "Mock Test";
                 const tSub = p.subcat || tData.subject || tData.sub || "Subject";
                 const tChap = p.topic || "";
-                h += `<div class="test-card hist-card-layout"><div class="hist-left"><h4 style="margin:0;color:var(--primary);font-size:14px;">📝 ${tBoard} - ${tExam} (${r.testCode||'Test'})</h4><div style="font-size:11px;color:var(--text-muted);margin:2px 0 6px 0;font-weight:600;">📂 ${tCat} | 📚 ${tSub} ${tChap ? ' | 📖 ' + tChap : ''}</div><div style="font-size:11px;color:var(--text-main);background:var(--bg-subtle);padding:6px 10px;border-radius:var(--radius-sm);border:1px solid var(--border-color); display:inline-block;">Attempt: <b>${r.attempt||1}</b> | Score: <b style="color:var(--success);font-size:13px;">${r.score||0}</b><br><span style="color:var(--success);margin-top:2px;display:inline-block;">✅ Right: ${r.right||0}</span> | <span style="color:var(--danger);">❌ Wrong: ${r.wrong||0}</span> | <span style="color:var(--text-muted);">⬜ Blank: ${r.blank||0}</span><br><div style="margin-top:2px;">⏱ Time Taken: ${Math.floor((r.timeSpent||0)/60)}m ${(r.timeSpent||0)%60}s</div></div></div><div class="hist-right"><button class="btn btn-danger btn-sm" style="margin:0; padding:6px 14px; font-size:11px;" onclick="window.downloadHistoryPDF('${pdfCode}')">📥 Download PDF</button></div></div>`;
+                h += `<div class="test-card hist-card-layout"><div class="hist-left"><h4 style="margin:0;color:var(--primary);font-size:14px;">📝 ${tBoard} - ${tExam} (${r.testCode||'Test'})</h4><div style="font-size:11px;color:var(--text-muted);margin:2px 0 6px 0;font-weight:600;">📂 ${tCat} | 📚 ${tSub} ${tChap ? ' | 📖 ' + tChap : ''}</div><div style="font-size:11px;color:var(--text-main);background:var(--bg-subtle);padding:6px 10px;border-radius:var(--radius-sm);border:1px solid var(--border-color); display:inline-block;">Attempt: <b>${r.attempt||1}</b> | Score: <b style="color:var(--success);font-size:13px;">${r.score||0}</b><br><span style="color:var(--success);margin-top:2px;display:inline-block;">✅ Right: ${r.right||0}</span> | <span style="color:var(--danger);">❌ Wrong: ${r.wrong||0}</span> | <span style="color:var(--text-muted);">⬜ Blank: ${r.blank||0}</span><br><div style="margin-top:2px;">⏱ Time Taken: ${Math.floor((r.timeSpent||0)/60)}m ${(r.timeSpent||0)%60}s</div></div></div><div class="hist-right" style="display:flex;flex-direction:column;gap:6px;"><button class="btn btn-primary btn-sm" style="margin:0; padding:6px 14px; font-size:11px;" onclick="window.openHistoricalResult('${pdfCode}')">👁️ View Result</button><button class="btn btn-danger btn-sm" style="margin:0; padding:6px 14px; font-size:11px;" onclick="window.downloadHistoryPDF('${pdfCode}')">📥 Download PDF</button></div></div>`;
             });
             list.innerHTML = h;
 
             window.renderSubjectFilterAndTopicPerformance(allSavedTests, records);
             window.computeAndShowRanks();
+        };
+
+        /* ==========================================================================
+           VIEW RESULT (from My Report) — reopens the exact same score-card +
+           rank + live leaderboard screen shown right after a fresh submission,
+           any time later, for any past test. Only a saved result record (score,
+           right/wrong/blank, timestamp) is available for a PAST attempt — the
+           per-question answer breakdown was never stored historically — so the
+           Analysis (Correct/Wrong/Blank review) and Subject-wise Analytics
+           sections, which need that detail, are hidden in this view rather than
+           shown inaccurately. Score, Rank, and Leaderboard are all populated
+           for real from the database, exactly like a fresh submission.
+           ========================================================================== */
+        window.openHistoricalResult = function(pdfCode) {
+            const record = window._historyRecordsCache && window._historyRecordsCache[pdfCode];
+            if (!record) return window.showCustomAlert("Error", "Result data not found — please refresh My Report and try again.", "⚠️");
+
+            const allSavedTests = window.getAllMergedTests();
+            const tData = allSavedTests.find(t => t.code === pdfCode) || {};
+
+            const certLogo = document.getElementById('cert-logo-img');
+            if (certLogo) certLogo.src = window.portalLogoURL || '';
+            const examTitleEl = document.getElementById('cert-exam-title');
+            if (examTitleEl) examTitleEl.innerText = "Performance Certificate";
+            const examNameEl = document.getElementById('cert-exam-name');
+            if (examNameEl) examNameEl.innerText = record.testName || tData.exam || record.testCode || "Test";
+            const testCodeEl = document.getElementById('cert-test-code');
+            if (testCodeEl) testCodeEl.innerText = record.testCode || "---";
+            const rwEl = document.getElementById('cert-right-wrong');
+            if (rwEl) rwEl.innerText = `${record.right||0} / ${record.wrong||0}`;
+            const scoreEl = document.getElementById('cert-score');
+            if (scoreEl) scoreEl.innerText = `${record.score||0}`;
+            const nameEl = document.getElementById('cert-student-name');
+            if (nameEl) nameEl.innerText = record.name || (window.studentInfo && window.studentInfo.name) || "Student";
+            const dateEl = document.getElementById('cert-date');
+            if (dateEl) dateEl.innerText = "Generated: " + (record.timestamp ? new Date(record.timestamp).toLocaleString('en-IN') : "—");
+            const rankEl = document.getElementById('cert-rank');
+            if (rankEl) rankEl.innerText = "#... / ...";
+
+            const heading = document.getElementById('result-heading');
+            if (heading) heading.innerHTML = '<span class="highlight">📊</span> Your Test Result';
+
+            // Hide the pieces that need the full per-question answer data,
+            // which isn't retained for past attempts — showing them without
+            // that data would be misleading. Score / Rank / Leaderboard below
+            // are all still real, live numbers pulled fresh from the database.
+            const btnRow = document.querySelector('.result-buttons-row');
+            if (btnRow) btnRow.style.display = 'none';
+            const analysisSection = document.querySelector('.result-analysis-section');
+            if (analysisSection) analysisSection.style.display = 'none';
+            const analyticsContainer = document.getElementById('analytics-container');
+            if (analyticsContainer) analyticsContainer.style.display = 'none';
+
+            // Swap the close button to return to My Report instead of Home.
+            const closeBtn = document.getElementById('result-close-btn');
+            if (closeBtn) { closeBtn.innerText = "⬅️ Back to My Report";
+                closeBtn.setAttribute('onclick', 'window.closeHistoricalResult()'); }
+
+            // Rank + live leaderboard — same real data source a fresh
+            // submission uses, just re-queried on demand.
+            const rankLoader = document.getElementById('rank-loader');
+            if (rankLoader) rankLoader.style.display = 'block';
+            db.collection("results").where("testCode", "==", record.testCode).get().then(snap => {
+                const scores = [];
+                snap.forEach(d => scores.push(d.data().score));
+                scores.sort((a, b) => b - a);
+                const rank = scores.indexOf(record.score) + 1;
+                if (rankLoader) rankLoader.style.display = 'none';
+                if (rankEl) rankEl.innerText = '#' + rank + ' / ' + scores.length;
+            }).catch(() => {
+                if (rankLoader) rankLoader.style.display = 'none';
+                if (rankEl) rankEl.innerText = 'N/A';
+            });
+            window.fetchLeaderboardWithPhotos(record.testCode);
+
+            document.querySelectorAll('.view-section').forEach(v => { v.classList.remove('active-view');
+                v.style.display = ''; });
+            const resView = document.getElementById('result-view');
+            if (resView) resView.classList.add('active-view');
+            window.toggleAdminLock(true);
+        };
+
+        window.closeHistoricalResult = function() {
+            // Restore the normal result-view UI so a genuinely fresh
+            // submission (right after a live test) still shows everything
+            // as usual the next time this same screen is used for that.
+            const btnRow = document.querySelector('.result-buttons-row');
+            if (btnRow) btnRow.style.display = '';
+            const analysisSection = document.querySelector('.result-analysis-section');
+            if (analysisSection) analysisSection.style.display = '';
+            const closeBtn = document.getElementById('result-close-btn');
+            if (closeBtn) { closeBtn.innerText = "🏠 Close & Go Home";
+                closeBtn.setAttribute('onclick', 'window.closeAndRedirect()'); }
+
+            document.querySelectorAll('.view-section').forEach(v => { v.classList.remove('active-view');
+                v.style.display = ''; });
+            const dashView = document.getElementById('student-dashboard-view');
+            if (dashView) {
+                dashView.classList.add('active-view');
+                window.toggleAdminLock(true);
+                window.switchStudentTab('history');
+            } else {
+                window.location.href = BASE_URL;
+            }
+            window.navStack = [];
+            try { history.pushState({}, "", window.location.pathname); } catch (e) {}
         };
 
         /* ==========================================================================
@@ -11404,12 +11926,19 @@
                             const parts = tag.split(':');
                             const subject = parts.length >= 1 ? parts[0].trim() : 'General';
                             subjectSet.add(subject);
+                            const topicTagVal = (q.topicTag || '').trim();
+                            let chapter = null;
+                            if (topicTagVal) {
+                                const ttParts = topicTagVal.split('::').map(s => s.trim()).filter(Boolean);
+                                if (ttParts.length >= 2) chapter = ttParts[1];
+                            }
                             allQuestionsWithTags.push({
                                 testCode: code,
                                 testName: test.exam || code,
                                 question: q,
                                 tag: tag,
                                 subject: subject,
+                                chapter: chapter,
                                 index: idx,
                             });
                             if (!tagPerformance[tag]) {
@@ -11509,6 +12038,7 @@
         window.filterHistorySubjectTop = function(subject) {
             const container = document.getElementById('subject-questions-container-top');
             const buttons = document.querySelectorAll('#subject-filter-bar-top .filter-btn');
+            const chapterBar = document.getElementById('chapter-filter-bar-top');
             if (!container) return;
 
             buttons.forEach(btn => {
@@ -11519,6 +12049,7 @@
             const data = window._historySubjectDataTop;
             if (!data) {
                 container.innerHTML = '<p style="color:var(--text-muted);">No data available.</p>';
+                if (chapterBar) { chapterBar.style.display = 'none'; chapterBar.innerHTML = ''; }
                 return;
             }
 
@@ -11527,9 +12058,66 @@
                 filtered = filtered.filter(item => item.subject === subject);
             }
 
-            if (filtered.length === 0) {
+            // ---- Chapter filter (built from !T topicTag data within the selected subject) ----
+            if (chapterBar) {
+                if (subject !== 'all') {
+                    const chapterSet = new Set();
+                    filtered.forEach(item => { if (item.chapter) chapterSet.add(item.chapter); });
+                    const sortedChapters = Array.from(chapterSet).sort();
+                    if (sortedChapters.length > 0) {
+                        let chBtnsHtml = '<span class="filter-label">📖 Filter by Chapter:</span>';
+                        chBtnsHtml += `<button class="filter-btn active" data-chapter="all" onclick="window.filterHistoryChapterTop('all')">📋 All</button>`;
+                        sortedChapters.forEach(ch => {
+                            chBtnsHtml += `<button class="filter-btn" data-chapter="${ch}" onclick="window.filterHistoryChapterTop('${ch.replace(/'/g, "\\'")}')">${ch}</button>`;
+                        });
+                        chapterBar.innerHTML = chBtnsHtml;
+                        chapterBar.style.display = 'flex';
+                    } else {
+                        chapterBar.style.display = 'none';
+                        chapterBar.innerHTML = '';
+                    }
+                } else {
+                    chapterBar.style.display = 'none';
+                    chapterBar.innerHTML = '';
+                }
+            }
+
+            window._historyChapterDataTop = {
+                subject: subject,
+                subjectFilteredItems: filtered
+            };
+
+            window.renderHistoryFilteredQuestions(filtered, subject === 'all' ? 'any subject' : subject);
+        };
+
+        /* ---- Filter (within the currently selected Subject) by Chapter, built from !T topicTag ---- */
+        window.filterHistoryChapterTop = function(chapter) {
+            const chapterButtons = document.querySelectorAll('#chapter-filter-bar-top .filter-btn');
+            chapterButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.chapter === chapter) btn.classList.add('active');
+            });
+
+            const data = window._historyChapterDataTop;
+            if (!data) return;
+
+            let filtered = data.subjectFilteredItems;
+            if (chapter !== 'all') {
+                filtered = filtered.filter(item => item.chapter === chapter);
+            }
+
+            window.renderHistoryFilteredQuestions(filtered, chapter === 'all' ? data.subject : chapter);
+        };
+
+        /* ---- Shared renderer: builds the grouped question/answer list for whatever
+             filtered set (by Subject and/or Chapter) is currently active ---- */
+        window.renderHistoryFilteredQuestions = function(filtered, emptyLabel) {
+            const container = document.getElementById('subject-questions-container-top');
+            if (!container) return;
+
+            if (!filtered || filtered.length === 0) {
                 container.innerHTML =
-                    `<p style="color:var(--text-muted); font-size:13px; padding:8px 0;">No questions found for ${subject === 'all' ? 'any subject' : subject}.</p>`;
+                    `<p style="color:var(--text-muted); font-size:13px; padding:8px 0;">No questions found for ${emptyLabel === 'any subject' ? 'any subject' : emptyLabel}.</p>`;
                 return;
             }
 
@@ -11558,7 +12146,9 @@
                     const q = item.question;
                     const idxNum = item.index + 1;
                     const solutionId = 'sol-' + groupId + '-' + idx;
+                    const predictId = 'predq-' + groupId + '-' + idx;
                     const hasExp = q.exp && q.exp.trim() !== "";
+                    const hasPredicted = q.predicted && Array.isArray(q.predicted) && q.predicted.length > 0;
 
                     // Find the correct option text
                     let correctOptionText = q.ans || 'N/A';
@@ -11567,6 +12157,20 @@
                         if (found) {
                             correctOptionText = q.ans + '. ' + found.text;
                         }
+                    }
+
+                    let predictedHtml = '';
+                    if (hasPredicted) {
+                        predictedHtml += `<div class="sq-solution-content" id="${predictId}"><button class="sq-solution-close" onclick="window.closeHistorySolution('${predictId}')">✕ Close</button><br>`;
+                        q.predicted.forEach((pq, pi) => {
+                            predictedHtml += `
+                                        <div style="margin-top:${pi === 0 ? '4' : '10'}px;padding-top:${pi === 0 ? '0' : '8'}px;${pi === 0 ? '' : 'border-top:1px dashed var(--border-color);'}">
+                                            <b>PQ${pi+1}. ${pq.q || ''}</b>
+                                            ${pq.s ? `<div style="margin-top:4px;color:var(--text-muted);"><b>Solution:</b> ${pq.s}</div>` : ''}
+                                        </div>
+                                    `;
+                        });
+                        predictedHtml += `</div>`;
                     }
 
                     html += `
@@ -11579,10 +12183,12 @@
                                     <div class="sq-answer">
                                         <span style="color:var(--text-muted);">Correct: ${correctOptionText}</span>
                                         ${hasExp ? `<button class="sq-solution-btn" onclick="window.toggleHistorySolution('${solutionId}')">💡 Solution</button>` : ''}
+                                        ${hasPredicted ? `<button class="sq-solution-btn" onclick="window.toggleHistorySolution('${predictId}')">🔥 Predict Questions</button>` : ''}
                                     </div>
                                     ${hasExp ? `<div class="sq-solution-content" id="${solutionId}"><button class="sq-solution-close" onclick="window.closeHistorySolution('${solutionId}')">✕ Close</button><br>${q.exp}</div>` : ''}
+                                    ${predictedHtml}
                                 </div>
-                            `;
+                        `;
                 });
                 html += `</div></div></div>`;
             }
